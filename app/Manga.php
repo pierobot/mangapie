@@ -160,6 +160,91 @@ class Manga extends Model
         return empty($tokens) != true ? $tokens : null;
     }
 
+    private function zipGetEntrySize($archive_path, $index) {
+        $size = null;
+        $zip = new \ZipArchive;
+        if ($zip->open($archive_path) !== true)
+            return null;
+
+        $indices = [];
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $stat = $zip->statIndex($i);
+            if ($stat !== false && $this->zipEntryIsImage($stat) == true)
+                array_push($indices, $i);
+        }
+
+        $stat = $zip->statIndex($indices[$index]);
+        if ($stat !== false) {
+            $size = $stat['size'];
+        }
+
+        $zip->close();
+
+        return $size;
+    }
+
+    private function rarGetEntrySize($archive_path, $index) {
+        $size = null;
+        $rar = \RarArchive::open($archive_path);
+        if ($rar == false)
+            return null;
+
+        $entries = $rar->getEntries();
+        $indices = [];
+
+        foreach ($entries as $entry) {
+            $name = $entry->getName();
+            if ($this->rarEntryIsImage($name) == true)
+                array_push($indices, $name);
+        }
+
+        usort($indices, function ($left_name, $right_name) use($rar) {
+        // all the entries should be good, as verified in above loop
+            $left_tokens = $this->getNumberTokens($left_name);
+            $right_tokens = $this->getNumberTokens($right_name);
+            if ($left_tokens == null || $right_tokens == null)
+                return 0;
+
+            $left_token_count = count($left_tokens);
+            $right_token_count = count($right_tokens);
+            $min_token_count = min($left_token_count, $right_token_count);
+
+            for ($i = 0; $i < $min_token_count; $i++) {
+                $left_token = $left_tokens[$i];
+                $right_token = $right_tokens[$i];
+
+                if ($left_token < $right_token)
+                    return -1;
+                elseif ($left_token > $right_token)
+                    return 1;
+            }
+
+            // if we reach here, then all the tokens up to $min_token_count are equal
+            if ($left_token_count == $right_token_count)
+                return 0;
+                
+            return $left_token_count < $right_token_count ? -1 : 1;                    
+        });
+
+        if (count($indices) > 0) {
+            $entry = $rar->getEntry($indices[$index]);
+            $size = $entry->getUnpackedSize();
+        }
+
+        return $size;
+    }
+
+    private function getEntrySize($archive_path, $index) {
+        $type = $this->getArchiveType($archive_path);
+
+        if ($type == 'zip')
+            return $this->zipGetEntrySize($archive_path, $index);
+        if ($type == 'rar')
+            return $this->rarGetEntrySize($archive_path, $index);
+
+        return null;
+    }
+
     private function zipGetEntryData($archive_path, $archive_name, $index) {
         $data = null;
         $zip = new \ZipArchive;
@@ -338,63 +423,6 @@ class Manga extends Model
             return $this->zipgetEntryName($archive_path, $index);
         elseif ($type == 'rar')
             return $this->rargetEntryName($archive_path, $index);
-
-        return null;
-    }
-
-    private function zipGetEntrySize($archive_path, $index) {
-        $size = null;
-        $zip = new \ZipArchive;
-        if ($zip->open($archive_path) !== true)
-            return null;
-
-        $indices = [];
-        for ($i = 0; $i < $zip->numFiles; $i++) {
-            $stat = $zip->statIndex($i);
-            if ($stat !== false && $this->zipEntryIsImage($stat) == true)
-                array_push($indices, $i);
-        }
-
-        $stat = $zip->statIndex($indices[$index]);
-        if ($stat !== false) {
-            $size = $stat['size'];
-        }
-
-        $zip->close();
-
-        return $size;
-    }
-
-    private function rarGetEntrySize($archive_path, $index) {
-        $size = null;
-        $rar = \RarArchive::open($archive_path);
-        if ($rar == false)
-            return null;
-
-        $entries = $rar->getEntries();
-        $indices = [];
-
-        foreach ($entries as $entry) {
-            $name = $entry->getName();
-            if ($this->rarEntryIsImage($name) == true)
-                array_push($indices, $name);
-        }
-
-        if (count($indices) > 0) {
-            $entry = $rar->getEntry($indices[$index]);
-            $size = $entry->getUnpackedSize();
-        }
-
-        return $size;
-    }
-
-    private function getEntrySize($archive_path, $index) {
-        $type = $this->getArchiveType($archive_path);
-
-        if ($type == 'zip')
-            return $this->zipGetEntrySize($archive_path, $index);
-        if ($type == 'rar')
-            return $this->rarGetEntrySize($archive_path, $index);
 
         return null;
     }
