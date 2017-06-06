@@ -23,23 +23,12 @@ class MangaController extends Controller
         if (Manga::count() == 0) {
             if (Library::count() == 0) {
                 foreach (\Config::get('mangapie.libraries') as $library) {
-                    Library::create([
+                    $library = Library::updateOrCreate([
                         'name' => $library['name'],
                         'path' => $library['path']
                     ]);
-                }
-            }
 
-            $libraries = Library::all();
-
-            // Populate the manga in each library path
-            foreach ($libraries as $library) {
-                foreach (\File::directories($library['path']) as $path) {
-                    $manga = Manga::create([
-                        'name' => pathinfo($path, PATHINFO_FILENAME),
-                        'path' => $path,
-                        'library_id' => Library::where('name','=',$library->name)->first()->id
-                    ]);
+                    $library->scan();
                 }
             }
         }
