@@ -21,7 +21,9 @@ class LibraryController extends Controller
             'ids'=> 'required|array'
         ]);
         
-        $library = Library::find(\Input::get('ids'));      
+        $library = Library::find(\Input::get('ids'))->first();
+        if ($library != null)
+            $library->scan();
 
         // Redirect to the admin index page
         return \Redirect::action('AdminController@index');
