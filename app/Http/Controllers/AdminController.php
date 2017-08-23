@@ -101,9 +101,9 @@ class AdminController extends Controller
         $user = User::where('name', '=', \Input::get('old-name'))->first();
         if ($user != null) {
             $user->setName(\Input::get('new-name'));
-        }
 
-        \Session::flash('edit-alert-success', 'User was successfully edited!');
+            \Session::flash('edit-alert-success', 'User was successfully edited!');
+        }
 
         return \Redirect::action('AdminController@users');
     }
@@ -123,9 +123,9 @@ class AdminController extends Controller
         $user = User::where('name', '=', \Input::get('name'))->first();
         if ($user != null) {
             $user->forceDelete();
-        }
 
-        \Session::flash('delete-alert-success', 'User was successfully deleted!');
+            \Session::flash('delete-alert-success', 'User was successfully deleted!');
+        }
 
         return \Redirect::action('AdminController@users');
     }
