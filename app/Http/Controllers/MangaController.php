@@ -22,12 +22,14 @@ class MangaController extends Controller
 
         if (Manga::count() == 0) {
             if (Library::count() == 0) {
-                foreach (\Config::get('mangapie.libraries') as $library) {
+                foreach (\Config::get('mangapie.libraries') as $library_cfg) {
                     $library = Library::updateOrCreate([
-                        'name' => $library['name'],
-                        'path' => $library['path']
+                        'name' => $library_cfg['name'],
+                        'path' => $library_cfg['path']
                     ]);
+                }
 
+                foreach (Library::all() as $library) {
                     $library->scan();
                 }
             }
@@ -40,6 +42,7 @@ class MangaController extends Controller
 
         if ($user->isAdmin() == true) {
             $libraries = Library::all();
+
             $manga_list = Manga::orderBy('name', 'asc')->get();
         } else {
             $library_ids = LibraryPrivilege::getIds($user->getId());

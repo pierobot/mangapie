@@ -26,7 +26,7 @@ class Manga extends Model
             return mb_strtolower(substr($name, $extension_start + 1));
         }
 
-        return null;        
+        return null;
     }
 
     private function getArchiveType($archive_name) {
