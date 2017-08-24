@@ -4,7 +4,9 @@
     <title>MangaPie @yield ('title')</title>
 
     <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"> -->
-    <link href="{{ URL::to('/public/css/bootswatch-slate.min.css') }}" rel="stylesheet">
+    {{-- <link href="{{ URL::to('/public/css/bootswatch-slate.min.css') }}" rel="stylesheet"> --}}
+    <link href="{{ URL::to('/public/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ URL::to('/public/bootstrap/dist/css/bootstrap-theme.min.css') }}" rel="stylesheet">
     <link href="{{ URL::to('/public/css/layout.css') }}" rel="stylesheet">
 
     @yield ('stylesheets')

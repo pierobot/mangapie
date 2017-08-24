@@ -19,36 +19,11 @@ class ReaderController extends Controller
         $manga = Manga::find($id);
         // This controller/view implements a custom navbar
         $custom_navbar = true;
-        // get the archive path
-        $matches = Finder::create()->in($manga->getPath())->name($archive_name);
-
-        if (count($matches) == 0) {
-            \Session::flash('reader-failure', 'Unable to find ' . "'" . $archive_name . "'");
-
-            return view('manga.reader');
-        }
-
-        // ensure we don't have any archives with the same name.
-        // TO-DO: THIS WILL BE ALTERED IN THE FUTURE TO ALLOW SAME FILE NAMES
-        //        SO LONG AS THEY ARE IN A DIFFERENT SUBDIRECTORY.
-        if (count($matches) > 1) {
-
-            \Session::flash('reader-failure', 'The archive ' . "'" . $archive_name . "'" . 'has the same name as another. This is a known bug.');
-
-            return view('manga.reader');
-        }
-        
-        // get the path of the first. 
-        // this is bugged, see above.
-        // TO-DO: will fix later as this will also require changes to reader.blade.php
-        $archive_path = '';
-        foreach ($matches as $match) {
-
-            $archive_path = $match->getPathname();
-            break;
-        }
 
         // Get the image count
+        // TO-DO: This will not work with subdirectories. Fix.
+        $archive_path = $manga->getPath() . '/' . $archive_name;
+        // get the archive path
         $page_count = $manga->getImageCount($archive_path);
 
         $prev_url = false;

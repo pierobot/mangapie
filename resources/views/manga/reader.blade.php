@@ -66,7 +66,7 @@
 @endsection
 
 @section ('scripts')
-    
+
 {{-- <script src="http://hammerjs.github.io/dist/hammer.min.js" type="text/javascript"></script> --}}
 <script src="{{ URL::to('/public/js/manga/reader.js') }}" type="text/javascript"></script>
 
