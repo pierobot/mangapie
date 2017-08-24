@@ -6,11 +6,13 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
+        "components/jquery": "^3.2",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "~5.0",
         "php-curl-class/php-curl-class": "^7.2",
-        "querypath/QueryPath": ">=3.0.0"
+        "querypath/QueryPath": ">=3.0.0",
+        "twitter/bootstrap": "^3.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -39,11 +41,19 @@
         ],
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php artisan optimize"
+            "php artisan optimize",
+
+            "mkdir -p public/bootstrap",
+            "cp -R vendor/twitter/bootstrap/dist public/bootstrap",
+            "cp -R vendor/components/jquery public/jquery"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php artisan optimize"
+            "php artisan optimize",
+
+            "mkdir -p public/bootstrap",
+            "cp -R vendor/twitter/bootstrap/dist public/bootstrap",
+            "cp -R vendor/components/jquery public/jquery"
         ]
     },
     "config": {

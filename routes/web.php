@@ -38,4 +38,5 @@ Route::post('/admin/users/edit', 'AdminController@editUser');
 Route::post('/admin/users/delete', 'AdminController@deleteUser');
 Route::get('/admin/libraries', 'AdminController@libraries');
 
-Route::post('/library', 'LibraryController@update');
+Route::post('/library/create', 'LibraryController@create');
+Route::post('/library/update', 'LibraryController@update');

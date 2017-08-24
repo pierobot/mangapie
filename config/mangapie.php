@@ -7,13 +7,13 @@ return [
     'mu_cookie' => env('MANGAPIE_MU_COOKIE'),
 
     'libraries' => [
-        [
-            'name' => 'Manga1',
-            'path' => '/mnt/hdd1/Manga/Manga'
-        ],
-        [
-            'name' => 'Manga2',
-            'path' => '/mnt/hdd2/Manga/Manga'
-        ],
+        // [
+        //     'name' => 'Manga1',
+        //     'path' => '/mnt/hdd1/Manga/Manga'
+        // ],
+        // [
+        //     'name' => 'Manga2',
+        //     'path' => '/mnt/hdd2/Manga/Manga'
+        // ],
     ],
 ];

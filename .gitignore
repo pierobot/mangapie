@@ -20,3 +20,5 @@ Homestead.json
 .rocketeer/
 
 nginx-log/
+public/bootstrap
+public/jquery
