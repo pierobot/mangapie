@@ -7,6 +7,11 @@ use Illuminate\Support\Collection;
 
 use \Symfony\Component\Finder\Finder;
 
+use \App\ArtistReference;
+use \App\AuthorReference;
+use \App\GenreInformation;
+use \App\MangaInformation;
+
 class Manga extends Model
 {
     //
@@ -95,6 +100,7 @@ class Manga extends Model
 
     private function zipGetImageCount($archive_path) {
         $zip = new \ZipArchive;
+
         if ($zip->open($archive_path) !== true)
             return false;
 
@@ -503,22 +509,6 @@ class Manga extends Model
         ];
     }
 
-    public function getId() {
-        return $this->id;
-    }
-
-    public function getName() {
-        return $this->name;
-    }
-
-    public function getPath() {
-        return $this->path;
-    }
-
-    public function getLibraryId() {
-        return $this->library_id;
-    }
-
     public function getArchives() {
         // get all the files in the path and filter by archives
         $files = Finder::create()->in($this->path)
@@ -565,5 +555,65 @@ class Manga extends Model
         }
 
         return $archives != [] ? $archives : null;
+    }
+
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getName() {
+        return $this->name;
+    }
+
+    public function getPath() {
+        return $this->path;
+    }
+
+    public function getLibraryId() {
+        return $this->library_id;
+    }
+
+    public function forceDelete() {
+
+        // delete all information and references that belongs to this manga
+
+        $id = $this->getId();
+        $artist_references = ArtistReference::where('manga_id', '=', $id)->get();
+        if ($artist_references != null) {
+
+            foreach ($artist_references as $reference) {
+
+                $reference->forceDelete();
+            }
+        }
+
+        $author_references = AuthorReference::where('manga_id', '=', $id)->get();
+        if ($author_references != null) {
+
+            foreach ($author_references as $reference) {
+
+                $reference->forceDelete();
+            }
+        }
+
+        $genre_information = GenreInformation::where('manga_id', '=', $id)->get();
+        if ($genre_information != null) {
+
+            foreach ($genre_information as $information) {
+
+                $information->forceDelete();
+            }
+        }
+
+        $manga_information = MangaInformation::where('id', '=', $id)->get();
+        if ($manga_information != null) {
+
+            foreach ($manga_information as $information) {
+
+                $manga_information->forceDelete();
+            }
+        }
+
+        parent::delete();
     }
 }

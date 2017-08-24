@@ -9,8 +9,8 @@
 
     @yield ('stylesheets')
 
-    <script src="https://code.jquery.com/jquery-2.2.1.min.js" type="text/javascript"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="{{ URL::to('/public/jquery/jquery.min.js') }}" type="text/javascript"></script>
+    <script src="{{ URL::to('/public/bootstrap/dist/js/bootstrap.min.js') }}" type="text/javascript"></script>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
@@ -33,7 +33,7 @@
 
             @yield ('custom_navbar_right')
 
-            @if (Auth::id() != null)             
+            @if (Auth::id() != null)
 
                 @if (\App\User::find(Auth::id())['admin'] == true)
                     <li class="dropdown">

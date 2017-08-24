@@ -18,6 +18,26 @@ class MangaInformation extends Model
     //
     protected $fillable = ['id', 'mu_id', 'name', 'description', 'type', 'year'];
 
+    public function getMangaId() {
+
+        return $this->id;
+    }
+
+    public function getMangaUpdatesId() {
+
+        return $this->mu_id;
+    }
+
+    public function getDescription() {
+
+        return $this->description;
+    }
+
+    public function getType() {
+
+        return $this->type;
+    }
+
     private static function searchMangaUpdates($name, $page = 1) {
         // https://www.mangaupdates.com/series.html?stype=title&search=asd&page=1
         $results = null;
@@ -407,22 +427,6 @@ class MangaInformation extends Model
             return false;
 
         return true;
-    }
-
-    public function getMangaId() {
-        return $this->id;
-    }
-
-    public function getMangaUpdatesId() {
-        return $this->mu_id;
-    }
-
-    public function getDescription() {
-        return $this->description;
-    }
-
-    public function getType() {
-        return $this->type;
     }
 
     public function getAssociatedNames() {

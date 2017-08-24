@@ -35,6 +35,14 @@
 
 @section ('content')
 
+@if (\Session::has('reader-failure'))
+
+    <div class="alert alert-danger">
+        <span class="glyphicon glyphicon-remove"></span>&nbsp; {{ \Session::get('reader-failure') }}
+    </div>
+
+@endif
+
 @if ($page_count !== false)
     <div class="row">
     @if ($prev_url === false && $next_url === true)
@@ -42,10 +50,11 @@
     @elseif ($prev_url === true && $next_url === true)
         <a href="{{ URL::action('ReaderController@index', [$id, $archive_name, $page + 1]) }}" prev_url="{{ URL::action('ReaderController@index', [$id, $archive_name, $page - 1]) }}">
         <!-- <a href="{{ $next_url}}" prev_url="{{ $prev_url }}"> -->
-    @elseif ($prev_url === true && $next_url === false)
+    @elseif ($prev_url === true && $next_url === false && $page < $page_count)
         <a href="{{ URL::action('ReaderController@index', [$id, $archive_name, $page - 1]) }}">
     @endif            
-            {{ Html::image(URL::action('ReaderController@image', [$id, $archive_name, $page]), 'image', ['class' => 'swipe img-responsive center-block']) }}
+            {{-- Html::image(URL::action('ReaderController@image', [$id, $archive_name, $page]), 'image', ['class' => 'swipe img-responsive center-block']) --}}
+            {{ Html::image(URL::action('ReaderController@image', [$id, $archive_name, $page]), 'image', ['class' => 'reader-image center-block']) }}
         </a>
     </div>
 @else
@@ -58,7 +67,7 @@
 
 @section ('scripts')
     
-<script src="http://hammerjs.github.io/dist/hammer.min.js" type="text/javascript"></script>
+{{-- <script src="http://hammerjs.github.io/dist/hammer.min.js" type="text/javascript"></script> --}}
 <script src="{{ URL::to('/public/js/manga/reader.js') }}" type="text/javascript"></script>
 
 @endsection
