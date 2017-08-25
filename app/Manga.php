@@ -549,7 +549,7 @@ class Manga extends Model
         $archives = [];
         foreach ($files as $file) {
             $archive = [];
-            $archive['name'] = $file->getFileName();
+            $archive['name'] = $file->getRelativePathname();
 
             array_push($archives, $archive);
         }

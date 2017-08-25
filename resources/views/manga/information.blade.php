@@ -110,7 +110,7 @@
                 @if ($archives != null)
                     @foreach ($archives as $archive)
                     <li class="list-group-item">
-                        <a href="{{ \Config::get('mangapie.app_url') }}/reader/{{ $id }}/{{ $archive['name'] }}">
+                        <a href="{{ \Config::get('mangapie.app_url') }}/reader/{{ $id }}/{{ $archive['name'] }}/1">
                         {{ $archive['name'] }}
                         </a>
                     </li>

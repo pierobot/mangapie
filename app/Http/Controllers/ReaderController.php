@@ -15,7 +15,7 @@ class ReaderController extends Controller
     }
 
     //
-    public function index($id, $archive_name, $page = 1) {
+    public function index($id, $archive_name, $page) {
         $manga = Manga::find($id);
         // This controller/view implements a custom navbar
         $custom_navbar = true;

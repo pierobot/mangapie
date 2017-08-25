@@ -46,7 +46,7 @@ class MangaInformation extends Model
             <td width="32%" class="text pad col1" bgcolor=""><a href="https://www.mangaupdates.com/series.html?id=88" alt="Series Info">Berserk</a></td>
         */
         $qp = html5qp('https://www.mangaupdates.com/series.html?stype=title&search=' . urlencode($name) . '&page=' . $page);
-                
+
         for ($i = 0; $i < $qp->size(); $i++) {
             $a_tag = $qp->find('td.col1>a')->get($i);
 
@@ -341,7 +341,7 @@ class MangaInformation extends Model
     private function updateAuthorsInformation($mu_info) {
         if ($mu_info == null)
             return false;
-        
+
         $references = AuthorReference::where('manga_id', '=', $this->getMangaId());
         $references->forceDelete();
 
@@ -394,7 +394,7 @@ class MangaInformation extends Model
 
                 if ($manga_info->updateAuthorsInformation($mu_info) == false)
                     return null;
-                
+
                 $manga_info->save();
             }
         }
@@ -410,7 +410,7 @@ class MangaInformation extends Model
         $mu_info = $this->getMangaUpdatesInformation($mu_id);
         if ($mu_info == null)
             return false;    
-        
+
         if ($this->updateMangaInformation($mu_info) === false)
             return false;
 
@@ -432,7 +432,7 @@ class MangaInformation extends Model
     public function getAssociatedNames() {
         $assoc_names = [];
         $name_references = AssociatedNameReference::where('manga_id', '=', $this->getMangaId())->get();
-        
+
         if ($name_references == null)
             return null;
 
@@ -440,7 +440,7 @@ class MangaInformation extends Model
             $assoc_name = AssociatedName::find($reference->getAssociatedNameId());
             if ($assoc_name == null)
                 continue;
-            
+
             array_push($assoc_names, $assoc_name);
         }
 

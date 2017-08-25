@@ -28,8 +28,8 @@ Route::post('/information', 'MangaInformationController@update');
 
 Route::get('/genre/{id}', 'GenreController@index');
 
-Route::get('/reader/{id}/{archive_name}/{page?}', 'ReaderController@index');
-Route::get('/image/{id}/{archive_name}/{page}', 'ReaderController@image');
+Route::get('/reader/{id}/{archive_name}/{page}', 'ReaderController@index')->where('archive_name', ".*");
+Route::get('/image/{id}/{archive_name}/{page}', 'ReaderController@image')->where('archive_name', ".*");
 
 Route::get('/admin', 'AdminController@index');
 Route::get('/admin/users', 'AdminController@users');
