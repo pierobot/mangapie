@@ -20,15 +20,14 @@ class ReaderController extends Controller
         // This controller/view implements a custom navbar
         $custom_navbar = true;
 
-        // Get the image count
-        // TO-DO: This will not work with subdirectories. Fix.
+        
         $archive_path = $manga->getPath() . '/' . $archive_name;
-        // get the archive path
         $page_count = $manga->getImageCount($archive_path);
+        $app_url = \Config::get('mangapie.app_url');
 
+        // determine if the navbar will have the previous/next button(s) available
         $prev_url = false;
         $next_url = false;
-        $app_url = \Config::get('mangapie.app_url');
         if ($page < $page_count)
             $next_url = true;
         
