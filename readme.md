@@ -36,4 +36,40 @@ vim .env
 php artisan migrate
 ```
 
+#### Setup your web server (Example config for nginx with php 7.0)
+```
+server {
+	listen 127.0.0.1:80;
+	#listen 192.168.1.142:80; 
+	server_name localhost;
+
+	location /mangapie/ {
+		proxy_pass http://127.0.0.1:8000/;
+	}
+}
+
+server {
+	listen 127.0.0.1:8000;
+	server_name mangapie;
+	root /home/pierobot/github/mangapie/;
+	access_log /home/pierobot/github/mangapie/nginx-log/access.log;
+	error_log /home/pierobot/github/mangapie/nginx-log/error.log;
+
+	index index.php;
+
+	location / {
+		try_files $uri $uri/ /index.php$args;
+	}
+
+	location ~ \.php$ {
+		try_files $uri =404;
+
+		include fastcgi.conf;
+		fastcgi_index index.php;
+		fastcgi_pass unix:/run/php/php7.0-fpm.sock;
+	}
+}
+
+```
+
 #### Login using 'dev' for both username and password. Change username and password and add libraries.
