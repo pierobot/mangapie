@@ -18,6 +18,7 @@ class MangaController extends Controller
     //public $perPage = 25;
 
     public function __construct() {
+
         $this->middleware('auth');
 
         if (Manga::count() == 0) {
@@ -37,6 +38,7 @@ class MangaController extends Controller
     }
 
     public function index() {
+
         $user = \Auth::user();
         $libraries = null;
 
@@ -55,6 +57,7 @@ class MangaController extends Controller
     }
 
     public function library($id) {
+
         $user = \Auth::user();
         $can_access = false;
         
@@ -91,6 +94,7 @@ class MangaController extends Controller
     }
 
     public function thumbnail($id) {
+
         $manga = Manga::find($id);
         if ($manga !== null) {
             $thumbnail_path = $manga->path . "/folder.jpg";
