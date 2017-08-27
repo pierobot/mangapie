@@ -8,6 +8,7 @@ This is a self-hosted server for archived manga.
 * Whatever [Laravel](https://laravel.com/docs/master/installation) requires.
 * Any DBMS that Laravel supports.
 * [php-rar](https://github.com/cataphract/php-rar)
+* php-intl (this requires ICU)
 
 ## Installation
 
