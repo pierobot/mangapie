@@ -149,7 +149,7 @@ class MangaUpdates {
         ])->get();
 
         $description = [];
-        $description_result = preg_match_all('/<div class=(\"|\')sCat(\"|\')><b>Description<\/b><\/div>\s<div class=(\"|\')sContent(\"|\').+\">(.+?)\s<\/div>/', $file, $description);
+        $description_result = preg_match_all('/<div class=(\"|\')sCat(\"|\')><b>Description<\/b><\/div>\s<div class=(\"|\')sContent(\"|\').+?\">(.+?)\s<\/div>/', $file, $description);
         if ($description_result == 0 || $description_result === false)
             return null;
 
