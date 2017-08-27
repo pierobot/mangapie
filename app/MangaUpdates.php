@@ -93,6 +93,12 @@ class MangaUpdates {
             if ($name_match_count == 0 || $name_match_count === false)
                 continue;
 
+            // url decode the names
+            array_walk($names[4], function (&$name, $key) {
+
+            	$name = urldecode($name);
+            });
+
             /* dd($names);
 
                 array:6 [▼
@@ -152,6 +158,12 @@ class MangaUpdates {
         $description_result = preg_match_all('/<div class=(\"|\')sCat(\"|\')><b>Description<\/b><\/div>\s<div class=(\"|\')sContent(\"|\').+?\">(.+?)\s<\/div>/', $file, $description);
         if ($description_result == 0 || $description_result === false)
             return null;
+
+        // url decode the descriptions
+        array_walk($description[5], function (&$desc, $key) {
+
+        	$desc = urldecode($desc);
+        });
 
         /* dd($description);
 
@@ -314,6 +326,12 @@ class MangaUpdates {
         if ($authors_result == 0 || $authors_result === false)
             return null;
 
+        // url decode the authors' name
+        array_walk($authors[2], function (&$author, $key) {
+
+        	$author = urldecode($author);
+        });
+
         /* dd($authors);
 
             array:3 [
@@ -357,6 +375,12 @@ class MangaUpdates {
         $artists_result = preg_match_all('/\?id=(\d+).+?<u>(.+?)<\/u>/', $artists_content[0][0], $artists);
         if ($artists_result == 0 || $artists_result === false)
             return null;
+
+        // url decode the artists' name
+        array_walk($artists[2], function (&$artist, $key) {
+
+        	$artist = urldecode($artist);
+        });
 
         /* dd($artists);
 
