@@ -2,6 +2,8 @@
 
 namespace App;
 
+use \App\Intl_UTF8;
+
 class MangaUpdates {
 
     public static function genres() {
@@ -45,7 +47,7 @@ class MangaUpdates {
 
             array_push($genres, [
                 'name' => $genre_name,
-                'description' => $genres_info[10][$index]
+                'description' => Intl_UTF8::convert(urldecode($genres_info[10][$index]))
             ]);
         }
 
@@ -96,7 +98,7 @@ class MangaUpdates {
             // url decode the names
             array_walk($names[4], function (&$name, $key) {
 
-            	$name = urldecode($name);
+            	$name = Intl_UTF8::convert(urldecode($name));
             });
 
             /* dd($names);
@@ -162,7 +164,7 @@ class MangaUpdates {
         // url decode the descriptions
         array_walk($description[5], function (&$desc, $key) {
 
-        	$desc = urldecode($desc);
+        	$desc = Intl_UTF8::convert(urldecode($desc));
         });
 
         /* dd($description);
@@ -235,9 +237,9 @@ class MangaUpdates {
             return null;
 
         // the names are url encoded. take care of that.
-        array_walk($assoc_names[2], function (&$raw_name, $key) {
+        array_walk($assoc_names[2], function (&$name, $key) {
 
-            $raw_name = urldecode($raw_name);
+            $name = Intl_UTF8::convert(urldecode($name));
         }, null);
 
         /* dd($assoc_names);
@@ -329,7 +331,7 @@ class MangaUpdates {
         // url decode the authors' name
         array_walk($authors[2], function (&$author, $key) {
 
-        	$author = urldecode($author);
+        	$author = Intl_UTF8::convert(urldecode($author));
         });
 
         /* dd($authors);
@@ -379,7 +381,7 @@ class MangaUpdates {
         // url decode the artists' name
         array_walk($artists[2], function (&$artist, $key) {
 
-        	$artist = urldecode($artist);
+        	$artist = Intl_UTF8::convert(urldecode($artist));
         });
 
         /* dd($artists);
