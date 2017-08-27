@@ -183,6 +183,7 @@ return [
         App\Providers\MangaServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
 
+        Ixudra\Curl\CurlServiceProvider::class,
     ],
 
     /*
@@ -236,6 +237,7 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
 
+        'Curl' => Ixudra\Curl\Facades\Curl::class,
     ],
 
 ];

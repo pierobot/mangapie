@@ -11,8 +11,8 @@
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "~5.0",
         "php-curl-class/php-curl-class": "^7.2",
-        "querypath/QueryPath": ">=3.0.0",
-        "twitter/bootstrap": "^3.3"
+        "twitter/bootstrap": "^3.3",
+        "ixudra/curl": "6.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
