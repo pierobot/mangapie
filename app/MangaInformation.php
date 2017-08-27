@@ -43,19 +43,12 @@ class MangaInformation extends Model
         if ($mu_info == null)
             return false;
 
-        // $this->mu_id = $mu_info['mu_id'];
-        // $this->description = $mu_info['description'];
-        // $this->type = $mu_info['type'];
-        // $this->year = $mu_info['year'];
-
         $this->update([
             'mu_id' => $mu_info['mu_id'],
             'description' => $mu_info['description'],
             'type' => $mu_info['type'],
             'year' => $mu_info['year']
         ]);
-
-        //$this->save();
 
         return true;
     }
@@ -242,7 +235,7 @@ class MangaInformation extends Model
         // ...
 
         // Update those that depend on mangaupdates
-        $mu_info = $this->getMangaUpdatesInformation($mu_id);
+        $mu_info = MangaUpdates::information($mu_id);
         if ($mu_info == null)
             return false;    
 
