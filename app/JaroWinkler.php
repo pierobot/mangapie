@@ -2,7 +2,7 @@
 
 namespace App;
 
-use \App\Intl_UTF8;
+use \App\IntlString;
 
 class JaroWinkler {
 
@@ -19,12 +19,12 @@ class JaroWinkler {
 		for ($i = 0, $current_1 = 0, $next_1 = 0; $i < $str1_len; $i++) {
 
 
-			$g_1 = Intl_UTF8::grapheme($str1, ($current_1 = $next_1), $next_1);
+			$g_1 = IntlString::grapheme($str1, ($current_1 = $next_1), $next_1);
 			$cp_1 = \IntlChar::ord($g_1);
 
 			for ($j = 0, $current_2 = 0, $next_2 = 0; $j < $range; $j++) {
 
-				$g_2 = Intl_UTF8::grapheme($str2, ($current_2 = $current_1 + $next_2), $next_2);
+				$g_2 = IntlString::grapheme($str2, ($current_2 = $current_1 + $next_2), $next_2);
 				$cp_2 = \IntlChar::ord($g_2);
 
 				// make sure we're within range
@@ -63,8 +63,8 @@ class JaroWinkler {
 
 		for ($i = 0, $current_1 = 0, $current_2 = 0, $next_1 = 0, $next_2 = 0; $i < $min; $i++) {
 
-			$g_1 = Intl_UTF8::grapheme($str1, ($current_1 = $next_1), $next_1);
-			$g_2 = Intl_UTF8::grapheme($str2, ($current_2 = $current_1 + $next_2), $next_2);
+			$g_1 = IntlString::grapheme($str1, ($current_1 = $next_1), $next_1);
+			$g_2 = IntlString::grapheme($str2, ($current_2 = $current_1 + $next_2), $next_2);
 			$cp_1 = \IntlChar::ord($g_1);
 			$cp_2 = \IntlChar::ord($g_2);
 
@@ -88,14 +88,14 @@ class JaroWinkler {
 	public static function distance($str1, $str2, $threshold = 0.7, $scaling_factor = 0.1) {
 
 		// convert both strings to utf8
-		$str1_utf8 = Intl_UTF8::convert($str1);
-		$str2_utf8 = Intl_UTF8::convert($str2);
+		$str1_utf8 = IntlString::convert($str1);
+		$str2_utf8 = IntlString::convert($str2);
 
-		$str1_len = Intl_UTF8::strlen($str1_utf8);
-		$str2_len = Intl_UTF8::strlen($str2_utf8);
+		$str1_len = IntlString::strlen($str1_utf8);
+		$str2_len = IntlString::strlen($str2_utf8);
 
 		// check if the strings are equal
-		if (Intl_UTF8::strcmp($str1_utf8, $str2_utf8) == 0)
+		if (IntlString::strcmp($str1_utf8, $str2_utf8) == 0)
 			return 1.0;
 
 		// get the max range the distance between to code points can be
