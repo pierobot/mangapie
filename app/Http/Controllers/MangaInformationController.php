@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use \Carbon\Carbon;
+
 use \App\Manga;
 use \App\MangaInformation;
 use \App\Genre;
 use \App\GenreInformation;
+use \App\MangaUpdates;
 
 class MangaInformationController extends Controller
 {
@@ -18,6 +21,22 @@ class MangaInformationController extends Controller
     public function index($id) {
         $manga = Manga::find($id);
         $manga_info = MangaInformation::find($id);
+        $genre_count = Genre::count();
+
+        // update genres if there are none or if they are older than 6 months
+        if ($genre_count == 0) {
+
+            $genres = MangaUpdates::genres();
+            Genre::populate($genres);
+        } else {
+
+            $oldest = Genre::oldest();
+            if ($oldest != null && Carbon::now()->subMonths(6)->gt($oldest['updated_at'])) {
+
+                $genres = MangaUpdates::genres();
+                Genre::populate($genres);
+            }
+        }
 
         // Do we need to retrieve information from mangaupdates?
         if ($manga_info == null) {
