@@ -56,7 +56,7 @@ class MangaUpdates {
 
     public static function search($title, $page, $perpage = 25) {
 
-    	$results = [];
+      $results = [];
         // https://www.mangaupdates.com/series.html?stype=title&search=asd&page=1&perpage=25
 
         $file = \Curl::to('https://www.mangaupdates.com/series.html')->withData([
@@ -98,13 +98,13 @@ class MangaUpdates {
             // url decode the names
             array_walk($names[4], function (&$name, $key) {
 
-            	$name = IntlString::convert(urldecode($name));
+                $name = IntlString::convert(urldecode($name));
             });
 
             /* dd($names);
 
                 array:6 [▼
- 				  ...
+          ...
                   4 => array:1 [▼
                     0 => "Yu Yu Hakusho dj - Shinkei ga Wareta Samui Yoru"
                   ]
@@ -164,7 +164,7 @@ class MangaUpdates {
         // url decode the descriptions
         array_walk($description[5], function (&$desc, $key) {
 
-        	$desc = IntlString::convert(urldecode($desc));
+            $desc = IntlString::convert(urldecode($desc));
         });
 
         /* dd($description);
@@ -331,7 +331,7 @@ class MangaUpdates {
         // url decode the authors' name
         array_walk($authors[2], function (&$author, $key) {
 
-        	$author = IntlString::convert(urldecode($author));
+            $author = IntlString::convert(urldecode($author));
         });
 
         /* dd($authors);
@@ -381,7 +381,7 @@ class MangaUpdates {
         // url decode the artists' name
         array_walk($artists[2], function (&$artist, $key) {
 
-        	$artist = IntlString::convert(urldecode($artist));
+            $artist = IntlString::convert(urldecode($artist));
         });
 
         /* dd($artists);
@@ -421,7 +421,7 @@ class MangaUpdates {
                   </div>
                   """
               ]
-			  ...
+        ...
               5 => array:1 [
                 0 => "2003"
               ]
