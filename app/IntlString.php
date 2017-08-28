@@ -4,12 +4,12 @@ namespace App;
 
 # requirements: php-intl
 
-class Intl_UTF8 {
+class IntlString {
 
 	// converts a string to another encoding
-	public static function convert($str1) {
+	public static function convert($str1, $encoding = 'UTF-8') {
 
-		$converter = new \UConverter('UTF-8');
+		$converter = new \UConverter($encoding);
 		
 		return $converter->convert($str1);
 	}
@@ -29,8 +29,8 @@ class Intl_UTF8 {
 	// compares two strings.
 	public static function strcmp($str1, $str2) {
 
-		$str1_length = Intl_UTF8::strlen($str1);
-		$str2_length = Intl_UTF8::strlen($str2);
+		$str1_length = IntlString::strlen($str1);
+		$str2_length = IntlString::strlen($str2);
 
 		// do basic length comparison
 		if ($str1_length < $str2_length)
@@ -47,8 +47,8 @@ class Intl_UTF8 {
 
 			// get the grapheme for the current pos and advance $current_x to $next_x
 			// this will let us get the next grapheme on the next call
-			$g_1 = Intl_UTF8::grapheme($str1, ($current_1 = $next_1), $next_1);
-			$g_2 = Intl_UTF8::grapheme($str2, ($current_2 = $next_2), $next_2);
+			$g_1 = IntlString::grapheme($str1, ($current_1 = $next_1), $next_1);
+			$g_2 = IntlString::grapheme($str2, ($current_2 = $next_2), $next_2);
 
 			// get the code point for the grapheme for comparison
 			$cp_1 = \IntlChar::ord($g_1);
