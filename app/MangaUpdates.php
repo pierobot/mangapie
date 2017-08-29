@@ -8,10 +8,15 @@ class MangaUpdates {
 
     public static function genres() {
 
-        $file = \Curl::to('https://www.mangaupdates.com/genres.html')->get();
+        $contents = \Curl::to('https://www.mangaupdates.com/genres.html')->get();
+
+        return MangaUpdates::genres_ex($contents);
+    }
+
+    public static function genres_ex($contents) {
 
         $genres_info = [];
-        $genres_info_result = preg_match_all('/(<td class=(\"|\')releasestitle(\"|\').+?<b>(.+?)<\/b><\/td>)\s.+\s.+?\s.+?(<td class=(\"|\')text(\"|\') align=(\"|\').+?(\"|\')>(.+?)<br>)/', $file, $genres_info);
+        $genres_info_result = preg_match_all('/(<td class=(\"|\')releasestitle(\"|\').+?<b>(.+?)<\/b><\/td>)\s.+\s.+?\s.+?(<td class=(\"|\')text(\"|\') align=(\"|\').+?(\"|\')>(.+?)<br>)/', $contents, $genres_info);
         if ($genres_info_result == 0 || $genres_info_result === false)
             return null;
 
@@ -47,7 +52,7 @@ class MangaUpdates {
 
             array_push($genres, [
                 'name' => $genre_name,
-                'description' => IntlString::convert(urldecode($genres_info[10][$index]))
+                'description' => IntlString::convert(\Html::decode($genres_info[10][$index]))
             ]);
         }
 
@@ -56,10 +61,7 @@ class MangaUpdates {
 
     public static function search($title, $page, $perpage = 25) {
 
-      $results = [];
-        // https://www.mangaupdates.com/series.html?stype=title&search=asd&page=1&perpage=25
-
-        $file = \Curl::to('https://www.mangaupdates.com/series.html')->withData([
+        $contents = \Curl::to('https://www.mangaupdates.com/series.html')->withData([
 
             'stype' => 'title',
             'search' => urlencode($title),
@@ -67,8 +69,15 @@ class MangaUpdates {
             'perpage' => strval($perpage)
         ])->get();
 
+        return MangaUpdates::search_ex($title, $contents);
+    }
+
+    public static function search_ex($title, $contents) {
+
+        $results = [];
+
         $a_elements = [];
-        $a_element_count = preg_match_all('/<a href=(\"|\')https?:\/\/(www\.?)?mangaupdates\.com\/series\.html\?id=\d+(\"|\').+alt=(\"|\')Series Info(\"|\')>.+<\/a>/', $file, $a_elements);
+        $a_element_count = preg_match_all('/<a href=(\"|\')https?:\/\/(www\.?)?mangaupdates\.com\/series\.html\?id=\d+(\"|\').+alt=(\"|\')Series Info(\"|\')>.+<\/a>/', $contents, $a_elements);
 
         if ($a_element_count == 0 || $a_element_count === false)
             return null;
@@ -98,7 +107,7 @@ class MangaUpdates {
             // url decode the names
             array_walk($names[4], function (&$name, $key) {
 
-                $name = IntlString::convert(urldecode($name));
+                $name = IntlString::convert(\Html::decode($name));
             });
 
             /* dd($names);
@@ -151,20 +160,25 @@ class MangaUpdates {
 
     public static function information($mu_id) {
 
-        $file = \Curl::to('https://www.mangaupdates.com/series.html')->withData([
+        $contents = \Curl::to('https://www.mangaupdates.com/series.html')->withData([
 
             'id' => $mu_id
         ])->get();
 
+        return MangaUpdates::information_ex($mu_id, $contents);
+    }
+
+    public static function information_ex($mu_id, $contents) {
+
         $description = [];
-        $description_result = preg_match_all('/<div class=(\"|\')sCat(\"|\')><b>Description<\/b><\/div>\s<div class=(\"|\')sContent(\"|\').+?\">(.+?)\s<\/div>/', $file, $description);
+        $description_result = preg_match_all('/<div class=(\"|\')sCat(\"|\')><b>Description<\/b><\/div>\s<div class=(\"|\')sContent(\"|\').+?\">(.+?)\s<\/div>/', $contents, $description);
         if ($description_result == 0 || $description_result === false)
             return null;
 
         // url decode the descriptions
         array_walk($description[5], function (&$desc, $key) {
 
-            $desc = IntlString::convert(urldecode($desc));
+            $desc = IntlString::convert(\Html::decode($desc));
         });
 
         /* dd($description);
@@ -186,7 +200,7 @@ class MangaUpdates {
          */
 
         $type = [];
-        $type_result = preg_match_all('/<div class=(\"|\')sCat(\"|\')><b>Type<\/b><\/div>\s<div class=(\"|\')sContent(\"|\')\s+>(.+?)\s<\/div>/', $file, $type);
+        $type_result = preg_match_all('/<div class=(\"|\')sCat(\"|\')><b>Type<\/b><\/div>\s<div class=(\"|\')sContent(\"|\')\s+>(.+?)\s<\/div>/', $contents, $type);
         if ($type_result == 0 || $type_result === false)
             return null;
 
@@ -209,68 +223,50 @@ class MangaUpdates {
          */
 
         $assoc_names_content = [];
-        $assoc_names_content_result = preg_match_all('/<div class=(\"|\')sCat(\"|\')><b>Associated Names<\/b><\/div>\s<div class=(\"|\')sContent(\"|\')\s>(.+?)\s<\/div>/', $file, $assoc_names_content);
+        $assoc_names_content_result = preg_match_all('/<div class=(\"|\')sCat(\"|\')><b>Associated Names<\/b><\/div>\s<div class=(\"|\')sContent(\"|\')\s>(.+?)\s<\/div>/', $contents, $assoc_names_content);
         if ($assoc_names_content_result == 0 || $assoc_names_content_result === false)
             return null;
 
-        /* dd($assoc_names_content_result);
+        /* dd($assoc_names_content);
 
             array:6 [▼
-              0 => array:1 [▼
-                0 => """
-                  <div class="sCat"><b>Associated Names</b></div>\n
-                  <div class="sContent" >&#1058;&#1088;&#1080;&#1087;&#1083;&#1077;&#1082;&#1089;&#1086;&#1075;&#1086;&#1083;&#1080;&#1082;<br />&times;&times;&times;HOLiC<br />&times;&times;&times;HOLiC&#12539;&#31840;<br />Holic<br />XXX &#12507;&#12522;&#12483;&#12463;<br />xxxHolic R&#333;<br />xxxHolic Rou<br />\n
-                  </div>
-                  """
-              ]
-              ...
+              0 => array:1 [▶]
+              1 => array:1 [▶]
+              2 => array:1 [▶]
+              3 => array:1 [▶]
+              4 => array:1 [▶]
               5 => array:1 [▼
-                0 => "&#1058;&#1088;&#1080;&#1087;&#1083;&#1077;&#1082;&#1089;&#1086;&#1075;&#1086;&#1083;&#1080;&#1082;<br />&times;&times;&times;HOLiC<br />&times;&times;&times;HOLiC&#12539;&#31840;<br />Holic<br />XXX &#12507;&#12522;&#12483;&#12463;<br />xxxHolic R&#333;<br />xxxHolic Rou<br />"
+                0 => "&#1044;&#1086;&#1093;&#1086;&#1076;&#1085;&#1099;&#1081; &#1076;&#1086;&#1084; &#1048;&#1082;&#1082;&#1086;&#1082;&#1091;<br />&#12417;&#12382;&#12435;&#19968;&#21051;<br />Mezon Ikkoku<br /> ◀"
               ]
             ]
-
          */
 
         $assoc_names = [];
-        $assoc_names_result = preg_match_all('/(\&\#\d+\;)?(.+?)(<br\s\/>)/', $assoc_names_content[5][0], $assoc_names);
+        $assoc_names_result = preg_match_all('/(.+?)(<br\s\/>)/', $assoc_names_content[5][0], $assoc_names);
         if ($assoc_names_result == 0 || $assoc_names_result === false)
             return null;
 
         // the names are url encoded. take care of that.
-        array_walk($assoc_names[2], function (&$name, $key) {
+        array_walk($assoc_names[1], function (&$name, $key) {
 
-            $name = IntlString::convert(urldecode($name));
+            $name = IntlString::convert(\Html::decode($name));
         }, null);
 
         /* dd($assoc_names);
 
-            array:4 [
-              0 => array:7 [
-                0 => "&#1058;&#1088;&#1080;&#1087;&#1083;&#1077;&#1082;&#1089;&#1086;&#1075;&#1086;&#1083;&#1080;&#1082;<br />"
-                1 => "&times;&times;&times;HOLiC<br />"
-                2 => "&times;&times;&times;HOLiC&#12539;&#31840;<br />"
-                3 => "Holic<br />"
-                4 => "XXX &#12507;&#12522;&#12483;&#12463;<br />"
-                5 => "xxxHolic R&#333;<br />"
-                6 => "xxxHolic Rou<br />"
+            array:3 [▼
+              0 => array:3 [▶]
+              1 => array:3 [▼
+                0 => "&#1044;&#1086;&#1093;&#1086;&#1076;&#1085;&#1099;&#1081; &#1076;&#1086;&#1084; &#1048;&#1082;&#1082;&#1086;&#1082;&#1091;"
+                1 => "&#12417;&#12382;&#12435;&#19968;&#21051;"
+                2 => "Mezon Ikkoku"
               ]
-              ...
-              2 => array:7 [
-                0 => "&#1088;&#1080;&#1087;&#1083;&#1077;&#1082;&#1089;&#1086;&#1075;&#1086;&#1083;&#1080;&#1082;"
-                1 => "&times;&times;&times;HOLiC"
-                2 => "&times;&times;&times;HOLiC&#12539;&#31840;"
-                3 => "Holic"
-                4 => "XXX &#12507;&#12522;&#12483;&#12463;"
-                5 => "xxxHolic R&#333;"
-                6 => "xxxHolic Rou"
-              ]
-              ...
+              2 => array:3 [▶]
             ]
-
          */
 
         $genres = [];
-        $genres_result = preg_match_all('/<a rel=(\"|\').+?genre=.+?<u>(.+?)<\/u><\/a>/', $file, $genres);
+        $genres_result = preg_match_all('/<a rel=(\"|\').+?genre=.+?<u>(.+?)<\/u><\/a>/', $contents, $genres);
         if ($genres_result == 0 || $genres_result === false)
             return null;
 
@@ -304,7 +300,7 @@ class MangaUpdates {
          
 
         $authors_content = [];
-        $authors_content_result = preg_match_all('/Author\(s\)<\/b><\/div>\s.+?sContent(\"|\')\s>.+?\s<\/div>/', $file, $authors_content);
+        $authors_content_result = preg_match_all('/Author\(s\)<\/b><\/div>\s.+?sContent(\"|\')\s>.+?\s<\/div>/', $contents, $authors_content);
         if ($authors_content_result == 0 || $authors_content_result === false)
             return null;
 
@@ -331,7 +327,7 @@ class MangaUpdates {
         // url decode the authors' name
         array_walk($authors[2], function (&$author, $key) {
 
-            $author = IntlString::convert(urldecode($author));
+            $author = IntlString::convert(\Html::decode($author));
         });
 
         /* dd($authors);
@@ -354,7 +350,7 @@ class MangaUpdates {
          */
 
         $artists_content = [];
-        $artists_content_result = preg_match_all('/(Artist\(s\)<\/b><\/div>\s.+?sContent(\"|\')\s>).+?\s<\/div>/', $file, $artists_content);
+        $artists_content_result = preg_match_all('/(Artist\(s\)<\/b><\/div>\s.+?sContent(\"|\')\s>).+?\s<\/div>/', $contents, $artists_content);
         if ($artists_content_result == 0 || $artists_content_result === false)
             return null;
 
@@ -381,7 +377,7 @@ class MangaUpdates {
         // url decode the artists' name
         array_walk($artists[2], function (&$artist, $key) {
 
-            $artist = IntlString::convert(urldecode($artist));
+            $artist = IntlString::convert(\Html::decode($artist));
         });
 
         /* dd($artists);
@@ -407,7 +403,7 @@ class MangaUpdates {
          */
 
         $year = [];
-        $year_result = preg_match_all('/(\"|\')sCat(\"|\')><b>Year<\/b><\/div>\s<div class=(\"|\')sContent(\"|\')\s>(\d+)\s<\/div>/', $file, $year);
+        $year_result = preg_match_all('/(\"|\')sCat(\"|\')><b>Year<\/b><\/div>\s<div class=(\"|\')sContent(\"|\')\s>(\d+)\s<\/div>/', $contents, $year);
         if ($year_result == 0 || $year_result === false)
             return null;
 
@@ -433,7 +429,7 @@ class MangaUpdates {
         $information['mu_id'] = $mu_id;
         $information['description'] = $description[5][0];
         $information['type'] = $type[5][0];
-        $information['assoc_names'] = $assoc_names[2];
+        $information['assoc_names'] = $assoc_names[1];
         $information['genres'] = $genres[2];
         $information['authors'] = $authors[2];
         $information['artists'] = $artists[2];
