@@ -7,6 +7,7 @@ use \Symfony\Component\Finder\Finder;
 
 use \App\Manga;
 use \App\Library;
+use \App\ImageArchive;
 
 class ReaderController extends Controller
 {
@@ -20,10 +21,16 @@ class ReaderController extends Controller
         // This controller/view implements a custom navbar
         $custom_navbar = true;
 
-        
         $archive_path = $manga->getPath() . '/' . $archive_name;
-        $page_count = $manga->getImageCount($archive_path);
-        $app_url = \Config::get('mangapie.app_url');
+        $archive = ImageArchive::open($archive_path);
+        if ($archive === false)
+            return \Response::make(null, 400);
+
+        $images = $archive->getImages();
+        if ($images === false)
+            return \Response::make(null, 400);
+
+        $page_count = count($images);
 
         // determine if the navbar will have the previous/next button(s) available
         $prev_url = false;
@@ -45,17 +52,13 @@ class ReaderController extends Controller
 
     public function image($id, $archive_name, $page) {
         $manga = Manga::find($id);
-        $img = $manga->getImage($archive_name, $page);
+        $image = $manga->getImage($archive_name, $page);
 
-        if ($img !== false) {
-            // $headers = [
-            //     'Content-Type' => $img_mime,
-            //     'Content-Length' => ???
-            // ];
+        if ($image !== false) {
 
-            return \Response::make($img['data'], 200, [
-                'Content-Type' => $img['mime'],
-                'Content-Length' => $img['size']
+            return \Response::make($image['contents'], 200, [
+                'Content-Type' => $image['mime'],
+                'Content-Length' => $image['size']
             ]);
         }
         else
