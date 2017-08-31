@@ -13,7 +13,7 @@ class ImageArchiveZip implements ImageArchiveInterface
     public function __construct($file_path) {
 
         $this->m_file_path = $file_path;
-        
+
         $this->m_zip = new ZipArchive;
         if ($this->m_zip->open($this->m_file_path) === false)
             $this->m_zip = false;

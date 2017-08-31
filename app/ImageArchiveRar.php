@@ -74,7 +74,7 @@ class ImageArchiveRar implements ImageArchiveInterface
             if ($index == $idx) {
 
                 $stream = $entry->getStream();
-                
+
                 $size = $entry->getUnpackedSize();
 
                 return stream_get_contents($stream, $size);
@@ -99,9 +99,9 @@ class ImageArchiveRar implements ImageArchiveInterface
 
             $name = $entry->getName();
             $size = $entry->getUnpackedSize();
-            
+
             if (ImageArchive::isImage($name)) {
-            
+
                 array_push($images, [
                     'name' => $name,
                     'size' => $size,

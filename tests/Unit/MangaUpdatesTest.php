@@ -162,7 +162,7 @@ class MangaUpdatesTest extends TestCase
 
             $this->assertTrue(IntlString::strcmp($assoc_name, $expected_assoc_names[$index]) == 0);
         }
-        
+
         $genres = $information['genres'];
         $expected_genres = [
             'Comedy',
@@ -190,7 +190,7 @@ class MangaUpdatesTest extends TestCase
 
             $this->assertTrue(IntlString::strcmp($artist, $expected_artists[$index]) == 0);
         }
-        
+
         $year = $information['year'];
         $expected_year = '1980';
         $this->assertTrue(IntlString::strcmp($year, $expected_year) == 0);
@@ -198,7 +198,7 @@ class MangaUpdatesTest extends TestCase
 
     /**
      *  Asserts whether or not we can correctly match a title that is several pages deep in search results.
-     *  The first four pages, and first half of the fifth, are all yaoi doujinshi. 
+     *  The first four pages, and first half of the fifth, are all yaoi doujinshi.
      *
      *  @return void
      */

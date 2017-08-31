@@ -22,7 +22,7 @@ class IntlStringTest extends TestCase
     }
 
     /**
-     * Asserts that one string is less than the other. 
+     * Asserts that one string is less than the other.
      *
      * @return void
      */

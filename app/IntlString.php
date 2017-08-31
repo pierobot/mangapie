@@ -17,7 +17,7 @@ class IntlString {
     public static function convert($str1, $encoding = 'UTF-8') {
 
         $converter = new \UConverter($encoding);
-        
+
         return $converter->convert($str1);
     }
 
