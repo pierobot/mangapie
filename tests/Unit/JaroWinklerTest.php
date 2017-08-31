@@ -31,7 +31,7 @@ class JaroWinklerTest extends TestCase
     public function testdistance()
     {
         $str = 'うる星やつら';
-        
+
         $d1 = JaroWinkler::distance($str, 'うる星や');
         $d2 = JaroWinkler::distance($str, 'うる星やつ');
 

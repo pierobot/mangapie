@@ -297,7 +297,7 @@ class MangaUpdates {
             ]
 
          */
-         
+
 
         $authors_content = [];
         $authors_content_result = preg_match_all('/Author\(s\)<\/b><\/div>\s.+?sContent(\"|\')\s>.+?\s<\/div>/', $contents, $authors_content);

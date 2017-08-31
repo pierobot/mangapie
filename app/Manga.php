@@ -54,7 +54,7 @@ class Manga extends Model
             array_push($tokens, intval($result[0]));
             // get next token
             $result = mb_ereg_search_regs();
-        }      
+        }
 
         return empty($tokens) != true ? $tokens : false;
     }
@@ -85,7 +85,7 @@ class Manga extends Model
         $archive = ImageArchive::open($archive_path);
         if ($archive === false)
             return false;
-       
+
         $images = $archive->getImages();
         usort($images, function ($left, $right) {
             // all the entries should be good, as verified in above loop
@@ -112,7 +112,7 @@ class Manga extends Model
             if ($left_token_count == $right_token_count)
                 return 0;
 
-            return $left_token_count < $right_token_count ? -1 : 1;                    
+            return $left_token_count < $right_token_count ? -1 : 1;
         });
 
         $index = $images[$page - 1]['index'];
@@ -167,7 +167,7 @@ class Manga extends Model
                 return 0;
 
             return $left_token_count < $right_token_count ? -1 : 1;
-        });    
+        });
 
         $archives = [];
         foreach ($files as $file) {

@@ -103,7 +103,7 @@ class MangaInformation extends Model
     private function updateArtistsInformation($mu_info) {
         if ($mu_info == null)
             return false;
-        
+
         $references = ArtistReference::where('manga_id', '=', $this->getMangaId());
         $references->forceDelete();
 
@@ -112,7 +112,7 @@ class MangaInformation extends Model
 
         for ($i = 0; $i < sizeof($mu_info['artists']); $i++) {
             $artist_name = $mu_info['artists'][$i];
-            
+
             $artist = Artist::create([
                 'name' => $artist_name
             ]);
@@ -138,7 +138,7 @@ class MangaInformation extends Model
 
         for ($i = 0; $i < sizeof($mu_info['authors']); $i++) {
             $author_name = $mu_info['authors'][$i];
-            
+
             $author = Author::create([
                 'name' => $author_name
             ]);
@@ -237,7 +237,7 @@ class MangaInformation extends Model
         // Update those that depend on mangaupdates
         $mu_info = MangaUpdates::information($mu_id);
         if ($mu_info == null)
-            return false;    
+            return false;
 
         if ($this->updateMangaInformation($mu_info) === false)
             return false;

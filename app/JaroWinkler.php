@@ -6,7 +6,7 @@ use \App\IntlString;
 
 class JaroWinkler {
 
-    // gets the maximum range two matching codepoints are allowed to be apart 
+    // gets the maximum range two matching codepoints are allowed to be apart
     private static function max_range($str1_len, $str2_len) {
 
         return (int)(floor(max($str1_len, $str2_len) / 2)) - 1;
