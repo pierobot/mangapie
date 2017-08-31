@@ -205,41 +205,14 @@ class Manga extends Model
         // delete all information and references that belongs to this manga
 
         $id = $this->getId();
-        $artist_references = ArtistReference::where('manga_id', '=', $id)->get();
-        if ($artist_references != null) {
 
-            foreach ($artist_references as $reference) {
+        $artist_references = ArtistReference::where('manga_id', '=', $id)->forceDelete();
 
-                $reference->forceDelete();
-            }
-        }
+        $author_references = AuthorReference::where('manga_id', '=', $id)->forceDelete();
 
-        $author_references = AuthorReference::where('manga_id', '=', $id)->get();
-        if ($author_references != null) {
+        $genre_information = GenreInformation::where('manga_id', '=', $id)->forceDelete();
 
-            foreach ($author_references as $reference) {
-
-                $reference->forceDelete();
-            }
-        }
-
-        $genre_information = GenreInformation::where('manga_id', '=', $id)->get();
-        if ($genre_information != null) {
-
-            foreach ($genre_information as $information) {
-
-                $information->forceDelete();
-            }
-        }
-
-        $manga_information = MangaInformation::where('id', '=', $id)->get();
-        if ($manga_information != null) {
-
-            foreach ($manga_information as $information) {
-
-                $manga_information->forceDelete();
-            }
-        }
+        $manga_information = MangaInformation::where('id', '=', $id)->forceDelete();
 
         parent::delete();
     }
