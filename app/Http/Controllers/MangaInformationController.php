@@ -42,9 +42,11 @@ class MangaInformationController extends Controller
         if ($manga_info == null) {
             // Yes
             $manga_info = MangaInformation::createFromMangaUpdates($manga->getId(), $manga->getName());
-            $manga_info->save();
+
+            if ($manga_info != null)
+                $manga_info->save();
         }
-        
+
         $name = $manga->getName();
         $archives = $manga->getArchives();
 
@@ -60,7 +62,7 @@ class MangaInformationController extends Controller
 
         // Update the values if there is MU information
         if($manga_info != null) {
-            $mu_id = $manga_info->getMangaUpdatesId();        
+            $mu_id = $manga_info->getMangaUpdatesId();
             $description = $manga_info->getDescription();
             $type = $manga_info->getType();
             $assoc_names = $manga_info->getAssociatedNames();

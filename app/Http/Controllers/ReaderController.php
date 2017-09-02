@@ -17,6 +17,7 @@ class ReaderController extends Controller
 
     //
     public function index($id, $archive_name, $page) {
+
         $manga = Manga::find($id);
         // This controller/view implements a custom navbar
         $custom_navbar = true;
@@ -37,7 +38,7 @@ class ReaderController extends Controller
         $next_url = false;
         if ($page < $page_count)
             $next_url = true;
-        
+
         if ($page > 1)
             $prev_url = true;
 

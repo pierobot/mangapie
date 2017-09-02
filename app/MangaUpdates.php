@@ -80,7 +80,7 @@ class MangaUpdates {
         $a_element_count = preg_match_all('/<a href=(\"|\')https?:\/\/(www\.?)?mangaupdates\.com\/series\.html\?id=\d+(\"|\').+alt=(\"|\')Series Info(\"|\')>.+<\/a>/', $contents, $a_elements);
 
         if ($a_element_count == 0 || $a_element_count === false)
-            return null;
+            return false;
 
         // index 0 contains the <a></a> element
         foreach ($a_elements[0] as $a_element) {

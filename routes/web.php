@@ -40,3 +40,6 @@ Route::get('/admin/libraries', 'AdminController@libraries');
 
 Route::post('/library/create', 'LibraryController@create');
 Route::post('/library/update', 'LibraryController@update');
+
+Route::get('/user/settings', 'UserSettingsController@index');
+Route::post('/user/settings', 'UserSettingsController@update');

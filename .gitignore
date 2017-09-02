@@ -22,3 +22,4 @@ Homestead.json
 nginx-log/
 public/bootstrap
 public/jquery
+public/themes
