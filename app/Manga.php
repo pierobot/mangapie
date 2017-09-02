@@ -119,9 +119,13 @@ class Manga extends Model
         $image = $archive->getInfo($index);
         $name = $image['name'];
         $size = 0;
-        $contents = $archive->getContents($index, $size);
+
         $mime = $this->getMIME($name);
         if ($mime === false)
+            return false;
+
+        $contents = $archive->getContents($index, $size);
+        if ($contents === false)
             return false;
 
         return [
