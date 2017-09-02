@@ -4,6 +4,7 @@ namespace App;
 
 use \App\ImageArchiveZip;
 use \App\ImageArchiveRar;
+use \App\IntlString;
 
 interface ImageArchiveInterface
 {
@@ -25,7 +26,34 @@ class ImageArchive
         return false;
     }
 
+    private static function isJunk($name) {
+
+        $all_junk = [
+          '__MACOSX',
+          '.DS_STORE'
+        ];
+
+        foreach ($all_junk as $junk) {
+
+            $result = IntlString::strncmp(
+                        IntlString::convert($name),
+                        IntlString::convert($junk),
+                        IntlString::strlen($junk));
+
+            if ($result == 0)
+                return true;
+        }
+
+        return false;
+    }
+
     public static function isImage($name) {
+
+        // there are some images in junk folders that we don't care about
+        if (ImageArchive::isJunk($name) === true) {
+
+            return false;
+        }
 
         $image_extensions = [
             'jpg',
@@ -49,10 +77,6 @@ class ImageArchive
         }
 
         return $found;
-    }
-
-    public static function assign_indexes($images) {
-
     }
 
     /**

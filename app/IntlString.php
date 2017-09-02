@@ -61,14 +61,45 @@ class IntlString {
      *          A negative value indicates $str1 is lexicographically less than $str2.
      *          A positive value indicates $str2 is lexicographically greater than $str2.
      */
-
     public static function strcmp($str1, $str2) {
-
-        $str1_length = IntlString::strlen($str1);
-        $str2_length = IntlString::strlen($str2);
 
         // iterate until $current_1 and $current_2 reach the $min grapheme length
         for ($current_1 = 0, $current_2 = 0, $next_1 = 0, $next_2 = 0;;) {
+
+            // get the grapheme for the current pos and advance $current_x to $next_x
+            // this will let us get the next grapheme on the next call
+            $g_1 = IntlString::grapheme($str1, ($current_1 = $next_1), $next_1);
+            $g_2 = IntlString::grapheme($str2, ($current_2 = $next_2), $next_2);
+            if ($g_1 === false && $g_2 === false)
+                break;
+
+            // get the code point for the grapheme for comparison
+            $cp_1 = \IntlChar::ord($g_1);
+            $cp_2 = \IntlChar::ord($g_2);
+
+            if ($cp_1 != $cp_2)
+                return $cp_1 - $cp_2;
+        }
+
+        // strings are equal if execution reaches here
+        return 0;
+    }
+
+    /**
+     *  Compares two strings up to count grapheme units.
+     *
+     *  @param $str1 A string.
+     *  @param $str2 A string.
+     *  @param $count The count of grapheme units to compare.
+     *  @return An integer that indicates lexicographical difference between the two strings.
+     *          A value of zero indicates they are lexicographically equal.
+     *          A negative value indicates $str1 is lexicographically less than $str2.
+     *          A positive value indicates $str2 is lexicographically greater than $str2.
+     */
+    public static function strncmp($str1, $str2, $count) {
+
+        // iterate until $current_1 and $current_2 reach the $min grapheme length
+        for ($i = 0, $current_1 = 0, $current_2 = 0, $next_1 = 0, $next_2 = 0; $i < $count; $i++) {
 
             // get the grapheme for the current pos and advance $current_x to $next_x
             // this will let us get the next grapheme on the next call
