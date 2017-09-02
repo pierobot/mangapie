@@ -7,12 +7,13 @@
     "require": {
         "php": ">=5.6.4",
         "components/jquery": "^3.2",
+        "ixudra/curl": "6.*",
         "laravel/framework": "5.4.*",
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "~5.0",
         "php-curl-class/php-curl-class": "^7.2",
-        "twitter/bootstrap": "^3.3",
-        "ixudra/curl": "6.*"
+        "thomaspark/bootswatch": "^3.3",
+        "twitter/bootstrap": "^3.3"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
@@ -21,7 +22,8 @@
     },
     "autoload": {
         "classmap": [
-            "database"
+            "database",
+            "app/Http/Controllers"
         ],
         "psr-4": {
             "App\\": "app/"
@@ -45,7 +47,10 @@
 
             "mkdir -p public/bootstrap",
             "cp -R vendor/twitter/bootstrap/dist public/bootstrap",
-            "cp -R vendor/components/jquery public/jquery"
+            "cp -R vendor/components/jquery public/jquery",
+
+            "mkdir -p public/themes/bootswatch",
+            "cp -R vendor/thomaspark/bootswatch public/themes/"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
@@ -53,7 +58,10 @@
 
             "mkdir -p public/bootstrap",
             "cp -R vendor/twitter/bootstrap/dist public/bootstrap",
-            "cp -R vendor/components/jquery public/jquery"
+            "cp -R vendor/components/jquery public/jquery",
+
+            "mkdir -p public/themes/bootswatch",
+            "cp -R vendor/thomaspark/bootswatch public/themes/"
         ]
     },
     "config": {
