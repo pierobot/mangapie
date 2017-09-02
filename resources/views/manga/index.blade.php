@@ -44,6 +44,7 @@
         </a>
 
         <h4>{{ $manga->name }}</h4>
+
     </div>
 
     @endforeach

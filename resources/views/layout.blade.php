@@ -3,10 +3,11 @@
     <meta charset="UTF-8">
     <title>MangaPie @yield ('title')</title>
 
-    <!-- <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet"> -->
-    {{-- <link href="{{ URL::to('/public/css/bootswatch-slate.min.css') }}" rel="stylesheet"> --}}
-    <link href="{{ URL::to('/public/bootstrap/dist/css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ URL::to('/public/bootstrap/dist/css/bootstrap-theme.min.css') }}" rel="stylesheet">
+    @if (\Auth::user() == null)
+        <link href="{{ URL::to('/public/themes/bootswatch/slate/bootstrap.min.css') }}" rel="stylesheet">
+    @else
+        <link href="{{ URL::to(\App\Theme::path(\Auth::user()->getTheme())) }}" rel="stylesheet">
+    @endif
     <link href="{{ URL::to('/public/css/layout.css') }}" rel="stylesheet">
 
     @yield ('stylesheets')
@@ -51,6 +52,10 @@
                         </ul>
                     </li>
                 @endif
+
+                    <li>
+                        <a href="{{ URL::action('UserSettingsController@index') }}"><span class="glyphicon glyphicon-cog"></span> Settings</a>
+                    </li>
 
                     <li>
                         <a href="{{ URL::action('LoginController@logout') }}"><span class="glyphicon glyphicon-off"></span> Logout</a>
