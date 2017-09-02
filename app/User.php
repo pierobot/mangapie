@@ -24,7 +24,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'admin'
+        'name', 'email', 'password', 'admin', 'theme'
     ];
 
     /**
@@ -51,5 +51,14 @@ class User extends Authenticatable
 
     public function isAdmin() {
         return $this->admin;
+    }
+
+    public function getTheme() {
+        return $this->theme;
+    }
+
+    public function setTheme($theme) {
+        $this->theme = $theme;
+        $this->save();
     }
 }

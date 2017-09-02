@@ -161,10 +161,8 @@ class MangaInformation extends Model
         for ($i = 1; $i <= 5; $i++) {
 
             $results = MangaUpdates::search($name, $i);
-
-            // abort if the search fails
-            if (count($results) == 0)
-                return null;
+            if ($results === false || $results == [])
+                break;
 
             // avoid getting other pages if we have a perfect match
             if ($results[0]['distance'] == 1.0) {
