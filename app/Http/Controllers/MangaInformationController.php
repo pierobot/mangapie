@@ -98,9 +98,18 @@ class MangaInformationController extends Controller
         $mu_id = \Input::get('mu_id');
 
         $manga_info = MangaInformation::find($id);
-        if ($manga_info != null)
+        if ($manga_info != null) {
             // this can fail; find a way to forward errors to MangaInformationController@index
             $manga_info->updateFromMangaUpdates($mu_id);
+        } else {
+
+            $manga_info = MangaInformation::create([
+                'id' => $id,
+            ]);
+
+            if ($manga_info != null)
+                $manga_info->updateFromMangaUpdates($mu_id);
+        }
 
         return \Redirect::action('MangaInformationController@index', [$id]);
     }
