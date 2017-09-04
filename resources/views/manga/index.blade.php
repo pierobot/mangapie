@@ -2,19 +2,6 @@
 
 @section ('custom_navbar_right')
 
-    <li class="dropdown">
-        <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="glyphicon glyphicon-chevron-down white"></span>Libraries
-        </a>
-        <ul class="dropdown-menu" style="color: black;">
-            @foreach ($libraries as $library)
-                <li>
-                    <a href="{{ URL::action('MangaController@library', ['id' => $library->getId()]) }}">{{ $library->getName() }}</a>
-                <li>
-            @endforeach
-        </ul>
-    </li>  
-
     <li>
     {{ Form::open(['action' => 'SearchController@search', 'class' => 'navbar-form form-inline']) }}
 
@@ -29,6 +16,19 @@
     {{ Form::close() }}
     </li>
 
+    <li class="dropdown">
+        <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="glyphicon glyphicon-chevron-down white"></span>Libraries
+        </a>
+        <ul class="dropdown-menu" style="color: black;">
+            @foreach ($libraries as $library)
+                <li>
+                    <a href="{{ URL::action('MangaController@library', ['id' => $library->getId()]) }}">{{ $library->getName() }}</a>
+                <li>
+            @endforeach
+        </ul>
+    </li>
+
 @endsection
 
 @section ('content')
@@ -36,9 +36,9 @@
     <div class="row">
 
     @foreach ($manga_list as $manga)
-   
+
     <div class="col-lg-2 col-sm-4 col-xs-6 text-center thumbnail center">
-        
+
         <a href="{{ \Config::get('mangapie.app_url') }}/information/{{ $manga->id }}" >
             <img src="{{ \Config::get('mangapie.app_url') }}/thumbnail/{{ $manga->id }}">
         </a>
@@ -53,7 +53,7 @@
 
 
 {{-- Render the navigation control only if there is more than one page of results --}}
-{{-- 
+{{--
 @if ($pagination->lastPage() > 1)
 
 <nav aria-label="Navigation">
@@ -65,9 +65,9 @@
                 <span aria-hidden="true">&laquo;</span>
             </a>
         <li>
-        
+
         @foreach ($pagination as $page)
-            
+
         @endforeach
 
         <li>
