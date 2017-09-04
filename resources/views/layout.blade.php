@@ -53,13 +53,25 @@
                     </li>
                 @endif
 
-                    <li>
-                        <a href="{{ URL::action('UserSettingsController@index') }}"><span class="glyphicon glyphicon-cog"></span> Settings</a>
-                    </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <span class="glyphicon glyphicon-user white"></span>&nbsp; {{ Auth::user()->getName() }} &nbsp;<span class="glyphicon glyphicon-chevron-down white"></span>
+                    </a>
+                    <ul class="dropdown-menu" style="color: black;">
+                        <li>
+                            <a href="{{ URL::action('UserSettingsController@index') }}"><span class="glyphicon glyphicon-cog"></span> Settings</a>
+                            <a href="{{ URL::action('LoginController@logout') }}"><span class="glyphicon glyphicon-off"></span> Logout</a>
+                        </li>
+                    </ul>
+                </li>
 
-                    <li>
-                        <a href="{{ URL::action('LoginController@logout') }}"><span class="glyphicon glyphicon-off"></span> Logout</a>
-                    </li>
+                {{-- <li>
+                    <a href="{{ URL::action('UserSettingsController@index') }}"><span class="glyphicon glyphicon-cog"></span> Settings</a>
+                </li>
+
+                <li>
+                    <a href="{{ URL::action('LoginController@logout') }}"><span class="glyphicon glyphicon-off"></span> Logout</a>
+                </li> --}}
             @endif
             </ul>
         </div>
