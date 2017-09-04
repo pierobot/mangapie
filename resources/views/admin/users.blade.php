@@ -16,9 +16,8 @@
             <ul class="nav nav-tabs">
 
                 <li class="active"><a href="#create-user-content" data-toggle="tab"><span class="glyphicon glyphicon-plus"></span> Create</a></li>
-                <li><a href="#edit-user-content" data-toggle="tab"><span class="glyphicon glyphicon-pencil"></span> Edit</a></li>
                 <li><a href="#delete-user-content" data-toggle="tab"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
-            
+
             </ul>
 
             <div class="tab-content">
@@ -74,7 +73,7 @@
                     {{ Form::close() }}
 
                     @if (\Session::has('create-alert-success'))
-                    
+
                         <div class="alert alert-success">
                             <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ session('create-alert-success') }}
                         </div>
@@ -85,53 +84,6 @@
                     <div class="alert alert-danger">
                         <ul>
                             @foreach ($errors->create->all() as $error)
-                            <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                    @endif                    
-
-                </ul>
-                </div>
-
-                <div class="tab-pane" id="edit-user-content">
-
-                <ul class="list-group">
-
-                    {{ Form::open(['action' => 'AdminController@editUser']) }}
-
-                    <li class="list-group-item">
-                        <div class="row">
-                            <div class="form-group col-xs-12 col-lg-3">
-                                {{ Form::label('old name:', null, ['for' => 'old-name']) }}
-                                {{ Form::text('old-name', null, ['class' => 'form-control', 'placeholder' => 'Enter old name here...']) }}
-
-                                {{ Form::label('new name:', null, ['for' => 'new-name']) }}
-                                {{ Form::text('new-name', null, ['class' => 'form-control', 'placeholder' => 'Enter new name here...']) }}
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-xs-4 col-lg-3">
-                                {{ Form::submit('Edit', ['class' => 'btn btn-warning']) }}
-                            </div>
-                        </div>
-                    </li>
-
-                    {{ Form::close() }}
-
-                    @if (\Session::has('edit-alert-success'))
-                    
-                        <div class="alert alert-success">
-                            <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ session('edit-alert-success') }}
-                        </div>
-
-                    @endif
-
-                    @if ($errors->edit->count() > 0)
-                    <div class="alert alert-danger">
-                        <ul>
-                            @foreach ($errors->edit->all() as $error)
                             <li>{{ $error }}</li>
                             @endforeach
                         </ul>
@@ -165,7 +117,7 @@
                     {{ Form::close() }}
 
                     @if (\Session::has('delete-alert-success'))
-                    
+
                         <div class="alert alert-success">
                             <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ session('delete-alert-success') }}
                         </div>
