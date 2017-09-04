@@ -2,39 +2,20 @@
     margin-bottom: 0;
 }
 
-.library {
-    display: inline-block;
-}
-
 .thumbnail {
     margin-bottom: 0;
 }
 
 /* For screens < 768px wide - basically mobile devices */
 @media screen and (max-width: 768px) {
-
-    .thumbnail {
-        max-width: 50%;
-        max-height: 50%;
-    }
 }
 
 /* For screens > 992px - tablets */
 @media screen and (min-width: 992px) {
-
-    .thumbnail {
-        max-width: 33%;
-        max-height: 60%;
-    }
 }
 
 /* For screens > 1200px - computers */
 @media screen and (min-width: 1200px) {
-
-    .thumbnail {
-        max-width: 16%;
-        max-height: 30%;
-    }
 
     input.advanced-search-box {
         max-width: 33%;
@@ -48,9 +29,9 @@
     text-overflow: ellipsis;
 }
 
-.thumbnail > a > img {
+.thumbnail img {
     max-height: 250px;
-    width: 100%;
+    width: auto;
     height: auto;
     display: block;
 }
