@@ -53,6 +53,15 @@ class User extends Authenticatable
         return $this->admin;
     }
 
+    public function getPassword() {
+        return $this->password;
+    }
+
+    public function setPassword($password) {
+        $this->password = $password;
+        $this->save();
+    }
+
     public function getTheme() {
         return $this->theme;
     }
