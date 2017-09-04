@@ -18,7 +18,7 @@
 
     <li class="dropdown">
         <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="glyphicon glyphicon-chevron-down white"></span>Libraries
+            <span class="glyphicon glyphicon-chevron-down white"></span>&nbsp; Libraries
         </a>
         <ul class="dropdown-menu" style="color: black;">
             @foreach ($libraries as $library)
