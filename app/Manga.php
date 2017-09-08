@@ -80,6 +80,16 @@ class Manga extends Model
         if ($page < 1)
             return false;
 
+        // Get the first archive if no name is specified
+        if (empty($archive_name) === true) {
+
+            $archives = $this->getArchives();
+            if (empty($archives) === true)
+                return false;
+
+            $archive_name = $archives[0]['name'];
+        }
+
         $archive_path = $this->getPath() . '/' . $archive_name;
 
         $archive = ImageArchive::open($archive_path);
@@ -181,7 +191,7 @@ class Manga extends Model
             array_push($archives, $archive);
         }
 
-        return $archives != [] ? $archives : null;
+        return $archives;
     }
 
     public function getId() {

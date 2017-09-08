@@ -184,6 +184,7 @@ return [
         Collective\Html\HtmlServiceProvider::class,
 
         Ixudra\Curl\CurlServiceProvider::class,
+        Intervention\Image\ImageServiceProvider::class,
     ],
 
     /*
@@ -238,6 +239,7 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
 
         'Curl' => Ixudra\Curl\Facades\Curl::class,
+        'Image' => Intervention\Image\Facades\Image::class,
     ],
 
 ];

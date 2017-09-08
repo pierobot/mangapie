@@ -39,9 +39,12 @@
 
     <div class="col-lg-2 col-sm-4 col-xs-6 text-center thumbnail center">
 
-        <a href="{{ \Config::get('mangapie.app_url') }}/information/{{ $manga->id }}" >
-            <img src="{{ \Config::get('mangapie.app_url') }}/thumbnail/{{ $manga->id }}">
-        </a>
+        <div>
+            <a href="{{ \Config::get('mangapie.app_url') }}/information/{{ $manga->id }}" >
+                {{-- <img src="{{ \Config::get('mangapie.app_url') }}/thumbnail/{{ $manga->id }}"> --}}
+                {{ Html::image(URL::action('ThumbnailController@smallDefault', [$manga->id])) }}
+            </a>
+        </div>
 
         <h4>{{ $manga->name }}</h4>
 
