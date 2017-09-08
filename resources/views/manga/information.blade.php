@@ -10,7 +10,7 @@
 
     <div class="panel-body">
 
-        {{ Html::image(URL::action('MangaController@thumbnail', [$id]), '', ['class' => 'information-img center-block']) }}
+        {{ Html::image(URL::action('ThumbnailController@mediumDefault', [$id]), '', ['class' => 'information-img center-block']) }}
         <hr>
         <!--
             other preview thumbnails here ?
