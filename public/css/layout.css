@@ -2,10 +2,6 @@
     margin-bottom: 0;
 }
 
-.thumbnail {
-    margin-bottom: 0;
-}
-
 /* For screens < 768px wide - basically mobile devices */
 @media screen and (max-width: 768px) {
 }
@@ -20,6 +16,14 @@
     input.advanced-search-box {
         max-width: 33%;
     }
+}
+
+.thumbnail {
+    margin-bottom: 0;
+}
+
+div.thumbnail > div {
+    height: 250px;
 }
 
 /* Shorten long names with ellipses */
@@ -37,9 +41,8 @@
 }
 
 .information-img {
-    width: 100%;
-    max-width: 500px;
-    height: auto;
+    max-width: 100%;
+    max-height: 500px;
     display: block;
 }
 
