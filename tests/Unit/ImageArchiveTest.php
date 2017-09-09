@@ -20,6 +20,21 @@ class ImageArchiveTest extends TestCase
     private $path_rar = 'tests/Data/ImageArchive/rar/abc.rar';
     private $path_cbr = 'tests/Data/ImageArchive/rar/abc.cbr';
 
+    public function testisJunk()
+    {
+        $this->assertTrue(ImageArchive::isJunk('asd?？asd/029.png') === false);
+        $this->assertTrue(ImageArchive::isJunk('テスト♡テスト/050.png') === false);
+
+        $this->assertTrue(ImageArchive::isJunk('__MACOSX/asd？asd/029.png') === true);
+        $this->assertTrue(ImageArchive::isJunk('.DS_STORE/テスト♡テスト/050.png') === true);
+    }
+
+    public function testgetExtension()
+    {
+        $this->assertTrue(ImageArchive::getExtension('asd?？asd/029.png') == 'png');
+        $this->assertTrue(ImageArchive::getExtension('テスト♡テスト/050.png') == 'png');
+    }
+
     public function testopen()
     {
         $archive_zip = ImageArchive::open($this->path_zip);

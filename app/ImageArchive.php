@@ -16,17 +16,17 @@ interface ImageArchiveInterface
 
 class ImageArchive
 {
-    private static function getExtension($name) {
+    public static function getExtension($name) {
 
         $extension_start = mb_strrpos($name, '.');
         if ($extension_start > 0) {
-            return mb_strtolower(substr($name, $extension_start + 1));
+            return mb_strtolower(mb_substr($name, $extension_start + 1));
         }
 
         return false;
     }
 
-    private static function isJunk($name) {
+    public static function isJunk($name) {
 
         $all_junk = [
           '__MACOSX',
