@@ -28,16 +28,6 @@ class Manga extends Model
         return Manga::whereIn('library_id', $library_ids);
     }
 
-    private function getExtension($name) {
-
-        $extension_start = mb_strrpos($name, '.');
-        if ($extension_start > 0) {
-            return mb_strtolower(substr($name, $extension_start + 1));
-        }
-
-        return false;
-    }
-
     private function getNumberTokens($name) {
 
         if (mb_ereg_search_init($name, "\\d+") === false)
@@ -68,7 +58,7 @@ class Manga extends Model
             'gif' => 'image/gif' // really rare but I've come across this.
         ];
 
-        $extension = $this->getExtension($image_name);
+        $extension = ImageArchive::getExtension($image_name);
         if ($extension === false)
             return false;
 
@@ -91,12 +81,14 @@ class Manga extends Model
         }
 
         $archive_path = $this->getPath() . '/' . $archive_name;
-
         $archive = ImageArchive::open($archive_path);
         if ($archive === false)
             return false;
 
         $images = $archive->getImages();
+        if (empty($images) === true)
+            return false;
+
         usort($images, function ($left, $right) {
             // all the entries should be good, as verified in above loop
             $left_tokens = $this->getNumberTokens($left['name']);
