@@ -28,12 +28,24 @@ class Library extends Model
 
     public function scan() {
 
+        // scan and add new directories
         foreach (\File::directories($this->getPath()) as $path) {
             $manga = Manga::updateOrCreate([
                 'name' => pathinfo($path, PATHINFO_FILENAME),
                 'path' => $path,
                 'library_id' => Library::where('name','=',$this->getName())->first()->id
             ]);
+        }
+
+        // iterate through all the manga in the library
+        // and remove those that no longer exist in the filesystem
+        $manga = Manga::where('library_id', '=', $this->getId())->get();
+        foreach ($manga as $manga_) {
+
+            if (\File::exists($manga_->getPath()) === false) {
+
+                $manga_->forceDelete();
+            }
         }
     }
 
