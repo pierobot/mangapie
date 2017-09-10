@@ -6,7 +6,7 @@
 
 @section ('stylesheets')
 
-    <link href="{{ \Config::get('mangapie.app_url') }}/public/css/admin.css" rel="stylesheet">
+    <link href="{{ URL::to('/public/css/admin.css') rel="stylesheet">
 
 @endsection
 

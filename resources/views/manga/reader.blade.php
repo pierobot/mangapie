@@ -1,5 +1,9 @@
 @extends ('layout')
 
+@section ('stylesheets')
+    <link href="{{ URL::to('/public/css/manga/reader.css') }}" rel="stylesheet">
+@endsection
+
 @section ('custom_navbar_right')
     <!-- <li class="clickable navbar-link"><a href="{{ \Config::get('mangapie.app_url') }}/information/{{ $id }}"><span class="glyphicon glyphicon-book white"></span> Information</a></li> -->
     <li class="clickable navbar-link"><a href="{{ URL::action('MangaInformationController@index', [$id]) }}"><span class="glyphicon glyphicon-book white"></span> Information</a></li>

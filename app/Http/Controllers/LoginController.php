@@ -19,9 +19,13 @@ class LoginController extends Controller
         $username = \Input::get('username');
         $password = \Input::get('password');
 
-        if (\Auth::attempt(['name' => $username, 'password' => $password]) == false)
-            return view('login')->with('login_failed', true);
-        
+        if (\Auth::attempt(['name' => $username, 'password' => $password]) == false) {
+
+            \Session::flash('login-failure', 'You have given invalid credentials. Please try again.');
+
+            return view('login');
+        }
+
         return \Redirect::action('MangaController@index');
     }
 

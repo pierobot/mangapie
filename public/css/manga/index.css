@@ -1,0 +1,17 @@
+/* Shorten long names with ellipses */
+.thumbnail h4 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.thumbnail img {
+    max-height: 250px;
+    width: auto;
+    height: auto;
+    display: block;
+}
+
+div.thumbnail > div {
+    height: 250px;
+}

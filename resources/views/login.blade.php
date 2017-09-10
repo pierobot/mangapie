@@ -24,12 +24,10 @@
 
     {{ Form::close() }}
 
-    @if (compact('login_failed') == true)
-        @if ($login_failed == true)
+    @if (\Session::has('login-failure'))
         <div class="row alert alert-danger col-xs-12 col-sm-12 col-lg-12 center-block">
-            Authentication failure. Incorrect username or password.
+            {{ \Session::get('login-failure') }}
         </div>
-        @endif
     @endif
     </div>
 </div>
@@ -37,7 +35,5 @@
 @endsection
 
 @section ('scripts')
-
-
 
 @endsection

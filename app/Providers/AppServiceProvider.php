@@ -15,8 +15,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $url_generator = $this->app['url'];
-        $url_generator->forceRootUrl(config('app.url'));
+        \URL::forceRootUrl(config('app.url'));
+        \URL::forceScheme('https');
     }
 
     /**
