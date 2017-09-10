@@ -1,4 +1,4 @@
-    @extends ('layout')
+@extends ('layout')
 
 @section ('content')
 
@@ -7,7 +7,7 @@
             <h4 class="panel-title">Advanced Search</h4>
         </div>
         <div class="panel-body">
-            
+
             <h4><span class="glyphicon glyphicon-tags"></span>&nbsp;&nbsp;Genres</h4>
             {{ Form::open(['action' => 'SearchController@search']) }}
 
@@ -18,10 +18,10 @@
                     <div class="form-group col-xs-6 col-sm-4 col-md-3 col-lg-2">
                         {{ Form::checkbox('genres[]', $genre->name) }}
                         {{ Form::label($genre->name) }}
-                    </div>            
+                    </div>
                 @endforeach
                 </div>
-            
+
             <hr>
             <div class="form-group">
                 {{ Form::label('Name', null, ['for' => 'query']) }}
@@ -29,7 +29,7 @@
             </div>
 
             {{ Form::submit('Search', ['class' => 'btn btn-default']) }}
-            
+
             {{ Form::close() }}
 
             @if (count($errors) > 0)

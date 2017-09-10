@@ -1,5 +1,9 @@
 @extends ('layout')
 
+@section ('stylesheets')
+    <link href="{{ URL::to('/public/css/manga/information.css') }}" rel="stylesheet">
+@endsection
+
 @section ('content')
 
 <div class="panel panel-default">
@@ -107,10 +111,10 @@
             <div class="tab-pane" id="files-content">
 
                 <ul id="list-files" class="list-group scrollable-list">
-                @if ($archives != null)
+                @if (empty($archives) === false)
                     @foreach ($archives as $archive)
                     <li class="list-group-item">
-                        <a href="{{ \Config::get('mangapie.app_url') }}/reader/{{ $id }}/{{ rawurlencode($archive['name']) }}/1">
+                        <a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive['name']), 1]) }}">
                         {{ $archive['name'] }}
                         </a>
                     </li>
@@ -141,13 +145,12 @@
                             @endif
 
                             </div>
-                            <hr>
-
+                            <br>
                             {{ Form::submit('Update', ['class' => 'btn btn-success', 'id' => 'action', 'name' => 'action', 'value' => 'update']) }}
-                            {{-- Form::submit('Delete', ['class' => 'btn btn-danger', 'id' => 'action', 'name' => 'action', 'value' => 'delete']) --}}
 
                         {{ Form::close() }}
                     </li>
+
                 </ul>
 
             </div>

@@ -1,5 +1,9 @@
 @extends ('layout')
 
+@section ('stylesheets')
+        <link href="{{ URL::to('/public/css/manga/index.css') }}" rel="stylesheet">
+@endsection
+
 @section ('custom_navbar_right')
 
     <li>
@@ -40,7 +44,8 @@
     <div class="col-lg-2 col-sm-4 col-xs-6 text-center thumbnail center">
 
         <div>
-            <a href="{{ \Config::get('mangapie.app_url') }}/information/{{ $manga->id }}" >
+            {{-- <a href="{{ \Config::get('mangapie.app_url') }}/information/{{ $manga->id }}" > --}}
+            <a href="{{ URL::action('MangaInformationController@index', [$manga->id]) }}">
                 {{-- <img src="{{ \Config::get('mangapie.app_url') }}/thumbnail/{{ $manga->id }}"> --}}
                 {{ Html::image(URL::action('ThumbnailController@smallDefault', [$manga->id])) }}
             </a>

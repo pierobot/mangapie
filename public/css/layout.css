@@ -2,6 +2,20 @@
     margin-bottom: 0;
 }
 
+.center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (max-width: 767px) /* @grid-float-breakpoint -1 */
+{
+    .navbar-fixed-top
+    {
+        position: relative;
+        top: auto;
+    }
+}
+
 /* For screens < 768px wide - basically mobile devices */
 @media screen and (max-width: 768px) {
 }
@@ -21,87 +35,3 @@
 .thumbnail {
     margin-bottom: 0;
 }
-
-div.thumbnail > div {
-    height: 250px;
-}
-
-/* Shorten long names with ellipses */
-.thumbnail h4 {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.thumbnail img {
-    max-height: 250px;
-    width: auto;
-    height: auto;
-    display: block;
-}
-
-.information-img {
-    max-width: 100%;
-    max-height: 500px;
-    display: block;
-}
-
-.dropdown-menu {
-    max-height: 350px;
-    overflow: hidden;
-    overflow-y: auto;
-}
-
-img.reader-image {
-    max-width: 100%;
-    max-height: 100%;
-    height: auto;
-    width: auto;
-}
-
-
-@media (max-width: 767px) /* @grid-float-breakpoint -1 */
-{
-    .navbar-fixed-top
-    {
-    position: relative;
-    top: auto;
-    }
-}
-
-/*
-
-html body {
-    background-color: #1f1f1f !important;
-}
-
-.panel {
-    background-color: #1f1f1f !important;
-}
-
-.panel > .panel-body {
-    background-color: #1f1f1f !important;
-}
-
-.panel > .panel-heading {
-    background-color: #333 !important;
-}
-
-.panel-default, .panel-heading {
-    border-color: #333 !important;
-}
-
-.text {
-    position: absolute;
-    text-align: center;
-}
-
-.center {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-a.thumbnail{
-    background-color: #333 !important;
-}
-*/

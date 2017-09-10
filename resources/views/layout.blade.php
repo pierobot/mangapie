@@ -65,13 +65,6 @@
                     </ul>
                 </li>
 
-                {{-- <li>
-                    <a href="{{ URL::action('UserSettingsController@index') }}"><span class="glyphicon glyphicon-cog"></span> Settings</a>
-                </li>
-
-                <li>
-                    <a href="{{ URL::action('LoginController@logout') }}"><span class="glyphicon glyphicon-off"></span> Logout</a>
-                </li> --}}
             @endif
             </ul>
         </div>

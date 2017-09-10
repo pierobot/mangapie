@@ -1,0 +1,22 @@
+.set-cover {
+    height: 310px;
+    max-width: 100%;
+}
+
+.set-cover img {
+    max-height: 250px;
+    max-width: 100%;
+    display: block;
+}
+
+.information-img {
+    max-width: 100%;
+    max-height: 500px;
+    display: block;
+}
+
+.thumbnail h4 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
