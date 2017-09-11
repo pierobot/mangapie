@@ -90,7 +90,7 @@ class Manga extends Model
             return false;
 
         usort($images, function ($left, $right) {
-            // all the entries should be good, as verified in above loop
+
             $left_tokens = $this->getNumberTokens($left['name']);
             $right_tokens = $this->getNumberTokens($right['name']);
             if ($left_tokens === false || $right_tokens === false)

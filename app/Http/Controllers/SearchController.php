@@ -18,7 +18,7 @@ class SearchController extends Controller
 
     public function index() {
         $genres = Genre::all();
-        
+
         return view('search.index', compact('genres'));
     }
 
@@ -26,7 +26,7 @@ class SearchController extends Controller
         // if the query is empty, then redirect to the advanced search page
         if ($query == null)
             return \Redirect::action('SearchController@index');
-        
+
         $user = \Auth::user();
         $library_ids = LibraryPrivilege::getIds($user->getId());
         $libraries = null;
@@ -34,12 +34,12 @@ class SearchController extends Controller
         if ($user->isAdmin() == true) {
             $manga_list = Manga::search($query)
                                ->orderBy('name', 'asc')
-                               ->get();
+                               ->paginate(18);
             $libraries = Library::all();
         } else {
             $manga_list = Manga::search($query)->whereIn('library_id', $library_ids)
                                ->orderBy('name', 'asc')
-                               ->get();
+                               ->paginate(18);
 
             $libraries = Library::whereIn('id', $library_ids)->get();
         }
@@ -48,7 +48,7 @@ class SearchController extends Controller
     }
 
     private function doAdvancedSearch($query, $genres) {
-        
+
     }
 
     public function search(Request $request) {
@@ -70,7 +70,7 @@ class SearchController extends Controller
         elseif ($type == 'advanced') {
             return $this->doAdvancedSearch($query, $genres);
         }
-        
+
         return \Redirect::action('SearchController@index');
     }
 }
