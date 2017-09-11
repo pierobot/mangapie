@@ -57,6 +57,10 @@
 
     </div>
 
+    <div class="text-center">
+        {{ $manga_list->render() }}
+    </div>
+
 
 {{-- Render the navigation control only if there is more than one page of results --}}
 {{--
