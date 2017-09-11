@@ -20,21 +20,6 @@ class MangaController extends Controller
     public function __construct() {
 
         $this->middleware('auth');
-
-        if (Manga::count() == 0) {
-            if (Library::count() == 0) {
-                foreach (\Config::get('mangapie.libraries') as $library_cfg) {
-                    $library = Library::updateOrCreate([
-                        'name' => $library_cfg['name'],
-                        'path' => $library_cfg['path']
-                    ]);
-                }
-
-                foreach (Library::all() as $library) {
-                    $library->scan();
-                }
-            }
-        }
     }
 
     public function index() {
@@ -52,7 +37,7 @@ class MangaController extends Controller
             $manga_list = Manga::whereIn('library_id', $library_ids)->orderBy('name', 'asc')->get();
             $libraries = Library::whereIn('id', $library_ids)->get();
         }
- 
+
         return view('manga.index', compact('manga_list', 'libraries'));
     }
 
@@ -60,7 +45,7 @@ class MangaController extends Controller
 
         $user = \Auth::user();
         $can_access = false;
-        
+
         // check if the user has sufficient privileges
         if ($user->isAdmin() == true) {
             // admin can always access everything
@@ -111,7 +96,7 @@ class MangaController extends Controller
             //     'Content-Type' => \File::mimeType($thumbnail_path),
             //     'Content-Length' => \File::size($thumbnail_path)
             // ];
-            
+
             // return \Response::stream(function () use($thumbnail_path) {
             //         if ($file = fopen($thumbnail_path, 'rb')) {
             //             fpassthru($file);
