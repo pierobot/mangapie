@@ -24,7 +24,7 @@ class ThumbnailController extends Controller
 
     public function small($manga_id, $archive_name, $page)
     {
-        return \Cache::remember(request()->fullUrl(), 1440, function () use ($manga_id, $archive_name, $page) {
+        return \Cache::rememberForever(request()->fullUrl(), function () use ($manga_id, $archive_name, $page) {
 
                    $manga = Manga::find($manga_id);
                    if ($manga == null) {
@@ -50,7 +50,7 @@ class ThumbnailController extends Controller
 
     public function medium($manga_id, $archive_name, $page)
     {
-        return \Cache::remember(request()->fullUrl(), 1440, function () use ($manga_id, $archive_name, $page) {
+        return \Cache::rememberForever(request()->fullUrl(), function () use ($manga_id, $archive_name, $page) {
 
                    $manga = Manga::find($manga_id);
                    if ($manga == null) {
@@ -72,5 +72,11 @@ class ThumbnailController extends Controller
     public function mediumDefault($manga_id)
     {
         return $this->medium($manga_id, null, 1);
+    }
+
+    public function update(Request $request)
+    {
+        dd($request->all());
+        return \Redirect::action('MangaInformationController@index')->withInput();
     }
 }
