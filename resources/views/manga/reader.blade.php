@@ -5,18 +5,18 @@
 @endsection
 
 @section ('custom_navbar_right')
-    <!-- <li class="clickable navbar-link"><a href="{{ \Config::get('mangapie.app_url') }}/information/{{ $id }}"><span class="glyphicon glyphicon-book white"></span> Information</a></li> -->
     <li class="clickable navbar-link"><a href="{{ URL::action('MangaInformationController@index', [$id]) }}"><span class="glyphicon glyphicon-book white"></span> Information</a></li>
+
 @if ($page_count !== false)
     @if ($page == $page_count)
-    <li class="navbar-link disabled"><a href="#" id="next-image"><span class="glyphicon glyphicon-chevron-left white"></span> Next</a></li>
+        <li class="navbar-link disabled"><a href="#" id="next-image"><span class="glyphicon glyphicon-chevron-left white"></span> Next</a></li>
     @else
-    <li class="clickable navbar-link"><a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive_name), $page + 1]) }}" id="next-image"><span class="glyphicon glyphicon-chevron-left white"></span> Next</a></li>
+        <li class="clickable navbar-link"><a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive_name), $page + 1]) }}" id="next-image"><span class="glyphicon glyphicon-chevron-left white"></span> Next</a></li>
     @endif
     @if ($page == 1)
-    <li class="navbar-link disabled"><a href="#" id="prev-image"><span class="glyphicon glyphicon-chevron-right white"></span> Previous</a></li>
+        <li class="navbar-link disabled"><a href="#" id="prev-image"><span class="glyphicon glyphicon-chevron-right white"></span> Previous</a></li>
     @else
-    <li class="clickable navbar-link"><a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive_name), $page - 1]) }}" id="prev-image"><span class="glyphicon glyphicon-chevron-right white"></span> Previous</a></li>
+        <li class="clickable navbar-link"><a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive_name), $page - 1]) }}" id="prev-image"><span class="glyphicon glyphicon-chevron-right white"></span> Previous</a></li>
     @endif
 
     <li class="dropdown">
@@ -57,7 +57,6 @@
     @elseif ($prev_url === true && $next_url === false && $page < $page_count)
         <a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive_name), $page - 1]) }}">
     @endif
-            {{-- Html::image(URL::action('ReaderController@image', [$id, $archive_name, $page]), 'image', ['class' => 'swipe img-responsive center-block']) --}}
             {{ Html::image(URL::action('ReaderController@image', [$id, rawurlencode($archive_name), $page]), 'image', ['class' => 'reader-image center-block']) }}
         </a>
     </div>

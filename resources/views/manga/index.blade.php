@@ -61,36 +61,4 @@
         {{ $manga_list->render() }}
     </div>
 
-
-{{-- Render the navigation control only if there is more than one page of results --}}
-{{--
-@if ($pagination->lastPage() > 1)
-
-<nav aria-label="Navigation">
-
-    <ul class="pagination">
-
-        <li>
-            <a href="#{{ $pagination->url(1) }}" aria-label="First">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        <li>
-
-        @foreach ($pagination as $page)
-
-        @endforeach
-
-        <li>
-            <a href="{{ $pagination->lastPage() }}" aria-label="Last">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
-
-    </ul>
-
-</nav>
-
-@endif
---}}
-
 @endsection
