@@ -44,7 +44,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if ($exception instanceof TokenMismatchException) {
+        if ($exception instanceof \Illuminate\Session\TokenMismatchException) {
 
             \Auth::logout();
             \Session::flash('login-failure', 'Your session has expired. Please log-in again.');
