@@ -86,6 +86,11 @@ class MangaInformationController extends Controller
     }
 
     public function update(Request $request) {
+
+        if (\Auth::user()->isAdmin() == false) {
+            return view('errors.403');
+        }
+
         // Ensure the form data is valid
         $this->validate($request, [
             'id' => 'integer|required',
