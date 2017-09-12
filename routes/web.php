@@ -47,4 +47,5 @@ Route::post('/user/settings', 'UserSettingsController@update');
 Route::get('/thumbnail/small/{id}', 'ThumbnailController@smallDefault');
 Route::get('/thumbnail/medium/{id}', 'ThumbnailController@mediumDefault');
 Route::get('/thumbnail/small/{id}/{archive_name}/{page}', 'ThumbnailController@small')->where('archive_name', ".*");;
-Route::get('/thumbnail/medium/{id}/{archive_name}/{page}', 'ThumbnailController@medium')->where('archive_name', ".*");;
+Route::get('/thumbnail/medium/{id}/{archive_name}/{page}', 'ThumbnailController@medium')->where('archive_name', ".*");
+Route::post('/thumbnail/update', 'ThumbnailController@update');
