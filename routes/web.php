@@ -16,20 +16,24 @@ Route::post('/login', ['as' => 'login', 'uses' => 'LoginController@login']);
 Route::get('/logout', ['as' => 'logout', 'uses' => 'LoginController@logout']);
 
 Route::get('/', 'MangaController@index');
-Route::get('/browse/{page}', 'MangaController@show');
-Route::get('/browse/library/{id}', 'MangaController@library');
-Route::get('/thumbnail/{id}', 'MangaController@thumbnail');
+Route::get('/browse/{page}', 'MangaController@show')->where('page', '\d+');
+Route::get('/browse/library/{id}', 'MangaController@library')->where('id', '\d+');
+Route::get('/thumbnail/{id}', 'MangaController@thumbnail')->where('id', '\d+');
 
 Route::get('/search', 'SearchController@index');
 Route::post('/search', 'SearchController@search');
 
-Route::get('/information/{id}', 'MangaInformationController@index');
+Route::get('/information/{id}', 'MangaInformationController@index')->where('id', '\d+');
 Route::post('/information', 'MangaInformationController@update');
 
-Route::get('/genre/{id}', 'GenreController@index');
+Route::get('/genre/{id}', 'GenreController@index')->where('id', '\d+');
 
-Route::get('/reader/{id}/{archive_name}/{page}', 'ReaderController@index')->where('archive_name', ".*");
-Route::get('/image/{id}/{archive_name}/{page}', 'ReaderController@image')->where('archive_name', ".*");
+Route::get('/reader/{id}/{archive_name}/{page}', 'ReaderController@index')->where('id', '\d+')
+                                                                          ->where('archive_name', '.+')
+                                                                          ->where('page', '\d+');
+Route::get('/image/{id}/{archive_name}/{page}', 'ReaderController@image')->where('id', '\d+')
+                                                                         ->where('archive_name', '.+')
+                                                                         ->where('page', '\d+');
 
 Route::get('/admin', 'AdminController@index');
 Route::get('/admin/users', 'AdminController@users');
@@ -44,8 +48,12 @@ Route::post('/library/update', 'LibraryController@update');
 Route::get('/user/settings', 'UserSettingsController@index');
 Route::post('/user/settings', 'UserSettingsController@update');
 
-Route::get('/thumbnail/small/{id}', 'ThumbnailController@smallDefault');
-Route::get('/thumbnail/medium/{id}', 'ThumbnailController@mediumDefault');
-Route::get('/thumbnail/small/{id}/{archive_name}/{page}', 'ThumbnailController@small')->where('archive_name', ".*");;
-Route::get('/thumbnail/medium/{id}/{archive_name}/{page}', 'ThumbnailController@medium')->where('archive_name', ".*");
+Route::get('/thumbnail/small/{id}', 'ThumbnailController@smallDefault')->where('id', '\d+');
+Route::get('/thumbnail/medium/{id}', 'ThumbnailController@mediumDefault')->where('id', '\d+');
+Route::get('/thumbnail/small/{id}/{archive_name}/{page}', 'ThumbnailController@small')->where('id', '\d+')
+                                                                                      ->where('archive_name', '.+')
+                                                                                      ->where('page', '\d+');
+Route::get('/thumbnail/medium/{id}/{archive_name}/{page}', 'ThumbnailController@medium')->where('id', '\d+')
+                                                                                        ->where('archive_name', '.+')
+                                                                                        ->where('page', '\d+');
 Route::post('/thumbnail/update', 'ThumbnailController@update');

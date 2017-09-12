@@ -194,7 +194,7 @@
                                                     <div>
                                                         {{ Html::image(URL::action('ThumbnailController@small', [
                                                                            $id,
-                                                                           $archive['name'],
+                                                                           rawurlencode($archive['name']),
                                                                            $i]), null, ['class' => 'center-block'])
                                                         }}
                                                     </div>
