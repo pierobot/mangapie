@@ -35,7 +35,9 @@
 
             <li class="active"><a href="#information-content" data-toggle="tab"><span class="glyphicon glyphicon-info-sign"></span> Information</a></li>
             <li><a href="#files-content" data-toggle="tab"><span class="glyphicon glyphicon-folder-open"></span> Files</a></li>
+            @if (\Auth::user()->isAdmin() == true)
             <li><a href="#edit-content" data-toggle="tab"><span class="glyphicon glyphicon-pencil"></span> Edit</a></li>
+            @endif
 
         </ul>
 
@@ -135,6 +137,7 @@
 
             </div>
 
+            @if (\Auth::user()->isAdmin() == true)
             <div class="tab-pane" id="edit-content">
 
                 <ul class="list-group">
@@ -215,6 +218,7 @@
                 </li>
 
             </div>
+            @endif
 
         </div>
 

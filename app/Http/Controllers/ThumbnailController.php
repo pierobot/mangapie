@@ -104,6 +104,10 @@ class ThumbnailController extends Controller
 
     public function update(Request $request)
     {
+        if (\Auth::user()->isAdmin() == false) {
+            return view('errors.403');
+        }
+
         $validator = \Validator::make($request->all(), [
             'id' => 'required|integer',
             'archive_name' => 'required|string',
