@@ -104,7 +104,7 @@ class ThumbnailController extends Controller
 
     public function update(Request $request)
     {
-        if (\Auth::user()->isAdmin() == false) {
+        if (\Auth::user()->isAdmin() == false && \Auth::user()->isMaintainer() == false) {
             return view('errors.403');
         }
 

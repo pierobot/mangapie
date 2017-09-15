@@ -63,6 +63,20 @@
                     </li>
 
                     <li class="list-group-item">
+                        <h4>Roles</h4>
+
+                        <div class="row">
+                            <div class="form-group col-xs-12 col-lg-6">
+                                {{ Form::checkbox('admin', 1, ['class' => 'form-control']) }}
+                                {{ Form::label('admin-label', 'Admin', ['for' => 'admin']) }}
+
+                                {{ Form::checkbox('maintainer', 1, ['class' => 'form-control']) }}
+                                {{ Form::label('maintainer-label', 'Maintainer', ['for' => 'maintainer']) }}
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="list-group-item">
                         <div class="row">
                             <div class="col-xs-4 col-lg-3">
                                 {{ Form::submit('Create', ['class' => 'btn btn-success']) }}

@@ -54,7 +54,9 @@ class AdminController extends Controller
             'name' => 'required|string|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|string',
-            'libraries' => 'required|array'
+            'libraries' => 'required|array',
+            'admin' => 'boolean',
+            'maintainer' => 'boolean'
         ]);
 
         if ($validator->fails())
@@ -65,7 +67,8 @@ class AdminController extends Controller
             'name' => \Input::get('name'),
             'email' => \Input::get('email'),
             'password' => \Hash::make(\Input::get('password')),
-            'admin' => false
+            'admin' => \Input::get('admin') == null ? false : \Input::get('admin'),
+            'maintainer' => \Input::get('maintainer') == null ? false : \Input::get('maintainer')
         ]);
 
         if ($user != null) {
@@ -73,7 +76,7 @@ class AdminController extends Controller
             foreach (\Input::get('libraries') as $library_id) {
                 if (Library::find($library_id) == null)
                     continue;
-                
+
                 LibraryPrivilege::create([
                     'user_id' => $user->getId(),
                     'library_id' => $library_id
