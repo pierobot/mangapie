@@ -48,7 +48,7 @@
                 <ul class="list-group">
 
                     <li class="list-group-item">
-                        <h4><span class="glyphicon glyphicon-info-sign"></span> Description</h4>
+                        <h4><span class="glyphicon glyphicon-info-sign"></span>&nbsp;Description</h4>
                     @if ($description != null)
                         {!! Html::decode($description) !!}
                     @else
@@ -57,7 +57,7 @@
                     @endif
 
                     <li class="list-group-item">
-                        <h4><span class="glyphicon glyphicon-book"></span> Type</h4>
+                        <h4><span class="glyphicon glyphicon-book"></span>&nbsp;Type</h4>
                     @if ($type != null)
                         <span class="label label-default">{{ $type }}</span>
                     @else
@@ -66,7 +66,7 @@
                     </li>
 
                     <li class="list-group-item">
-                        <h4><span class="glyphicon glyphicon-list-alt"></span> Associated Names</h4>
+                        <h4><span class="glyphicon glyphicon-list-alt"></span>&nbsp;Associated Names</h4>
                     @if ($assoc_names != null)
                         @foreach ($assoc_names as $assoc_name)
                             <span class="label label-default">{{ $assoc_name->getName() }}</span>
@@ -77,7 +77,7 @@
                     </li>
 
                     <li class="list-group-item">
-                        <h4><span class="glyphicon glyphicon-tags"></span> Genres</h4>
+                        <h4><span class="glyphicon glyphicon-tags"></span>&nbsp;Genres</h4>
                     @if ($genres != null)
                         @foreach ($genres as $genre)
                             <span class="label label-default">{{ $genre }}</span>
@@ -88,7 +88,7 @@
                     </li>
 
                     <li class="list-group-item">
-                        <h4><span class="glyphicon glyphicon-user"></span> Authors</h4>
+                        <h4><span class="glyphicon glyphicon-user"></span>&nbsp;Authors</h4>
                     @if ($authors != null)
                         @foreach ($authors as $author)
                             <span class="label label-default">{{ $author->getName() }}</span>
@@ -99,7 +99,7 @@
                     </li>
 
                     <li class="list-group-item">
-                        <h4><span class="glyphicon glyphicon-user"></span> Artists</h4>
+                        <h4><span class="glyphicon glyphicon-user"></span>&nbsp;Artists</h4>
                     @if ($artists != null)
                         @foreach ($artists as $artist)
                             <span class="label label-default">{{ $artist->getName() }}</span>
@@ -110,13 +110,20 @@
                     </li>
 
                     <li class="list-group-item">
-                        <h4><span class="glyphicon glyphicon-calendar"></span> Year</h4>
+                        <h4><span class="glyphicon glyphicon-calendar"></span>&nbsp;Year</h4>
                     @if ($year != null)
                         <span class="label label-default">{{ $year }}</span>
                     @else
                         Unable to find year.
                     @endif
                     </li>
+
+                    @if (\Auth::user()->isAdmin() == true)
+                    <li class="list-group-item">
+                        <h4><span class="glyphicon glyphicon-hdd"></span>&nbsp;Path</h4>
+                        {{ $path }}
+                    </li>
+                    @endif
 
                 </ul>
             </div>
