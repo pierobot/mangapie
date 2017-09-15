@@ -48,6 +48,7 @@ class MangaInformationController extends Controller
         }
 
         $name = $manga->getName();
+        $path = $manga->getPath();
         $archives = $manga->getArchives();
 
         // These are passed to the blade template even if there is no MU information
@@ -82,7 +83,8 @@ class MangaInformationController extends Controller
                                                  'authors',
                                                  'artists',
                                                  'year',
-                                                 'archives'));
+                                                 'archives',
+                                                 'path'));
     }
 
     public function update(Request $request) {
