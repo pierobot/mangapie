@@ -6,7 +6,7 @@
 
 @section ('stylesheets')
 
-    <link href="{{ URL::to('/public/css/admin.css') rel="stylesheet">
+    <link href="{{ URL::to('/public/css/admin.css') }}" rel="stylesheet">
 
 @endsection
 
