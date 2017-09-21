@@ -49,7 +49,7 @@
             </a>
         </div>
 
-        <h4>{{ $manga->name }}</h4>
+        <h4><a href="{{ URL::action('MangaInformationController@index', [$manga->id]) }}">{{ $manga->name }}</a></h4>
 
     </div>
 
