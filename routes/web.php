@@ -23,7 +23,8 @@ Route::get('/thumbnail/{id}', 'MangaController@thumbnail')->where('id', '\d+');
 Route::get('/search', 'SearchController@index');
 Route::post('/search', 'SearchController@search');
 
-Route::get('/information/{id}', 'MangaInformationController@index')->where('id', '\d+');
+Route::get('/information/{id}/{sort?}', 'MangaInformationController@index')->where('id', '\d+')
+                                                                           ->where('sort', 'ascending|descending');
 Route::post('/information', 'MangaInformationController@update');
 
 Route::get('/genre/{id}', 'GenreController@index')->where('id', '\d+');

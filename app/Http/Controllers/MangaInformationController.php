@@ -18,7 +18,7 @@ class MangaInformationController extends Controller
         $this->middleware('auth');
     }
 
-    public function index($id) {
+    public function index($id, $sort = 'ascending') {
         $manga = Manga::find($id);
         $manga_info = MangaInformation::find($id);
         $genre_count = Genre::count();
@@ -49,7 +49,7 @@ class MangaInformationController extends Controller
 
         $name = $manga->getName();
         $path = $manga->getPath();
-        $archives = $manga->getArchives();
+        $archives = $manga->getArchives($sort);
 
         // These are passed to the blade template even if there is no MU information
         $mu_id = null;
@@ -84,7 +84,8 @@ class MangaInformationController extends Controller
                                                  'artists',
                                                  'year',
                                                  'archives',
-                                                 'path'));
+                                                 'path',
+                                                 'sort'));
     }
 
     public function update(Request $request) {
