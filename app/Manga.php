@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
 use \Symfony\Component\Finder\Finder;
+use \Carbon\Carbon;
 
 use \App\ArtistReference;
 use \App\AuthorReference;
@@ -137,7 +138,18 @@ class Manga extends Model
         ];
     }
 
-    public function getArchives() {
+    private function convertSizeToReadable($bytes)
+    {
+        $sizes = [ 'B', 'KB', 'MB', 'GB' ];
+
+        for ($i = 0; $bytes > 1024; $i++) {
+            $bytes /= 1024;
+        }
+
+        return round($bytes, 2) . ' ' . $sizes[$i];
+    }
+
+    public function getArchives($sort) {
 
         // get all the files in the path and filter by archives
         $files = Finder::create()->in($this->path)
@@ -147,7 +159,7 @@ class Manga extends Model
                                  ->name('*.cbr');
 
         // sort by number tokens
-        $files->sort(function ($left, $right) {
+        $files->sort(function ($left, $right) use ($sort) {
             $left_tokens = $this->getNumberTokens($left->getFilename());
             $right_tokens = $this->getNumberTokens($right->getFilename());
 
@@ -163,22 +175,28 @@ class Manga extends Model
                 $right_token = $right_tokens[$i];
 
                 if ($left_token < $right_token)
-                    return -1;
+                    return $sort == 'ascending' ? -1 : 1;
                 elseif ($left_token > $right_token)
-                    return 1;
+                    return $sort == 'ascending' ? 1 : -1;
             }
 
             // if we reach here, then all the tokens up to $min_token_count are equal
             if ($left_token_count == $right_token_count)
                 return 0;
 
-            return $left_token_count < $right_token_count ? -1 : 1;
+            if ($left_token_count < $right_token_count)
+                return $sort == 'ascending' ? -1 : 1;
+            else
+                return $sort == 'ascending' ? 1 : -1;
         });
 
         $archives = [];
         foreach ($files as $file) {
             $archive = [];
             $archive['name'] = $file->getRelativePathname();
+            $archive['size'] = $this->convertSizeToReadable($file->getSize());
+            $time = Carbon::createFromTimestamp($file->getMTime());
+            $archive['modified'] = $time->toDateTimeString();
 
             array_push($archives, $archive);
         }
