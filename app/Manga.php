@@ -19,18 +19,18 @@ class Manga extends Model
     //
     protected $fillable = ['name', 'path', 'library_id'];
 
-    public function scopeSearch($query, $value) {
-
+    public function scopeSearch($query, $value)
+    {
         return empty($value) ? $query : $query->whereRaw("match(name) against(? in boolean mode)", [$value]);
     }
 
-    public function scopeFromLibrary($library_ids) {
-
+    public function scopeFromLibrary($library_ids)
+    {
         return Manga::whereIn('library_id', $library_ids);
     }
 
-    private function getNumberTokens($name) {
-
+    private function getNumberTokens($name)
+    {
         if (mb_ereg_search_init($name, "\\d+") === false)
             return false;
 
@@ -50,8 +50,8 @@ class Manga extends Model
         return empty($tokens) != true ? $tokens : false;
     }
 
-    private function getMIME($image_name) {
-
+    private function getMIME($image_name)
+    {
         $image_extensions = [
             'jpg' => 'image/jpeg',
             'jpeg' => 'image/jpeg',
@@ -66,8 +66,8 @@ class Manga extends Model
         return array_key_exists($extension, $image_extensions) == true ? $image_extensions[$extension] : false;
     }
 
-    public function getImage($archive_name, $page) {
-
+    public function getImage($archive_name, $page)
+    {
         if ($page < 1)
             return false;
 
@@ -149,8 +149,8 @@ class Manga extends Model
         return round($bytes, 2) . ' ' . $sizes[$i];
     }
 
-    public function getArchives($sort) {
-
+    public function getArchives($sort = 'ascending')
+    {
         // get all the files in the path and filter by archives
         $files = Finder::create()->in($this->path)
                                  ->name('*.zip')
@@ -204,28 +204,28 @@ class Manga extends Model
         return $archives;
     }
 
-    public function getId() {
-
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getName() {
-
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function getPath() {
-
+    public function getPath()
+    {
         return $this->path;
     }
 
-    public function getLibraryId() {
-
+    public function getLibraryId()
+    {
         return $this->library_id;
     }
 
-    public function forceDelete() {
-
+    public function forceDelete()
+    {
         // delete all information and references that belongs to this manga
 
         $id = $this->getId();
