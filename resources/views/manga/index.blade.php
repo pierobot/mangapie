@@ -48,12 +48,12 @@
     <div class="col-lg-2 col-sm-4 col-xs-6 text-center thumbnail center">
 
         <div>
-            <a href="{{ URL::action('MangaInformationController@index', [$manga->id]) }}">
-                {{ Html::image(URL::action('ThumbnailController@smallDefault', [$manga->id])) }}
+            <a href="{{ URL::action('MangaInformationController@index', [$manga->getId()]) }}">
+                {{ Html::image(URL::action('ThumbnailController@smallDefault', [$manga->getId()])) }}
             </a>
         </div>
 
-        <h4><a href="{{ URL::action('MangaInformationController@index', [$manga->id]) }}">{{ $manga->name }}</a></h4>
+        <h4 title="{{ $manga->getName() }}"><a href="{{ URL::action('MangaInformationController@index', [$manga->id]) }}">{{ $manga->getName() }}</a></h4>
 
     </div>
 
