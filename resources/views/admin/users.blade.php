@@ -1,6 +1,6 @@
 @extends ('layout')
 @section ('title')
-:: Users
+    Admin &middot; Users
 @endsection
 
 @section ('content')

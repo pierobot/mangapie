@@ -1,7 +1,7 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title>MangaPie @yield ('title')</title>
+    <title>@yield ('title')</title>
 
     @if (\Auth::user() == null)
         <link href="{{ URL::to('/public/themes/bootswatch/slate/bootstrap.min.css') }}" rel="stylesheet">
