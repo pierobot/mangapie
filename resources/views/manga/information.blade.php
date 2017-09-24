@@ -1,5 +1,9 @@
 @extends ('layout')
 
+@section ('title')
+    Information &middot; {{ $name }}
+@endsection
+
 @section ('stylesheets')
     <link href="{{ URL::to('/public/css/manga/information.css') }}" rel="stylesheet">
 @endsection

@@ -1,7 +1,7 @@
 @extends ('layout')
 
 @section ('title')
-:: Dashboard
+    Admin &middot; Dashboard
 @endsection
 
 @section ('stylesheets')

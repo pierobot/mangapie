@@ -1,7 +1,11 @@
 @extends ('layout')
 
+@section ('title')
+    Index
+@endsection
+
 @section ('stylesheets')
-        <link href="{{ URL::to('/public/css/manga/index.css') }}" rel="stylesheet">
+    <link href="{{ URL::to('/public/css/manga/index.css') }}" rel="stylesheet">
 @endsection
 
 @section ('custom_navbar_right')

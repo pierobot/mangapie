@@ -1,7 +1,7 @@
 @extends ('layout')
 
 @section ('title')
-:: Settings
+    Settings &middot; {{ \Auth::user()->getName() }}
 @endsection
 
 @section ('content')

@@ -33,6 +33,7 @@ class ReaderController extends Controller
     public function index($id, $archive_name, $page)
     {
         $manga = Manga::find($id);
+        $name = $manga->getName();
         // This controller/view implements a custom navbar
         $custom_navbar = true;
 
@@ -94,6 +95,7 @@ class ReaderController extends Controller
         }
 
         return view('manga.reader', compact('id',
+                                            'name',
                                             'archive_name',
                                             'custom_navbar',
                                             'page',

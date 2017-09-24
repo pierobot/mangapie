@@ -1,5 +1,9 @@
 @extends('layout')
 
+@section ('title')
+    Login
+@endsection
+
 @section ('content')
 
 <div class="panel panel-default center-block" style="max-width:600px">

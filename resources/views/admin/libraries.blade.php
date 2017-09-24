@@ -1,13 +1,13 @@
 @extends ('layout')
 
 @section ('title')
-:: Libraries
+    Admin &middot; Libraries
 @endsection
 
 @section ('content')
 
     <div class="panel panel-default">
-                
+
         <div class="panel-heading">
             <h2 class="panel-title">Libraries</h2>
         </div>
@@ -18,7 +18,7 @@
 
                 <li class="active"><a href="#create-content" data-toggle="tab"><span class="glyphicon glyphicon-plus"></span> Create</a></li>
                 <li><a href="#edit-content" data-toggle="tab"><span class="glyphicon glyphicon-pencil"></span> Edit</a></li>
-            
+
             </ul>
 
             <div class="tab-content">
@@ -48,7 +48,7 @@
                             </div>
 
                         @if ($errors->create->count() > 0)
-                        
+
                             <div class="alert alert-danger">
                                 <ul>
                                     @foreach ($errors->create->all() as $error)
@@ -59,7 +59,7 @@
 
                         @endif
                         </li>
-                        
+
                         {{ Form::close() }}
 
                         @if (\Session::has('library-create-success'))
@@ -83,7 +83,7 @@
                     <ul class="list-group">
 
                         {{ Form::open(['action' => 'LibraryController@update']) }}
-                        
+
                         <li class="list-group-item">
 
                             <div class="row">

@@ -1,5 +1,9 @@
 @extends ('layout')
 
+@section ('title')
+    Reader &middot; {{ $name }}
+@endsection
+
 @section ('stylesheets')
     <link href="{{ URL::to('/public/css/manga/reader.css') }}" rel="stylesheet">
 @endsection
