@@ -17,13 +17,14 @@ class MangaController extends Controller
 {
     //public $perPage = 25;
 
-    public function __construct() {
+    public function __construct()
+    {
 
         $this->middleware('auth');
     }
 
-    public function index() {
-
+    public function index()
+    {
         $user = \Auth::user();
         $libraries = null;
 
@@ -43,8 +44,8 @@ class MangaController extends Controller
         return view('manga.index', compact('manga_list', 'libraries'));
     }
 
-    public function library($id) {
-
+    public function library($id)
+    {
         $user = \Auth::user();
         $can_access = false;
 
@@ -80,8 +81,8 @@ class MangaController extends Controller
                                      view('error.403');
     }
 
-    public function thumbnail($id) {
-
+    public function thumbnail($id)
+    {
         $manga = Manga::find($id);
         if ($manga !== null) {
             $thumbnail_path = $manga->path . "/folder.jpg";
@@ -94,25 +95,6 @@ class MangaController extends Controller
                 }
             }
 
-            // $headers = [
-            //     'Content-Type' => \File::mimeType($thumbnail_path),
-            //     'Content-Length' => \File::size($thumbnail_path)
-            // ];
-
-            // return \Response::stream(function () use($thumbnail_path) {
-            //         if ($file = fopen($thumbnail_path, 'rb')) {
-            //             fpassthru($file);
-            //             flush();
-            //             fclose($file);
-            //         }
-            //     },
-            //     200,
-            //     $headers
-            // );
-
-            //return $response;
-
-            //return file_get_contents($thumbnail_path);
             return response()->file($thumbnail_path);
         }
 

@@ -9,12 +9,13 @@ use \App\Library;
 
 class LibraryController extends Controller
 {
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware('auth');
     }
 
-    public function update(Request $request) {
-
+    public function update(Request $request)
+    {
         // Ensure the form data is valid
         $validator = \Validator::make($request->all(), [
             'action' => 'required|string|max:10',
@@ -57,8 +58,8 @@ class LibraryController extends Controller
         return \Redirect::action('AdminController@libraries');
     }
 
-    public function create(Request $request) {
-
+    public function create(Request $request)
+    {
         if (\Auth::user()->isAdmin() == false)
             return view('errors.403');
 

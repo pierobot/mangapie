@@ -12,17 +12,20 @@ use \App\LibraryPrivilege;
 class SearchController extends Controller
 {
     //
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware('auth');
     }
 
-    public function index() {
+    public function index()
+    {
         $genres = Genre::all();
 
         return view('search.index', compact('genres'));
     }
 
-    private function doBasicSearch($query) {
+    private function doBasicSearch($query)
+    {
         // if the query is empty, then redirect to the advanced search page
         if ($query == null)
             return \Redirect::action('SearchController@index');
@@ -47,11 +50,13 @@ class SearchController extends Controller
         return view('manga.index', compact('manga_list', 'libraries'));
     }
 
-    private function doAdvancedSearch($query, $genres) {
+    private function doAdvancedSearch($query, $genres)
+    {
 
     }
 
-    public function search(Request $request) {
+    public function search(Request $request)
+    {
         // Ensure the form data is valid
         $this->validate($request, [
             'type' => 'string|required',

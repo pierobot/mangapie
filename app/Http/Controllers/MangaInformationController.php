@@ -14,11 +14,13 @@ use \App\MangaUpdates;
 
 class MangaInformationController extends Controller
 {
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware('auth');
     }
 
-    public function index($id, $sort = 'ascending') {
+    public function index($id, $sort = 'ascending')
+    {
         $manga = Manga::find($id);
         $manga_info = MangaInformation::find($id);
         $genre_count = Genre::count();
@@ -88,8 +90,8 @@ class MangaInformationController extends Controller
                                                  'sort'));
     }
 
-    public function update(Request $request) {
-
+    public function update(Request $request)
+    {
         if (\Auth::user()->isAdmin() == false && \Auth::user()->isMaintainer() == false) {
             return view('errors.403');
         }

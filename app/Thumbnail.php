@@ -11,10 +11,10 @@ class Thumbnail
      *  Specifying a value for width or image and null for the other will
      *  result in a proportionally resized image.
      *
-     *  @param $contents The image buffer contents.
-     *  @param $width The desired width.
-     *  @param $height The desired height.
-     *  @return An instance of Intervention/Image that has been resized or FALSE on failure.
+     *  @param string $contents The image buffer contents.
+     *  @param int $width The desired width.
+     *  @param int $height The desired height.
+     *  @return mixed An instance of Intervention/Image that has been resized or FALSE on failure.
      */
     public static function make($contents, $width, $height)
     {

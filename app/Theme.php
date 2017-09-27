@@ -9,10 +9,11 @@ class Theme
     /**
      * Gets the path relative to the working directory of a theme.
      *
-     *  @param $name The name of the theme. (Ex: bootswatch/slate)
-     *  @return The path of the theme.
+     *  @param string $name The name of the theme. (Ex: bootswatch/slate)
+     *  @return string The path of the theme.
      */
-    public static function path($name) {
+    public static function path($name)
+    {
         if (empty($name) === true)
             return false;
 

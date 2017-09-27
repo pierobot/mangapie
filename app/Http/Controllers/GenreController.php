@@ -10,11 +10,13 @@ use \App\Genre;
 
 class GenreController extends Controller
 {
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware('auth');
     }
 
-    public function index($id) {
+    public function index($id)
+    {
         $genre = Genre::find($id);
 
         return $genre;

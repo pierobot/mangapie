@@ -10,11 +10,13 @@ use \App\User;
 
 class AdminController extends Controller
 {
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware('auth');
     }
 
-    public function index() {
+    public function index()
+    {
         if (\Auth::user()->isAdmin() == false)
             return view('errors.403');
 
@@ -28,7 +30,8 @@ class AdminController extends Controller
                                            'user_count'));
     }
 
-    public function users() {
+    public function users()
+    {
         if (\Auth::user()->isAdmin() == false)
             return view('errors.403');
 
@@ -37,7 +40,8 @@ class AdminController extends Controller
         return view('admin.users', compact('libraries'));
     }
 
-    public function libraries() {
+    public function libraries()
+    {
         if (\Auth::user()->isAdmin() == false)
             return view('errors.403');
 
@@ -46,7 +50,8 @@ class AdminController extends Controller
         return view('admin.libraries', compact('libraries'));
     }
 
-    public function createUser(Request $request) {
+    public function createUser(Request $request)
+    {
         if (\Auth::user()->isAdmin() == false)
             return view('errors.403');
 
@@ -89,7 +94,8 @@ class AdminController extends Controller
         return \Redirect::action('AdminController@users');
     }
 
-    public function editUser(Request $request) {
+    public function editUser(Request $request)
+    {
         if (\Auth::user()->isAdmin() == false)
             return view('errors.403');
 
@@ -111,7 +117,8 @@ class AdminController extends Controller
         return \Redirect::action('AdminController@users');
     }
 
-    public function deleteUser(Request $request) {
+    public function deleteUser(Request $request)
+    {
         if (\Auth::user()->isAdmin() == false)
             return view('errors.403');
 

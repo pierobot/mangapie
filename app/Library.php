@@ -11,23 +11,23 @@ class Library extends Model
     //
     protected $fillable = ['name', 'path'];
 
-    public function getId() {
-
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getName() {
-
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function getPath() {
-
+    public function getPath()
+    {
         return $this->path;
     }
 
-    public function scan() {
-
+    public function scan()
+    {
         // scan and add new directories
         foreach (\File::directories($this->getPath()) as $path) {
             $manga = Manga::updateOrCreate([
@@ -49,8 +49,8 @@ class Library extends Model
         }
     }
 
-    public function forceDelete() {
-
+    public function forceDelete()
+    {
         // get all the manga that have library_id to ours
         $manga = Manga::where('library_id', '=', $this->getId())->get();
         // and delete them

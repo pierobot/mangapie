@@ -7,17 +7,16 @@ use \App\IntlString;
 class JaroWinkler {
 
     // gets the maximum range two matching codepoints are allowed to be apart
-    private static function max_range($str1_len, $str2_len) {
-
+    private static function max_range($str1_len, $str2_len)
+    {
         return (int)(floor(max($str1_len, $str2_len) / 2)) - 1;
     }
 
     // gets the matching codepoints in an array
-    private static function matching_cp($str1, $str1_len, $str2, $str2_len, $range) {
-
+    private static function matching_cp($str1, $str1_len, $str2, $str2_len, $range)
+    {
         $matches = [];
         for ($i = 0, $current_1 = 0, $next_1 = 0; $i < $str1_len; $i++) {
-
 
             $g_1 = IntlString::grapheme($str1, ($current_1 = $next_1), $next_1);
             $cp_1 = \IntlChar::ord($g_1);
@@ -42,8 +41,8 @@ class JaroWinkler {
     }
 
     // gets the # of transpositions between two array of matching codepoints
-    private static function transpositions($cp_array1, $cp_array2) {
-
+    private static function transpositions($cp_array1, $cp_array2)
+    {
         $count = 0;
         $min = min(count($cp_array1), count($cp_array2));
 
@@ -57,8 +56,8 @@ class JaroWinkler {
     }
 
     // getst the prefix length to use
-    private static function prefix_len($str1, $str1_len, $str2, $str2_len, $default_len = 4) {
-
+    private static function prefix_len($str1, $str1_len, $str2, $str2_len, $default_len = 4)
+    {
         $min = min([$str1_len, $str2_len, $default_len]);
 
         for ($i = 0, $current_1 = 0, $current_2 = 0, $next_1 = 0, $next_2 = 0; $i < $min; $i++) {
@@ -75,18 +74,18 @@ class JaroWinkler {
         return $min;
     }
 
-    /*
+    /**
      *  Calculates the Jaro-Winkler distance between $str1 and $str2.
      *  The scaling factor will only be applied if the Jaro distance meets the threshold.
      *
-     *  @param $str1 A string.
-     *  @param $str2 A string.
-     *  @param $threshold The threshold to use.
-     *  @param $scaling_factor The scaling factor to use.
-     *  @return A number between 0 and 1. 0 Indicates no match. 1 indicates a perfect match.
+     *  @param string $str1 A string.
+     *  @param string $str2 A string.
+     *  @param float $threshold The threshold to use.
+     *  @param float $scaling_factor The scaling factor to use.
+     *  @return float A number between 0 and 1. 0 Indicates no match. 1 indicates a perfect match.
      */
-    public static function distance($str1, $str2, $threshold = 0.7, $scaling_factor = 0.1) {
-
+    public static function distance($str1, $str2, $threshold = 0.7, $scaling_factor = 0.1)
+    {
         // convert both strings to utf8
         $str1_utf8 = IntlString::convert($str1);
         $str2_utf8 = IntlString::convert($str2);

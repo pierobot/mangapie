@@ -10,8 +10,8 @@ class ImageArchiveZip implements ImageArchiveInterface
     private $m_file_path;
     private $m_zip;
 
-    public function __construct($file_path) {
-
+    public function __construct($file_path)
+    {
         $this->m_file_path = $file_path;
 
         $this->m_zip = new ZipArchive;
@@ -19,8 +19,8 @@ class ImageArchiveZip implements ImageArchiveInterface
             $this->m_zip = false;
     }
 
-    public function __destruct() {
-
+    public function __destruct()
+    {
         if ($this->m_zip !== false)
             $this->m_zip->close();
     }
@@ -28,20 +28,21 @@ class ImageArchiveZip implements ImageArchiveInterface
     /**
      *  Used to check whether construction was ok.
      *
-     *  @return TRUE if no errors occurred and FALSE otherwise.
+     *  @return bool TRUE if no errors occurred and FALSE otherwise.
      */
-    public function good() {
-
+    public function good()
+    {
         return $this->m_zip !== false;
     }
 
     /**
      *  Gets information about an entry at an index.
      *
-     *  @return An array containing zip_stat_t information or FALSE on failure.
+     *  @param int $index The index of the entry.
+     *  @return mixed An array containing zip_stat_t information or FALSE on failure.
      */
-    public function getInfo($index) {
-
+    public function getInfo($index)
+    {
         $stat = $this->m_zip->statIndex($index);
 
         return $stat;
@@ -50,12 +51,12 @@ class ImageArchiveZip implements ImageArchiveInterface
     /**
      *  Gets the contents of a file at an index.
      *
-     *  @param $index The index of the file.
-     *  @param &$size The variable that will hold the size of the contents.
-     *  @return The contents of the file or FALSE on failure.
+     *  @param int $index The index of the file.
+     *  @param int &$size The variable that will hold the size of the contents.
+     *  @return mixed The contents of the file or FALSE on failure.
      */
-    public function getContents($index, &$size) {
-
+    public function getContents($index, &$size)
+    {
         $images = $this->getImages();
         if ($images === false)
             return false;
@@ -76,11 +77,10 @@ class ImageArchiveZip implements ImageArchiveInterface
     /**
      *  Gets all the image entries in an archive.
      *
-     *  @param $filter A callback that determines whether a file is an image.
-     *  @return An array of entries or FALSE on failure.
+     *  @return mixed An array of entries or FALSE on failure.
      */
-    public function getImages() {
-
+    public function getImages()
+    {
         $images = [];
 
         for ($i = 0; $i < $this->m_zip->numFiles; $i++) {
