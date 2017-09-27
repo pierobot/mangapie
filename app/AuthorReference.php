@@ -9,11 +9,13 @@ class AuthorReference extends Model
     //
     protected $fillable = ['manga_id', 'author_id'];
 
-    public function getMangaId() {
+    public function getMangaId()
+    {
         return $this->manga_id;
     }
 
-    public function getAuthorId() {
+    public function getAuthorId()
+    {
         return $this->author_id;
     }
 }

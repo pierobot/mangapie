@@ -7,7 +7,8 @@ use Illuminate\Http\Request;
 class GenreInformationController extends Controller
 {
     //
-    public function __construct() {
+    public function __construct()
+    {
         $this->middleware('auth');
     }
 }

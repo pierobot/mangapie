@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use \App\Manga;
-use \App\ImageArchive;
 use \App\Thumbnail;
 
 /*
@@ -114,13 +113,13 @@ class ThumbnailController extends Controller
             'page' => 'required|integer',
         ]);
 
+        $id = \Input::get('id');
         if ($validator->fails()) {
 
             return \Redirect::action('MangaInformationController@index', [$id])
                             ->withErrors($validator, 'update');
         }
 
-        $id = \Input::get('id');
         $archive_name = \Input::get('archive_name');
         $page = \Input::get('page');
         // archive name and page are always null for the default thumbnail

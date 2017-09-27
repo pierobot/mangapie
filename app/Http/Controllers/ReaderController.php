@@ -3,10 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use \Symfony\Component\Finder\Finder;
 
 use \App\Manga;
-use \App\Library;
 use \App\ImageArchive;
 
 class ReaderController extends Controller

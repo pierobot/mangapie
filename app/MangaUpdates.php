@@ -6,15 +6,15 @@ use \App\IntlString;
 
 class MangaUpdates {
 
-    public static function genres() {
-
+    public static function genres()
+    {
         $contents = \Curl::to('https://www.mangaupdates.com/genres.html')->get();
 
         return MangaUpdates::genres_ex($contents);
     }
 
-    public static function genres_ex($contents) {
-
+    public static function genres_ex($contents)
+    {
         $genres_info = [];
         $genres_info_result = preg_match_all('/(<td class=(\"|\')releasestitle(\"|\').+?<b>(.+?)<\/b><\/td>)\s.+\s.+?\s.+?(<td class=(\"|\')text(\"|\') align=(\"|\').+?(\"|\')>(.+?)<br>)/', $contents, $genres_info);
         if ($genres_info_result == 0 || $genres_info_result === false)
@@ -59,8 +59,8 @@ class MangaUpdates {
         return $genres;
     }
 
-    public static function search($title, $page, $perpage = 25) {
-
+    public static function search($title, $page, $perpage = 25)
+    {
         $contents = \Curl::to('https://www.mangaupdates.com/series.html')->withData([
 
             'stype' => 'title',
@@ -72,8 +72,8 @@ class MangaUpdates {
         return MangaUpdates::search_ex($title, $contents);
     }
 
-    public static function search_ex($title, $contents) {
-
+    public static function search_ex($title, $contents)
+    {
         $results = [];
 
         $a_elements = [];
@@ -158,8 +158,8 @@ class MangaUpdates {
         return $results;
     }
 
-    public static function information($mu_id) {
-
+    public static function information($mu_id)
+    {
         $contents = \Curl::to('https://www.mangaupdates.com/series.html')->withData([
 
             'id' => $mu_id
@@ -168,8 +168,8 @@ class MangaUpdates {
         return MangaUpdates::information_ex($mu_id, $contents);
     }
 
-    public static function information_ex($mu_id, $contents) {
-
+    public static function information_ex($mu_id, $contents)
+    {
         $description = [];
         $description_result = preg_match_all('/<div class=(\"|\')sCat(\"|\')><b>Description<\/b><\/div>\s<div class=(\"|\')sContent(\"|\').+?\">(.+?)\s<\/div>/', $contents, $description);
         if ($description_result == 0 || $description_result === false)

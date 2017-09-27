@@ -16,8 +16,8 @@ interface ImageArchiveInterface
 
 class ImageArchive
 {
-    public static function getExtension($name) {
-
+    public static function getExtension($name)
+    {
         $extension_start = mb_strrpos($name, '.');
         if ($extension_start > 0) {
             return mb_strtolower(mb_substr($name, $extension_start + 1));
@@ -26,8 +26,8 @@ class ImageArchive
         return false;
     }
 
-    public static function isJunk($name) {
-
+    public static function isJunk($name)
+    {
         $all_junk = [
           '__MACOSX',
           '.DS_STORE'
@@ -47,8 +47,8 @@ class ImageArchive
         return false;
     }
 
-    public static function isImage($name) {
-
+    public static function isImage($name)
+    {
         // there are some images in junk folders that we don't care about
         if (ImageArchive::isJunk($name) === true) {
 
@@ -82,11 +82,11 @@ class ImageArchive
     /**
      *  Opens an archive for accessing image files.
      *
-     *  @param $file_path The file path to the archive.
-     *  @return An object that implements ImageArchiveInterface or FALSE on failure.
+     *  @param string $file_path The file path to the archive.
+     *  @return mixed An object that implements ImageArchiveInterface or FALSE on failure.
      */
-    public static function open($file_path) {
-
+    public static function open($file_path)
+    {
         $extension = ImageArchive::getExtension($file_path);
         if ($extension == 'zip' || $extension == 'cbz')
             return new ImageArchiveZip($file_path);

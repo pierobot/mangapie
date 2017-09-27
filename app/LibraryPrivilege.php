@@ -9,15 +9,18 @@ class LibraryPrivilege extends Model
     //
     protected $fillable = ['user_id', 'library_id'];
 
-    public function getUserId() {
+    public function getUserId()
+    {
         return $this->user_id;
     }
 
-    public function getLibraryId() {
+    public function getLibraryId()
+    {
         return $this->library_id;
     }
 
-    public static function getIds($user_id) {
+    public static function getIds($user_id)
+    {
         $ids = [];
 
         $privileges = LibraryPrivilege::where('user_id', '=', $user_id)->get();

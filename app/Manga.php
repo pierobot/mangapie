@@ -207,8 +207,8 @@ class Manga extends Model
     /**
      *  Gets the adjacent archive in relation to $name.
      *
-     *  @param $name The name of the current archive.
-     *  @param $next Boolean value that indicates to get the next or previous archive.
+     *  @param string $name The name of the current archive.
+     *  @param bool $next Boolean value that indicates to get the next or previous archive.
      *  @return mixed On success, an object containing the name, size, and modified
      *                date of the archive; on failure, FALSE.
      */

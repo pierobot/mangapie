@@ -9,8 +9,8 @@ class ImageArchiveRar implements ImageArchiveInterface
     private $m_file_path;
     private $m_rar;
 
-    public function __construct($file_path) {
-
+    public function __construct($file_path)
+    {
         $this->m_file_path = $file_path;
 
         $this->m_rar = \RarArchive::open($file_path);
@@ -18,8 +18,8 @@ class ImageArchiveRar implements ImageArchiveInterface
             $this->m_rar = false;
     }
 
-    public function __destruct() {
-
+    public function __destruct()
+    {
         if ($this->m_rar !== false)
             $this->m_rar->close();
     }
@@ -27,19 +27,21 @@ class ImageArchiveRar implements ImageArchiveInterface
     /**
      *  Used to check whether construction was ok.
      *
-     *  @return TRUE if no errors occurred and FALSE otherwise.
+     *  @return bool TRUE if no errors occurred and FALSE otherwise.
      */
-    public function good() {
-
+    public function good()
+    {
         return $this->m_rar !== false;
     }
 
     /**
      *  Gets information about an entry at an index.
      *
-     *  @return An array containing information or FALSE on failure.
+     *  @index int $index The index of the desired entry.
+     *  @return mixed An array containing information or FALSE on failure.
      */
-    public function getInfo($index) {
+    public function getInfo($index)
+    {
 
         $entries = $this->m_rar->getEntries();
         foreach ($entries as $idx => $entry) {
@@ -62,12 +64,12 @@ class ImageArchiveRar implements ImageArchiveInterface
     /**
      *  Gets the contents of a file at an index.
      *
-     *  @param $index The index of the file.
-     *  @param &$size The variable that will hold the size of the contents.
-     *  @return The contents of the file or FALSE on failure.
+     *  @param int $index The index of the file.
+     *  @param int &$size The variable that will hold the size of the contents.
+     *  @return mixed The contents of the file or FALSE on failure.
      */
-    public function getContents($index, &$size) {
-
+    public function getContents($index, &$size)
+    {
         $entries = $this->m_rar->getEntries();
         foreach ($entries as $idx => $entry) {
 
@@ -87,11 +89,10 @@ class ImageArchiveRar implements ImageArchiveInterface
     /**
      *  Gets all the image entries in an archive.
      *
-     *  @param $filter A callback that determines whether a file is an image.
-     *  @return An array of entries or FALSE on failure.
+     *  @return mixed An array of entries or FALSE on failure.
      */
-    public function getImages() {
-
+    public function getImages()
+    {
         $images = [];
 
         $entries = $this->m_rar->getEntries();

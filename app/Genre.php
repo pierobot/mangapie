@@ -8,19 +8,23 @@ class Genre extends Model
 {
     protected $fillable = ['name', 'description'];
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function getDescription() {
+    public function getDescription()
+    {
         return $this->description;
     }
 
-    public static function populate($genres) {
+    public static function populate($genres)
+    {
 
         if (count($genres) > 0) {
 
@@ -34,7 +38,8 @@ class Genre extends Model
         }
     }
 
-    public function scopeOldest($query) {
+    public function scopeOldest($query)
+    {
 
         $old = Genre::orderBy('updated_at', 'asc')->first();
 

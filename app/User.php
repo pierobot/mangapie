@@ -36,41 +36,50 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public function getId() {
+    public function getId()
+    {
         return $this->id;
     }
 
-    public function getName() {
+    public function getName()
+    {
         return $this->name;
     }
 
-    public function setName($name) {
+    public function setName($name)
+    {
         $this->name = $name;
         $this->save();
     }
 
-    public function isAdmin() {
+    public function isAdmin()
+    {
         return $this->admin;
     }
 
-    public function isMaintainer() {
+    public function isMaintainer()
+    {
         return $this->maintainer;
     }
 
-    public function getPassword() {
+    public function getPassword()
+    {
         return $this->password;
     }
 
-    public function setPassword($password) {
+    public function setPassword($password)
+    {
         $this->password = $password;
         $this->save();
     }
 
-    public function getTheme() {
+    public function getTheme()
+    {
         return $this->theme;
     }
 
-    public function setTheme($theme) {
+    public function setTheme($theme)
+    {
         $this->theme = $theme;
         $this->save();
     }

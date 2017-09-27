@@ -19,27 +19,28 @@ class MangaInformation extends Model
     //
     protected $fillable = ['id', 'mu_id', 'name', 'description', 'type', 'year'];
 
-    public function getMangaId() {
-
+    public function getMangaId()
+    {
         return $this->id;
     }
 
-    public function getMangaUpdatesId() {
-
+    public function getMangaUpdatesId()
+    {
         return $this->mu_id;
     }
 
-    public function getDescription() {
-
+    public function getDescription()
+    {
         return $this->description;
     }
 
-    public function getType() {
-
+    public function getType()
+    {
         return $this->type;
     }
 
-    private function updateMangaInformation($mu_info) {
+    private function updateMangaInformation($mu_info)
+    {
         if ($mu_info == null)
             return false;
 
@@ -53,7 +54,8 @@ class MangaInformation extends Model
         return true;
     }
 
-    private function updateAssociatedNames($mu_info) {
+    private function updateAssociatedNames($mu_info)
+    {
         if ($mu_info == null)
             return false;
 
@@ -77,7 +79,8 @@ class MangaInformation extends Model
         return true;
     }
 
-    private function updateGenreInformation($mu_info) {
+    private function updateGenreInformation($mu_info)
+    {
         if ($mu_info == null)
             return false;
 
@@ -100,7 +103,8 @@ class MangaInformation extends Model
         return true;
     }
 
-    private function updateArtistsInformation($mu_info) {
+    private function updateArtistsInformation($mu_info)
+    {
         if ($mu_info == null)
             return false;
 
@@ -126,7 +130,8 @@ class MangaInformation extends Model
         return true;
     }
 
-    private function updateAuthorsInformation($mu_info) {
+    private function updateAuthorsInformation($mu_info)
+    {
         if ($mu_info == null)
             return false;
 
@@ -152,7 +157,8 @@ class MangaInformation extends Model
         return true;
     }
 
-    public static function createFromMangaUpdates($id, $name) {
+    public static function createFromMangaUpdates($id, $name)
+    {
         $manga_info = null;
 
         $search_results = [];
@@ -228,7 +234,8 @@ class MangaInformation extends Model
         return $manga_info;
     }
 
-    public function updateFromMangaUpdates($mu_id) {
+    public function updateFromMangaUpdates($mu_id)
+    {
         // Update the values that don't depend on mangaupdates first
         // ...
 
@@ -255,7 +262,8 @@ class MangaInformation extends Model
         return true;
     }
 
-    public function getAssociatedNames() {
+    public function getAssociatedNames()
+    {
         $assoc_names = [];
         $name_references = AssociatedNameReference::where('manga_id', '=', $this->getMangaId())->get();
 
@@ -273,11 +281,13 @@ class MangaInformation extends Model
         return $assoc_names != [] ? $assoc_names : null;
     }
 
-    public function getYear() {
+    public function getYear()
+    {
         return $this->year;
     }
 
-    public function getGenres() {
+    public function getGenres()
+    {
         $genres = [];
         $genre_info = GenreInformation::where('manga_id', '=', $this->getMangaId())->get();
 
@@ -295,7 +305,8 @@ class MangaInformation extends Model
         return $genres != [] ? $genres : null;
     }
 
-    public function getAuthors() {
+    public function getAuthors()
+    {
         $references = AuthorReference::where('manga_id', '=', $this->getMangaId())->get();
         $authors = [];
 
@@ -308,7 +319,8 @@ class MangaInformation extends Model
         return $authors != [] ? $authors : null;
     }
 
-    public function getArtists() {
+    public function getArtists()
+    {
         $references = ArtistReference::where('manga_id', '=', $this->getMangaId())->get();
         $artists = [];
 
