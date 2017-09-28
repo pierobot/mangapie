@@ -1,5 +1,9 @@
 @extends ('layout')
 
+@section ('title')
+    Not found
+@endsection
+
 @section ('content')
 
     <div class="alert alert-danger">
