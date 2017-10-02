@@ -31,7 +31,7 @@ class Library extends Model
         // scan and add new directories
         foreach (\File::directories($this->getPath()) as $path) {
             $manga = Manga::updateOrCreate([
-                'name' => pathinfo($path, PATHINFO_FILENAME),
+                'name' => pathinfo($path, PATHINFO_BASENAME),
                 'path' => $path,
                 'library_id' => Library::where('name','=',$this->getName())->first()->id
             ]);
