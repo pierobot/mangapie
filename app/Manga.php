@@ -279,6 +279,6 @@ class Manga extends Model
 
         $manga_information = MangaInformation::where('id', '=', $id)->forceDelete();
 
-        parent::delete();
+        parent::forceDelete();
     }
 }
