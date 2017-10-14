@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 use \App\Manga;
 use \App\ImageArchive;
@@ -25,6 +26,31 @@ class ReaderController extends Controller
             return false;
 
         return count($images);
+    }
+
+    private function getPreloadUrls($id, $archive_name, $page_count, $current_page, $count = 4)
+    {
+        if ($page_count <= 0 || $count == 0 || $current_page == $page_count)
+            return false;
+
+        // ensure we only build up to $count or less. +1 because we don't count the current page
+        $difference = $page_count - $current_page;
+        if ($difference >= $count) {
+            $count = 4;
+        } else {
+            $count = $difference;
+        }
+
+        $urls = [];
+        ++$current_page;
+        for ($i = $current_page; $i < $current_page + $count; $i++) {
+            array_push($urls, [
+               'id' => strval($i),
+               'url' => \URL::action('ReaderController@image', [$id, rawurlencode($archive_name), $i])
+            ]);
+        }
+
+        return $urls;
     }
 
     //
@@ -92,12 +118,15 @@ class ReaderController extends Controller
             }
         }
 
+        $preload = $this->getPreloadUrls($id, $archive_name, $page_count, $page);
+
         return view('manga.reader', compact('id',
                                             'name',
                                             'archive_name',
                                             'custom_navbar',
                                             'page',
                                             'page_count',
+                                            'preload',
                                             'has_next_page',
                                             'next_url',
                                             'prev_url',
@@ -113,7 +142,9 @@ class ReaderController extends Controller
 
             return \Response::make($image['contents'], 200, [
                 'Content-Type' => $image['mime'],
-                'Content-Length' => $image['size']
+                'Content-Length' => $image['size'],
+                'Cache-Control' => 'public, max-age=2629800',
+                'Expires' => Carbon::now()->addMonth()->toRfc2822String()
             ]);
         }
         else

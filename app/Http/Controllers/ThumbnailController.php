@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use \Carbon\Carbon;
 
 use \App\Manga;
 use \App\Thumbnail;
@@ -57,7 +58,10 @@ class ThumbnailController extends Controller
             \Cache::forever($key, $smallResponse);
         }
 
-        return $smallResponse;
+        return $smallResponse->withHeaders([
+            'Cache-Control' => 'public, max-age=2629800',
+            'Expires' => Carbon::now()->addMonth()->toRfc2822String()
+        ]);
     }
 
     public function smallDefault($id)
@@ -93,7 +97,10 @@ class ThumbnailController extends Controller
             \Cache::forever($key, $mediumResponse);
         }
 
-        return $mediumResponse;
+        return $mediumResponse->withHeaders([
+            'Cache-Control' => 'public, max-age=2629800',
+            'Expires' => Carbon::now()->addMonth()->toRfc2822String()
+        ]);
     }
 
     public function mediumDefault($id)

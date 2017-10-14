@@ -59,6 +59,14 @@
             {{ Html::image(URL::action('ReaderController@image', [$id, rawurlencode($archive_name), $page]), 'image', ['class' => 'reader-image center-block']) }}
         </a>
     </div>
+
+    @if ($preload !== false)
+    <div id="preload" style="display: none;">
+        @foreach ($preload as $preload_url)
+            <img id="{{ $preload_url['id'] }}" src="{{ $preload_url['url'] }}">
+        @endforeach
+    </div>
+    @endif
 @else
 
 <div class="alert alert-danger">Unable to get images from archive.</div>
@@ -71,5 +79,9 @@
 
 {{-- <script src="http://hammerjs.github.io/dist/hammer.min.js" type="text/javascript"></script> --}}
 {{-- <script src="{{ URL::to('/public/js/manga/reader.js') }}" type="text/javascript"></script> --}}
+
+<script type="text/javascript">
+
+</script>
 
 @endsection
