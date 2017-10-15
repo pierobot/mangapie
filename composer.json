@@ -14,6 +14,7 @@
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "~5.0",
         "php-curl-class/php-curl-class": "^7.2",
+        "predis/predis": "^1.1",
         "thomaspark/bootswatch": "^3.3",
         "twitter/bootstrap": "^3.3"
     },
