@@ -144,7 +144,7 @@ class ReaderController extends Controller
                 'Content-Type' => $image['mime'],
                 'Content-Length' => $image['size'],
                 'Cache-Control' => 'public, max-age=2629800',
-                'Expires' => Carbon::now()->addDays(3)->toRfc2822String()
+                'Expires' => Carbon::now()->addMonth()->toRfc2822String()
             ]);
         }
         else

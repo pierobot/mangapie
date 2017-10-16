@@ -24,7 +24,7 @@ Route::get('/search', 'SearchController@index');
 Route::post('/search', 'SearchController@search');
 
 Route::get('/information/{id}/{sort?}', 'MangaInformationController@index')->where('id', '\d+')
-                                                                                     ->where('sort', 'ascending|descending');
+                                                                           ->where('sort', 'ascending|descending');
 Route::post('/information', 'MangaInformationController@update');
 
 Route::get('/edit/{id}', 'MangaEditController@index')->where('id', '\d+');
@@ -33,11 +33,11 @@ Route::get('/edit/{id}', 'MangaEditController@index')->where('id', '\d+');
 Route::get('/genre/{id}', 'GenreController@index')->where('id', '\d+');
 
 Route::get('/reader/{id}/{archive_name}/{page}', 'ReaderController@index')->where('id', '\d+')
-                                                                                    ->where('archive_name', '.+')
-                                                                                    ->where('page', '\d+');
+                                                                          ->where('archive_name', '.+')
+                                                                          ->where('page', '\d+');
 Route::get('/image/{id}/{archive_name}/{page}', 'ReaderController@image')->where('id', '\d+')
-                                                                                   ->where('archive_name', '.+')
-                                                                                   ->where('page', '\d+');
+                                                                         ->where('archive_name', '.+')
+                                                                         ->where('page', '\d+');
 
 Route::get('/admin', 'AdminController@index');
 Route::get('/admin/users', 'AdminController@users');
