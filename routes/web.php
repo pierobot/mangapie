@@ -27,6 +27,9 @@ Route::get('/information/{id}/{sort?}', 'MangaInformationController@index')->whe
                                                                            ->where('sort', 'ascending|descending');
 Route::post('/information', 'MangaInformationController@update');
 
+Route::get('/edit/{id}', 'MangaEditController@index')->where('id', '\d+');
+//Route::post('/edit', 'MangaEditController@update');
+
 Route::get('/genre/{id}', 'GenreController@index')->where('id', '\d+');
 
 Route::get('/reader/{id}/{archive_name}/{page}', 'ReaderController@index')->where('id', '\d+')
