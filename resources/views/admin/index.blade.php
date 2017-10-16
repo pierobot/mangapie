@@ -9,7 +9,7 @@
 @endsection
 
 @section ('content')
-    <h2 class="text-center">Dashboard</h2>
+    <h2 class="text-center"><b>Dashboard</b></h2>
 
     <div class="panel-body">
         <ul class="list-group">

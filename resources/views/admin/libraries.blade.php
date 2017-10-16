@@ -5,7 +5,7 @@
 @endsection
 
 @section ('content')
-    <h2 class="text-center">Libraries</h2>
+    <h2 class="text-center"><b>Libraries</b></h2>
 
     <ul class="nav nav-tabs">
         <li class="active"><a href="#create-content" data-toggle="tab"><span class="glyphicon glyphicon-plus"></span> Create</a></li>
