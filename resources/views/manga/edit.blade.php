@@ -31,10 +31,7 @@
 @endsection
 
 @section ('content')
-
-    <h2 class="text-center">
-        <b>Edit &middot; {{ $name }}</b>
-    </h2>
+    <h2 class="text-center"><b>Edit &middot; {{ $name }}</b></h2>
 
     <div class="panel panel-default">
         <div class="panel-body">

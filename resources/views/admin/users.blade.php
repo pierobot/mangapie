@@ -4,7 +4,8 @@
 @endsection
 
 @section ('content')
-    <h2 class="text-center">Users</h2>
+    <h2 class="text-center"><b>Users</b></h2>
+
     <ul class="nav nav-tabs">
         <li class="active"><a href="#create-user-content" data-toggle="tab"><span class="glyphicon glyphicon-plus"></span> Create</a></li>
         <li><a href="#delete-user-content" data-toggle="tab"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>

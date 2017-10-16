@@ -19,7 +19,7 @@
         Only make the title visible on screens that are not xs (phones)
         I don't think it looks very good on xs screens. Maybe there's a way to improve this?
     --}}
-    <h2 class="visible-sm visible-md visible-lg visible-xl text-center">Information &middot; {{ $name }}</h2>
+    <h2 class="visible-sm visible-md visible-lg visible-xl text-center"><b>Information &middot; {{ $name }}</b></h2>
 
     @if ($errors->update->count() > 0)
         <div class="alert alert-danger">
@@ -33,7 +33,7 @@
         <div class="alert alert-success">
             <ul>
                 <li>{{ \Session::get('thumbnail-update-success') }}</li>
-                <ul>
+            </ul>
         </div>
     @endif
 
@@ -41,18 +41,13 @@
     <hr>
 
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#information-content" data-toggle="tab"><span
-                        class="glyphicon glyphicon-info-sign"></span> Information</a></li>
-        <li><a href="#files-content" data-toggle="tab"><span class="glyphicon glyphicon-folder-open"></span> Files</a>
-        </li>
+        <li class="active"><a href="#information-content" data-toggle="tab"><span class="glyphicon glyphicon-info-sign"></span> Information</a></li>
+        <li><a href="#files-content" data-toggle="tab"><span class="glyphicon glyphicon-folder-open"></span> Files</a></li>
     </ul>
 
     <div class="tab-content">
-
         <div class="tab-pane active" id="information-content">
-
             <ul class="list-group">
-
                 <li class="list-group-item">
                     <h4><span class="glyphicon glyphicon-info-sign"></span>&nbsp;<b>Description</b></h4>
                     @if ($description != null)
@@ -159,11 +154,17 @@
                             @if (empty($archives) === false)
                                 @foreach ($archives as $archive)
                                     <tr>
-                                        <th class="col-lg-8 col-md-8 col-sm-8"><a
-                                                    href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive['name']), 1]) }}">{{ $archive['name'] }}</a>
+                                        <th class="col-lg-8 col-md-8 col-sm-8">
+                                            <a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive['name']), 1]) }}">
+                                                {{ $archive['name'] }}
+                                            </a>
                                         </th>
-                                        <th class="col-lg-2 col-md-2 col-sm-2">{{ $archive['size'] }}</th>
-                                        <th class="col-lg-2 col-md-2 col-sm-2 visible-sm visible-md visible-lg">{{ $archive['modified'] }}</th>
+                                        <th class="col-lg-2 col-md-2 col-sm-2">
+                                            {{ $archive['size'] }}
+                                        </th>
+                                        <th class="col-lg-2 col-md-2 col-sm-2 visible-sm visible-md visible-lg">
+                                            {{ $archive['modified'] }}
+                                        </th>
                                     </tr>
                                 @endforeach
                             @endif
