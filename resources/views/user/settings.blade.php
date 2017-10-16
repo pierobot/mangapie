@@ -5,124 +5,114 @@
 @endsection
 
 @section ('content')
+    <h2 class="text-center"><b>Settings &middot; {{ \Auth::user()->getName() }}</b></h2>
 
-   <div class="panel panel-default">
+    <div class="panel-body">
 
-       <div class="panel-heading">
-           <h2 class="panel-title">Settings</h2>
-       </div>
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#edit-user-content" data-toggle="tab"><span class="glyphicon glyphicon-pencil"></span> Edit</a></li>
+            <li><a href="#edit-theme-content" data-toggle="tab"><span class="glyphicon glyphicon-pencil"></span> Themes</a>
+            </li>
+        </ul>
 
-       <div class="panel-body">
+        <div class="tab-content">
+            <div class="tab-pane active" id="edit-user-content">
 
-           <ul class="nav nav-tabs">
+                <ul class="list-group">
 
-               <li class="active"><a href="#edit-user-content" data-toggle="tab"><span class="glyphicon glyphicon-pencil"></span> Edit</a></li>
-               <li><a href="#edit-theme-content" data-toggle="tab"><span class="glyphicon glyphicon-pencil"></span> Themes</a></li>
+                    {{ Form::open(['action' => 'UserSettingsController@update']) }}
 
-           </ul>
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="form-group col-xs-12 col-lg-3">
+                                {{ Form::hidden('action', 'updatepassword') }}
+                                {{ Form::label('old password:', null, ['for' => 'old-password']) }}
+                                <input name="old-password" id="old-password" type="password" class="form-control"
+                                       placeholder="Enter old password here...">
 
-           <div class="tab-content">
-               <div class="tab-pane active" id="edit-user-content">
+                                {{ Form::label('new password:', null, ['for' => 'new-password']) }}
+                                <input name="new-password" id="new-password" type="password" class="form-control"
+                                       placeholder="Enter new password here...">
 
-                   <ul class="list-group">
+                                {{ Form::label('confirm password:', null, ['for' => 'confirm-password']) }}
+                                <input name="confirm-password" id="confirm-password" type="password"
+                                       class="form-control" placeholder="Confirm new password here...">
+                            </div>
+                        </div>
 
-                       {{ Form::open(['action' => 'UserSettingsController@update']) }}
+                        <div class="row">
+                            <div class="col-xs-4 col-lg-3">
+                                {{ Form::submit('Save', ['class' => 'btn btn-warning']) }}
+                            </div>
+                        </div>
+                    </li>
 
-                       <li class="list-group-item">
-                           <div class="row">
-                               <div class="form-group col-xs-12 col-lg-3">
-                                   {{ Form::hidden('action', 'updatepassword') }}
-                                   {{ Form::label('old password:', null, ['for' => 'old-password']) }}
-                                   <input name="old-password" id="old-password" type="password" class="form-control" placeholder="Enter old password here...">
+                    {{ Form::close() }}
 
-                                   {{ Form::label('new password:', null, ['for' => 'new-password']) }}
-                                   <input name="new-password" id="new-password" type="password" class="form-control" placeholder="Enter new password here...">
+                    @if (\Session::has('edit-alert-success'))
+                        <div class="alert alert-success">
+                            <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ \Session::get('edit-alert-success') }}
+                        </div>
+                    @endif
 
-                                   {{ Form::label('confirm password:', null, ['for' => 'confirm-password']) }}
-                                   <input name="confirm-password" id="confirm-password" type="password" class="form-control" placeholder="Confirm new password here...">
-                               </div>
-                           </div>
+                    @if ($errors->edit->count() > 0)
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->edit->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
-                           <div class="row">
-                               <div class="col-xs-4 col-lg-3">
-                                   {{ Form::submit('Save', ['class' => 'btn btn-warning']) }}
-                               </div>
-                           </div>
-                       </li>
+                </ul>
+            </div>
 
-                       {{ Form::close() }}
+            <div class="tab-pane" id="edit-theme-content">
+                <ul class="list-group">
+                    <li class="list-group-item">
 
-                       @if (\Session::has('edit-alert-success'))
+                        {{ Form::open(['action' => 'UserSettingsController@update']) }}
 
-                           <div class="alert alert-success">
-                               <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ session('edit-alert-success') }}
-                           </div>
+                        <div class="row">
+                            <div class="form-group col-xs-12 col-lg-3">
 
-                       @endif
+                                {{ Form::hidden('action', 'updatetheme') }}
+                                {{ Form::label('theme:', null, ['for' => 'theme']) }}
 
-                       @if ($errors->edit->count() > 0)
-                       <div class="alert alert-danger">
-                           <ul>
-                               @foreach ($errors->edit->all() as $error)
-                               <li>{{ $error }}</li>
-                               @endforeach
-                           </ul>
-                       </div>
-                       @endif
+                                <select name="theme" class="form-control">
+                                    <option disabled="disabled" selected="selected">{{ $current_theme }}</option>
+                                    @foreach ($theme_collections as $collection_name => $theme)
+                                        <optgroup label="{{ $collection_name }}">
 
-                   </ul>
-               </div>
+                                            @foreach ($theme as $theme_name => $theme_path)
+                                                <option value="{{ $collection_name . '/' . $theme_name }}">{{ $theme_name }}</option>
+                                            @endforeach
 
-               <div class="tab-pane" id="edit-theme-content">
-                   <ul class="list-group">
-                       <li class="list-group-item">
+                                        </optgroup>
+                                    @endforeach
+                                </select>
 
-                           {{ Form::open(['action' => 'UserSettingsController@update']) }}
+                            </div>
+                        </div>
 
-                           <div class="row">
-                               <div class="form-group col-xs-12 col-lg-3">
+                        <div class="row">
+                            <div class="form-group col-xs-12 col-lg-3">
+                                {{ Form::submit('Save', ['class' => 'btn btn-success']) }}
+                            </div>
+                        </div>
 
-                                   {{ Form::hidden('action', 'updatetheme') }}
-                                   {{ Form::label('theme:', null, ['for' => 'theme']) }}
+                        {{ Form::close() }}
 
-                                   <select name="theme" class="form-control">
-                                       <option disabled="disabled" selected="selected">{{ $current_theme }}</option>
-                                   @foreach ($theme_collections as $collection_name => $theme)
-                                       <optgroup label="{{ $collection_name }}">
+                    </li>
+                </ul>
+            </div>
+        </div>
 
-                                           @foreach ($theme as $theme_name => $theme_path)
-                                               <option value="{{ $collection_name . '/' . $theme_name }}">{{ $theme_name }}</option>
-                                           @endforeach
-
-                                       </optgroup>
-                                   @endforeach
-                                   </select>
-
-                               </div>
-                           </div>
-
-                           <div class="row">
-                               <div class="form-group col-xs-12 col-lg-3">
-                               {{ Form::submit('Save', ['class' => 'btn btn-success']) }}
-                               </div>
-                           </div>
-
-                           {{ Form::close() }}
-
-                           @if (\Session::has('theme-alert-success'))
-
-                               <div class="alert alert-success">
-                                   <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ session('theme-alert-success') }}
-                               </div>
-
-                           @endif
-
-                       </li>
-                   </ul>
-               </div>
-           </div>
-       </div>
-
-   </div>
-
+        @if (\Session::has('theme-alert-success'))
+            <div class="alert alert-success">
+                <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ \Session::get('theme-alert-success') }}
+            </div>
+        @endif
+    </div>
 @endsection

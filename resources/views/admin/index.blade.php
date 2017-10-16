@@ -5,30 +5,18 @@
 @endsection
 
 @section ('stylesheets')
-
     <link href="{{ URL::to('/public/css/admin.css') }}" rel="stylesheet">
-
 @endsection
 
 @section ('content')
-
-<div class="panel panel-default">
-
-    <div class="panel-heading">
-        <h2 class="panel-title">Dashboard</h2>
-    </div>
+    <h2 class="text-center"><b>Dashboard</b></h2>
 
     <div class="panel-body">
-
         <ul class="list-group">
             <li class="list-group-item">
                 <label>Number of admins:</label> {{ $admin_count }} <br>
                 <label>Number of users:</label> {{ $user_count }} <br>
             </li>
         </ul>
-
     </div>
-
-</div>
-
 @endsection
