@@ -15,9 +15,12 @@ Check out the wiki.
 * Support for
 	- zip/cbz
 	- rar/cbr
+* Reader
+    - Automatic transition from one archive to another
+    - Image preloading
 * Mangaupdates scraper
 	- Description, Type, Associated Names, Genres, Authors, Artists, Year
-	- Uses Jaro-Winkler for name matching
+	- Uses Jaro-Winkler for name matching   
 
 ## Screenshots
 ![Manga](/screenshots/manga.png?raw=true "Manga")
