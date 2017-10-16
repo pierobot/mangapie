@@ -5,20 +5,13 @@
 @endsection
 
 @section ('content')
-
-   <div class="panel panel-default">
-
-       <div class="panel-heading">
-           <h2 class="panel-title">Settings</h2>
-       </div>
+       <h2 class="text-center">Settings &middot; {{ \Auth::user()->getName() }}</h2>
 
        <div class="panel-body">
 
            <ul class="nav nav-tabs">
-
                <li class="active"><a href="#edit-user-content" data-toggle="tab"><span class="glyphicon glyphicon-pencil"></span> Edit</a></li>
                <li><a href="#edit-theme-content" data-toggle="tab"><span class="glyphicon glyphicon-pencil"></span> Themes</a></li>
-
            </ul>
 
            <div class="tab-content">
@@ -53,11 +46,9 @@
                        {{ Form::close() }}
 
                        @if (\Session::has('edit-alert-success'))
-
                            <div class="alert alert-success">
-                               <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ session('edit-alert-success') }}
+                               <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ \Session::get('edit-alert-success') }}
                            </div>
-
                        @endif
 
                        @if ($errors->edit->count() > 0)
@@ -109,20 +100,16 @@
 
                            {{ Form::close() }}
 
-                           @if (\Session::has('theme-alert-success'))
-
-                               <div class="alert alert-success">
-                                   <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ session('theme-alert-success') }}
-                               </div>
-
-                           @endif
-
                        </li>
                    </ul>
                </div>
            </div>
-       </div>
 
-   </div>
+           @if (\Session::has('theme-alert-success'))
+               <div class="alert alert-success">
+                   <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ \Session::get('theme-alert-success') }}
+               </div>
+           @endif
+       </div>
 
 @endsection
