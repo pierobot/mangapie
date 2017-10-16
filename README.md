@@ -23,5 +23,5 @@ Check out the wiki.
 	- Uses Jaro-Winkler for name matching   
 
 ## Screenshots
-![Manga](/screenshots/manga.png?raw=true "Manga")
-![Reader1](/screenshots/reader-1.png?raw=true "Reader1")
+![Manga](/screenshots/index.png?raw=true "Index")
+![Reader1](/screenshots/reader-01.png?raw=true "Reader1")
