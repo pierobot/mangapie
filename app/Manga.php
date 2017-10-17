@@ -194,7 +194,7 @@ class Manga extends Model
             return false;
 
         $archives = $this->getArchives();
-        if ($archives === false)
+        if (empty($archives))
             return false;
 
         // find the index of $name in $archives
