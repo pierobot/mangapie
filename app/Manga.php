@@ -91,31 +91,7 @@ class Manga extends Model
             return false;
 
         usort($images, function ($left, $right) {
-
-            $left_tokens = $this->getNumberTokens($left['name']);
-            $right_tokens = $this->getNumberTokens($right['name']);
-            if ($left_tokens === false || $right_tokens === false)
-                return 0;
-
-            $left_token_count = count($left_tokens);
-            $right_token_count = count($right_tokens);
-            $min_token_count = min($left_token_count, $right_token_count);
-
-            for ($i = 0; $i < $min_token_count; $i++) {
-
-                $left_token = $left_tokens[$i];
-                $right_token = $right_tokens[$i];
-                if ($left_token < $right_token)
-                    return -1;
-                elseif ($left_token > $right_token)
-                    return 1;
-            }
-
-            // if we reach here, then all the tokens up to $min_token_count are equal
-            if ($left_token_count == $right_token_count)
-                return 0;
-
-            return $left_token_count < $right_token_count ? -1 : 1;
+           return strnatcasecmp($left['name'], $right['name']);
         });
 
         $index = $images[$page - 1]['index'];
