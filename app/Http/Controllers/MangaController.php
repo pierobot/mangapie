@@ -19,7 +19,6 @@ class MangaController extends Controller
 
     public function __construct()
     {
-
         $this->middleware('auth');
     }
 
@@ -77,27 +76,9 @@ class MangaController extends Controller
             }
         }
 
+        $manga_list->withPath(env('app.url'));
+
         return $can_access == true ? view('manga.index', compact('manga_list', 'libraries')) :
                                      view('error.403');
-    }
-
-    public function thumbnail($id)
-    {
-        $manga = Manga::find($id);
-        if ($manga !== null) {
-            $thumbnail_path = $manga->path . "/folder.jpg";
-
-            if (\File::exists($thumbnail_path) == false) {
-                $thumbnail_path = $manga->path . "/folder.jpeg";
-
-                if (\File::exists($thumbnail_path) == false) {
-                    $thumbnail_path = "public/img/unknown.jpg";
-                }
-            }
-
-            return response()->file($thumbnail_path);
-        }
-
-        return response('', 404);
     }
 }

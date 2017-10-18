@@ -59,8 +59,9 @@
                     </a>
                     <ul class="dropdown-menu" style="color: black;">
                         <li>
-                            <a href="{{ URL::action('UserSettingsController@index') }}"><span class="glyphicon glyphicon-cog"></span> Settings</a>
-                            <a href="{{ URL::action('LoginController@logout') }}"><span class="glyphicon glyphicon-off"></span> Logout</a>
+                            <a href="{{ URL::action('FavoriteController@index') }}"><span class="glyphicon glyphicon-heart"></span>&nbsp;Favorites</a>
+                            <a href="{{ URL::action('UserSettingsController@index') }}"><span class="glyphicon glyphicon-cog"></span>&nbsp;Settings</a>
+                            <a href="{{ URL::action('LoginController@logout') }}"><span class="glyphicon glyphicon-off"></span>&nbsp;Logout</a>
                         </li>
                     </ul>
                 </li>

@@ -1,7 +1,7 @@
 @extends ('layout')
 
 @section ('title')
-    Index
+    Favorites
 @endsection
 
 @section ('stylesheets')
@@ -40,19 +40,23 @@
 @endsection
 
 @section ('content')
+    <h3 class="text-center">
+        <b>Favorites&nbsp;({{ $total }})</b>
+    </h3>
+
     <div class="row">
 
-    @foreach ($manga_list as $manga)
+    @foreach ($favorite_list as $favorite)
 
     <div class="col-lg-2 col-sm-4 col-xs-6 text-center thumbnail center">
 
         <div>
-            <a href="{{ URL::action('MangaInformationController@index', [$manga->getId()]) }}">
-                {{ Html::image(URL::action('ThumbnailController@smallDefault', [$manga->getId()])) }}
+            <a href="{{ URL::action('MangaInformationController@index', [$favorite->getId()]) }}">
+                {{ Html::image(URL::action('ThumbnailController@smallDefault', [$favorite->getId()])) }}
             </a>
         </div>
 
-        <h4 title="{{ $manga->getName() }}"><a href="{{ URL::action('MangaInformationController@index', [$manga->getId()]) }}">{{ $manga->getName() }}</a></h4>
+        <h4 title="{{ $favorite->getName() }}"><a href="{{ URL::action('MangaInformationController@index', [$favorite->getId()]) }}">{{ $favorite->getName() }}</a></h4>
 
     </div>
 
@@ -61,7 +65,7 @@
     </div>
 
     <div class="text-center">
-        {{ $manga_list->render() }}
+        {{ $favorite_list->render() }}
     </div>
 
 @endsection
