@@ -38,6 +38,8 @@ class MangaController extends Controller
             $libraries = Library::whereIn('id', $library_ids)->get();
         }
 
+        $manga_list->withPath(env('app.url'));
+
         return view('manga.index', compact('manga_list', 'libraries'));
     }
 
@@ -73,6 +75,8 @@ class MangaController extends Controller
                 $libraries = Library::whereIn('id', $library_ids)->get();
             }
         }
+
+        $manga_list->withPath(env('app.url'));
 
         return $can_access == true ? view('manga.index', compact('manga_list', 'libraries')) :
                                      view('error.403');
