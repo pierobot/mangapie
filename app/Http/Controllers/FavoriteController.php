@@ -36,6 +36,8 @@ class FavoriteController extends Controller
         $favorite_list = Manga::whereIn('id', $ids)->orderBy('name', 'asc')->paginate(18);
         $total = count($favorites);
 
+        $favorite_list->withPath(env('app.url'));
+
         return view('manga.favorites', compact('favorite_list', 'libraries', 'total'));
     }
 
