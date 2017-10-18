@@ -16,9 +16,7 @@ Route::post('/login', ['as' => 'login', 'uses' => 'LoginController@login']);
 Route::get('/logout', ['as' => 'logout', 'uses' => 'LoginController@logout']);
 
 Route::get('/', 'MangaController@index');
-Route::get('/browse/{page}', 'MangaController@show')->where('page', '\d+');
 Route::get('/browse/library/{id}', 'MangaController@library')->where('id', '\d+');
-Route::get('/thumbnail/{id}', 'MangaController@thumbnail')->where('id', '\d+');
 
 Route::get('/search', 'SearchController@index');
 Route::post('/search', 'SearchController@search');
@@ -38,6 +36,9 @@ Route::get('/reader/{id}/{archive_name}/{page}', 'ReaderController@index')->wher
 Route::get('/image/{id}/{archive_name}/{page}', 'ReaderController@image')->where('id', '\d+')
                                                                          ->where('archive_name', '.+')
                                                                          ->where('page', '\d+');
+
+Route::get('/favorites', 'FavoriteController@index');
+Route::post('/favorites', 'FavoriteController@update');
 
 Route::get('/admin', 'AdminController@index');
 Route::get('/admin/users', 'AdminController@users');
