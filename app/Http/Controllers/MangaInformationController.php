@@ -6,10 +6,11 @@ use Illuminate\Http\Request;
 
 use \Carbon\Carbon;
 
-use \App\Manga;
-use \App\MangaInformation;
+use \App\Favorite;
 use \App\Genre;
 use \App\GenreInformation;
+use \App\Manga;
+use \App\MangaInformation;
 use \App\MangaUpdates;
 
 class MangaInformationController extends Controller
@@ -75,8 +76,16 @@ class MangaInformationController extends Controller
             $year = $manga_info->getYear();
         }
 
+        // determine whether or not the manga has been favorited
+        $user_id = \Auth::user()->getId();
+        $favorite = Favorite::where('user_id', $user_id)
+                            ->where('manga_id', $id)
+                            ->get();
+        $is_favorited = $favorite->count() != 0;
+
         return view('manga.information', compact('id',
                                                  'mu_id',
+                                                 'is_favorited',
                                                  'name',
                                                  'description',
                                                  'type',

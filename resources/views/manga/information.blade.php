@@ -15,11 +15,31 @@
 @endsection
 
 @section ('content')
-    {{--
-        Only make the title visible on screens that are not xs (phones)
-        I don't think it looks very good on xs screens. Maybe there's a way to improve this?
-    --}}
-    <h2 class="visible-sm visible-md visible-lg visible-xl text-center"><b>Information &middot; {{ $name }}</b></h2>
+
+    <h3 class="visible-xs text-center">
+        <b>Information &middot; {{ $name }}</b>
+    </h3>
+
+    <h2 class="visible-sm visible-md visible-lg visible-xl text-center">
+        <b>Information &middot; {{ $name }}</b>
+    </h2>
+
+    <div class="row text-center">
+        {{ Form::open(['action' => 'FavoriteController@update']) }}
+
+        {{ Form::hidden('id', $id) }}
+        @if ($is_favorited == false)
+            {{ Form::hidden('action', 'favorite') }}
+            {{ Form::button('', ['class' => 'btn btn-success glyphicon glyphicon-heart',
+                                 'type' => 'submit']) }}
+        @else
+            {{ Form::hidden('action', 'unfavorite') }}
+            {{ Form::button('', ['class' => 'btn btn-danger glyphicon glyphicon-heart',
+                                 'type' => 'submit']) }}
+        @endif
+
+        {{ Form::close() }}
+    </div>
 
     @if ($errors->update->count() > 0)
         <div class="alert alert-danger">
@@ -29,15 +49,20 @@
                 @endforeach
             </ul>
         </div>
-    @elseif (\Session::has('thumbnail-update-success'))
+    @endif
+    @if (\Session::has('thumbnail-update-success'))
         <div class="alert alert-success">
-            <ul>
-                <li>{{ \Session::get('thumbnail-update-success') }}</li>
-            </ul>
+            <span class="glyphicon glyphicon-ok"></span>&nbsp;{{ \Session::get('thumbnail-update-success') }}
+        </div>
+    @endif
+    @if (\Session::has('favorite-success'))
+        <div class="alert alert-success">
+            <span class="glyphicon glyphicon-ok"></span>&nbsp;{{ \Session::get('favorite-success') }}
         </div>
     @endif
 
     {{ Html::image(URL::action('ThumbnailController@mediumDefault', [$id]), '', ['class' => 'information-img center-block']) }}
+
     <hr>
 
     <ul class="nav nav-tabs">
