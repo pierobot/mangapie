@@ -1,3 +1,16 @@
+$(function () {
+
+    $(document).on('keyup', function (e) {
+        if (e.keyCode == 37 || e.keyCode == 65) {
+            // left arrow or a
+            window.location = $('#next-image').attr('href');
+
+        } else if (e.keyCode == 39 || e.keyCode == 68) {
+            // right arrow or d
+            window.location = $('#prev-image').attr('href');
+        }
+    });
+});
 /*
 $swipe_prev_direction = 'left';
 $swipe_next_direction = 'right';

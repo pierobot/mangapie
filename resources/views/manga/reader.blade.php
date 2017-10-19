@@ -44,40 +44,35 @@
 @endsection
 
 @section ('content')
-
-@if (\Session::has('reader-failure'))
-
-    <div class="alert alert-danger">
-        <span class="glyphicon glyphicon-remove"></span>&nbsp; {{ \Session::get('reader-failure') }}
-    </div>
-
-@endif
-
-@if ($page_count !== false)
-    <div class="row">
-        <a href="{{ $has_next_page ? $next_url : "" }}">
-            {{ Html::image(URL::action('ReaderController@image', [$id, rawurlencode($archive_name), $page]), 'image', ['class' => 'reader-image center-block']) }}
-        </a>
-    </div>
-
-    @if ($preload !== false)
-    <div id="preload" style="display: none;">
-        @foreach ($preload as $preload_url)
-            <img id="{{ $preload_url['id'] }}" src="{{ $preload_url['url'] }}">
-        @endforeach
-    </div>
+    @if (\Session::has('reader-failure'))
+        <div class="alert alert-danger">
+            <span class="glyphicon glyphicon-remove"></span>&nbsp; {{ \Session::get('reader-failure') }}
+        </div>
     @endif
-@else
 
-<div class="alert alert-danger">Unable to get images from archive.</div>
+    @if ($page_count !== false)
 
-@endif
+        <div class="row">
+            <a id="image" href="{{ $has_next_page ? $next_url : "#" }}">
+                {{ Html::image(URL::action('ReaderController@image', [$id, rawurlencode($archive_name), $page]), 'image', ['class' => 'reader-image center-block']) }}
+            </a>
+        </div>
 
+        @if ($preload !== false)
+        <div id="preload" style="display: none;">
+            @foreach ($preload as $preload_url)
+                <img id="{{ $preload_url['id'] }}" src="{{ $preload_url['url'] }}">
+            @endforeach
+        </div>
+        @endif
+    @else
+
+    <div class="alert alert-danger">Unable to get images from archive.</div>
+
+    @endif
 @endsection
 
 @section ('scripts')
-
-{{-- <script src="http://hammerjs.github.io/dist/hammer.min.js" type="text/javascript"></script> --}}
-{{-- <script src="{{ URL::to('/public/js/manga/reader.js') }}" type="text/javascript"></script> --}}
-
+    {{--<script src="http://hammerjs.github.io/dist/hammer.min.js" type="text/javascript"></script> --}}
+    <script src="{{ URL::to('/public/js/manga/reader.js') }}" type="text/javascript"></script>
 @endsection
