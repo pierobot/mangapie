@@ -45,7 +45,7 @@ class LoginController extends Controller
 
         $this->clearLoginAttempts($request);
 
-        return \Redirect::action('MangaController@index');
+        return \Redirect::intended();
     }
 
     public function logout() {
