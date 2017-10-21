@@ -1,5 +1,6 @@
 $(function () {
 
+    // set up handler for key events
     $(document).on('keyup', function (e) {
         if (e.keyCode == 37 || e.keyCode == 65) {
             // left arrow or a
@@ -10,7 +11,18 @@ $(function () {
             window.location = $('#prev-image').attr('href');
         }
     });
+
+    // set up handler for preloading images
+    // this method will allow the first image to be loaded faster as it
+    // will not share bandwidth with the preloaded images
+    $(document).ready(function (e) {
+        // go through each img in div#preload and load it
+        $('#preload > img').each(function () {
+            $(this).attr('src', $(this).attr('data-src'));
+        })
+    });
 });
+
 /*
 $swipe_prev_direction = 'left';
 $swipe_next_direction = 'right';
