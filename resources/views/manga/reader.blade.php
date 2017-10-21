@@ -61,7 +61,7 @@
         @if ($preload !== false)
         <div id="preload" style="display: none;">
             @foreach ($preload as $preload_url)
-                <img id="{{ $preload_url['id'] }}" src="{{ $preload_url['url'] }}">
+                <img id="{{ $preload_url['id'] }}" data-src="{{ $preload_url['url'] }}">
             @endforeach
         </div>
         @endif
