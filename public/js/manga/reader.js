@@ -12,14 +12,9 @@ $(function () {
         }
     });
 
-    // set up handler for preloading images
-    // this method will allow the first image to be loaded faster as it
-    // will not share bandwidth with the preloaded images
-    $(document).ready(function (e) {
-        // go through each img in div#preload and load it
-        $('#preload > img').each(function () {
-            $(this).attr('src', $(this).attr('data-src'));
-        })
+    // go through each img in #preload and load it
+    $('#preload > img').each(function () {
+        $(this).attr('src', $(this).attr('data-src'));
     });
 });
 
