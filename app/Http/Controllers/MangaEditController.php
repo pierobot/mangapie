@@ -27,6 +27,7 @@ class MangaEditController extends Controller
 
         $name = $manga->getName();
         $info = MangaInformation::find($id);
+        $mu_id = null;
         if ($info != null) {
             $mu_id = $info->getMangaUpdatesId();
         }
