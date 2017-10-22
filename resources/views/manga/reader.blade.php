@@ -27,7 +27,7 @@
 
     <li class="dropdown">
         <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Page
+            <span class="glyphicon glyphicon-file"></span>&nbsp;Page
             <span class="badge">{{ $page }}</span> of
             <span class="badge">{{ $page_count }}</span>
             <span class="glyphicon glyphicon-chevron-down white"></span>
