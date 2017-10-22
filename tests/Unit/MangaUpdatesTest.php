@@ -98,7 +98,7 @@ class MangaUpdatesTest extends TestCase
             'This work usually involves intimate relationships between women.',
         ];
 
-        $genres = MangaUpdates::genres_ex($contents);
+        $genres = MangaUpdates::genres_all_ex($contents);
 
         $this->assertTrue(empty($genres) === false);
         $this->assertTrue(count($genres) == count($expected_names));
