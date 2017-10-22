@@ -29,14 +29,14 @@ class MangaInformationController extends Controller
         // update genres if there are none or if they are older than 6 months
         if ($genre_count == 0) {
 
-            $genres = MangaUpdates::genres();
+            $genres = MangaUpdates::genres_all();
             Genre::populate($genres);
         } else {
 
             $oldest = Genre::oldest();
             if ($oldest != null && Carbon::now()->subMonths(6)->gt($oldest['updated_at'])) {
 
-                $genres = MangaUpdates::genres();
+                $genres = MangaUpdates::genres_all();
                 Genre::populate($genres);
             }
         }
