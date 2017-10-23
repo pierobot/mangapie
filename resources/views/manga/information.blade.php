@@ -144,6 +144,17 @@
                     @endif
                 </li>
 
+                @if (\Auth::user()->isAdmin() || \Auth::user()->isMaintainer())
+                <li class="list-group-item">
+                    <h4><span class="glyphicon glyphicon-saved"></span>&nbsp;<b>Last Updated</b></h4>
+                    @if ($lastUpdated != null)
+                        <span class="label label-default">{{ $lastUpdated }}</span>
+                    @else
+                        Unable to find date of last update.
+                    @endif
+                </li>
+                @endif
+
                 @if (\Auth::user()->isAdmin() == true)
                     <li class="list-group-item">
                         <h4><span class="glyphicon glyphicon-hdd"></span>&nbsp;<b>Path</b></h4>

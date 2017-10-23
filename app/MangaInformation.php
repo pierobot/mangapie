@@ -16,7 +16,6 @@ use \App\MangaUpdates;
 
 class MangaInformation extends Model
 {
-    //
     protected $fillable = ['id', 'mu_id', 'name', 'description', 'type', 'year'];
 
     public function getMangaId()
@@ -37,6 +36,11 @@ class MangaInformation extends Model
     public function getType()
     {
         return $this->type;
+    }
+
+    public function getLastUpdated()
+    {
+        return $this->updated_at;
     }
 
     private function updateMangaInformation($mu_info)
@@ -278,7 +282,7 @@ class MangaInformation extends Model
             array_push($assoc_names, $assoc_name);
         }
 
-        return $assoc_names != [] ? $assoc_names : null;
+        return empty($assoc_names) !== true ? $assoc_names : null;
     }
 
     public function getYear()
@@ -302,7 +306,7 @@ class MangaInformation extends Model
             $genres[$i] = $genre->getName();
         }
 
-        return $genres != [] ? $genres : null;
+        return empty($genres) !== true ? $genres : null;
     }
 
     public function getAuthors()
@@ -316,7 +320,7 @@ class MangaInformation extends Model
                 array_push($authors, $author);
         }
 
-        return $authors != [] ? $authors : null;
+        return empty($authors) !== true ? $authors : null;
     }
 
     public function getArtists()
@@ -330,6 +334,6 @@ class MangaInformation extends Model
                 array_push($artists, $artist);
         }
 
-        return $artists != [] ? $artists : null;
+        return empty($artists) != true ? $artists : null;
     }
 }

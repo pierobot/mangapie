@@ -63,6 +63,7 @@ class MangaInformationController extends Controller
         $authors = null;
         $artists = null;
         $year = null;
+        $lastUpdated = null;
 
         // Update the values if there is MU information
         if($manga_info != null) {
@@ -74,6 +75,7 @@ class MangaInformationController extends Controller
             $authors = $manga_info->getAuthors();
             $artists = $manga_info->getArtists();
             $year = $manga_info->getYear();
+            $lastUpdated = $manga_info->getLastUpdated();
         }
 
         // determine whether or not the manga has been favorited
@@ -94,6 +96,7 @@ class MangaInformationController extends Controller
                                                  'authors',
                                                  'artists',
                                                  'year',
+                                                 'lastUpdated',
                                                  'archives',
                                                  'path',
                                                  'sort'));
