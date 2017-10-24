@@ -51,10 +51,9 @@
     @endif
 
     @if ($page_count !== false)
-
-        <div class="row">
+        <div class="row text-center">
             <a id="image" href="{{ $has_next_page ? $next_url : "#" }}">
-                {{ Html::image(URL::action('ReaderController@image', [$id, rawurlencode($archive_name), $page]), 'image', ['class' => 'reader-image center-block']) }}
+                {{ Html::image(URL::action('ReaderController@image', [$id, rawurlencode($archive_name), $page]), 'image', ['class' => 'reader-image']) }}
             </a>
         </div>
 
