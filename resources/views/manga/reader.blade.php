@@ -1,7 +1,7 @@
 @extends ('layout')
 
 @section ('title')
-    Reader &middot; {{ $name . '&middot;' . $archive_name }}
+    Reader &middot; {{ $archive_name }}
 @endsection
 
 @section ('stylesheets')
