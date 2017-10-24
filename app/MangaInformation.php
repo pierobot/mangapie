@@ -66,8 +66,8 @@ class MangaInformation extends Model
         $references = AssociatedNameReference::where('manga_id', '=', $this->getMangaId());
         $references->forceDelete();
 
-        if (array_key_exists('assoc_names', $mu_info) == false)
-            return false;
+        if (array_key_exists('assoc_names', $mu_info) == false || $mu_info['assoc_names'] == null)
+            return true;
 
         foreach ($mu_info['assoc_names'] as $name) {
             $assoc_name = AssociatedName::create([
@@ -91,8 +91,8 @@ class MangaInformation extends Model
         $genre_info = GenreInformation::where('manga_id', '=', $this->getMangaId());
         $genre_info->forceDelete();
 
-        if (array_key_exists('genres', $mu_info) == false)
-            return false;
+        if (array_key_exists('genres', $mu_info) == false || $mu_info['genres'] == null)
+            return true;
 
         for ($i = 0; $i < sizeof($mu_info['genres']); $i++) {
             $genre_name = $mu_info['genres'][$i];
@@ -115,8 +115,8 @@ class MangaInformation extends Model
         $references = ArtistReference::where('manga_id', '=', $this->getMangaId());
         $references->forceDelete();
 
-        if (array_key_exists('artists', $mu_info) == false)
-            return false;
+        if (array_key_exists('artists', $mu_info) == false || $mu_info['artists'] == null)
+            return true;
 
         for ($i = 0; $i < sizeof($mu_info['artists']); $i++) {
             $artist_name = $mu_info['artists'][$i];
@@ -142,8 +142,8 @@ class MangaInformation extends Model
         $references = AuthorReference::where('manga_id', '=', $this->getMangaId());
         $references->forceDelete();
 
-        if (array_key_exists('authors', $mu_info) == false)
-            return false;
+        if (array_key_exists('authors', $mu_info) == false || $mu_info['authors'] == null)
+            return true;
 
         for ($i = 0; $i < sizeof($mu_info['authors']); $i++) {
             $author_name = $mu_info['authors'][$i];
@@ -171,7 +171,7 @@ class MangaInformation extends Model
         for ($i = 1; $i <= 5; $i++) {
 
             $results = MangaUpdates::search($name, $i);
-            if ($results === false || $results == [])
+            if ($results === false || empty($results))
                 break;
 
             // avoid getting other pages if we have a perfect match
@@ -216,20 +216,11 @@ class MangaInformation extends Model
 
                 $manga_info = MangaInformation::find($id);
 
-                if ($manga_info->updateMangaInformation($mu_info) === false)
-                    return null;
-
-                if ($manga_info->updateAssociatedNames($mu_info) == false)
-                    return null;
-
-                if ($manga_info->updateGenreInformation($mu_info) === false)
-                    return null;
-
-                if ($manga_info->updateArtistsInformation($mu_info) == false)
-                    return null;
-
-                if ($manga_info->updateAuthorsInformation($mu_info) == false)
-                    return null;
+                $manga_info->updateMangaInformation($mu_info);
+                $manga_info->updateAssociatedNames($mu_info);
+                $manga_info->updateGenreInformation($mu_info);
+                $manga_info->updateArtistsInformation($mu_info);
+                $manga_info->updateAuthorsInformation($mu_info);
 
                 $manga_info->save();
             }
@@ -248,20 +239,11 @@ class MangaInformation extends Model
         if ($mu_info == null)
             return false;
 
-        if ($this->updateMangaInformation($mu_info) === false)
-            return false;
-
-        if ($this->updateAssociatedNames($mu_info) == false)
-            return false;
-
-        if ($this->updateGenreInformation($mu_info) === false)
-            return false;
-
-        if ($this->updateArtistsInformation($mu_info) == false)
-            return false;
-
-        if ($this->updateAuthorsInformation($mu_info) == false)
-            return false;
+        $this->updateMangaInformation($mu_info);
+        $this->updateAssociatedNames($mu_info);
+        $this->updateGenreInformation($mu_info);
+        $this->updateArtistsInformation($mu_info);
+        $this->updateAuthorsInformation($mu_info);
 
         return true;
     }
@@ -314,6 +296,9 @@ class MangaInformation extends Model
         $references = AuthorReference::where('manga_id', '=', $this->getMangaId())->get();
         $authors = [];
 
+        if ($references == null)
+            return null;
+
         foreach ($references as $reference) {
             $author = Author::find($reference->getAuthorId());
             if ($author != null)
@@ -327,6 +312,9 @@ class MangaInformation extends Model
     {
         $references = ArtistReference::where('manga_id', '=', $this->getMangaId())->get();
         $artists = [];
+
+        if ($references == null)
+            return null;
 
         foreach ($references as $reference) {
             $artist = Artist::find($reference->getArtistId());
