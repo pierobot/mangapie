@@ -66,24 +66,24 @@
     <hr>
 
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#information-content" data-toggle="tab"><span class="glyphicon glyphicon-info-sign"></span> Information</a></li>
-        <li><a href="#files-content" data-toggle="tab"><span class="glyphicon glyphicon-folder-open"></span> Files</a></li>
+        <li class="active"><a href="#information-content" data-toggle="tab"><span class="glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;Information</a></li>
+        <li><a href="#files-content" data-toggle="tab"><span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Files</a></li>
     </ul>
 
     <div class="tab-content">
         <div class="tab-pane active" id="information-content">
             <ul class="list-group">
                 <li class="list-group-item">
-                    <h4><span class="glyphicon glyphicon-info-sign"></span>&nbsp;<b>Description</b></h4>
+                    <h4><span class="glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;<b>Description</b></h4>
                     @if ($description != null)
-                        {!! Html::decode($description) !!}
+                        {{ Html::decode($description) }}
                     @else
                         Unable to find description.
                 </li>
                 @endif
 
                 <li class="list-group-item">
-                    <h4><span class="glyphicon glyphicon-book"></span>&nbsp;<b>Type</b></h4>
+                    <h4><span class="glyphicon glyphicon-book"></span>&nbsp;&nbsp;<b>Type</b></h4>
                     @if ($type != null)
                         <span class="label label-default">{{ $type }}</span>
                     @else
@@ -92,7 +92,7 @@
                 </li>
 
                 <li class="list-group-item">
-                    <h4><span class="glyphicon glyphicon-list-alt"></span>&nbsp;<b>Associated Names</b></h4>
+                    <h4><span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;<b>Associated Names</b></h4>
                     @if ($assoc_names != null)
                         @foreach ($assoc_names as $assoc_name)
                             <span class="label label-default">{{ $assoc_name->getName() }}</span>
@@ -103,7 +103,7 @@
                 </li>
 
                 <li class="list-group-item">
-                    <h4><span class="glyphicon glyphicon-tags"></span>&nbsp;<b>Genres</b></h4>
+                    <h4><span class="glyphicon glyphicon-tags"></span>&nbsp;&nbsp;<b>Genres</b></h4>
                     @if ($genres != null)
                         @foreach ($genres as $genre)
                             <span class="label label-default">{{ $genre }}</span>
@@ -114,7 +114,7 @@
                 </li>
 
                 <li class="list-group-item">
-                    <h4><span class="glyphicon glyphicon-user"></span>&nbsp;<b>Authors</b></h4>
+                    <h4><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<b>Authors</b></h4>
                     @if ($authors != null)
                         @foreach ($authors as $author)
                             <span class="label label-default">{{ $author->getName() }}</span>
@@ -125,7 +125,7 @@
                 </li>
 
                 <li class="list-group-item">
-                    <h4><span class="glyphicon glyphicon-user"></span>&nbsp;<b>Artists</b></h4>
+                    <h4><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<b>Artists</b></h4>
                     @if ($artists != null)
                         @foreach ($artists as $artist)
                             <span class="label label-default">{{ $artist->getName() }}</span>
@@ -136,7 +136,7 @@
                 </li>
 
                 <li class="list-group-item">
-                    <h4><span class="glyphicon glyphicon-calendar"></span>&nbsp;<b>Year</b></h4>
+                    <h4><span class="glyphicon glyphicon-calendar"></span>&nbsp;&nbsp;<b>Year</b></h4>
                     @if ($year != null)
                         <span class="label label-default">{{ $year }}</span>
                     @else
@@ -146,7 +146,7 @@
 
                 @if (\Auth::user()->isAdmin() || \Auth::user()->isMaintainer())
                 <li class="list-group-item">
-                    <h4><span class="glyphicon glyphicon-saved"></span>&nbsp;<b>Last Updated</b></h4>
+                    <h4><span class="glyphicon glyphicon-saved"></span>&nbsp;&nbsp;<b>Last Updated</b></h4>
                     @if ($lastUpdated != null)
                         <span class="label label-default">{{ $lastUpdated }}</span>
                     @else
@@ -157,7 +157,7 @@
 
                 @if (\Auth::user()->isAdmin() == true)
                     <li class="list-group-item">
-                        <h4><span class="glyphicon glyphicon-hdd"></span>&nbsp;<b>Path</b></h4>
+                        <h4><span class="glyphicon glyphicon-hdd"></span>&nbsp;&nbsp;<b>Path</b></h4>
                         {{ $path }}
                     </li>
                 @endif
@@ -166,7 +166,7 @@
         </div>
 
         <div class="tab-pane" id="files-content">
-            <div class="list-group">
+            <ul class="list-group">
                 <li class="list-group-item">
                     <div class="row">
                         <table class="table table-responsive table-hover">
@@ -208,7 +208,7 @@
                         </table>
                     </div>
                 </li>
-            </div>
+            </ul>
         </div>
     </div>
 @endsection
