@@ -33,9 +33,29 @@ class MangaInformation extends Model
         return $this->description;
     }
 
+    public function setDescription($description)
+    {
+        $this->description = $description;
+    }
+
     public function getType()
     {
         return $this->type;
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+    }
+
+    public function getYear()
+    {
+        return $this->year;
+    }
+
+    public function setYear($year)
+    {
+        $this->year = $year;
     }
 
     public function getLastUpdated()
@@ -267,11 +287,6 @@ class MangaInformation extends Model
         return empty($assoc_names) !== true ? $assoc_names : null;
     }
 
-    public function getYear()
-    {
-        return $this->year;
-    }
-
     public function getGenres()
     {
         $genres = [];
@@ -323,5 +338,272 @@ class MangaInformation extends Model
         }
 
         return empty($artists) != true ? $artists : null;
+    }
+
+    /**
+     * Updates the description for a manga.
+     *
+     * @param $description The description to update with.
+     * @return bool
+     */
+    public function updateDescription($description)
+    {
+        $this->setDescription($description);
+        $this->save();
+
+        return true;
+    }
+
+    /**
+     * Deletes the description from a manga.
+     *
+     * @return bool
+     */
+    public function deleteDescription()
+    {
+        $this->setDescription(null);
+        $this->save();
+
+        return true;
+    }
+
+    /**
+     * Updates the type of a manga.
+     *
+     * @param $type The type to update with.
+     * @return bool
+     */
+    public function updateType($type)
+    {
+        $this->setType($type);
+        $this->save();
+
+        return true;
+    }
+
+    public function deleteType()
+    {
+        $this->setType(null);
+        $this->save();
+
+        return true;
+    }
+
+    /**
+     * Adds an associated name to a manga.
+     *
+     * @param $name The associated name to add.
+     * @return bool
+     */
+    public function addAssociatedName($name)
+    {
+        $assoc_name = AssociatedName::firstOrCreate([
+            'name' => $name
+        ]);
+
+        if ($assoc_name == null)
+            return false;
+
+        $reference = AssociatedNameReference::firstOrCreate([
+            'manga_id' => $this->getMangaId(),
+            'assoc_name_id' => $assoc_name->getId()
+        ]);
+
+        if ($reference == null) {
+            $this->deleteAssociatedName($assoc_name->getName());
+        }
+
+        return true;
+    }
+
+    /**
+     * Deletes an associated name from a manga.
+     *
+     * @param $name The associated name to delete.
+     * @return bool
+     */
+    public function deleteAssociatedName($name)
+    {
+        // the name should always exist so throw an exception if it doesn't
+        $assoc_name = AssociatedName::where('name', $name)->firstOrFail();
+
+        AssociatedNameReference::where('manga_id', $this->getMangaId())
+                               ->where('assoc_name_id', $assoc_name->getId())
+                               ->forceDelete();
+
+        // find other existing references and preserve
+        $refCount = AssociatedNameReference::where('assoc_name_id', $assoc_name->getId())->count();
+        if ($refCount == 0) {
+            $assoc_name->forceDelete();
+        }
+
+        return true;
+    }
+
+    /**
+     * Adds a genre to the manga.
+     *
+     * @param $name The name of the genre to add.
+     * @return bool
+     */
+    public function addGenre($name)
+    {
+        // genre should always exist
+        $genre = Genre::where('name', $name)->firstOrFail();
+
+        $genreInfo = GenreInformation::firstOrCreate([
+            'manga_id' => $this->getMangaId(),
+            'genre_id' => $genre->getId()
+        ]);
+
+        return $genreInfo != null;
+    }
+
+    /**
+     * Deletes a genre from a manga.
+     *
+     * @param $name The name of the genre to delete.
+     * @return bool
+     */
+    public function deleteGenre($name)
+    {
+        $genre = Genre::where('name', $name)->firstOrFail();
+
+        GenreInformation::where('manga_id', $this->getMangaId())
+                        ->where('genre_id', $genre->getId())
+                        ->forceDelete();
+
+        return true;
+    }
+
+    /**
+     * Adds an author to a manga.
+     *
+     * @param $name The name of the author.
+     * @return bool
+     */
+    public function addAuthor($name)
+    {
+        $author = Author::firstOrCreate([
+            'name' => $name
+        ]);
+
+        if ($author == null)
+            return false;
+
+        $reference = AuthorReference::firstOrCreate([
+            'manga_id' => $this->getMangaId(),
+            'author_id' => $author->getId()
+        ]);
+
+        if ($reference == null) {
+            $this->deleteAuthor($author->getName());
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Deletes an author from a manga.
+     *
+     * @param $name The name of the author.
+     * @return bool
+     */
+    public function deleteAuthor($name)
+    {
+        $author = Author::where('name', $name)->firstOrFail();
+
+        AuthorReference::where('manga_id', $this->getMangaId())
+                       ->where('author_id', $author->getId())
+                       ->forceDelete();
+
+        // delete if there are no references
+        $refCount = AuthorReference::where('author_id', $author->getId())->count();
+        if ($refCount == 0) {
+            $author->forceDelete();
+        }
+
+        return true;
+    }
+
+    /**
+     * Adds an artist to a manga.
+     *
+     * @param $name The name of the artist.
+     * @return bool
+     */
+    public function addArtist($name)
+    {
+        $artist = Artist::firstOrCreate([
+            'name' => $name
+        ]);
+
+        if ($artist == null)
+            return false;
+
+        $reference = ArtistReference::firstOrCreate([
+            'manga_id' => $this->getMangaId(),
+            'artist_id' => $artist->getId()
+        ]);
+
+        if ($reference == null) {
+            $this->deleteArtist($artist->getName());
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Deletes an artist from a manga.
+     *
+     * @param $name The name of the artist.
+     * @return bool
+     */
+    public function deleteArtist($name)
+    {
+        $artist = Artist::where('name', $name)->firstOrFail();
+
+        ArtistReference::where('manga_id', $this->getMangaId())
+                       ->where('artist_id', $artist->getId())
+                       ->forceDelete();
+
+        // delete if there are no references
+        $refCount = ArtistReference::where('artist_id', $artist->getId())->count();
+        if ($refCount == 0) {
+            $artist->forceDelete();
+        }
+
+        return true;
+    }
+
+    /**
+     * Updates the year for a manga.
+     *
+     * @param $year The year to update with.
+     * @return bool
+     */
+    public function updateYear($year)
+    {
+        $this->setYear($year);
+        $this->save();
+
+        return true;
+    }
+
+    /**
+     * Deletes the year from a manga.
+     *
+     * @return bool
+     */
+    public function deleteYear()
+    {
+        $this->setYear(null);
+        $this->save();
+
+        return true;
     }
 }
