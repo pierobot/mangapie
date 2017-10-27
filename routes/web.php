@@ -26,7 +26,7 @@ Route::get('/information/{id}/{sort?}', 'MangaInformationController@index')->whe
 Route::post('/information', 'MangaInformationController@update');
 
 Route::get('/edit/{id}', 'MangaEditController@index')->where('id', '\d+');
-//Route::post('/edit', 'MangaEditController@update');
+Route::post('/edit', 'MangaEditController@update');
 
 Route::get('/genre/{id}', 'GenreController@index')->where('id', '\d+');
 
