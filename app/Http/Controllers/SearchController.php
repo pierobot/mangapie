@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SearchRequest;
 use Illuminate\Http\Request;
 
 use \App\Genre;
@@ -55,27 +56,14 @@ class SearchController extends Controller
 
     }
 
-    public function search(Request $request)
+    public function search(SearchRequest $request)
     {
-        // Ensure the form data is valid
-        $this->validate($request, [
-            'type' => 'string|required',
-            'query' => 'string|required_without:genres',
-            'genres'=> 'array|required_without:query'
-        ]);
-
-        // dd($a);
-
         $query = \Input::get('query');
-        $type = \Input::get('type');
         $genres = \Input::get('genres');
 
-        if ($type == 'basic')
+        if ($genres == null)
             return $this->doBasicSearch($query);
-        elseif ($type == 'advanced') {
+        else
             return $this->doAdvancedSearch($query, $genres);
-        }
-
-        return \Redirect::action('SearchController@index');
     }
 }
