@@ -101,38 +101,4 @@ class MangaInformationController extends Controller
                                                  'path',
                                                  'sort'));
     }
-
-    public function update(Request $request)
-    {
-        if (\Auth::user()->isAdmin() == false && \Auth::user()->isMaintainer() == false) {
-            return view('errors.403');
-        }
-
-        // Ensure the form data is valid
-        $this->validate($request, [
-            'id' => 'integer|required',
-            'name' => 'string',
-            'mu_id' => 'integer'
-        ]);
-
-        $id = \Input::get('id');
-        $name = \Input::get('name');
-        $mu_id = \Input::get('mu_id');
-
-        $manga_info = MangaInformation::find($id);
-        if ($manga_info != null) {
-            // this can fail; find a way to forward errors to MangaInformationController@index
-            $manga_info->updateFromMangaUpdates($mu_id);
-        } else {
-
-            $manga_info = MangaInformation::create([
-                'id' => $id,
-            ]);
-
-            if ($manga_info != null)
-                $manga_info->updateFromMangaUpdates($mu_id);
-        }
-
-        return \Redirect::action('MangaInformationController@index', [$id]);
-    }
 }
