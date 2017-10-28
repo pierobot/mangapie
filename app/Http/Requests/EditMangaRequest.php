@@ -27,8 +27,9 @@ class EditMangaRequest extends FormRequest
     {
         return [
             'id' => 'required|integer|exists:manga',
-            'action' => 'required|string|in:description.update,description.delete,type.update,type.delete,assoc_name.add,assoc_name.delete,genre.add,genre.delete,author.add,author.delete,artist.add,artist.delete,year.update,year.delete',
+            'action' => 'required|string|in:autofill,description.update,description.delete,type.update,type.delete,assoc_name.add,assoc_name.delete,genre.add,genre.delete,author.add,author.delete,artist.add,artist.delete,year.update,year.delete',
 
+            'mu_id' => 'required_if:action,autofill|integer',
             'description' => 'required_if:action,description.update|string',
             'type' => 'required_if:action,type.update|string|in:Manga,Doujinshi,Manwha',
             'assoc_name' => 'required_if:action,assoc_name.add,assoc_name.delete|string',
