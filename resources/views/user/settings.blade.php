@@ -7,6 +7,22 @@
 @section ('content')
     <h2 class="text-center"><b>Settings &middot; {{ \Auth::user()->getName() }}</b></h2>
 
+    @if ($errors->count() > 0)
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
+    @if (\Session::has('update-success'))
+        <div class="alert alert-success">
+            <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ \Session::get('update-success') }}
+        </div>
+    @endif
+
     <div class="panel-body">
 
         <ul class="nav nav-tabs">
@@ -25,7 +41,7 @@
                     <li class="list-group-item">
                         <div class="row">
                             <div class="form-group col-xs-12 col-lg-3">
-                                {{ Form::hidden('action', 'updatepassword') }}
+                                {{ Form::hidden('action', 'password.update') }}
                                 {{ Form::label('old password:', null, ['for' => 'old-password']) }}
                                 <input name="old-password" id="old-password" type="password" class="form-control"
                                        placeholder="Enter old password here...">
@@ -48,23 +64,6 @@
                     </li>
 
                     {{ Form::close() }}
-
-                    @if (\Session::has('edit-alert-success'))
-                        <div class="alert alert-success">
-                            <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ \Session::get('edit-alert-success') }}
-                        </div>
-                    @endif
-
-                    @if ($errors->edit->count() > 0)
-                        <div class="alert alert-danger">
-                            <ul>
-                                @foreach ($errors->edit->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-                    @endif
-
                 </ul>
             </div>
 
@@ -77,7 +76,7 @@
                         <div class="row">
                             <div class="form-group col-xs-12 col-lg-3">
 
-                                {{ Form::hidden('action', 'updatetheme') }}
+                                {{ Form::hidden('action', 'theme.update') }}
                                 {{ Form::label('theme:', null, ['for' => 'theme']) }}
 
                                 <select name="theme" class="form-control">
@@ -103,16 +102,9 @@
                         </div>
 
                         {{ Form::close() }}
-
                     </li>
                 </ul>
             </div>
         </div>
-
-        @if (\Session::has('theme-alert-success'))
-            <div class="alert alert-success">
-                <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ \Session::get('theme-alert-success') }}
-            </div>
-        @endif
     </div>
 @endsection
