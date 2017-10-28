@@ -30,7 +30,7 @@
     <div class="tab-content">
         <div class="tab-pane active" id="create-user-content">
             <ul class="list-group">
-                {{ Form::open(['action' => 'AdminController@createUser']) }}
+                {{ Form::open(['action' => 'UserController@create']) }}
 
                 <li class="list-group-item">
                     <h4>Information</h4>
@@ -94,7 +94,7 @@
 
         <div class="tab-pane" id="delete-user-content">
             <ul class="list-group">
-                {{ Form::open(['action' => 'AdminController@deleteUser']) }}
+                {{ Form::open(['action' => 'UserController@delete']) }}
 
                 <li class="list-group-item">
                     <div class="row">

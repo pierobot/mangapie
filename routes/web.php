@@ -41,15 +41,15 @@ Route::post('/favorites', 'FavoriteController@update');
 
 Route::get('/admin', 'AdminController@index');
 Route::get('/admin/users', 'AdminController@users');
-Route::post('/admin/users/create', 'AdminController@createUser');
-Route::post('/admin/users/edit', 'AdminController@editUser');
-Route::post('/admin/users/delete', 'AdminController@deleteUser');
 Route::get('/admin/libraries', 'AdminController@libraries');
 
 Route::post('/library/create', 'LibraryController@create');
 Route::post('/library/update', 'LibraryController@update');
 Route::post('/library/delete', 'LibraryController@delete');
 
+Route::post('/users/create', 'UserController@create');
+Route::post('/users/edit', 'UserController@edit');
+Route::post('/users/delete', 'UserController@delete');
 Route::get('/user/settings', 'UserSettingsController@index');
 Route::post('/user/settings', 'UserSettingsController@update');
 
