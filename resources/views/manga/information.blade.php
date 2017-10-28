@@ -41,23 +41,18 @@
         {{ Form::close() }}
     </div>
 
-    @if ($errors->update->count() > 0)
+    @if ($errors->count() > 0)
         <div class="alert alert-danger">
             <ul>
-                @foreach ($errors->update->all() as $error)
+                @foreach ($errors->all() as $error)
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
         </div>
     @endif
-    @if (\Session::has('thumbnail-update-success'))
+    @if (\Session::has('success'))
         <div class="alert alert-success">
-            <span class="glyphicon glyphicon-ok"></span>&nbsp;{{ \Session::get('thumbnail-update-success') }}
-        </div>
-    @endif
-    @if (\Session::has('favorite-success'))
-        <div class="alert alert-success">
-            <span class="glyphicon glyphicon-ok"></span>&nbsp;{{ \Session::get('favorite-success') }}
+            <span class="glyphicon glyphicon-ok"></span>&nbsp;{{ \Session::get('success') }}
         </div>
     @endif
 
