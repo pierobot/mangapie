@@ -6,6 +6,22 @@
 @section ('content')
     <h2 class="text-center"><b>Users</b></h2>
 
+    @if (\Session::has('success'))
+        <div class="alert alert-success">
+            <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ \Session::get('success') }}
+        </div>
+    @endif
+
+    @if ($errors->count() > 0)
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <ul class="nav nav-tabs">
         <li class="active"><a href="#create-user-content" data-toggle="tab"><span class="glyphicon glyphicon-plus"></span> Create</a></li>
         <li><a href="#delete-user-content" data-toggle="tab"><span class="glyphicon glyphicon-trash"></span> Delete</a></li>
@@ -99,36 +115,4 @@
             </ul>
         </div>
     </div>
-
-    @if (\Session::has('create-alert-success'))
-        <div class="alert alert-success">
-            <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ \Session::get('create-alert-success') }}
-        </div>
-    @endif
-
-    @if ($errors->create->count() > 0)
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->create->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    @if (\Session::has('delete-alert-success'))
-        <div class="alert alert-success">
-            <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ \Session::get('delete-alert-success') }}
-        </div>
-    @endif
-
-    @if ($errors->delete->count() > 0)
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->delete->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 @endsection

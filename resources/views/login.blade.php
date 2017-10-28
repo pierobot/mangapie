@@ -28,9 +28,13 @@
 
     {{ Form::close() }}
 
-    @if (\Session::has('login-failure'))
-        <div class="row alert alert-danger col-xs-12 col-sm-12 col-lg-12 center-block">
-            {{ \Session::get('login-failure') }}
+    @if ($errors->count() > 0)
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
         </div>
     @endif
     </div>

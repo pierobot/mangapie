@@ -85,62 +85,71 @@ class MangaEditController extends Controller
         $action = \Input::get('action');
         $information = MangaInformation::firstOrNew(['id' => $id]);
 
-        if ($action == 'description.update') {
+        if ($action == 'autofill') {
+            $result = $information->updateFromMangaUpdates(\Input::get('mu_id'));
+
+            if ($result == false) {
+                return \Redirect::action('MangaEditController@index')
+                                ->withErrors(['autofill' => 'Unable to scrape mangaupdates for information.']);
+            }
+
+            \Session::flash('success', 'The information was autofilled.');
+        } elseif ($action == 'description.update') {
             $information->updateDescription(\Input::get('description'));
 
-            \Session::flash('update-success', 'The description was successfully updated.');
+            \Session::flash('success', 'The description was successfully updated.');
         } elseif ($action == 'description.delete') {
             $information->deleteDescription();
 
-            \Session::flash('update-success', 'The description was successfully deleted.');
+            \Session::flash('success', 'The description was successfully deleted.');
         } elseif ($action == 'type.update') {
             $information->updateType(\Input::get('type'));
 
-            \Session::flash('update-success', 'The type was successfully updated.');
+            \Session::flash('success', 'The type was successfully updated.');
         } elseif ($action == 'type.delete') {
             $information->deleteType();
 
-            \Session::flash('update-success', 'The type was successfully deleted.');
+            \Session::flash('success', 'The type was successfully deleted.');
         } elseif ($action == 'assoc_name.add') {
             $information->addAssociatedName(\Input::get('assoc_name'));
 
-            \Session::flash('update-success', 'The associated name was successfully added.');
+            \Session::flash('success', 'The associated name was successfully added.');
         } elseif ($action == 'assoc_name.delete') {
             $information->deleteAssociatedName(\Input::get('assoc_name'));
 
-            \Session::flash('update-success', 'The associated name was successfully deleted.');
+            \Session::flash('success', 'The associated name was successfully deleted.');
         } elseif ($action == 'genre.add') {
             $information->addGenre(\Input::get('genre'));
 
-            \Session::flash('update-success', 'The genre was successfully added.');
+            \Session::flash('success', 'The genre was successfully added.');
         } elseif ($action == 'genre.delete') {
             $information->deleteGenre(\Input::get('genre'));
 
-            \Session::flash('update-success', 'The genre was successfully deleted.');
+            \Session::flash('success', 'The genre was successfully deleted.');
         } elseif ($action == 'author.add') {
             $information->addAuthor(\Input::get('author'));
 
-            \Session::flash('update-success', 'The author was successfully added.');
+            \Session::flash('success', 'The author was successfully added.');
         } elseif ($action =='author.delete') {
             $information->deleteAuthor(\Input::get('author'));
 
-            \Session::flash('update-success', 'The author was successfully deleted.');
+            \Session::flash('success', 'The author was successfully deleted.');
         } elseif ($action == 'artist.add') {
             $information->addArtist(\Input::get('artist'));
 
-            \Session::flash('update-success', 'The artist was successfully added.');
+            \Session::flash('success', 'The artist was successfully added.');
         } elseif ($action == 'artist.delete') {
             $information->deleteArtist(\Input::get('artist'));
 
-            \Session::flash('update-success', 'The artist was successfully deleted.');
+            \Session::flash('success', 'The artist was successfully deleted.');
         } elseif ($action == 'year.update') {
             $information->updateYear(\Input::get('year'));
 
-            \Session::flash('update-success', 'The year was successfully updated.');
+            \Session::flash('success', 'The year was successfully updated.');
         } elseif ($action == 'year.delete') {
             $information->deleteYear();
 
-            \Session::flash('update-success', 'The year was successfully deleted.');
+            \Session::flash('success', 'The year was successfully deleted.');
         }
 
         $information->save();

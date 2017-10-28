@@ -13,8 +13,6 @@
     <li>
         {{ Form::open(['action' => 'SearchController@search', 'class' => 'navbar-form form-inline']) }}
 
-        {{ Form::hidden('type', 'basic') }}
-
         <div class="form-group">
             {{ Form::text('query', null, ['class' => 'form-control', 'placeholder' => '...']) }}
         </div>
@@ -43,10 +41,10 @@
         </div>
     @endif
 
-    @if (\Session::has('update-success'))
+    @if (\Session::has('success'))
         <div class="alert alert-success">
             <ul>
-                <li>{{ \Session::get('update-success') }}</li>
+                <li>{{ \Session::get('success') }}</li>
             </ul>
         </div>
     @endif
@@ -62,8 +60,9 @@
                 <div class="panel-content">
                     <h4>Autofill</h4>
                     <hr>
-                    {{ Form::open(['action' => 'MangaInformationController@update']) }}
+                    {{ Form::open(['action' => 'MangaEditController@update']) }}
                     {{ Form::hidden('id', $id) }}
+                    {{ Form::hidden('action', 'autofill') }}
                     <div class="input-group">
                         {{ Form::label('id:', '', ['for' => 'mu_id']) }}
                         @if (isset($mu_id))
@@ -73,10 +72,7 @@
                         @endif
                     </div>
                     <br>
-                    {{ Form::submit('Update', ['class' => 'btn btn-success',
-                                               'id' => 'action',
-                                               'name' => 'action',
-                                               'value' => 'update']) }}
+                    {{ Form::submit('Update', ['class' => 'btn btn-success']) }}
                     {{ Form::close() }}
                 </div>
             </div>
