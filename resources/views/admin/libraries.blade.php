@@ -7,6 +7,22 @@
 @section ('content')
     <h2 class="text-center"><b>Libraries</b></h2>
 
+    @if (\Session::has('success'))
+        <div class="alert alert-success">
+            <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ \Session::get('success') }}
+        </div>
+    @endif
+
+    @if ($errors->count() > 0)
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <ul class="nav nav-tabs">
         <li class="active"><a href="#create-content" data-toggle="tab"><span class="glyphicon glyphicon-plus"></span> Create</a></li>
         <li><a href="#edit-content" data-toggle="tab"><span class="glyphicon glyphicon-pencil"></span> Edit</a></li>
@@ -44,87 +60,48 @@
 
         <div class="tab-pane" id="edit-content">
             <ul class="list-group">
-                {{ Form::open(['action' => 'LibraryController@update']) }}
-
                 <li class="list-group-item">
-                    <div class="row">
-                        <div class="form-group col-xs-12">
-                            <table class="table table-responsive table-hover ">
-                                <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>Name</th>
-                                    <th class="visible-sm visible-md visible-lg">Id</th>
-                                    <th class="visible-sm visible-md visible-lg">Path</th>
-                                    <th class="visible-sm visible-md visible-lg">Count</th>
-                                </tr>
-                                </thead>
+                    <table class="table table-responsive table-hover ">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>Name</th>
+                            <th class="visible-sm visible-md visible-lg">Id</th>
+                            <th class="visible-sm visible-md visible-lg">Path</th>
+                            <th>Count</th>
+                        </tr>
+                        </thead>
 
-                                <tbody>
-                                @foreach ($libraries as $library)
-                                    <tr>
-                                        <th>{{ Form::checkbox('ids[]', $library->id) }}</th>
-                                        <th>{{ $library->name }}</th>
-                                        <th class="visible-sm visible-md visible-lg">{{ $library->id }}</th>
-                                        <th class="visible-sm visible-md visible-lg">{{ $library->path }}</th>
-                                        <th class="visible-sm visible-md visible-lg">{{ \App\Manga::where('library_id', '=', $library->id)->count() }}</th>
-                                    </tr>
-                                @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group col-xs-12 col-lg-3">
-                            {{ Form::submit('Update', ['class' => 'btn btn-success', 'id' => 'action', 'name' => 'action', 'value' => 'update']) }}
-                            {{ Form::submit('Delete', ['class' => 'btn btn-danger', 'id' => 'action', 'name' => 'action', 'value' => 'delete']) }}
-                        </div>
-                    </div>
+                        <tbody>
+                        @foreach ($libraries as $library)
+                            <tr>
+                                <td>
+                                    {{ Form::open(['action' => 'LibraryController@update']) }}
+                                    {{ Form::hidden('id', $library->getId()) }}
+                                    <button class="btn btn-success" type="submit">
+                                        <span class="glyphicon glyphicon-refresh"></span>
+                                    </button>
+                                    {{ Form::close() }}
+                                </td>
+                                <td>
+                                    {{ Form::open(['action' => 'LibraryController@delete']) }}
+                                    {{ Form::hidden('id', $library->getId()) }}
+                                    <button class="btn btn-danger" type="submit">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </button>
+                                    {{ Form::close() }}
+                                </td>
+                                <td>{{ $library->name }}</td>
+                                <td class="visible-sm visible-md visible-lg">{{ $library->id }}</td>
+                                <td class="visible-sm visible-md visible-lg">{{ $library->path }}</td>
+                                <td>{{ \App\Manga::where('library_id', '=', $library->id)->count() }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
                 </li>
-
-                {{ Form::close() }}
             </ul>
         </div>
     </div>
-
-    @if (\Session::has('library-create-success'))
-        <div class="alert alert-success">
-            <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ \Session::get('library-create-success') }}
-        </div>
-    @elseif (\Session::has('library-create-failure'))
-        <div class="alert alert-danger">
-            <span class="glyphicon glyphicon-remove"></span>&nbsp; {{ \Session::get('library-create-failure') }}
-        </div>
-    @endif
-
-    @if (\Session::has('library-update-success'))
-        <div class="alert alert-success">
-            <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ \Session::get('library-update-success') }}
-        </div>
-    @elseif (\Session::has('library-update-failure'))
-        <div class="alert alert-danger">
-            <span class="glyphicon glyphicon-remove"></span>&nbsp; {{ \Session::get('library-update-failure') }}
-        </div>
-    @endif
-
-    @if ($errors->create->count() > 0)
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->create->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    @if ($errors->update->count() > 0)
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->update->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
 @endsection

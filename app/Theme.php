@@ -7,6 +7,16 @@ use \Symfony\Component\Finder\Finder;
 class Theme
 {
     /**
+     * Determines whether a theme exists or not.
+     *
+     * @param string $name
+     * @return bool TRUE if the theme exists and FALSE if not.
+     */
+    public static function exists($name)
+    {
+        return file_exists(Theme::path($name));
+    }
+    /**
      * Gets the path relative to the working directory of a theme.
      *
      *  @param string $name The name of the theme. (Ex: bootswatch/slate)
@@ -17,7 +27,7 @@ class Theme
         if (empty($name) === true)
             return false;
 
-        return $theme_path = '/public/themes/' . $name . '/' . 'bootstrap.min.css';
+        return $theme_path = 'public/themes/' . $name . '/' . 'bootstrap.min.css';
     }
     /**
      *  Gets all the themes in the public/themes directory.
@@ -49,7 +59,6 @@ class Theme
     public static function all($include_path = true)
     {
         $theme_collections = [];
-        $themes = [];
 
         $dirs = Finder::create()->in('public/themes')->depth('== 2')->directories();
         foreach ($dirs as $dir) {

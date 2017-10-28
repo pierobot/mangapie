@@ -13,8 +13,6 @@
     <li>
     {{ Form::open(['action' => 'SearchController@search', 'class' => 'navbar-form form-inline']) }}
 
-        {{ Form::hidden('type', 'basic') }}
-
         <div class="form-group">
         {{ Form::text('query', null, ['class' => 'form-control', 'placeholder' => '...']) }}
         </div>

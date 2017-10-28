@@ -23,7 +23,6 @@ Route::post('/search', 'SearchController@search');
 
 Route::get('/information/{id}/{sort?}', 'MangaInformationController@index')->where('id', '\d+')
                                                                            ->where('sort', 'ascending|descending');
-Route::post('/information', 'MangaInformationController@update');
 
 Route::get('/edit/{id}', 'MangaEditController@index')->where('id', '\d+');
 Route::post('/edit', 'MangaEditController@update');
@@ -49,6 +48,7 @@ Route::get('/admin/libraries', 'AdminController@libraries');
 
 Route::post('/library/create', 'LibraryController@create');
 Route::post('/library/update', 'LibraryController@update');
+Route::post('/library/delete', 'LibraryController@delete');
 
 Route::get('/user/settings', 'UserSettingsController@index');
 Route::post('/user/settings', 'UserSettingsController@update');

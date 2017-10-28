@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Favorite;
+use App\Http\Requests\FavoriteRequest;
 use App\Library;
 use App\LibraryPrivilege;
 use App\Manga;
@@ -41,19 +42,9 @@ class FavoriteController extends Controller
         return view('manga.favorites', compact('favorite_list', 'libraries', 'total'));
     }
 
-    public function update(Request $request)
+    public function update(FavoriteRequest $request)
     {
-        $validator = \Validator::make($request->all(), [
-            'id' => 'required|integer',
-            'action' => ['required', 'regex:/favorite|unfavorite/']
-        ]);
-
         $id = intval(\Input::get('id'));
-        if ($validator->fails()) {
-            return \Redirect::action('MangaInformationController@index', [$id])
-                            ->withErrors($validator, 'update');
-        }
-
         $user_id = \Auth::user()->getId();
         $action = \Input::get('action');
 
@@ -63,14 +54,14 @@ class FavoriteController extends Controller
                 'manga_id' => $id
             ]);
 
-            \Session::flash('favorite-success', 'You have favorited this manga.');
+            \Session::flash('success', 'You have favorited this manga.');
         } else {
             $favorite = Favorite::where('user_id', $user_id)
                                 ->where('manga_id', $id);
 
             $favorite->forceDelete();
 
-            \Session::flash('favorite-success', 'You have unfavorited this manga.');
+            \Session::flash('success', 'You have unfavorited this manga.');
         }
 
         return \Redirect::action('MangaInformationController@index', [$id]);
