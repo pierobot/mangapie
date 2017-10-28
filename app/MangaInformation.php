@@ -33,29 +33,14 @@ class MangaInformation extends Model
         return $this->description;
     }
 
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
     public function getType()
     {
         return $this->type;
     }
 
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
     public function getYear()
     {
         return $this->year;
-    }
-
-    public function setYear($year)
-    {
-        $this->year = $year;
     }
 
     public function getLastUpdated()
@@ -348,8 +333,7 @@ class MangaInformation extends Model
      */
     public function updateDescription($description)
     {
-        $this->setDescription($description);
-        $this->save();
+        $this->description = $description;
 
         return true;
     }
@@ -361,8 +345,7 @@ class MangaInformation extends Model
      */
     public function deleteDescription()
     {
-        $this->setDescription(null);
-        $this->save();
+        $this->description = null;
 
         return true;
     }
@@ -375,16 +358,14 @@ class MangaInformation extends Model
      */
     public function updateType($type)
     {
-        $this->setType($type);
-        $this->save();
+        $this->type = $type;
 
         return true;
     }
 
     public function deleteType()
     {
-        $this->setType(null);
-        $this->save();
+        $this->type = null;
 
         return true;
     }
@@ -588,8 +569,7 @@ class MangaInformation extends Model
      */
     public function updateYear($year)
     {
-        $this->setYear($year);
-        $this->save();
+        $this->year = $year;
 
         return true;
     }
@@ -601,8 +581,7 @@ class MangaInformation extends Model
      */
     public function deleteYear()
     {
-        $this->setYear(null);
-        $this->save();
+        $this->year = null;
 
         return true;
     }

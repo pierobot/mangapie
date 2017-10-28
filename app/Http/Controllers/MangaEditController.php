@@ -37,8 +37,15 @@ class MangaEditController extends Controller
 
         $name = $manga->getName();
         $info = MangaInformation::find($id);
+
         $mu_id = null;
         $description = null;
+        $type = null;
+        $assoc_names = null;
+        $genres = null;
+        $authors = null;
+        $artists = null;
+        $year = null;
         if ($info != null) {
             $mu_id = $info->getMangaUpdatesId();
             $description = $info->getDescription();
@@ -76,7 +83,7 @@ class MangaEditController extends Controller
     {
         $id = \Input::get('id');
         $action = \Input::get('action');
-        $information = MangaInformation::find($id);
+        $information = MangaInformation::firstOrNew(['id' => $id]);
 
         if ($action == 'description.update') {
             $information->updateDescription(\Input::get('description'));
@@ -135,6 +142,8 @@ class MangaEditController extends Controller
 
             \Session::flash('update-success', 'The year was successfully deleted.');
         }
+
+        $information->save();
 
         return \Redirect::action('MangaEditController@index', [$id]);
     }
