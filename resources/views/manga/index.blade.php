@@ -14,7 +14,9 @@
     {{ Form::open(['action' => 'SearchController@search', 'class' => 'navbar-form form-inline']) }}
 
         <div class="form-group">
-        {{ Form::text('query', null, ['class' => 'form-control', 'placeholder' => '...']) }}
+        {{ Form::text('query', null, ['class' => 'form-control',
+                                      'placeholder' => '...',
+                                      'id' => 'autocomplete']) }}
         </div>
 
         {{ Form::submit('Search', ['class' => 'btn btn-primary btn-navbar']) }}
@@ -38,6 +40,16 @@
 @endsection
 
 @section ('content')
+    @if ($errors->count() > 0)
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="row">
 
     @foreach ($manga_list as $manga)
@@ -61,5 +73,21 @@
     <div class="text-center">
         {{ $manga_list->render() }}
     </div>
+@endsection
 
+@section ('scripts')
+    <script src="{{ \URL::to('public/bootstrap-3-typeahead/bootstrap3-typeahead.min.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+            $('#autocomplete').typeahead({
+                minLength: 3,
+                delay: 250,
+                source: function (query, process) {
+                    return $.getJSON('{{ \URL::to('/search/autocomplete') }}', { query : query}, function (data) {
+                        return process(data);
+                    });
+                }
+            });
+        });
+    </script>
 @endsection
