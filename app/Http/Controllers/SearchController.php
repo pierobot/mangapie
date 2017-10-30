@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SearchAutoCompleteRequest;
 use App\Http\Requests\SearchRequest;
 use Illuminate\Http\Request;
 
@@ -41,19 +42,21 @@ class SearchController extends Controller
                                ->paginate(18);
             $libraries = Library::all();
         } else {
-            $manga_list = Manga::search($query)->whereIn('library_id', $library_ids)
+            $manga_list = Manga::search($query)
+                               ->whereIn('library_id', $library_ids)
                                ->orderBy('name', 'asc')
                                ->paginate(18);
 
             $libraries = Library::whereIn('id', $library_ids)->get();
         }
 
+        $manga_list->withPath(env('app.url'));
+
         return view('manga.index', compact('manga_list', 'libraries'));
     }
 
     private function doAdvancedSearch($query, $genres)
     {
-
     }
 
     public function search(SearchRequest $request)
@@ -65,5 +68,34 @@ class SearchController extends Controller
             return $this->doBasicSearch($query);
         else
             return $this->doAdvancedSearch($query, $genres);
+    }
+
+    public function autoComplete()
+    {
+        $query = \Input::get('query');
+
+        $user = \Auth::user();
+        $library_ids = LibraryPrivilege::getIds($user->getId());
+        $libraries = null;
+
+        if ($user->isAdmin() == true) {
+            $manga_list = Manga::where('name', 'like', '%' . $query . '%')
+                               ->orderBy('name', 'asc')
+                               ->get();
+        } else {
+            $manga_list = Manga::where('name', 'like', '%' . $query . '%')
+                               ->whereIn('library_id', $library_ids)
+                               ->orderBy('name', 'asc')
+                               ->get();
+        }
+
+        $results = [];
+        foreach ($manga_list as $manga) {
+            array_push($results, [
+                'name' => $manga->getName()
+            ]);
+        }
+
+        return \Response::json($results);
     }
 }
