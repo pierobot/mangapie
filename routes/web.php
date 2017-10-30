@@ -20,6 +20,7 @@ Route::get('/browse/library/{id}', 'MangaController@library')->where('id', '\d+'
 
 Route::get('/search', 'SearchController@index');
 Route::post('/search', 'SearchController@search');
+Route::get('/search/autocomplete', 'SearchController@autoComplete');
 
 Route::get('/information/{id}/{sort?}', 'MangaInformationController@index')->where('id', '\d+')
                                                                            ->where('sort', 'ascending|descending');
