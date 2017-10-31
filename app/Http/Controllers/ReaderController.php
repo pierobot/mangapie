@@ -74,9 +74,7 @@ class ReaderController extends Controller
         $page_count = count($images);
 
         $has_prev_page = false;
-        $prev_archive = false;
         $has_next_page = false;
-        $next_archive = false;
 
         $prev_url = false;
         $next_url = false;
@@ -120,17 +118,17 @@ class ReaderController extends Controller
 
         $preload = $this->getPreloadUrls($id, $archive_name, $page_count, $page);
 
-        return view('manga.reader', compact('id',
-                                            'name',
-                                            'archive_name',
-                                            'custom_navbar',
-                                            'page',
-                                            'page_count',
-                                            'preload',
-                                            'has_next_page',
-                                            'next_url',
-                                            'prev_url',
-                                            'has_prev_page'));
+        return view('manga.reader')->with('id', $id)
+                                   ->with('name', $name)
+                                   ->with('archive_name', $archive_name)
+                                   ->with('custom_navbar', $custom_navbar)
+                                   ->with('page', $page)
+                                   ->with('page_count', $page_count)
+                                   ->with('preload', $preload)
+                                   ->with('has_next_page', $has_next_page)
+                                   ->with('has_prev_page', $has_prev_page)
+                                   ->with('next_url', $next_url)
+                                   ->with('prev_url', $prev_url);
     }
 
     public function image($id, $archive_name, $page)
@@ -138,16 +136,14 @@ class ReaderController extends Controller
         $manga = Manga::find($id);
         $image = $manga->getImage($archive_name, $page);
 
-        if ($image !== false) {
-
-            return \Response::make($image['contents'], 200, [
-                'Content-Type' => $image['mime'],
-                'Content-Length' => $image['size'],
-                'Cache-Control' => 'public, max-age=2629800',
-                'Expires' => Carbon::now()->addMonth()->toRfc2822String()
-            ]);
-        }
-        else
+        if ($image == false)
             return \Response::make(null, 400);
+
+        return \Response::make($image['contents'], 200, [
+            'Content-Type' => $image['mime'],
+            'Content-Length' => $image['size'],
+            'Cache-Control' => 'public, max-age=2629800',
+            'Expires' => Carbon::now()->addMonth()->toRfc2822String()
+        ]);
     }
 }

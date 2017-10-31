@@ -11,7 +11,7 @@
 @section ('custom_navbar_right')
     <li class="clickable navbar-link"><a href="{{ URL::action('MangaInformationController@index', [$id]) }}"><span class="glyphicon glyphicon-book white"></span> Information</a></li>
 
-@if ($page_count !== false)
+@if ($page_count != 0)
 
     @if ($has_next_page)
         <li class="clickable navbar-link"><a href="{{ $next_url }}" id="next-image"><span class="glyphicon glyphicon-chevron-left white"></span> Next</a></li>
@@ -44,13 +44,9 @@
 @endsection
 
 @section ('content')
-    @if (\Session::has('reader-failure'))
-        <div class="alert alert-danger">
-            <span class="glyphicon glyphicon-remove"></span>&nbsp; {{ \Session::get('reader-failure') }}
-        </div>
-    @endif
+    @include ('shared.errors')
 
-    @if ($page_count !== false)
+    @if ($page_count !== 0)
         <div class="row text-center">
             <a id="image" href="{{ $has_next_page ? $next_url : "#" }}">
                 {{ Html::image(URL::action('ReaderController@image', [$id, rawurlencode($archive_name), $page]), 'image', ['class' => 'reader-image']) }}
@@ -64,10 +60,6 @@
             @endforeach
         </div>
         @endif
-    @else
-
-    <div class="alert alert-danger">Unable to get images from archive.</div>
-
     @endif
 @endsection
 

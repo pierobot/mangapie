@@ -6,21 +6,8 @@
 @section ('content')
     <h2 class="text-center"><b>Users</b></h2>
 
-    @if (\Session::has('success'))
-        <div class="alert alert-success">
-            <span class="glyphicon glyphicon-ok"></span>&nbsp; {{ \Session::get('success') }}
-        </div>
-    @endif
-
-    @if ($errors->count() > 0)
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+    @include ('shared.success')
+    @include ('shared.errors')
 
     <ul class="nav nav-tabs">
         <li class="active"><a href="#create-user-content" data-toggle="tab"><span class="glyphicon glyphicon-plus"></span> Create</a></li>

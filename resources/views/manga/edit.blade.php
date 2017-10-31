@@ -31,23 +31,8 @@
 @section ('content')
     <h2 class="text-center"><b>Edit &middot; <a href="{{ URL::action('MangaInformationController@index', [$id]) }}">{{ $name }}</a></b></h2>
 
-    @if ($errors->count() > 0)
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    @if (\Session::has('success'))
-        <div class="alert alert-success">
-            <ul>
-                <li>{{ \Session::get('success') }}</li>
-            </ul>
-        </div>
-    @endif
+    @include ('shared.success')
+    @include ('shared.errors')
 
     <div class="panel panel-default">
         <div class="panel-heading">

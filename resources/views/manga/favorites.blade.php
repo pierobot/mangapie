@@ -9,7 +9,6 @@
 @endsection
 
 @section ('custom_navbar_right')
-
     <li>
         {{ Form::open(['action' => 'SearchController@search', 'class' => 'navbar-form form-inline']) }}
 
@@ -36,7 +35,6 @@
             @endforeach
         </ul>
     </li>
-
 @endsection
 
 @section ('content')
@@ -44,55 +42,10 @@
         <b>Favorites&nbsp;({{ $total }})</b>
     </h3>
 
-    @if ($errors->count() > 0)
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-
-    <div class="row">
-
-    @foreach ($favorite_list as $favorite)
-
-    <div class="col-lg-2 col-sm-4 col-xs-6 text-center thumbnail center">
-
-        <div>
-            <a href="{{ URL::action('MangaInformationController@index', [$favorite->getId()]) }}">
-                {{ Html::image(URL::action('ThumbnailController@smallDefault', [$favorite->getId()])) }}
-            </a>
-        </div>
-
-        <h4 title="{{ $favorite->getName() }}"><a href="{{ URL::action('MangaInformationController@index', [$favorite->getId()]) }}">{{ $favorite->getName() }}</a></h4>
-
-    </div>
-
-    @endforeach
-
-    </div>
-
-    <div class="text-center">
-        {{ $favorite_list->render() }}
-    </div>
-
+    @include ('shared.errors')
+    @include ('shared.index')
 @endsection
 
 @section ('scripts')
-    <script src="{{ \URL::to('public/bootstrap-3-typeahead/bootstrap3-typeahead.min.js') }}" type="text/javascript"></script>
-    <script type="text/javascript">
-        $(function () {
-            $('#autocomplete').typeahead({
-                minLength: 3,
-                delay: 250,
-                source: function (query, process) {
-                    return $.getJSON('{{ \URL::to('/search/autocomplete') }}', { query : query}, function (data) {
-                        return process(data);
-                    });
-                }
-            });
-        });
-    </script>
+    @include ('shared.autocomplete')
 @endsection

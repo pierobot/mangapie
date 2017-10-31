@@ -39,7 +39,9 @@ class FavoriteController extends Controller
 
         $favorite_list->withPath(env('app.url'));
 
-        return view('manga.favorites', compact('favorite_list', 'libraries', 'total'));
+        return view('manga.favorites')->with('manga_list', $favorite_list)
+                                      ->with('libraries', $libraries)
+                                      ->with('total', $total);
     }
 
     public function update(FavoriteRequest $request)
