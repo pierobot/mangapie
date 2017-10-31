@@ -41,20 +41,8 @@
         {{ Form::close() }}
     </div>
 
-    @if ($errors->count() > 0)
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-    @if (\Session::has('success'))
-        <div class="alert alert-success">
-            <span class="glyphicon glyphicon-ok"></span>&nbsp;{{ \Session::get('success') }}
-        </div>
-    @endif
+    @include ('shared.success')
+    @include ('shared.errors')
 
     {{ Html::image(URL::action('ThumbnailController@mediumDefault', [$id]), '', ['class' => 'information-img center-block']) }}
 

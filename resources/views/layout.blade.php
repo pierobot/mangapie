@@ -3,10 +3,10 @@
     <meta charset="UTF-8">
     <title>@yield ('title')</title>
 
-    @if (\Auth::user() == null)
+    @if (Auth::check() == false)
         <link href="{{ URL::to('/public/themes/bootswatch/slate/bootstrap.min.css') }}" rel="stylesheet">
     @else
-        <link href="{{ URL::to(\App\Theme::path(\Auth::user()->getTheme())) }}" rel="stylesheet">
+        <link href="{{ URL::to(\App\Theme::path(Auth::user()->getTheme())) }}" rel="stylesheet">
     @endif
     <link href="{{ URL::to('/public/css/layout.css') }}" rel="stylesheet">
 
@@ -36,9 +36,8 @@
 
             @yield ('custom_navbar_right')
 
-            @if (Auth::id() != null)
-
-                @if (\App\User::find(Auth::id())['admin'] == true)
+            @if (Auth::check())
+                @if (Auth::user()->isAdmin() == true)
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="glyphicon glyphicon-wrench"></span>&nbsp;Admin&nbsp;<span class="glyphicon glyphicon-chevron-down white"></span>
@@ -65,7 +64,6 @@
                         </li>
                     </ul>
                 </li>
-
             @endif
             </ul>
         </div>

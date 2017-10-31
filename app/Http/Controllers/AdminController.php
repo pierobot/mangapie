@@ -28,9 +28,9 @@ class AdminController extends Controller
         $admin_count = User::where('admin', '=', true)->get()->count();
         $user_count = User::all()->count();
 
-        return view('admin.index', compact('info',
-                                           'admin_count',
-                                           'user_count'));
+        return view('admin.index')->with('info', $info)
+                                  ->with('admin_count', $admin_count)
+                                  ->with('user_count', $user_count);
     }
 
     public function users()
@@ -40,7 +40,7 @@ class AdminController extends Controller
 
         $libraries = Library::all();
 
-        return view('admin.users', compact('libraries'));
+        return view('admin.users')->with('libraries', $libraries);
     }
 
     public function libraries()
@@ -50,6 +50,6 @@ class AdminController extends Controller
 
         $libraries = Library::all();
 
-        return view('admin.libraries', compact('libraries'));
+        return view('admin.libraries')->with('libraries', $libraries);
     }
 }

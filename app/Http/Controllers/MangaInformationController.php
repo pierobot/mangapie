@@ -28,14 +28,11 @@ class MangaInformationController extends Controller
 
         // update genres if there are none or if they are older than 6 months
         if ($genre_count == 0) {
-
             $genres = MangaUpdates::genres_all();
             Genre::populate($genres);
         } else {
-
             $oldest = Genre::oldest();
             if ($oldest != null && Carbon::now()->subMonths(6)->gt($oldest['updated_at'])) {
-
                 $genres = MangaUpdates::genres_all();
                 Genre::populate($genres);
             }
@@ -85,20 +82,20 @@ class MangaInformationController extends Controller
                             ->get();
         $is_favorited = $favorite->count() != 0;
 
-        return view('manga.information', compact('id',
-                                                 'mu_id',
-                                                 'is_favorited',
-                                                 'name',
-                                                 'description',
-                                                 'type',
-                                                 'assoc_names',
-                                                 'genres',
-                                                 'authors',
-                                                 'artists',
-                                                 'year',
-                                                 'lastUpdated',
-                                                 'archives',
-                                                 'path',
-                                                 'sort'));
+        return view('manga.information')->with('id', $id)
+                                        ->with('mu_id', $mu_id)
+                                        ->with('is_favorited', $is_favorited)
+                                        ->with('name', $name)
+                                        ->with('description', $description)
+                                        ->with('type', $type)
+                                        ->with('assoc_names', $assoc_names)
+                                        ->with('genres', $genres)
+                                        ->with('authors', $authors)
+                                        ->with('artists', $artists)
+                                        ->with('year', $year)
+                                        ->with('lastUpdated', $lastUpdated)
+                                        ->with('archives', $archives)
+                                        ->with('path', $path)
+                                        ->with('sort');
     }
 }
