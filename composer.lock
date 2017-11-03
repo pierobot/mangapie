@@ -772,16 +772,16 @@
         },
         {
             "name": "ixudra/curl",
-            "version": "6.13.0",
+            "version": "6.14.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ixudra/curl.git",
-                "reference": "3b43c900d469e0e754f13fa792ea6581ddf645f1"
+                "reference": "cda520f67018d575dd3ebce3d54a692190eeac26"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ixudra/curl/zipball/3b43c900d469e0e754f13fa792ea6581ddf645f1",
-                "reference": "3b43c900d469e0e754f13fa792ea6581ddf645f1",
+                "url": "https://api.github.com/repos/ixudra/curl/zipball/cda520f67018d575dd3ebce3d54a692190eeac26",
+                "reference": "cda520f67018d575dd3ebce3d54a692190eeac26",
                 "shasum": ""
             },
             "require": {
@@ -789,6 +789,16 @@
                 "php": ">=5.4.0"
             },
             "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Ixudra\\Curl\\CurlServiceProvider"
+                    ],
+                    "aliases": {
+                        "Curl": "Ixudra\\Curl\\Facades\\Curl"
+                    }
+                }
+            },
             "autoload": {
                 "psr-4": {
                     "Ixudra\\Curl\\": "src/"
@@ -811,7 +821,7 @@
                 "curl",
                 "laravel"
             ],
-            "time": "2017-10-10T19:15:41+00:00"
+            "time": "2017-10-30T16:27:42+00:00"
         },
         {
             "name": "jakub-onderka/php-console-color",
@@ -1309,7 +1319,7 @@
         },
         {
             "name": "mtdowling/cron-expression",
-            "version": "v1.2.0",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mtdowling/cron-expression.git",

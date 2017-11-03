@@ -10,44 +10,51 @@
     @include ('shared.success')
     @include ('shared.errors')
 
-    <ul class="nav nav-tabs">
-        <li class="active"><a href="#create-content" data-toggle="tab"><span class="glyphicon glyphicon-plus"></span> Create</a></li>
-        <li><a href="#edit-content" data-toggle="tab"><span class="glyphicon glyphicon-pencil"></span> Edit</a></li>
-    </ul>
-
-    <div class="tab-content">
-        <div class="tab-pane active" id="create-content">
-            <ul class="list-group">
-
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span class="glyphicon glyphicon-plus"></span>&nbsp;Create
+            </div>
+        </div>
+        <div class="panel-content">
+            <div class="panel-body">
                 {{ Form::open(['action' => 'LibraryController@create']) }}
 
-                <li class="list-group-item">
-                    <div class="row">
-                        <div class="form-group col-xs-12 col-lg-3">
+                    <div class="col-xs-12">
+                        <div class="row">
+                            <div class="form-group col-xs-12 col-md-4">
 
-                            {{ Form::label('name:', null, ['for' => 'name']) }}
-                            {{ Form::text('name', null, ['class' => 'form-control', 'placeholder' => 'Enter name here...']) }}
+                                {{ Form::label('name:', null, ['for' => 'name']) }}
+                                {{ Form::text('name', null, ['class' => 'form-control', 'placeholder' => 'Enter name here...']) }}
 
-                            {{ Form::label('path:', null, ['for' => 'path']) }}
-                            {{ Form::text('path', null, ['class' => 'form-control', 'placeholder' => 'Enter path here'])}}
+                                {{ Form::label('path:', null, ['for' => 'path']) }}
+                                {{ Form::text('path', null, ['class' => 'form-control', 'placeholder' => 'Enter path here'])}}
 
+                            </div>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="form-group col-xs-12 col-lg-3">
+                    <div class="col-xs-12">
+                        <div class="form-group">
                             {{ Form::submit('Create', ['class' => 'btn btn-success']) }}
                         </div>
                     </div>
-                </li>
 
                 {{ Form::close() }}
-            </ul>
-        </div>
 
-        <div class="tab-pane" id="edit-content">
-            <ul class="list-group">
-                <li class="list-group-item">
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit
+            </div>
+        </div>
+        <div class="panel-content">
+            <div class="panel-body">
+                <div class="col-xs-12">
                     <table class="table table-responsive table-hover">
                         <thead>
                         <tr>
@@ -66,7 +73,7 @@
                                 <td>
                                     {{ Form::open(['action' => 'LibraryController@delete']) }}
                                     {{ Form::hidden('id', $library->getId()) }}
-                                    <button class="btn btn-danger" type="submit">
+                                    <button class="btn btn-danger" type="submit" title="Delete">
                                         <span class="glyphicon glyphicon-remove"></span>
                                     </button>
                                     {{ Form::close() }}
@@ -74,7 +81,7 @@
                                 <td>
                                     {{ Form::open(['action' => 'LibraryController@update']) }}
                                     {{ Form::hidden('id', $library->getId()) }}
-                                    <button class="btn btn-success" type="submit">
+                                    <button class="btn btn-success" type="submit" title="Scan">
                                         <span class="glyphicon glyphicon-refresh"></span>
                                     </button>
                                     {{ Form::close() }}
@@ -87,8 +94,12 @@
                         @endforeach
                         </tbody>
                     </table>
-                </li>
-            </ul>
+
+                    <div class="alert alert-warning">
+                        <span class="glyphicon glyphicon-warning-sign"></span>&nbsp; Deleted libraries will <b>NOT</b> be deleted from the filesystem.
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
