@@ -4,10 +4,6 @@
     Favorites
 @endsection
 
-@section ('stylesheets')
-    <link href="{{ URL::to('/public/css/manga/index.css') }}" rel="stylesheet">
-@endsection
-
 @section ('custom_navbar_right')
     <li>
         {{ Form::open(['action' => 'SearchController@search', 'class' => 'navbar-form form-inline']) }}

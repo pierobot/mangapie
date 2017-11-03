@@ -4,10 +4,6 @@
     Information &middot; {{ $name }}
 @endsection
 
-@section ('stylesheets')
-    <link href="{{ URL::to('/public/css/manga/information.css') }}" rel="stylesheet">
-@endsection
-
 @section ('custom_navbar_right')
     @if (\Auth::user()->isAdmin() || \Auth::user()->isMaintainer())
         <li class="clickable navbar-link"><a href="{{ URL::action('MangaEditController@index', [$id]) }}"><span class="glyphicon glyphicon-pencil"></span> Edit</a></li>
