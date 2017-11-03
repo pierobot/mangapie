@@ -1,10 +1,6 @@
+/* ------- Global ------- */
 .navbar {
     margin-bottom: 0;
-}
-
-.center {
-    margin-left: auto;
-    margin-right: auto;
 }
 
 @media (max-width: 767px) /* @grid-float-breakpoint -1 */
@@ -32,6 +28,73 @@
     }
 }
 
+/* ------- manga/index.blade.php ------- */
+
 .thumbnail {
     margin-bottom: 0;
+}
+
+.thumbnail h4 {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.thumbnail img {
+    max-height: 250px;
+    width: auto;
+    height: auto;
+    display: block;
+}
+
+div.thumbnail > div {
+    height: 250px;
+}
+
+/* ------- manga/information.blade.php ----- */
+
+.set-cover {
+    height: 310px;
+    max-width: 100%;
+}
+
+.set-cover img {
+    max-height: 250px;
+    max-width: 100%;
+    display: block;
+}
+
+.information-img {
+    max-width: 100%;
+    max-height: 500px;
+    display: block;
+}
+
+.thumbnail h4 {
+    /* Shorten long names with ellipses */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ------- manga/reader.blade.php ------- */
+
+.dropdown-menu {
+    max-height: 350px;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+img.reader-image {
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+    width: auto;
+}
+
+/* ------- admin/libraries.blade.php ------- */
+
+.table-th-button {
+    width: 35px;
+    max-width: 35px;
 }

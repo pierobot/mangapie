@@ -4,10 +4,6 @@
     Admin &middot; Dashboard
 @endsection
 
-@section ('stylesheets')
-    <link href="{{ URL::to('/public/css/admin.css') }}" rel="stylesheet">
-@endsection
-
 @section ('content')
     <h2 class="text-center"><b>Dashboard</b></h2>
 

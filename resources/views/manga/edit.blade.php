@@ -4,10 +4,6 @@
     Edit &middot; {{ $name }}
 @endsection
 
-@section ('stylesheets')
-    <link href="{{ URL::to('/public/css/manga/information.css') }}" rel="stylesheet">
-@endsection
-
 @section ('custom_navbar_right')
 
     <li>

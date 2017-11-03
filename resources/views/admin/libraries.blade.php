@@ -48,11 +48,11 @@
         <div class="tab-pane" id="edit-content">
             <ul class="list-group">
                 <li class="list-group-item">
-                    <table class="table table-responsive table-hover ">
+                    <table class="table table-responsive table-hover">
                         <thead>
                         <tr>
-                            <th></th>
-                            <th></th>
+                            <th class="table-th-button"></th>
+                            <th class="table-th-button"></th>
                             <th>Name</th>
                             <th class="visible-sm visible-md visible-lg">Id</th>
                             <th class="visible-sm visible-md visible-lg">Path</th>
@@ -64,18 +64,18 @@
                         @foreach ($libraries as $library)
                             <tr>
                                 <td>
-                                    {{ Form::open(['action' => 'LibraryController@update']) }}
-                                    {{ Form::hidden('id', $library->getId()) }}
-                                    <button class="btn btn-success" type="submit">
-                                        <span class="glyphicon glyphicon-refresh"></span>
-                                    </button>
-                                    {{ Form::close() }}
-                                </td>
-                                <td>
                                     {{ Form::open(['action' => 'LibraryController@delete']) }}
                                     {{ Form::hidden('id', $library->getId()) }}
                                     <button class="btn btn-danger" type="submit">
                                         <span class="glyphicon glyphicon-remove"></span>
+                                    </button>
+                                    {{ Form::close() }}
+                                </td>
+                                <td>
+                                    {{ Form::open(['action' => 'LibraryController@update']) }}
+                                    {{ Form::hidden('id', $library->getId()) }}
+                                    <button class="btn btn-success" type="submit">
+                                        <span class="glyphicon glyphicon-refresh"></span>
                                     </button>
                                     {{ Form::close() }}
                                 </td>

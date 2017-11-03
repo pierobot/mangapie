@@ -1,6 +1,6 @@
 <div class="row">
     @foreach ($manga_list as $manga)
-        <div class="col-lg-2 col-sm-4 col-xs-6 text-center thumbnail center">
+        <div class="col-lg-2 col-sm-4 col-xs-6 text-center thumbnail">
             <div>
                 <a href="{{ URL::action('MangaInformationController@index', [$manga->getId()]) }}">
                     {{ Html::image(URL::action('ThumbnailController@smallDefault', [$manga->getId()])) }}
