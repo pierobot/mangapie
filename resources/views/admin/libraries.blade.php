@@ -16,8 +16,8 @@
                 <span class="glyphicon glyphicon-plus"></span>&nbsp;Create
             </div>
         </div>
-        <div class="panel-content">
-            <div class="panel-body">
+        <div class="panel-body">
+            <div class="row">
                 {{ Form::open(['action' => 'LibraryController@create']) }}
 
                     <div class="col-xs-12">
@@ -52,16 +52,15 @@
                 <span class="glyphicon glyphicon-pencil"></span>&nbsp;Edit
             </div>
         </div>
-        <div class="panel-content">
-            <div class="panel-body">
+        <div class="panel-body">
+            <div class="row">
                 <div class="col-xs-12">
                     <table class="table table-responsive table-hover">
                         <thead>
                         <tr>
-                            <th class="table-th-button"></th>
-                            <th class="table-th-button"></th>
+                            <th class="col-xs-1"></th>
+                            <th class="col-xs-1"></th>
                             <th>Name</th>
-                            <th class="visible-sm visible-md visible-lg">Id</th>
                             <th class="visible-sm visible-md visible-lg">Path</th>
                             <th>Count</th>
                         </tr>
@@ -87,7 +86,6 @@
                                     {{ Form::close() }}
                                 </td>
                                 <td>{{ $library->name }}</td>
-                                <td class="visible-sm visible-md visible-lg">{{ $library->id }}</td>
                                 <td class="visible-sm visible-md visible-lg">{{ $library->path }}</td>
                                 <td>{{ \App\Manga::where('library_id', '=', $library->id)->count() }}</td>
                             </tr>

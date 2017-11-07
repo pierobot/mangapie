@@ -13,8 +13,8 @@
                 <span class="glyphicon glyphicon-info-sign"></span>&nbsp;Statistics
             </div>
         </div>
-        <div class="panel-content">
-            <div class="panel-body">
+        <div class="panel-body">
+            <div class="row">
                 <ul class="list-group">
 
                     <div class="col-xs-12 col-md-4">
