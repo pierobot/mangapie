@@ -52,6 +52,11 @@ class User extends Authenticatable
         $this->save();
     }
 
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
     public function isAdmin()
     {
         return $this->admin;

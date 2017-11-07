@@ -39,8 +39,10 @@ class AdminController extends Controller
             return view('errors.403');
 
         $libraries = Library::all();
+        $users = User::all();
 
-        return view('admin.users')->with('libraries', $libraries);
+        return view('admin.users')->with('libraries', $libraries)
+                                  ->with('users', $users);
     }
 
     public function libraries()
