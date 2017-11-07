@@ -48,6 +48,16 @@ class MangaInformation extends Model
         return $this->updated_at;
     }
 
+    public function manga()
+    {
+        return $this->belongsTo('App\Manga', 'id', 'id');
+    }
+
+    public function getManga()
+    {
+        return $this->manga;
+    }
+
     private function updateMangaInformation($mu_info)
     {
         if ($mu_info == null)
