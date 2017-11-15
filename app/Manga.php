@@ -17,7 +17,7 @@ use \App\ImageArchive;
 class Manga extends Model
 {
     //
-    protected $fillable = ['name', 'path', 'library_id', 'mu_id', 'description', 'type', 'year'];
+    protected $fillable = ['name', 'path', 'library_id'];
 
     public function scopeSearch($query, $value)
     {
