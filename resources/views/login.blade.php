@@ -8,27 +8,34 @@
 
 <div class="panel panel-default center-block" style="max-width:600px">
     <div class="panel-body">
-    {{ Form::open([ 'action' => 'LoginController@login']) }}
-
-        <div class="row input-group col-xs-12 col-sm-6 col-lg-6 center-block">
-            {{ Form::label('username', null, ['for' => 'username']) }}
-            {{ Form::text('username', null, ['class' => 'form-control']) }}
-        </div>
-        <div class="row input-group col-xs-12 col-sm-6 col-lg-6 center-block">
-            {{ Form::label('password', null, ['for' => 'password']) }}
-
-            {{-- the below doesn't want to display properly *shrug* --}}
-            {{-- Form::password('password', null, ['class' => 'form-control', 'type' => 'password']) --}}
-            <input name="password" id="password" type="password" class="form-control">
-        </div>
-        <div class="row">
+        {{ Form::open([ 'action' => 'LoginController@login']) }}
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-lg-6 col-lg-offset-3">
+                    <div class="input-group">
+                        <span class="input-group-addon glyphicon glyphicon-user" id="addon-username"></span>
+                        {{ Form::text('username', null, ['class' => 'form-control', 'aria-describedby' => 'addon-username']) }}
+                    </div>
+                </div>
+            </div>
             <br>
-            {{ Form::submit('Login', ['class' => 'btn btn-default center-block', 'type' => 'submit']) }}
-        </div>
+            <div class="row">
+                <div class="col-xs-12 col-sm-6 col-lg-6 col-lg-offset-3">
+                    <div class="input-group">
+                        <span class="input-group-addon glyphicon glyphicon-asterisk" id="addon-password"></span>
 
-    {{ Form::close() }}
+                        {{-- the below doesn't want to display properly *shrug* --}}
+                        {{-- Form::password('password', null, ['class' => 'form-control', 'type' => 'password']) --}}
+                        <input name="password" id="password" type="password" class="form-control" aria-describedby="addon-password">
+                    </div>
+                </div>
+            </div>
+            <br>
+            <div class="row center-block">
+                {{ Form::submit('Login', ['class' => 'btn btn-default center-block', 'type' => 'submit']) }}
+            </div>
+        {{ Form::close() }}
 
-    @include ('shared.errors')
+        @include ('shared.errors')
     </div>
 </div>
 
