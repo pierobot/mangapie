@@ -19,7 +19,11 @@
 </head>
 <body>
 
+@if (empty($page_count) == true)
 <div class="navbar navbar-default navbar-static-top">
+@else
+<div class="reader navbar navbar-default navbar-static-top">
+@endif
     <div class="container-fluid">
         <div class="navbar-header">
             <a class="btn btn-navbar navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-div" aria-expanded="false">
