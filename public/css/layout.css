@@ -1,15 +1,7 @@
 /* ------- Global ------- */
-.navbar {
+.reader.navbar {
+    /* Remove the bottom margin so that the image fits snugly */
     margin-bottom: 0;
-}
-
-@media (max-width: 767px) /* @grid-float-breakpoint -1 */
-{
-    .navbar-fixed-top
-    {
-        position: relative;
-        top: auto;
-    }
 }
 
 /* For screens < 768px wide - basically mobile devices */
