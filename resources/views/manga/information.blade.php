@@ -145,13 +145,12 @@
         </div>
 
         <div class="tab-pane" id="files-content">
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <div class="row">
-                        <table class="table table-responsive table-hover">
+            <div class="container-fluid">
+                <div class="row">
+                        <table class="table table-hover table-condensed" style="word-break: break-all; ">
                             <thead>
                             <tr>
-                                <th class="col-lg-8 col-md-8 col-sm-8">
+                                <th class="col-xs-8">
                                     <a href="{{ \URL::action('MangaInformationController@index', [$id, $sort == 'ascending' ? 'descending' : 'ascending']) }}">Filename&nbsp;
                                         @if ($sort == 'ascending')
                                             <span class="glyphicon glyphicon-triangle-top"></span>
@@ -160,8 +159,8 @@
                                         @endif
                                     </a>
                                 </th>
-                                <th class="col-lg-2 col-md-2 col-sm-2">Size</th>
-                                <th class="col-lg-2 col-md-2 col-sm-2 visible-sm visible-md visible-lg">Modified</th>
+                                <th class="col-xs-2">Size</th>
+                                <th class="col-sm-2 visible-sm visible-md visible-lg">Modified</th>
                             </tr>
                             </thead>
 
@@ -169,25 +168,24 @@
                             @if (empty($archives) === false)
                                 @foreach ($archives as $archive)
                                     <tr>
-                                        <th class="col-lg-8 col-md-8 col-sm-8">
+                                        <td class="col-xs-8">
                                             <a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive['name']), 1]) }}">
                                                 {{ $archive['name'] }}
                                             </a>
-                                        </th>
-                                        <th class="col-lg-2 col-md-2 col-sm-2">
+                                        </td>
+                                        <td class="col-xs-2">
                                             {{ $archive['size'] }}
-                                        </th>
-                                        <th class="col-lg-2 col-md-2 col-sm-2 visible-sm visible-md visible-lg">
+                                        </td>
+                                        <td class="col-sm-2 visible-sm visible-md visible-lg">
                                             {{ $archive['modified'] }}
-                                        </th>
+                                        </td>
                                     </tr>
                                 @endforeach
                             @endif
                             </tbody>
                         </table>
-                    </div>
-                </li>
-            </ul>
+                </div>
+            </div>
         </div>
     </div>
 @endsection
