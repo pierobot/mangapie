@@ -24,7 +24,7 @@
 @else
 <div class="reader navbar navbar-default navbar-static-top">
 @endif
-    <div class="container-fluid">
+    <div class="container">
         <div class="navbar-header">
             <a class="btn btn-navbar navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-div" aria-expanded="false">
                 <span class="glyphicon icon-bar"></span>
