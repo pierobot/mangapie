@@ -9,7 +9,7 @@ use \App\AuthorReference;
 use \App\Artist;
 use \App\ArtistReference;
 use \App\Genre;
-use \App\GenreInformation;
+use \App\GenreReference;
 use \App\Manga;
 use \App\JaroWinkler;
 use \App\MangaUpdates;
@@ -88,12 +88,12 @@ class MangaInformation extends Model
         return true;
     }
 
-    private function updateGenreInformation($mu_info)
+    private function updateGenreReferences($mu_info)
     {
         if ($mu_info == null)
             return false;
 
-        $genre_info = GenreInformation::where('manga_id', '=', $this->getMangaId());
+        $genre_info = GenreReference::where('manga_id', '=', $this->getMangaId());
         $genre_info->forceDelete();
 
         if (array_key_exists('genres', $mu_info) == false || $mu_info['genres'] == null)
@@ -103,7 +103,7 @@ class MangaInformation extends Model
             $genre_name = $mu_info['genres'][$i];
             $genre = Genre::where('name', '=', $genre_name)->first();
 
-            GenreInformation::updateOrCreate([
+            GenreReference::updateOrCreate([
                 'manga_id' => $this->getMangaId(),
                 'genre_id' => $genre->getId()
             ]);
@@ -223,7 +223,7 @@ class MangaInformation extends Model
 
                 $manga_info->updateMangaInformation($mu_info);
                 $manga_info->updateAssociatedNames($mu_info);
-                $manga_info->updateGenreInformation($mu_info);
+                $manga_info->updateGenreReferences($mu_info);
                 $manga_info->updateArtistsInformation($mu_info);
                 $manga_info->updateAuthorsInformation($mu_info);
 
@@ -246,7 +246,7 @@ class MangaInformation extends Model
 
         $this->updateMangaInformation($mu_info);
         $this->updateAssociatedNames($mu_info);
-        $this->updateGenreInformation($mu_info);
+        $this->updateGenreReferences($mu_info);
         $this->updateArtistsInformation($mu_info);
         $this->updateAuthorsInformation($mu_info);
 
@@ -275,7 +275,7 @@ class MangaInformation extends Model
     public function getGenres()
     {
         $genres = [];
-        $genre_info = GenreInformation::where('manga_id', '=', $this->getMangaId())->get();
+        $genre_info = GenreReference::where('manga_id', '=', $this->getMangaId())->get();
 
         if ($genre_info == null)
             return null;
@@ -432,7 +432,7 @@ class MangaInformation extends Model
         // genre should always exist
         $genre = Genre::where('name', $name)->firstOrFail();
 
-        $genreInfo = GenreInformation::firstOrCreate([
+        $genreInfo = GenreReference::firstOrCreate([
             'manga_id' => $this->getMangaId(),
             'genre_id' => $genre->getId()
         ]);
@@ -450,7 +450,7 @@ class MangaInformation extends Model
     {
         $genre = Genre::where('name', $name)->firstOrFail();
 
-        GenreInformation::where('manga_id', $this->getMangaId())
+        GenreReference::where('manga_id', $this->getMangaId())
                         ->where('genre_id', $genre->getId())
                         ->forceDelete();
 

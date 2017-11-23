@@ -25,7 +25,6 @@ class Genre extends Model
 
     public static function populate($genres)
     {
-
         if (count($genres) > 0) {
 
             foreach ($genres as $genre) {
@@ -40,7 +39,6 @@ class Genre extends Model
 
     public function scopeOldest($query)
     {
-
         $old = Genre::orderBy('updated_at', 'asc')->first();
 
         return $old;
