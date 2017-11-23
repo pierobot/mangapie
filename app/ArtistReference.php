@@ -18,4 +18,9 @@ class ArtistReference extends Model
     {
         return $this->artist_id;
     }
+
+    public function artist()
+    {
+        return $this->hasOne('App\Artist', 'id', 'artist_id');
+    }
 }

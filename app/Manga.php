@@ -19,6 +19,79 @@ class Manga extends Model
     //
     protected $fillable = ['name', 'path', 'library_id'];
 
+    public function library()
+    {
+        return $this->belongsTo('App\Library', 'library_id', 'id');
+    }
+
+    public function associatedNameReferences()
+    {
+        return $this->hasMany('App\AssociatedNameReference', 'manga_id', 'id');
+    }
+
+    public function getAssociatedNames()
+    {
+        $assocNames = [];
+
+        $references = $this->associatedNameReferences;
+        foreach ($references as $reference) {
+            array_push($assocNames, $reference->associatedName);
+        }
+
+        return $assocNames;
+    }
+
+    public function authorReferences()
+    {
+        return $this->hasMany('App\AuthorReference', 'manga_id', 'id');
+    }
+
+    public function getAuthors()
+    {
+        $authors = [];
+
+        $references = $this->authorReferences;
+        foreach ($references as $reference) {
+            array_push($authors, $reference->author);
+        }
+
+        return $authors;
+    }
+
+    public function artistReferences()
+    {
+        return $this->hasMany('App\ArtistReference', 'manga_id', 'id');
+    }
+
+    public function getArtists()
+    {
+        $artists = [];
+
+        $references = $this->artistReferences;
+        foreach ($references as $reference) {
+            array_push($artists, $reference->artist);
+        }
+
+        return $artists;
+    }
+
+    public function genreReferences()
+    {
+        return $this->hasMany('App\GenreReference', 'manga_id', 'id');
+    }
+
+    public function getGenres()
+    {
+        $genres = [];
+
+        $references = $this->genreReferences;
+        foreach ($references as $reference) {
+            array_push($genres, $reference->genre);
+        }
+
+        return $genres;
+    }
+
     public function scopeSearch($query, $value)
     {
         return empty($value) ? $query : $query->whereRaw("match(name) against(? in boolean mode)", [$value]);
