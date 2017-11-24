@@ -10,7 +10,7 @@
     <div class="panel-body">
         {{ Form::open([ 'action' => 'LoginController@login']) }}
             <div class="row">
-                <div class="col-xs-12 col-sm-6 col-lg-6 col-lg-offset-3">
+                <div class="col-xs-12 col-sm-6 col-sm-offset-3">
                     <div class="input-group">
                         <span class="input-group-addon glyphicon glyphicon-user" id="addon-username"></span>
                         {{ Form::text('username', null, ['class' => 'form-control', 'aria-describedby' => 'addon-username']) }}
@@ -19,7 +19,7 @@
             </div>
             <br>
             <div class="row">
-                <div class="col-xs-12 col-sm-6 col-lg-6 col-lg-offset-3">
+                <div class="col-xs-12 col-sm-6 col-sm-offset-3">
                     <div class="input-group">
                         <span class="input-group-addon glyphicon glyphicon-asterisk" id="addon-password"></span>
 
