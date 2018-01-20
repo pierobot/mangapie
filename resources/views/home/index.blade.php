@@ -1,22 +1,22 @@
 @extends ('layout')
 
 @section ('title')
-    Favorites
+    Index
 @endsection
 
 @section ('custom_navbar_right')
     <li>
-        {{ Form::open(['action' => 'SearchController@search', 'class' => 'navbar-form form-inline']) }}
+    {{ Form::open(['action' => 'SearchController@search', 'class' => 'navbar-form form-inline']) }}
 
         <div class="form-group">
-            {{ Form::text('query', null, ['class' => 'form-control',
-                                          'placeholder' => '...',
-                                          'id' => 'autocomplete']) }}
+        {{ Form::text('query', null, ['class' => 'form-control',
+                                      'placeholder' => '...',
+                                      'id' => 'autocomplete']) }}
         </div>
 
         {{ Form::submit('Search', ['class' => 'btn btn-primary btn-navbar']) }}
 
-        {{ Form::close() }}
+    {{ Form::close() }}
     </li>
 
     <li class="dropdown">
@@ -34,10 +34,6 @@
 @endsection
 
 @section ('content')
-    <h3 class="text-center">
-        <b>Favorites&nbsp;({{ $total }})</b>
-    </h3>
-
     @include ('shared.errors')
     @include ('shared.index')
 @endsection

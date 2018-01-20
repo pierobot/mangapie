@@ -15,15 +15,16 @@ Route::get('/login', ['as' => 'login', 'uses' => 'LoginController@index']);
 Route::post('/login', ['as' => 'login', 'uses' => 'LoginController@login']);
 Route::get('/logout', ['as' => 'logout', 'uses' => 'LoginController@logout']);
 
-Route::get('/', 'MangaController@index');
-Route::get('/browse/library/{id}', 'MangaController@library')->where('id', '\d+');
+Route::get('/', 'HomeController@index');
+Route::get('/home', 'HomeController@index');
+Route::get('/home/library/{id}', 'HomeController@library')->where('id', '\d+');
 
 Route::get('/search', 'SearchController@index');
 Route::post('/search', 'SearchController@search');
 Route::get('/search/autocomplete', 'SearchController@autoComplete');
 
-Route::get('/information/{id}/{sort?}', 'MangaInformationController@index')->where('id', '\d+')
-                                                                           ->where('sort', 'ascending|descending');
+Route::get('/manga/{id}/{sort?}', 'MangaController@index')->where('id', '\d+')
+                                                                ->where('sort', 'ascending|descending');
 
 Route::get('/edit/{id}', 'MangaEditController@index')->where('id', '\d+');
 Route::post('/edit', 'MangaEditController@update');

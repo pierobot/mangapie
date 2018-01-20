@@ -66,6 +66,6 @@ class FavoriteController extends Controller
             \Session::flash('success', 'You have unfavorited this manga.');
         }
 
-        return \Redirect::action('MangaInformationController@index', [$id]);
+        return \Redirect::action('MangaController@index', [$id]);
     }
 }
