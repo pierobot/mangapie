@@ -33,4 +33,9 @@ class LibraryPrivilege extends Model
 
         return count($ids) > 0 ? $ids : null;
     }
+
+    public function user()
+    {
+        return $this->belongsTo('App\User', 'user_id', 'id');
+    }
 }

@@ -10,7 +10,6 @@ use \App\Favorite;
 use \App\Genre;
 use \App\GenreInformation;
 use \App\Manga;
-use \App\MangaInformation;
 use \App\MangaUpdates;
 
 class MangaInformationController extends Controller
@@ -23,57 +22,27 @@ class MangaInformationController extends Controller
     public function index($id, $sort = 'ascending')
     {
         $manga = Manga::find($id);
-        $manga_info = MangaInformation::find($id);
-        $genre_count = Genre::count();
-
-        // update genres if there are none or if they are older than 6 months
-        if ($genre_count == 0) {
-            $genres = MangaUpdates::genres_all();
-            Genre::populate($genres);
-        } else {
-            $oldest = Genre::oldest();
-            if ($oldest != null && Carbon::now()->subMonths(6)->gt($oldest['updated_at'])) {
-                $genres = MangaUpdates::genres_all();
-                Genre::populate($genres);
-            }
-        }
+        if ($manga == null)
+            return view('error.404');
 
         // Do we need to retrieve information from mangaupdates?
-        if ($manga_info == null) {
-            // Yes
-            $manga_info = MangaInformation::createFromMangaUpdates($manga->getId(), $manga->getName());
-
-            if ($manga_info != null)
-                $manga_info->save();
+        if ($manga->getMangaUpdatesId() == null) {
+            $autofillResult = MangaUpdates::autofill($manga);
         }
 
         $name = $manga->getName();
         $path = $manga->getPath();
         $archives = $manga->getArchives($sort);
 
-        // These are passed to the blade template even if there is no MU information
-        $mu_id = null;
-        $description = null;
-        $type = null;
-        $assoc_names = null;
-        $genres = null;
-        $authors = null;
-        $artists = null;
-        $year = null;
-        $lastUpdated = null;
-
-        // Update the values if there is MU information
-        if($manga_info != null) {
-            $mu_id = $manga_info->getMangaUpdatesId();
-            $description = $manga_info->getDescription();
-            $type = $manga_info->getType();
-            $assoc_names = $manga_info->getAssociatedNames();
-            $genres = $manga_info->getGenres();
-            $authors = $manga_info->getAuthors();
-            $artists = $manga_info->getArtists();
-            $year = $manga_info->getYear();
-            $lastUpdated = $manga_info->getLastUpdated();
-        }
+        $mu_id = $manga->getMangaUpdatesId();
+        $description = $manga->getDescription();
+        $type = $manga->getType();
+        $assoc_names = $manga->getAssociatedNames();
+        $genres = $manga->getGenres();
+        $authors = $manga->getAuthors();
+        $artists = $manga->getArtists();
+        $year = $manga->getYear();
+        $lastUpdated = $manga->getLastUpdated();
 
         // determine whether or not the manga has been favorited
         $user_id = \Auth::user()->getId();

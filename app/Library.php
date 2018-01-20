@@ -26,6 +26,11 @@ class Library extends Model
         return $this->path;
     }
 
+    public function manga()
+    {
+        return $this->hasMany('App\Manga', 'library_id', 'id');
+    }
+
     public function scan()
     {
         // scan and add new directories
