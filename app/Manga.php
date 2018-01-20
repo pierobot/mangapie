@@ -17,11 +17,66 @@ use \App\ImageArchive;
 class Manga extends Model
 {
     //
-    protected $fillable = ['name', 'path', 'library_id'];
+    protected $fillable = ['name', 'path', 'library_id', 'mu_id', 'type', 'description', 'year'];
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    public function getLibraryId()
+    {
+        return $this->library_id;
+    }
+
+    public function getMangaUpdatesId()
+    {
+        return $this->mu_id;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function getYear()
+    {
+        return $this->year;
+    }
+
+    public function forceDelete()
+    {
+        // delete all information and references that belongs to this manga
+
+        $id = $this->getId();
+
+        $artist_references = ArtistReference::where('manga_id', '=', $id)->forceDelete();
+
+        $author_references = AuthorReference::where('manga_id', '=', $id)->forceDelete();
+
+        $genre_information = GenreInformation::where('manga_id', '=', $id)->forceDelete();
+
+        parent::forceDelete();
+    }
 
     public function library()
     {
-        return $this->belongsTo('App\Library', 'library_id', 'id');
+        return $this->belongsTo('App\Library');
     }
 
     public function associatedNameReferences()
@@ -292,42 +347,5 @@ class Manga extends Model
         }
 
         return false;
-    }
-
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    public function getLibraryId()
-    {
-        return $this->library_id;
-    }
-
-    public function forceDelete()
-    {
-        // delete all information and references that belongs to this manga
-
-        $id = $this->getId();
-
-        $artist_references = ArtistReference::where('manga_id', '=', $id)->forceDelete();
-
-        $author_references = AuthorReference::where('manga_id', '=', $id)->forceDelete();
-
-        $genre_information = GenreInformation::where('manga_id', '=', $id)->forceDelete();
-
-        $manga_information = MangaInformation::where('id', '=', $id)->forceDelete();
-
-        parent::forceDelete();
     }
 }
