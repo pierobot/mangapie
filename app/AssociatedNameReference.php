@@ -18,4 +18,9 @@ class AssociatedNameReference extends Model
     {
         return $this->assoc_name_id;
     }
+
+    public function associatedName()
+    {
+        return $this->hasOne('App\AssociatedName', 'id', 'assoc_name_id');
+    }
 }

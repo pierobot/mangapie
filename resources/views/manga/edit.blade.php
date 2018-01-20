@@ -256,7 +256,7 @@
                                             <div class="col-xs-12 col-md-6">
                                                 <select name="genre" class="form-control">
                                                     @foreach ($genres as $genre)
-                                                        <option value="{{ $genre }}">{{ $genre }}</option>
+                                                        <option value="{{ $genre->getName() }}">{{ $genre->getName() }}</option>
                                                     @endforeach
                                                 </select>
                                             </div>

@@ -2,17 +2,7 @@
 
 namespace App;
 
-use \App\ImageArchiveZip;
-use \App\ImageArchiveRar;
-use \App\IntlString;
-
-interface ImageArchiveInterface
-{
-    public function good();
-    public function getInfo($index);
-    public function getContents($index, &$size);
-    public function getImages();
-}
+use App\Interfaces\ImageArchiveInterface;
 
 class ImageArchive
 {
@@ -29,16 +19,16 @@ class ImageArchive
     public static function isJunk($name)
     {
         $all_junk = [
-          '__MACOSX',
-          '.DS_STORE'
+            '__MACOSX',
+            '.DS_STORE'
         ];
 
         foreach ($all_junk as $junk) {
 
             $result = IntlString::strncmp(
-                        IntlString::convert($name),
-                        IntlString::convert($junk),
-                        IntlString::strlen($junk));
+                IntlString::convert($name),
+                IntlString::convert($junk),
+                IntlString::strlen($junk));
 
             if ($result == 0)
                 return true;

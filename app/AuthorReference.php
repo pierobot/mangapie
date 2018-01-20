@@ -18,4 +18,9 @@ class AuthorReference extends Model
     {
         return $this->author_id;
     }
+
+    public function author()
+    {
+        return $this->hasOne('App\Author', 'id', 'author_id');
+    }
 }

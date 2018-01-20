@@ -88,4 +88,14 @@ class User extends Authenticatable
         $this->theme = $theme;
         $this->save();
     }
+
+    public function favorites()
+    {
+        return $this->hasMany('App\Favorite', 'user_id', 'id');
+    }
+
+    public function privileges()
+    {
+        return $this->hasMany('App\LibraryPrivilege', 'user_id', 'id');
+    }
 }
