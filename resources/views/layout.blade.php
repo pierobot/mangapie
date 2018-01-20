@@ -1,6 +1,8 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale = 1, maximum-scale = 1, user-scalable = no">
+
     <title>@yield ('title')</title>
 
     @if (Auth::check() == false)
@@ -14,8 +16,6 @@
 
     <script src="{{ URL::to('/public/jquery/jquery.min.js') }}" type="text/javascript"></script>
     <script src="{{ URL::to('/public/bootstrap/dist/js/bootstrap.min.js') }}" type="text/javascript"></script>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale = 1, maximum-scale = 1, user-scalable = no">
 </head>
 <body>
 
