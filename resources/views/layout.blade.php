@@ -15,7 +15,7 @@
     <script src="{{ URL::to('/public/jquery/jquery.min.js') }}" type="text/javascript"></script>
     <script src="{{ URL::to('/public/bootstrap/dist/js/bootstrap.min.js') }}" type="text/javascript"></script>
 
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale = 1, maximum-scale = 1, user-scalable = no">
 </head>
 <body>
 
@@ -32,7 +32,7 @@
                 <span class="glyphicon icon-bar"></span>
             </a>
 
-            {{ Html::link(URL::action('MangaController@index'), 'MangaPie', ['class' => 'navbar-brand']) }}
+            {{ Html::link(URL::action('HomeController@index'), 'MangaPie', ['class' => 'navbar-brand']) }}
         </div>
 
         <div class="collapse navbar-collapse" id="navbar-collapse-div">

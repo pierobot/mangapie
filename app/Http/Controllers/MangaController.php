@@ -3,82 +3,68 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Filesystem\Filesystem;
 
-use Symfony\Component\HttpFoundation\StreamedResponse;
+use \Carbon\Carbon;
 
+use \App\Favorite;
+use \App\Genre;
+use \App\GenreInformation;
 use \App\Manga;
-use \App\Library;
-use \App\LibraryPrivilege;
-use \App\User;
+use \App\MangaUpdates;
 
 class MangaController extends Controller
 {
-    //public $perPage = 25;
-
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    public function index()
+    public function index($id, $sort = 'ascending')
     {
-        $user = \Auth::user();
-        $libraries = null;
+        $manga = Manga::find($id);
+        if ($manga == null)
+            return view('error.404');
 
-        if ($user->isAdmin() == true) {
-            $libraries = Library::all();
-
-            $manga_list = Manga::orderBy('name', 'asc')->paginate(18);
-        } else {
-            $library_ids = LibraryPrivilege::getIds($user->getId());
-
-            $manga_list = Manga::whereIn('library_id', $library_ids)->orderBy('name', 'asc')->paginate(18);
-            $libraries = Library::whereIn('id', $library_ids)->get();
+        // Do we need to retrieve information from mangaupdates?
+        if ($manga->getMangaUpdatesId() == null) {
+            $autofillResult = MangaUpdates::autofill($manga);
         }
 
-        $manga_list->withPath(env('app.url'));
+        $name = $manga->getName();
+        $path = $manga->getPath();
+        $archives = $manga->getArchives($sort);
 
-        return view('manga.index', compact('manga_list', 'libraries'));
-    }
+        $mu_id = $manga->getMangaUpdatesId();
+        $description = $manga->getDescription();
+        $type = $manga->getType();
+        $assoc_names = $manga->getAssociatedNames();
+        $genres = $manga->getGenres();
+        $authors = $manga->getAuthors();
+        $artists = $manga->getArtists();
+        $year = $manga->getYear();
+        $lastUpdated = $manga->getLastUpdated();
 
-    public function library($id)
-    {
-        $user = \Auth::user();
-        $can_access = false;
+        // determine whether or not the manga has been favorited
+        $user_id = \Auth::user()->getId();
+        $favorite = Favorite::where('user_id', $user_id)
+                            ->where('manga_id', $id)
+                            ->get();
+        $is_favorited = $favorite->count() != 0;
 
-        // check if the user has sufficient privileges
-        if ($user->isAdmin() == true) {
-            // admin can always access everything
-            $can_access = true;
-        } else {
-            $privileges = LibraryPrivilege::where('user_id', '=', $user->getId())->get();
-            // a regular user needs to have library privileges
-            foreach ($privileges as $privilege) {
-                if ($privilege->getLibraryId() == $id) {
-                    $can_access = true;
-                    break;
-                }
-            }
-        }
-
-        $manga_list = null;
-        $libraries = null;
-        if ($can_access == true) {
-            $manga_list = Manga::where('library_id', '=', $id)->orderBy('name', 'asc')->paginate(18);
-
-            if ($user->isAdmin() == true) {
-                $libraries = Library::all();
-            } else {
-                $library_ids = LibraryPrivilege::getIds($user->getId());
-                $libraries = Library::whereIn('id', $library_ids)->get();
-            }
-        }
-
-        $manga_list->withPath(env('app.url'));
-
-        return $can_access == true ? view('manga.index', compact('manga_list', 'libraries')) :
-                                     view('error.403');
+        return view('manga.index')->with('id', $id)
+                                  ->with('mu_id', $mu_id)
+                                  ->with('is_favorited', $is_favorited)
+                                  ->with('name', $name)
+                                  ->with('description', $description)
+                                  ->with('type', $type)
+                                  ->with('assoc_names', $assoc_names)
+                                  ->with('genres', $genres)
+                                  ->with('authors', $authors)
+                                  ->with('artists', $artists)
+                                  ->with('year', $year)
+                                  ->with('lastUpdated', $lastUpdated)
+                                  ->with('archives', $archives)
+                                  ->with('path', $path)
+                                  ->with('sort');
     }
 }

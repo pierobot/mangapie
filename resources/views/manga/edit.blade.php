@@ -19,13 +19,13 @@
     </li>
 
     <li class="clickable navbar-link">
-        <a href="{{ URL::action('MangaInformationController@index', [$id]) }}"><span class="glyphicon glyphicon-book white"></span> Information</a>
+        <a href="{{ URL::action('MangaController@index', [$id]) }}"><span class="glyphicon glyphicon-book white"></span> Information</a>
     </li>
 
 @endsection
 
 @section ('content')
-    <h2 class="text-center"><b>Edit &middot; <a href="{{ URL::action('MangaInformationController@index', [$id]) }}">{{ $name }}</a></b></h2>
+    <h2 class="text-center"><b>Edit &middot; <a href="{{ URL::action('MangaController@index', [$id]) }}">{{ $name }}</a></b></h2>
 
     @include ('shared.success')
     @include ('shared.errors')
