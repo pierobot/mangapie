@@ -2,10 +2,13 @@
 
 namespace App;
 
-use \App\IntlString;
+use \Carbon\Carbon;
 
-class MangaUpdates {
+use App\IntlString;
+use App\Interfaces\AutoFillInterface;
 
+class MangaUpdates implements AutoFillInterface
+{
     public static function genres_all()
     {
         $contents = \Curl::to('https://www.mangaupdates.com/genres.html')->get();
@@ -240,5 +243,101 @@ class MangaUpdates {
         $information['year'] = MangaUpdates::year($contents);
 
         return $information;
+    }
+
+    /**
+     * Automatically scrapes information about a manga from mangaupdates.
+     * This function also saves, and overwrites, the information to the database.
+     *
+     * @param App\Manga $manga The manga to autofill.
+     * @return boolean TRUE on success and FALSE on failure.
+     */
+    public static function autofill($manga)
+    {
+        if ($manga == null)
+            return false;
+
+        $searchResults = [];
+        $exactMatch = false;
+        $bestMatchingId = 0;
+
+        // search through five pages for names that will match
+        for ($currentPage = 1; $currentPage <= 5; $currentPage++) {
+            $pageResults = MangaUpdates::search($manga->getName(), $currentPage);
+
+            if ($pageResults == false || empty($pageResults) == true)
+                break;
+
+            // if we have an exact match, then avoid searching other pages
+            if ($pageResults[0]['distance'] == 1.0) {
+                $exactMatch = true;
+                $bestMatchingId = $pageResults[0]['mu_id'];
+                break;
+            }
+
+            // a perfect match wasn't found, just append
+            foreach ($pageResults as $result) {
+                array_push($searchResults, $result);
+            }
+        }
+
+        // if no exact match was found, then sort them in descending order
+        if ($exactMatch == false) {
+            usort($searchResults, function ($left, $right) {
+                if ($left['distance'] == $right['distance'])
+                    return 0;
+                elseif ($left['distance'] < $right['distance'])
+                    return 1;
+                elseif ($left['distance'] > $right['distance'])
+                    return -1;
+            });
+
+            $bestMatchingId = $searchResults[0]['mu_id'];
+        }
+
+        // autofill from the id of the name that best matched
+        return MangaUpdates::autofillFromId($manga, $bestMatchingId);
+    }
+
+    public static function fillYear($manga, $year)
+    {
+        if (empty($year) == true)
+            return false;
+
+        $manga->year = $year;
+
+        return true;
+    }
+
+    public static function autofillFromId($manga, $id)
+    {
+        $genre_count = Genre::count();
+
+        // update genres if there are none or if they are older than 6 months
+        if ($genre_count == 0) {
+            $genres = MangaUpdates::genres_all();
+            Genre::populate($genres);
+        } else {
+            $oldest = Genre::oldest();
+            if ($oldest != null && Carbon::now()->subMonths(6)->gt($oldest['updated_at'])) {
+                $genres = MangaUpdates::genres_all();
+                Genre::populate($genres);
+            }
+        }
+
+        $information = MangaUpdates::information($id);
+
+        $manga->setMangaUpdatesId($information['mu_id']);
+        $manga->setType($information['type']);
+        $manga->setDescription($information['description']);
+        $assocNamesResult = $manga->addAssociatedNames($information['assoc_names']);
+        $authorsResult = $manga->addAuthors($information['authors']);
+        $artistsResult = $manga->addArtists($information['artists']);
+        $genresResult = $manga->addGenres($information['genres']);
+        $manga->setYear($information['year']);
+
+        $manga->save();
+
+        return true;
     }
 }
