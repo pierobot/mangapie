@@ -85,7 +85,7 @@
                     <h4><span class="glyphicon glyphicon-tags"></span>&nbsp;&nbsp;<b>Genres</b></h4>
                     @if ($genres != null)
                         @foreach ($genres as $genre)
-                            <span class="label label-default">{{ $genre }}</span>
+                            <span class="label label-default">{{ $genre->getName() }}</span>
                         @endforeach
                     @else
                         Unable to find genres.

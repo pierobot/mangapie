@@ -8,20 +8,83 @@ use Illuminate\Support\Collection;
 use \Symfony\Component\Finder\Finder;
 use \Carbon\Carbon;
 
-use \App\ArtistReference;
-use \App\AuthorReference;
-use \App\GenreInformation;
-use \App\MangaInformation;
-use \App\ImageArchive;
+use App\ArtistReference;
+use App\AuthorReference;
+use App\GenreInformation;
+use App\MangaInformation;
+use App\Interfaces\ImageArchiveInterface;
+use App\Interfaces\EditableInterface;
 
-class Manga extends Model
+class Manga
+    extends Model
+    implements EditableInterface
 {
     //
-    protected $fillable = ['name', 'path', 'library_id'];
+    protected $fillable = ['name', 'path', 'library_id', 'mu_id', 'type', 'description', 'year'];
+
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    public function getPath()
+    {
+        return $this->path;
+    }
+
+    public function getLibraryId()
+    {
+        return $this->library_id;
+    }
+
+    public function getMangaUpdatesId()
+    {
+        return $this->mu_id;
+    }
+
+    public function getType()
+    {
+        return $this->type;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function getYear()
+    {
+        return $this->year;
+    }
+
+    public function getLastUpdated()
+    {
+        return $this->updated_at;
+    }
+
+    public function forceDelete()
+    {
+        // delete all information and references that belongs to this manga
+
+        $id = $this->getId();
+
+        $artist_references = ArtistReference::where('manga_id', '=', $id)->forceDelete();
+
+        $author_references = AuthorReference::where('manga_id', '=', $id)->forceDelete();
+
+        $genre_information = GenreInformation::where('manga_id', '=', $id)->forceDelete();
+
+        parent::forceDelete();
+    }
 
     public function library()
     {
-        return $this->belongsTo('App\Library', 'library_id', 'id');
+        return $this->belongsTo('App\Library');
     }
 
     public function associatedNameReferences()
@@ -294,40 +357,160 @@ class Manga extends Model
         return false;
     }
 
-    public function getId()
+    public function setMangaUpdatesId($id)
     {
-        return $this->id;
+        $this->mu_id = $id;
+        $this->save();
     }
 
-    public function getName()
+    public function deleteType()
     {
-        return $this->name;
+        $this->type = null;
+        $this->save();
     }
 
-    public function getPath()
+    public function deleteDescription()
     {
-        return $this->path;
+        $this->description = null;
+        $this->save();
     }
 
-    public function getLibraryId()
+    public function deleteAssociatedName($name)
     {
-        return $this->library_id;
+        $assocName = AssociatedName::where('name', $name)->firstOrFail();
+
+        AssociatedNameReference::where('manga_id', $this->getId())
+                               ->where('assoc_name_id', $assocName->getId())
+                               ->forceDelete();
+
+        $refCount = AssociatedNameReference::where('assoc_name_id', $assocName->getId())->count();
+        if ($refCount == 0) {
+            $assocName->forceDelete();
+        }
     }
 
-    public function forceDelete()
+    public function deleteAuthorReference($authorName)
     {
-        // delete all information and references that belongs to this manga
+        $author = Author::where('name', $authorName)->firstOrFail();
 
-        $id = $this->getId();
+        AuthorReference::where('manga_id', $this->getId())
+                       ->where('author_id', $author->getId())
+                       ->forceDelete();
+    }
 
-        $artist_references = ArtistReference::where('manga_id', '=', $id)->forceDelete();
+    public function deleteArtistReference($artistName)
+    {
+        $artist = Artist::where('name', $artistName)->firstOrFail();
 
-        $author_references = AuthorReference::where('manga_id', '=', $id)->forceDelete();
+        ArtistReference::where('manga_id', $this->getId())
+                       ->where('artist_id', $artist->getId())
+                       ->forceDelete();
+    }
 
-        $genre_information = GenreInformation::where('manga_id', '=', $id)->forceDelete();
+    public function deleteGenreReference($genreName)
+    {
+        $genre = Genre::where('name', $genreName)->firstOrFail();
 
-        $manga_information = MangaInformation::where('id', '=', $id)->forceDelete();
+        GenreReference::where('manga_id', $this->getId())
+                      ->where('genre_id', $genre->getId())
+                      ->forceDelete();
+    }
 
-        parent::forceDelete();
+    public function deleteYear()
+    {
+        $this->year = null;
+        $this->save();
+    }
+
+    public function setType($type)
+    {
+        $this->type = $type;
+        $this->save();
+    }
+
+    public function setDescription($description)
+    {
+        $this->description = $description;
+        $this->save();
+    }
+
+    public function addAssociatedName($name)
+    {
+        $assocName = AssociatedName::firstOrCreate([
+            'name' => $name
+        ]);
+
+        AssociatedNameReference::firstOrCreate([
+            'manga_id' => $this->getId(),
+            'assoc_name_id' => $assocName->getId()
+        ]);
+    }
+
+    public function addAssociatedNames($names)
+    {
+        foreach ($names as $name) {
+            $this->addAssociatedName($name);
+        }
+    }
+
+    public function addAuthor($authorName)
+    {
+        $author = Author::firstOrCreate([
+            'name' => $authorName
+        ]);
+
+        AuthorReference::firstOrCreate([
+            'manga_id' => $this->getId(),
+            'author_id' => $author->getId()
+        ]);
+    }
+
+    public function addAuthors($authorNames)
+    {
+        foreach ($authorNames as $name) {
+            $this->addAuthor($name);
+        }
+    }
+
+    public function addArtist($artistName)
+    {
+        $artist = Artist::firstOrCreate([
+            'name' => $artistName
+        ]);
+
+        ArtistReference::firstOrCreate([
+            'manga_id' => $this->getId(),
+            'artist_id' => $artist->getId()
+        ]);
+    }
+
+    public function addArtists($artistNames)
+    {
+        foreach ($artistNames as $name) {
+            $this->addAuthor($name);
+        }
+    }
+
+    public function addGenre($genreName)
+    {
+        $genre = Genre::where('name', $genreName)->firstOrFail();
+
+        GenreReference::firstOrCreate([
+            'manga_id' => $this->getId(),
+            'genre_id' => $genre->getId()
+        ]);
+    }
+
+    public function addGenres($genreNames)
+    {
+        foreach ($genreNames as $name) {
+            $this->addGenre($name);
+        }
+    }
+
+    public function setYear($year)
+    {
+        $this->year = $year;
+        $this->save();
     }
 }

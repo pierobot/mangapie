@@ -3,7 +3,8 @@
 namespace App;
 
 use \ZipArchive;
-use \App\ImageArchive;
+
+use App\Interfaces\ImageArchiveInterface;
 
 class ImageArchiveZip implements ImageArchiveInterface
 {
