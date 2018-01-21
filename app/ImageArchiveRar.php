@@ -68,7 +68,7 @@ class ImageArchiveRar implements ImageArchiveInterface
      *  @param int &$size The variable that will hold the size of the contents.
      *  @return mixed The contents of the file or FALSE on failure.
      */
-    public function getContents($index, &$size)
+    public function getImage($index, &$size)
     {
         $entries = $this->m_rar->getEntries();
         foreach ($entries as $idx => $entry) {
@@ -80,6 +80,22 @@ class ImageArchiveRar implements ImageArchiveInterface
                 $size = $entry->getUnpackedSize();
 
                 return stream_get_contents($stream, $size);
+            }
+        }
+
+        return false;
+    }
+
+    public function getImageUrlPath($index, &$size)
+    {
+        $entries = $this->m_rar->getEntries();
+        foreach ($entries as $idx => $entry) {
+
+            if ($index == $idx) {
+
+                $size = $entry->getUnpackedSize();
+
+                return 'rar://' . rawurlencode($this->m_file_path) . '#' . rawurlencode($entry->getName());
             }
         }
 

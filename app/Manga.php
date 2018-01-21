@@ -238,12 +238,60 @@ class Manga
         if ($mime === false)
             return false;
 
-        $contents = $archive->getContents($index, $size);
+        $contents = $archive->getImage($index, $size);
         if ($contents === false)
             return false;
 
         return [
             'contents' => $contents,
+            'size' => $size,
+            'mime' => $mime
+        ];
+    }
+
+    public function getImageAsUrl($archive_name, $page)
+    {
+        if ($page < 1)
+            return false;
+
+        // Get the first archive if no name is specified
+        if (empty($archive_name) === true) {
+
+            $archives = $this->getArchives();
+            if (empty($archives) === true)
+                return false;
+
+            $archive_name = $archives[0]['name'];
+        }
+
+        $archive_path = $this->getPath() . '/' . $archive_name;
+        $archive = ImageArchive::open($archive_path);
+        if ($archive === false)
+            return false;
+
+        $images = $archive->getImages();
+        if (empty($images) === true)
+            return false;
+
+        usort($images, function ($left, $right) {
+            return strnatcasecmp($left['name'], $right['name']);
+        });
+
+        $index = $images[$page - 1]['index'];
+        $image = $archive->getInfo($index);
+        $name = $image['name'];
+        $size = 0;
+
+        $mime = $this->getMIME($name);
+        if ($mime === false)
+            return false;
+
+        $urlPath = $archive->getImageUrlPath($index, $size);
+        if ($urlPath === false)
+            return false;
+
+        return [
+            'urlPath' => $urlPath,
             'size' => $size,
             'mime' => $mime
         ];

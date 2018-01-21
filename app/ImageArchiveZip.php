@@ -56,7 +56,7 @@ class ImageArchiveZip implements ImageArchiveInterface
      *  @param int &$size The variable that will hold the size of the contents.
      *  @return mixed The contents of the file or FALSE on failure.
      */
-    public function getContents($index, &$size)
+    public function getImage($index, &$size)
     {
         $images = $this->getImages();
         if ($images === false)
@@ -73,6 +73,22 @@ class ImageArchiveZip implements ImageArchiveInterface
         $size = $data['size'];
 
         return $contents;
+    }
+
+    public function getImageUrlPath($index, &$size)
+    {
+        $images = $this->getImages();
+        if ($images === false)
+            return false;
+
+        $data = $this->getInfo($index);
+        if ($data === false)
+            return false;
+
+        $size = $data['size'];
+        $name = $data['name'];
+
+        return 'zip://' . rawurlencode($this->m_file_path) . '#' . rawurlencode($name);
     }
 
     /**

@@ -10,6 +10,7 @@ interface ImageArchiveInterface
 {
     public function good();
     public function getInfo($index);
-    public function getContents($index, &$size);
+    public function getImage($index, &$size);
+    public function getImageUrlPath($index, &$size);
     public function getImages();
 }

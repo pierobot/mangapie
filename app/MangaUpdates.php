@@ -299,16 +299,6 @@ class MangaUpdates implements AutoFillInterface
         return MangaUpdates::autofillFromId($manga, $bestMatchingId);
     }
 
-    public static function fillYear($manga, $year)
-    {
-        if (empty($year) == true)
-            return false;
-
-        $manga->year = $year;
-
-        return true;
-    }
-
     public static function autofillFromId($manga, $id)
     {
         $genre_count = Genre::count();
