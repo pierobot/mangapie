@@ -319,34 +319,7 @@ class Manga
 
         // sort by number tokens
         $files->sort(function ($left, $right) use ($sort) {
-            $left_tokens = $this->getNumberTokens($left->getFilename());
-            $right_tokens = $this->getNumberTokens($right->getFilename());
-
-            if ($left_tokens == null || $right_tokens === null)
-                return 0;
-
-            $left_token_count = count($left_tokens);
-            $right_token_count = count($right_tokens);
-            $min_token_count = min($left_token_count, $right_token_count);
-
-            for ($i = 0; $i < $min_token_count; $i++) {
-                $left_token = $left_tokens[$i];
-                $right_token = $right_tokens[$i];
-
-                if ($left_token < $right_token)
-                    return $sort == 'ascending' ? -1 : 1;
-                elseif ($left_token > $right_token)
-                    return $sort == 'ascending' ? 1 : -1;
-            }
-
-            // if we reach here, then all the tokens up to $min_token_count are equal
-            if ($left_token_count == $right_token_count)
-                return 0;
-
-            if ($left_token_count < $right_token_count)
-                return $sort == 'ascending' ? -1 : 1;
-            else
-                return $sort == 'ascending' ? 1 : -1;
+            return strnatcasecmp($left->getFilename(), $right->getFilename());
         });
 
         $archives = [];
