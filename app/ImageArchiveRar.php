@@ -2,7 +2,7 @@
 
 namespace App;
 
-use App\Interfaces\ImageArchive;
+use App\Interfaces\ImageArchiveInterface;
 
 class ImageArchiveRar implements ImageArchiveInterface
 {
