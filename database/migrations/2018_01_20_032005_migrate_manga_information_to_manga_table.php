@@ -23,25 +23,6 @@ class MigrateMangaInformationToMangaTable extends Migration
             $table->string('year', 4)->nullable();
         });
 
-        // migrate data from manga_information to manga table
-        $information = MangaInformation::all();
-        if ($information->count() > 0) {
-            foreach ($information as $info) {
-                $id = $info->getMangaId();
-                $manga = Manga::find($id);
-                if ($manga != null) {
-                    $manga->update([
-                        'mu_id' => $info->getMangaUpdatesId(),
-                        'type' => $info->getType(),
-                        'description' => $info->getDescription(),
-                        'year' => $info->getYear()
-                    ]);
-
-                    $manga->save();
-                }
-            }
-        }
-
         Schema::drop('manga_information');
     }
 
@@ -65,21 +46,6 @@ class MigrateMangaInformationToMangaTable extends Migration
 
             $table->timestamps();
         });
-
-        // migrate
-        $manga = Manga::all();
-        if ($manga != null) {
-            $info = MangaInformation::forceCreate([
-                'id' => $manga->getId(),
-                'mu_id' => $manga->getMangaUpdatesId(),
-                'name' => $manga->getName(),
-                'description' => $manga->getDescription(),
-                'type' => $manga->getType(),
-                'year' => $manga->getYear()
-            ]);
-
-            $info->save();
-        }
 
         Schema::table('manga', function (Blueprint $table) {
             $table->dropColumn('mu_id');
