@@ -52,7 +52,7 @@ class SearchController extends Controller
 
         $manga_list->withPath(env('app.url'));
 
-        return view('manga.index', compact('manga_list', 'libraries'));
+        return view('home.index', compact('manga_list', 'libraries'));
     }
 
     private function doAdvancedSearch($query, $genres)

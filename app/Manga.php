@@ -10,8 +10,7 @@ use \Carbon\Carbon;
 
 use App\ArtistReference;
 use App\AuthorReference;
-use App\GenreInformation;
-use App\MangaInformation;
+use App\GenreReference;
 use App\Interfaces\ImageArchiveInterface;
 use App\Interfaces\EditableInterface;
 
@@ -77,7 +76,7 @@ class Manga
 
         $author_references = AuthorReference::where('manga_id', '=', $id)->forceDelete();
 
-        $genre_information = GenreInformation::where('manga_id', '=', $id)->forceDelete();
+        $genre_information = GenreReference::where('manga_id', '=', $id)->forceDelete();
 
         parent::forceDelete();
     }
@@ -487,7 +486,7 @@ class Manga
     public function addArtists($artistNames)
     {
         foreach ($artistNames as $name) {
-            $this->addAuthor($name);
+            $this->addArtist($name);
         }
     }
 

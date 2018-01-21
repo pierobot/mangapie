@@ -123,7 +123,7 @@ class ThumbnailController extends Controller
         $id = \Input::get('id');
         if ($validator->fails()) {
 
-            return \Redirect::action('MangaInformationController@index', [$id])
+            return \Redirect::action('MangaController@index', [$id])
                             ->withErrors($validator, 'update');
         }
 
@@ -147,6 +147,6 @@ class ThumbnailController extends Controller
 
         \Session::flash('thumbnail-update-success', 'The thumbnail was successfully updated');
 
-        return \Redirect::action('MangaInformationController@index', [$id]);
+        return \Redirect::action('MangaController@index', [$id]);
     }
 }
