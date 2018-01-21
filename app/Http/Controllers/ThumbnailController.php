@@ -44,8 +44,16 @@ class ThumbnailController extends Controller
             return \Image::make('public/img/small/unknown.jpg')->response();
         }
 
-        $thumbnail = Thumbnail::make($manga_image['contents'], null, 250);
-        return $thumbnail->response();
+        try
+        {
+            $thumbnail = Thumbnail::make($manga_image['contents'], null, 250);
+
+            return $thumbnail->response();
+        }
+        catch (\Intervention\Image\Exception\NotReadableException $e)
+        {
+            return \Image::make('public/img/small/unknown.jpg')->response();
+        }
     }
 
     public function small($id, $archive_name, $page)
@@ -83,8 +91,16 @@ class ThumbnailController extends Controller
             return \Image::make('public/img/medium/unknown.jpg')->response();
         }
 
-        $thumbnail = Thumbnail::make($manga_image['contents'], null, 500);
-        return $thumbnail->response();
+        try
+        {
+            $thumbnail = Thumbnail::make($manga_image['contents'], null, 500);
+
+            return $thumbnail->response();
+        }
+        catch (\Intervention\Image\Exception\NotReadableException $e)
+        {
+            return \Image::make('public/img/medium/unknown.jpg')->response();
+        }
     }
 
     public function medium($id, $archive_name, $page)
