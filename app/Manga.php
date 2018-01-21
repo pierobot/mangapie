@@ -407,23 +407,23 @@ class Manga
     public function setMangaUpdatesId($id)
     {
         $this->mu_id = $id;
-        $this->save();
     }
 
     public function deleteType()
     {
         $this->type = null;
-        $this->save();
     }
 
     public function deleteDescription()
     {
         $this->description = null;
-        $this->save();
     }
 
     public function deleteAssociatedName($name)
     {
+        if (empty($name) == true)
+            return;
+
         $assocName = AssociatedName::where('name', $name)->firstOrFail();
 
         AssociatedNameReference::where('manga_id', $this->getId())
@@ -438,6 +438,9 @@ class Manga
 
     public function deleteAuthorReference($authorName)
     {
+        if (empty($authorName) == true)
+            return;
+
         $author = Author::where('name', $authorName)->firstOrFail();
 
         AuthorReference::where('manga_id', $this->getId())
@@ -447,6 +450,9 @@ class Manga
 
     public function deleteArtistReference($artistName)
     {
+        if (empty($artistName) == true)
+            return;
+
         $artist = Artist::where('name', $artistName)->firstOrFail();
 
         ArtistReference::where('manga_id', $this->getId())
@@ -456,6 +462,9 @@ class Manga
 
     public function deleteGenreReference($genreName)
     {
+        if (empty($genreName) == true)
+            return;
+
         $genre = Genre::where('name', $genreName)->firstOrFail();
 
         GenreReference::where('manga_id', $this->getId())
@@ -466,23 +475,23 @@ class Manga
     public function deleteYear()
     {
         $this->year = null;
-        $this->save();
     }
 
     public function setType($type)
     {
         $this->type = $type;
-        $this->save();
     }
 
     public function setDescription($description)
     {
         $this->description = $description;
-        $this->save();
     }
 
     public function addAssociatedName($name)
     {
+        if (empty($name) == true)
+            return;
+
         $assocName = AssociatedName::firstOrCreate([
             'name' => $name
         ]);
@@ -495,6 +504,9 @@ class Manga
 
     public function addAssociatedNames($names)
     {
+        if (empty($names) == true)
+            return;
+
         foreach ($names as $name) {
             $this->addAssociatedName($name);
         }
@@ -502,6 +514,9 @@ class Manga
 
     public function addAuthor($authorName)
     {
+        if (empty($authorName) == true)
+            return;
+
         $author = Author::firstOrCreate([
             'name' => $authorName
         ]);
@@ -514,6 +529,9 @@ class Manga
 
     public function addAuthors($authorNames)
     {
+        if (empty($authorNames) == true)
+            return;
+
         foreach ($authorNames as $name) {
             $this->addAuthor($name);
         }
@@ -521,6 +539,9 @@ class Manga
 
     public function addArtist($artistName)
     {
+        if (empty($artistName) == true)
+            return;
+
         $artist = Artist::firstOrCreate([
             'name' => $artistName
         ]);
@@ -533,6 +554,9 @@ class Manga
 
     public function addArtists($artistNames)
     {
+        if (empty($artistNames) == true)
+            return;
+
         foreach ($artistNames as $name) {
             $this->addArtist($name);
         }
@@ -540,6 +564,9 @@ class Manga
 
     public function addGenre($genreName)
     {
+        if (empty($genreName) == true)
+            return;
+
         $genre = Genre::where('name', $genreName)->firstOrFail();
 
         GenreReference::firstOrCreate([
@@ -550,6 +577,9 @@ class Manga
 
     public function addGenres($genreNames)
     {
+        if (empty($genreNames) == true)
+            return;
+
         foreach ($genreNames as $name) {
             $this->addGenre($name);
         }
@@ -558,6 +588,5 @@ class Manga
     public function setYear($year)
     {
         $this->year = $year;
-        $this->save();
     }
 }

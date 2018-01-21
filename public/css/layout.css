@@ -20,7 +20,7 @@
     }
 }
 
-/* ------- manga/index.blade.php ------- */
+/* ------- home/index.blade.php ------- */
 
 .thumbnail {
     margin-bottom: 0;
@@ -43,7 +43,7 @@ div.thumbnail > div {
     height: 250px;
 }
 
-/* ------- manga/information.blade.php ----- */
+/* ------- manga/index.blade.php ----- */
 
 .set-cover {
     height: 310px;
@@ -67,6 +67,10 @@ div.thumbnail > div {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+li.list-group-item span.label {
+    display: inline-block;
 }
 
 /* ------- manga/reader.blade.php ------- */
