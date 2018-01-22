@@ -18,7 +18,7 @@ class LoginController extends Controller
     {
         // if the user is already logged in then redirect to index
         if (\Auth::check())
-            return \Redirect::action('MangaController@index');
+            return \Redirect::action('HomeController@index');
 
         return view('login');
     }
@@ -26,7 +26,7 @@ class LoginController extends Controller
     public function login(LoginRequest $request)
     {
         if (\Auth::check())
-            return \Redirect::action('MangaController@index');
+            return \Redirect::action('HomeController@index');
 
         if ($this->hasTooManyLoginAttempts($request)) {
 
