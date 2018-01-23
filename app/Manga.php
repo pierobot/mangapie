@@ -72,11 +72,13 @@ class Manga
 
         $id = $this->getId();
 
-        $artist_references = ArtistReference::where('manga_id', '=', $id)->forceDelete();
+        ArtistReference::where('manga_id', '=', $id)->forceDelete();
 
-        $author_references = AuthorReference::where('manga_id', '=', $id)->forceDelete();
+        AuthorReference::where('manga_id', '=', $id)->forceDelete();
 
-        $genre_information = GenreReference::where('manga_id', '=', $id)->forceDelete();
+        GenreReference::where('manga_id', '=', $id)->forceDelete();
+
+        Favorite::where('manga_id', '=', $id)->forceDelete();
 
         parent::forceDelete();
     }
