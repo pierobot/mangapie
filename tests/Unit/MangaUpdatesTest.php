@@ -127,7 +127,7 @@ class MangaUpdatesTest extends TestCase
      */
     public function testinformation_ex()
     {
-        $contents = file_get_contents('tests/Data/MangaUpdates/Maison Ikkoku.html');
+        $contents = file_get_contents('tests/Data/MangaUpdates/Maison-Ikkoku.html');
 
         $information = MangaUpdates::information_ex(1051, $contents);
 
@@ -205,102 +205,25 @@ class MangaUpdatesTest extends TestCase
     public function testsearch_ex()
     {
         $title = 'Yu Yu Hakusho';
-        $page4_contents = file_get_contents('tests/Data/MangaUpdates/Yu Yu Hakusho-Page-4.html');
-        $page5_contents = file_get_contents('tests/Data/MangaUpdates/Yu Yu Hakusho-Page-5.html');
+        $page3_contents = file_get_contents('tests/Data/MangaUpdates/Yu-Yu-Hakusho-Page-3.json');
 
-        $page4_expected_names = [
-            'Yu Yu Hakusho dj - Dune',
-            'Yu Yu Hakusho dj - Goldfish',
-            'Yu Yu Hakusho dj - Higeki',
-            'Yu Yu Hakusho dj - Himitsu',
-            'Yu Yu Hakusho dj - Hiruiseki',
-            'Yu Yu Hakusho dj - Hisoka',
-            'Yu Yu Hakusho dj - Hiyaku',
-            'Yu Yu Hakusho dj - Hourglass',
-            'Yu Yu Hakusho dj - Howling',
-            'Yu Yu Hakusho dj - Inyoku',
-            'Yu Yu Hakusho dj - It must be love',
-            'Yu Yu Hakusho dj - Jealousy',
-            'Yu Yu Hakusho dj - Joy',
-            'Yu Yu Hakusho dj - Kingyo',
-            'Yu Yu Hakusho dj - Narukami',
-            'Yu Yu Hakusho dj - Nue',
-            'Yu Yu Hakusho dj - Opium',
-            'Yu Yu Hakusho dj - Our Babies',
-            'Yu Yu Hakusho dj - Overture',
-            'Yu Yu Hakusho dj - P0rn0graphy',
-            'Yu Yu Hakusho dj - Paradise',
-            'Yu Yu Hakusho dj - POrnOgraphy',
-            'Yu Yu Hakusho dj - Psycho',
-            'Yu Yu Hakusho dj - Purification',
-            'Yu Yu Hakusho dj - Romantic'
-        ];
+        $page3_results = MangaUpdates::search_ex($title, $page3_contents);
 
-        $page5_expected_names = [
-            'Yu Yu Hakusho dj - San',
-            'Yu Yu Hakusho dj - Self Control',
-            'Yu Yu Hakusho dj - Shogun',
-            'Yu Yu Hakusho dj - Sickness',
-            'Yu Yu Hakusho dj - SM28',
-            'Yu Yu Hakusho dj - You Brute',
-            'Yu Yu Hakusho dj - Yumegatari',
-            'Yu Yu Hakusho dj - Getting Used to It',
-            'Yu Yu Hakusho dj - With me',
-            'Yu Yu Hakusho',
-            'Mowang Yu Yongzhe Yu Sheng Jian Shendian',
-            'No No Yu',
-            'Yu',
-            'Bijutsubu Yu-re-',
-            'Crisis Yu',
-            'Ling Yu (Novel)',
-            'Little Yu (French)',
-            'Nobose Yu',
-            'Nono Yu',
-            'Qing Yu (Novel)',
-            'To-yu-ki',
-            'Tsuyako no Yu',
-            'Xin x Yu',
-            'Yu Ai',
-            'Yu Dan'
-        ];
+        $this->assertTrue(empty($page3_results) === false);
 
-        $page4_results = MangaUpdates::search_ex($title, $page4_contents);
-        $page5_results = MangaUpdates::search_ex($title, $page5_contents);
-
-        $this->assertTrue(empty($page4_results) === false);
-
-        foreach ($page4_results as $index => $result) {
+        foreach ($page3_results as $index => $result) {
 
             $this->assertTrue(array_key_exists('distance', $result));
             $this->assertTrue(array_key_exists('mu_id', $result));
             $this->assertTrue(array_key_exists('name', $result));
             $this->assertTrue(array_key_exists('url', $result));
-
-            // Yu Yu Hakusho should not be in this page
-            $this->assertTrue(IntlString::strcmp($result['name'], $title) != 0);
         }
-
-        foreach ($page5_results as $index => $result) {
-
-            $this->assertTrue(array_key_exists('distance', $result));
-            $this->assertTrue(array_key_exists('mu_id', $result));
-            $this->assertTrue(array_key_exists('name', $result));
-            $this->assertTrue(array_key_exists('url', $result));
-
-            // Yu Yu Hakusho should be in this page
-            if (IntlString::strcmp($result['name'], $title) == 0) {
-
-                break;
-            }
-        }
-
-        $this->assertTrue(IntlString::strcmp($result['name'], $title) == 0);
 
         // Jaro-Winkler distance should be 1.0 since they are equal
-        $this->assertTrue($page5_results[0]['distance'] == 1.0);
+        $this->assertTrue($page3_results[0]['distance'] == 1.0);
 
-        $this->assertTrue($page5_results[0]['mu_id'] == 118);
+        $this->assertTrue($page3_results[0]['mu_id'] == 118);
 
-        $this->assertTrue(IntlString::strcmp($page5_results[0]['url'], 'https://www.mangaupdates.com/series.html?id=118') == 0);
+        $this->assertTrue(IntlString::strcmp($page3_results[0]['url'], 'https://www.mangaupdates.com/series.html?id=118') == 0);
     }
 }
