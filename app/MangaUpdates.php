@@ -34,13 +34,14 @@ class MangaUpdates implements AutoFillInterface
         return $genres;
     }
 
-    public static function search($title, $page, $perpage = 25)
+    public static function search($title, $page, $perpage = 50)
     {
         $contents = \Curl::to('https://www.mangaupdates.com/series.html')->withData([
             'stype' => 'title',
             'search' => urlencode($title),
             'page' => strval($page),
-            'perpage' => strval($perpage)
+            'perpage' => strval($perpage),
+            'output' => 'json'
         ])->get();
 
         return MangaUpdates::search_ex($title, $contents);
@@ -50,39 +51,24 @@ class MangaUpdates implements AutoFillInterface
     {
         $results = [];
 
-        $a_elements = [];
-        $a_element_count = preg_match_all('/<a href=(\"|\')https?:\/\/(www\.?)?mangaupdates\.com\/series\.html\?id=\d+(\"|\').+alt=(\"|\')Series Info(\"|\')>.+<\/a>/', $contents, $a_elements);
+        $json = json_decode($contents);
+        if (empty($json) ||
+            empty($json->{'results'}) ||
+            empty($json->{'results'}->{'items'}))
+            return $results;
 
-        if ($a_element_count == 0 || $a_element_count === false)
-            return false;
-
-        // index 0 contains the <a></a> element
-        foreach ($a_elements[0] as $a_element) {
-            $urls = [];
-            $url_match_count = preg_match_all('/https?:\/\/(www)?\.mangaupdates\.com\/series.html\?id=\d+/', $a_element, $urls);
-            if ($url_match_count == 0 || $url_match_count === false)
-                continue;
-
-            $names = [];
-            $name_match_count = preg_match_all('/alt=(\"|\')Series Info(\"|\')>(<i>)?(.+?)(<\/i>)?<\/a>/', $a_element, $names);
-            if ($name_match_count == 0 || $name_match_count === false)
-                continue;
-
-            // url decode the names
-            array_walk($names[4], function (&$name, $key) {
-                $name = IntlString::convert(\Html::decode($name));
-            });
-
-            $ids = [];
-            $id_match_count = preg_match_all('/\?id=(\d+)/', $urls[0][0], $ids);
-            if ($id_match_count == 0 || $id_match_count === false)
-                continue;
+        $items = $json->{'results'}->{'items'};
+        foreach ($items as $item) {
+            $mu_id = intval($item->{'id'});
+            $url = 'https://www.mangaupdates.com/series.html?id=' . $item->{'id'};
+            $item_title = $item->{'title'};
+            $distance = JaroWinkler::distance($title, $item_title);
 
             array_push($results, [
-                'distance' => JaroWinkler::distance($title, $names[4][0]),
-                'mu_id' => intval($ids[1][0]),
-                'name' => $names[4][0],
-                'url' => $urls[0][0],
+                'mu_id' => $mu_id,
+                'url' => $url,
+                'name' => $item_title,
+                'distance' => $distance
             ]);
         }
 
@@ -261,8 +247,8 @@ class MangaUpdates implements AutoFillInterface
         $exactMatch = false;
         $bestMatchingId = 0;
 
-        // search through five pages for names that will match
-        for ($currentPage = 1; $currentPage <= 5; $currentPage++) {
+        // search through three pages for names that will match
+        for ($currentPage = 1; $currentPage <= 3; $currentPage++) {
             $pageResults = MangaUpdates::search($manga->getName(), $currentPage);
 
             if ($pageResults == false || empty($pageResults) == true)
