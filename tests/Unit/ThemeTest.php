@@ -17,7 +17,7 @@ class ThemeTest extends TestCase
      */
     public function testpath()
     {
-        $bootswatch_path = '/public/themes/bootswatch/';
+        $bootswatch_path = 'public/themes/bootswatch/';
         $slate_path = $bootswatch_path . 'slate/bootstrap.min.css';
         $yeti_path = $bootswatch_path . 'yeti/bootstrap.min.css';
         $lumen_path = $bootswatch_path . 'lumen/bootstrap.min.css';

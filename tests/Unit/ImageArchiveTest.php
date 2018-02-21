@@ -97,7 +97,7 @@ class ImageArchiveTest extends TestCase
         }
     }
 
-    public function testgetContents()
+    public function testgetImage()
     {
         $archive_zip = ImageArchive::open($this->path_zip);
         $archive_cbz = ImageArchive::open($this->path_cbz);
@@ -115,8 +115,8 @@ class ImageArchiveTest extends TestCase
 
             $image_cbz = $images_cbz[$index];
 
-            $contents_zip = $archive_zip->getContents($image_zip['index'], $size_zip);
-            $contents_cbz = $archive_cbz->getContents($image_cbz['index'], $size_cbz);
+            $contents_zip = $archive_zip->getImage($image_zip['index'], $size_zip);
+            $contents_cbz = $archive_cbz->getImage($image_cbz['index'], $size_cbz);
 
             $this->assertTrue(empty($contents_zip) !== true);
             $this->assertTrue(empty($contents_cbz) !== true);
@@ -132,16 +132,14 @@ class ImageArchiveTest extends TestCase
 
         $size_rar = 0;
         $size_cbr = 0;
-        $contents_rar = '';
-        $contents_cbr = '';
 
         // the rar and cbr should have the same file contents
         foreach ($images_rar as $index => $image_rar) {
 
             $image_cbr = $images_cbr[$index];
 
-            $contents_rar = $archive_rar->getContents($image_rar['index'], $size_rar);
-            $contents_cbr = $archive_cbr->getContents($image_cbr['index'], $size_cbr);
+            $contents_rar = $archive_rar->getImage($image_rar['index'], $size_rar);
+            $contents_cbr = $archive_cbr->getImage($image_cbr['index'], $size_cbr);
 
             $this->assertTrue(empty($contents_rar) !== true);
             $this->assertTrue(empty($contents_cbr) !== true);
