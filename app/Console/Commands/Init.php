@@ -52,6 +52,9 @@ class Init extends Command
         $this->comment('Migrating...');
         Artisan::call('migrate', ['--force' => true]);
 
+        $this->comment('Seeding database...');
+        Artisan::call('db:seed', ['--force' => true]);
+
         $this->comment('Finished initializing mangapie.');
     }
 }
