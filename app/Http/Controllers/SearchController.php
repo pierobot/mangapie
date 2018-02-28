@@ -92,6 +92,7 @@ class SearchController extends Controller
         $results = [];
         foreach ($manga_list as $manga) {
             array_push($results, [
+                'id' => $manga->getId(),
                 'name' => $manga->getName()
             ]);
         }
