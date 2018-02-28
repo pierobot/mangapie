@@ -24,16 +24,6 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->timestamps();
         });
-
-        $dev = \App\User::find(1);
-        if ($dev == null) {
-            $dev = new \App\User;
-            $dev->name = 'dev';
-            $dev->email = 'fake@email.com';
-            $dev->password = '$2y$10$5q/qypVAXnS.qHF7A.C0ke9R5NM0.UHae3WbWIg60BSeBnynFi0m6';
-            $dev->admin = true;
-            $dev->save();
-        }
     }
 
     /**
