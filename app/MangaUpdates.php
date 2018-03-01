@@ -253,6 +253,9 @@ class MangaUpdates implements AutoFillInterface
                     return -1;
             });
 
+            if (empty($searchResults) == true)
+                return false;
+
             $bestMatchingId = $searchResults[0]['mu_id'];
         }
 
