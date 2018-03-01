@@ -9,31 +9,6 @@ use App\Interfaces\AutoFillInterface;
 
 class MangaUpdates implements AutoFillInterface
 {
-    public static function genres_all()
-    {
-        $contents = \Curl::to('https://www.mangaupdates.com/genres.html')->get();
-
-        return MangaUpdates::genres_all_ex($contents);
-    }
-
-    public static function genres_all_ex($contents)
-    {
-        $genres_info = [];
-        $genres_info_result = preg_match_all('/(<td class=(\"|\')releasestitle(\"|\').+?<b>(.+?)<\/b><\/td>)\s.+\s.+?\s.+?(<td class=(\"|\')text(\"|\') align=(\"|\').+?(\"|\')>(.+?)<br>)/', $contents, $genres_info);
-        if ($genres_info_result == 0 || $genres_info_result === false)
-            return null;
-
-        $genres = [];
-        foreach ($genres_info[4] as $index => $genre_name) {
-            array_push($genres, [
-                'name' => $genre_name,
-                'description' => IntlString::convert(\Html::decode($genres_info[10][$index]))
-            ]);
-        }
-
-        return $genres;
-    }
-
     public static function search($title, $page, $perpage = 50)
     {
         $contents = \Curl::to('https://www.mangaupdates.com/series.html')->withData([
@@ -287,20 +262,6 @@ class MangaUpdates implements AutoFillInterface
 
     public static function autofillFromId($manga, $id)
     {
-        $genre_count = Genre::count();
-
-        // update genres if there are none or if they are older than 6 months
-        if ($genre_count == 0) {
-            $genres = MangaUpdates::genres_all();
-            Genre::populate($genres);
-        } else {
-            $oldest = Genre::oldest();
-            if ($oldest != null && Carbon::now()->subMonths(6)->gt($oldest['updated_at'])) {
-                $genres = MangaUpdates::genres_all();
-                Genre::populate($genres);
-            }
-        }
-
         $information = MangaUpdates::information($id);
 
         $manga->setMangaUpdatesId($information['mu_id']);
