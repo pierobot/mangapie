@@ -6,17 +6,7 @@
 
 @section ('custom_navbar_right')
 
-    <li>
-        {{ Form::open(['action' => 'SearchController@search', 'class' => 'navbar-form form-inline']) }}
-
-        <div class="form-group">
-            {{ Form::text('query', null, ['class' => 'form-control', 'placeholder' => '...']) }}
-        </div>
-
-        {{ Form::submit('Search', ['class' => 'btn btn-primary btn-navbar']) }}
-
-        {{ Form::close() }}
-    </li>
+    @include ('shared.searchbar')
 
     <li class="clickable navbar-link">
         <a href="{{ URL::action('MangaController@index', [$id]) }}"><span class="glyphicon glyphicon-book white"></span> Information</a>
