@@ -65,6 +65,6 @@ class MangaController extends Controller
                                   ->with('lastUpdated', $lastUpdated)
                                   ->with('archives', $archives)
                                   ->with('path', $path)
-                                  ->with('sort');
+                                  ->with('sort', $sort);
     }
 }
