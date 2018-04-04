@@ -140,6 +140,8 @@ class MangaEditController extends Controller
             \Session::flash('success', 'The year was successfully deleted.');
         }
 
+        $manga->save();
+
         return \Redirect::action('MangaEditController@index', [$id]);
     }
 }

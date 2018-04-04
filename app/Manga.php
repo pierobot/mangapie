@@ -321,7 +321,8 @@ class Manga
 
         // sort by number tokens
         $files->sort(function ($left, $right) use ($sort) {
-            return strnatcasecmp($left->getFilename(), $right->getFilename());
+            return $sort == 'ascending' ? strnatcasecmp($left->getFilename(), $right->getFilename()) :
+                                          strnatcasecmp($right->getFilename(), $left->getFilename());
         });
 
         $archives = [];
