@@ -20,23 +20,6 @@
         <b>Information &middot; {{ $name }}</b>
     </h2>
 
-    <div class="row text-center">
-        {{ Form::open(['action' => 'FavoriteController@update']) }}
-
-        {{ Form::hidden('id', $id) }}
-        @if ($is_favorited == false)
-            {{ Form::hidden('action', 'favorite') }}
-            {{ Form::button('', ['class' => 'btn btn-success glyphicon glyphicon-heart',
-                                 'type' => 'submit']) }}
-        @else
-            {{ Form::hidden('action', 'unfavorite') }}
-            {{ Form::button('', ['class' => 'btn btn-danger glyphicon glyphicon-heart',
-                                 'type' => 'submit']) }}
-        @endif
-
-        {{ Form::close() }}
-    </div>
-
     @include ('shared.success')
     @include ('shared.errors')
 
@@ -148,6 +131,33 @@
                             @else
                                 Unable to find year.
                             @endif
+                        </div>
+                    </div>
+                </li>
+
+                <li class="list-group-item">
+                    <div class="row">
+                        <div class="col-xs-3 col-md-2">
+                            <span class="glyphicon glyphicon glyphicon-share"></span>
+                            <label>Action</label>
+                        </div>
+                        <div class="col-xs-9 col-md-10">
+                            {{ Form::open(['action' => 'FavoriteController@update']) }}
+
+                            {{ Form::hidden('id', $id) }}
+                            @if ($is_favorited == false)
+                                {{ Form::hidden('action', 'favorite') }}
+                                <button class="btn btn-success" type="submit">
+                                    <span class="glyphicon glyphicon-heart"></span>&nbsp;Favorite
+                                </button>
+                            @else
+                                {{ Form::hidden('action', 'unfavorite') }}
+                                <button class="btn btn-danger" type="submit">
+                                    <span class="glyphicon glyphicon-remove"></span>&nbsp;Unfavorite
+                                </button>
+                            @endif
+
+                            {{ Form::close() }}
                         </div>
                     </div>
                 </li>
@@ -325,6 +335,33 @@
                                     @else
                                         Unable to find year.
                                     @endif
+                                </div>
+                            </div>
+                        </li>
+
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <span class="glyphicon glyphicon glyphicon-share"></span>
+                                    <label>Action</label>
+                                </div>
+                                <div class="col-xs-9">
+                                    {{ Form::open(['action' => 'FavoriteController@update']) }}
+
+                                    {{ Form::hidden('id', $id) }}
+                                    @if ($is_favorited == false)
+                                        {{ Form::hidden('action', 'favorite') }}
+                                        <button class="btn btn-success" type="submit">
+                                            <span class="glyphicon glyphicon-heart"></span>&nbsp;Favorite
+                                        </button>
+                                    @else
+                                        {{ Form::hidden('action', 'unfavorite') }}
+                                        <button class="btn btn-danger" type="submit">
+                                            <span class="glyphicon glyphicon-remove"></span>&nbsp;Unfavorite
+                                        </button>
+                                    @endif
+
+                                    {{ Form::close() }}
                                 </div>
                             </div>
                         </li>
