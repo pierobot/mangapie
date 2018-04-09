@@ -5,7 +5,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": ">=7.0.0",
+        "php": ">=7.1.0",
         "bassjobsen/bootstrap-3-typeahead": "dev-master",
         "components/jquery": "^3.2",
         "doctrine/dbal": "^2.5",
