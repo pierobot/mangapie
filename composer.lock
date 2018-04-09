@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/bassjobsen/Bootstrap-3-Typeahead.git",
-                "reference": "067bd296184a4dda8c669923417124065b4ebced"
+                "reference": "fc2d5dce4a5406d9b924224e395d5647918707c7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bassjobsen/Bootstrap-3-Typeahead/zipball/067bd296184a4dda8c669923417124065b4ebced",
-                "reference": "067bd296184a4dda8c669923417124065b4ebced",
+                "url": "https://api.github.com/repos/bassjobsen/Bootstrap-3-Typeahead/zipball/fc2d5dce4a5406d9b924224e395d5647918707c7",
+                "reference": "fc2d5dce4a5406d9b924224e395d5647918707c7",
                 "shasum": ""
             },
             "type": "component",
@@ -40,7 +40,7 @@
                 }
             ],
             "description": "Bootstrap 3 Typeahead",
-            "time": "2018-02-07T13:41:19+00:00"
+            "time": "2018-04-07T11:26:48+00:00"
         },
         {
             "name": "components/jquery",
