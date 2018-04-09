@@ -139,7 +139,7 @@
                     <div class="row">
                         <div class="col-xs-3 col-md-2">
                             <span class="glyphicon glyphicon glyphicon-share"></span>
-                            <label>Action</label>
+                            <label>Actions</label>
                         </div>
                         <div class="col-xs-9 col-md-10">
                             {{ Form::open(['action' => 'FavoriteController@update']) }}
@@ -236,7 +236,6 @@
                     <ul class="list-group">
                         <li class="list-group-item">
                             <div class="row">
-                                {{--<h4><span class="glyphicon glyphicon-tags"></span>&nbsp;&nbsp;<b>Genres</b></h4>--}}
                                 <div class="col-xs-3">
                                     <label>Genres</label>
                                 </div>
@@ -255,7 +254,6 @@
 
                         <li class="list-group-item">
                             <div class="row">
-                                {{--<h4><span class="glyphicon glyphicon-list-alt"></span>&nbsp;&nbsp;<b>Associated Names</b></h4>--}}
                                 <div class="col-xs-3">
                                     <label>Names</label>
                                 </div>
@@ -273,7 +271,6 @@
 
                         <li class="list-group-item">
                             <div class="row">
-                                {{--<h4><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<b>Authors</b></h4>--}}
                                 <div class="col-xs-3">
                                     <label>Authors</label>
                                 </div>
@@ -291,7 +288,6 @@
 
                         <li class="list-group-item">
                             <div class="row">
-                                {{--<h4><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;<b>Artists</b></h4>--}}
                                 <div class="col-xs-3">
                                     <label>Artists</label>
                                 </div>
@@ -309,7 +305,6 @@
 
                         <li class="list-group-item">
                             <div class="row">
-                                {{--<h4><span class="glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;<b>Description</b></h4>--}}
                                 <div class="col-xs-3">
                                     <label>Summary</label>
                                 </div>
@@ -325,7 +320,6 @@
 
                         <li class="list-group-item">
                             <div class="row">
-                                {{--<h4><span class="glyphicon glyphicon-calendar"></span>&nbsp;&nbsp;<b>Year</b></h4>--}}
                                 <div class="col-xs-3">
                                     <label>Year</label>
                                 </div>
@@ -342,8 +336,7 @@
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <span class="glyphicon glyphicon glyphicon-share"></span>
-                                    <label>Action</label>
+                                    <label>Actions</label>
                                 </div>
                                 <div class="col-xs-9">
                                     {{ Form::open(['action' => 'FavoriteController@update']) }}
@@ -369,7 +362,6 @@
                         @if (\Auth::user()->isAdmin())
                             <li class="list-group-item">
                                 <div class="row">
-                                    {{--<h4><span class="glyphicon glyphicon-hdd"></span>&nbsp;&nbsp;<b>Path</b></h4>--}}
                                     <div class="col-xs-3">
                                         <label>Path</label>
                                     </div>
