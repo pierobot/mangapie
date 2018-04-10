@@ -39,7 +39,7 @@
                         <div class="col-xs-9 col-md-10">
                             @if ($genres != null)
                                 @foreach ($genres as $genre)
-                                    <span class="label label-default">{{ $genre->getName() }}</span>
+                                    <span class="label label-default" title="{{ $genre->getDescription() }}">{{ $genre->getName() }}</span>
                                 @endforeach
                             @else
                                 Unable to find genres.
@@ -242,7 +242,7 @@
                                 <div class="col-xs-9">
                                     @if ($genres != null)
                                         @foreach ($genres as $genre)
-                                            <span class="label label-default">{{ $genre->getName() }}</span>
+                                            <span class="label label-default" title="{{ $genre->getDescription() }}">{{ $genre->getName() }}</span>
                                         @endforeach
                                     @else
                                         Unable to find genres.
