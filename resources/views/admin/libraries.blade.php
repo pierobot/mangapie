@@ -8,6 +8,7 @@
     <h2 class="text-center"><b>Libraries</b></h2>
 
     @include ('shared.success')
+    @include ('shared.warnings')
     @include ('shared.errors')
 
     <div class="panel panel-default">
