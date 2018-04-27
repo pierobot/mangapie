@@ -29,8 +29,10 @@ class MangaUpdates implements AutoFillInterface
         $json = json_decode($contents);
         if (empty($json) ||
             empty($json->{'results'}) ||
-            empty($json->{'results'}->{'items'}))
+            empty($json->{'results'}->{'items'})) {
+
             return $results;
+        }
 
         $items = $json->{'results'}->{'items'};
         foreach ($items as $item) {
@@ -215,12 +217,11 @@ class MangaUpdates implements AutoFillInterface
      */
     public static function autofill($manga)
     {
-        if ($manga == null)
+        if ($manga == null || $manga->getIgnoreOnScan() == true)
             return false;
 
         $searchResults = [];
         $exactMatch = false;
-        $bestMatchingId = 0;
 
         // search through three pages for names that will match
         for ($currentPage = 1; $currentPage <= 3; $currentPage++) {
@@ -232,7 +233,8 @@ class MangaUpdates implements AutoFillInterface
             // if we have an exact match, then avoid searching other pages
             if ($pageResults[0]['distance'] == 1.0) {
                 $exactMatch = true;
-                $bestMatchingId = $pageResults[0]['mu_id'];
+                $searchResults = [];
+                array_push($searchResults, $pageResults[0]);
                 break;
             }
 
@@ -240,6 +242,22 @@ class MangaUpdates implements AutoFillInterface
             foreach ($pageResults as $result) {
                 array_push($searchResults, $result);
             }
+
+            // wait for a couple of seconds before requesting the next page
+            sleep(2);
+        }
+
+        if (empty($searchResults) == true) {
+            \Log::warning(__METHOD__ . ' failure.', [
+                'id' => $manga->getId(),
+                'name' => $manga->getName(),
+            ]);
+
+            // there was a failure for whatever reason.
+            $manga->setIgnoreOnScan(true);
+            $manga->save();
+
+            return false;
         }
 
         // if no exact match was found, then sort them in descending order
@@ -252,20 +270,29 @@ class MangaUpdates implements AutoFillInterface
                 elseif ($left['distance'] > $right['distance'])
                     return -1;
             });
-
-            if (empty($searchResults) == true)
-                return false;
-
-            $bestMatchingId = $searchResults[0]['mu_id'];
         }
 
+        $manga->setMangaUpdatesName($searchResults[0]['name']);
+        $manga->setDistance($searchResults[0]['distance']);
+        $manga->save();
+
         // autofill from the id of the name that best matched
-        return MangaUpdates::autofillFromId($manga, $bestMatchingId);
+        return MangaUpdates::autofillFromId($manga, $searchResults[0]['mu_id']);
     }
 
     public static function autofillFromId($manga, $id)
     {
         $information = MangaUpdates::information($id);
+
+        if (empty($information) == true) {
+            \Log::warning(__METHOD__ . ' failure.', [
+                'id' => $manga->getId(),
+                'name' => $manga->getName(),
+                'mu_id' => $id
+            ]);
+
+            return false;
+        }
 
         $manga->setMangaUpdatesId($information['mu_id']);
         $manga->setType($information['type']);

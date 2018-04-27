@@ -9,7 +9,7 @@ use \App\Manga;
 class Library extends Model
 {
     //
-    protected $fillable = ['name', 'path'];
+    protected $fillable = ['name', 'path', 'initial_scan'];
 
     public function getId()
     {
@@ -46,11 +46,19 @@ class Library extends Model
         // and remove those that no longer exist in the filesystem
         $manga = Manga::where('library_id', '=', $this->getId())->get();
         foreach ($manga as $manga_) {
-
             if (\File::exists($manga_->getPath()) === false) {
-
                 $manga_->forceDelete();
             }
+        }
+
+        // refresh the collection
+        $manga = Manga::where('library_id', '=', $this->getId())->get();
+        foreach ($manga as $manga_) {
+            // skip if there is already information or set to ignore
+            if ($manga_->getMangaUpdatesId() != null || $manga_->getIgnoreOnScan() == true)
+                continue;
+
+            MangaUpdates::autofill($manga_);
         }
     }
 
@@ -60,7 +68,6 @@ class Library extends Model
         $manga = Manga::where('library_id', '=', $this->getId())->get();
         // and delete them
         foreach ($manga as $manga_) {
-
             // Manga::forceDelete deletes all the references to other tables (artists, authors, manga_information, etc..)
             $manga_->forceDelete();
         }

@@ -19,7 +19,18 @@ class Manga
     implements EditableInterface
 {
     //
-    protected $fillable = ['name', 'path', 'library_id', 'mu_id', 'type', 'description', 'year'];
+    protected $fillable = [
+        'name',
+        'path',
+        'library_id',
+        'mu_id',
+        'type',
+        'description',
+        'year',
+        'ignore_on_scan',
+        'mu_name',
+        'distance'
+    ];
 
     public function getId()
     {
@@ -59,6 +70,36 @@ class Manga
     public function getYear()
     {
         return $this->year;
+    }
+
+    public function getIgnoreOnScan()
+    {
+        return $this->ignore_on_scan;
+    }
+
+    public function setIgnoreOnScan($value)
+    {
+        $this->ignore_on_scan = $value;
+    }
+
+    public function getMangaUpdatesName()
+    {
+        return $this->mu_name;
+    }
+
+    public function setMangaUpdatesName($name)
+    {
+        $this->mu_name = $name;
+    }
+
+    public function getDistance()
+    {
+        return $this->distance;
+    }
+
+    public function setDistance($value)
+    {
+        $this->distance = $value;
     }
 
     public function getLastUpdated()
