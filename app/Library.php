@@ -9,7 +9,7 @@ use \App\Manga;
 class Library extends Model
 {
     //
-    protected $fillable = ['name', 'path', 'initial_scan'];
+    protected $fillable = ['name', 'path'];
 
     public function getId()
     {

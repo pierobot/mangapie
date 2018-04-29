@@ -179,8 +179,11 @@ return [
 
         App\Providers\PluralizationServiceProvider::class,
         App\Providers\GenreServiceProvider::class,
+
         App\Providers\LibraryServiceProvider::class,
         App\Providers\MangaServiceProvider::class,
+        App\Providers\LogParserServiceProvider::class,
+
         Collective\Html\HtmlServiceProvider::class,
 
         Ixudra\Curl\CurlServiceProvider::class,
@@ -219,6 +222,7 @@ return [
         'Input' => Illuminate\Support\Facades\Input::class,
         'Lang' => Illuminate\Support\Facades\Lang::class,
         'Log' => Illuminate\Support\Facades\Log::class,
+        'LogParser' => App\Facades\LogParser::class,
         'Mail' => Illuminate\Support\Facades\Mail::class,
         'Notification' => Illuminate\Support\Facades\Notification::class,
         'Password' => Illuminate\Support\Facades\Password::class,
