@@ -16,7 +16,6 @@
         <div class="panel-body">
             <div class="row">
                 <ul class="list-group">
-
                     <div class="col-xs-12 col-md-4">
                         <h4>Users</h4>
                         <hr>
@@ -25,9 +24,68 @@
                             <label>Number of users:</label> {{ $user_count }} <br>
                         </div>
                     </div>
-
                 </ul>
             </div>
         </div>
     </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                <span class="glyphicon glyphicon-info-sign"></span>&nbsp;Warnings
+                @if(empty($warnings) == false)
+                    <span class="label label-warning">{{ count($warnings) }}</span>
+                @else
+                    <span class="label label-success">0</span>
+                @endif
+            </div>
+        </div>
+        <div class="panel-body">
+            <table class="table table-hover table-condensed">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Message</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($warnings as $warning)
+                        <tr>
+                            <td>{{ $warning['datetime'] }}</td>
+                            <td>{{ $warning['messagectx'] }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    {{--<div class="panel panel-default">--}}
+        {{--<div class="panel-heading">--}}
+            {{--<div class="panel-title">--}}
+                {{--<span class="glyphicon glyphicon-info-sign"></span>&nbsp;Errors--}}
+                {{--@if(empty($errors_) == false)--}}
+                    {{--<span class="label label-warning">{{ count($errors_) }}</span>--}}
+                {{--@else--}}
+                    {{--<span class="label label-success">0</span>--}}
+                {{--@endif--}}
+            {{--</div>--}}
+        {{--</div>--}}
+        {{--<div class="panel-body">--}}
+            {{--<table class="table table-hover table-condensed">--}}
+                {{--<thead>--}}
+                {{--<th>Date</th>--}}
+                {{--<th>Message</th>--}}
+                {{--</thead>--}}
+                {{--<tbody>--}}
+                {{--@foreach ($errors_ as $error)--}}
+                    {{--<tr>--}}
+                        {{--<td>{{ $error['datetime'] }}</td>--}}
+                        {{--<td>{{ $error['messagectx'] }}</td>--}}
+                    {{--</tr>--}}
+                {{--@endforeach--}}
+                {{--</tbody>--}}
+            {{--</table>--}}
+        {{--</div>--}}
+    {{--</div>--}}
 @endsection
