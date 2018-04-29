@@ -47,7 +47,11 @@ class Init extends Command
         }
 
         $this->comment('Publishing vendor files...');
-        Artisan::call('vendor:publish');
+        if (\File::exists('config/image.php') == false) {
+            Artisan::call('vendor:publish', ['--provider' => 'Intervention\\Image\\ImageServiceProviderLaravel5']);
+        } else {
+            $this->comment('Config file for Intervention\\Image already exists. Skipping.');
+        }
 
         $this->comment('Migrating...');
         Artisan::call('migrate', ['--force' => true]);
