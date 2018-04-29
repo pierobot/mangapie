@@ -37,4 +37,9 @@ class ReaderHistory extends Model
     {
         return $this->page_count;
     }
+
+    public function getLastUpdated()
+    {
+        return $this->updated_at;
+    }
 }
