@@ -185,7 +185,7 @@
             <table class="table table-hover table-condensed" style="word-break: break-all; ">
                 <thead>
                 <tr>
-                    <th class="col-sm-8">
+                    <th class="col-sm-6">
                         <a href="{{ \URL::action('MangaController@index', [$id, $sort == 'ascending' ? 'descending' : 'ascending']) }}">Filename&nbsp;
                             @if ($sort == 'ascending')
                                 <span class="glyphicon glyphicon-triangle-top"></span>
@@ -194,8 +194,9 @@
                             @endif
                         </a>
                     </th>
+                    <th class="col-sm-2">Status</th>
                     <th class="col-sm-2">Size</th>
-                    <th class="col-sm-2 visible-md visible-lg">Modified</th>
+                    <th class="col-sm-2 visible-md visible-lg">Last Read</th>
                 </tr>
                 </thead>
 
@@ -203,16 +204,33 @@
                 @if (empty($archives) === false)
                     @foreach ($archives as $archive)
                         <tr>
-                            <td class="col-sm-8">
-                                <a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive['name']), 1]) }}">
+                            @php ($history = \App\ReaderHistory::where('user_id', \Auth::user()->getId())
+                                                               ->where('manga_id', $id)
+                                                               ->where('archive_name', $archive['name'])
+                                                               ->first())
+                            @endphp
+
+                            <td class="col-sm-6">
+                                <a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive['name']), $history != null ? $history->getPage() : 1]) }}">
                                     {{ $archive['name'] }}
                                 </a>
+                            </td>
+                            <td class="col-sm-2">
+                                @if ($history != null)
+                                    @if ($history->getPage() < $history->getPageCount())
+                                        <span class="label label-warning" title="pg. {{ $history->getPage() }} of {{ $history->getPageCount() }}">Incomplete</span>
+                                    @else
+                                        <span class="label label-success" title="pg. {{ $history->getPage() }} of {{ $history->getPageCount() }}">Complete</span>
+                                    @endif
+                                @else
+                                    <span class="label label-default">Unread</span>
+                                @endif
                             </td>
                             <td class="col-sm-2">
                                 {{ $archive['size'] }}
                             </td>
                             <td class="col-sm-2 visible-md visible-lg">
-                                {{ $archive['modified'] }}
+                                {{ $history != null ? $history->getLastUpdated() : "Never" }}
                             </td>
                         </tr>
                     @endforeach
@@ -381,7 +399,7 @@
                             <table class="table table-hover table-condensed" style="word-break: break-all; ">
                                 <thead>
                                 <tr>
-                                    <th class="col-xs-8">
+                                    <th class="col-xs-6">
                                         <a href="{{ \URL::action('MangaController@index', [$id, $sort == 'ascending' ? 'descending' : 'ascending']) }}">Filename&nbsp;
                                             @if ($sort == 'ascending')
                                                 <span class="glyphicon glyphicon-triangle-top"></span>
@@ -390,6 +408,7 @@
                                             @endif
                                         </a>
                                     </th>
+                                    <th class="col-xs-2">Status</th>
                                     <th class="col-xs-2">Size</th>
                                     <th class="col-sm-2 visible-sm visible-md visible-lg">Modified</th>
                                 </tr>
@@ -399,16 +418,33 @@
                                 @if (empty($archives) === false)
                                     @foreach ($archives as $archive)
                                         <tr>
-                                            <td class="col-xs-8">
-                                                <a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive['name']), 1]) }}">
+                                            @php ($history = \App\ReaderHistory::where('user_id', \Auth::user()->getId())
+                                                                               ->where('manga_id', $id)
+                                                                               ->where('archive_name', $archive['name'])
+                                                                               ->first())
+                                            @endphp
+
+                                            <td class="col-xs-6">
+                                                <a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive['name']), $history != null ? $history->getPage() : 1]) }}">
                                                     {{ $archive['name'] }}
                                                 </a>
                                             </td>
                                             <td class="col-xs-2">
+                                                @if ($history != null)
+                                                    @if ($history->getPage() < $history->getPageCount())
+                                                        <span class="label label-warning" title="pg. {{ $history->getPage() }} of {{ $history->getPageCount() }}">Incomplete</span>
+                                                    @else
+                                                        <span class="label label-success" title="pg. {{ $history->getPage() }} of {{ $history->getPageCount() }}">Complete</span>
+                                                    @endif
+                                                @else
+                                                    <span class="label label-default">Unread</span>
+                                                @endif
+                                            </td>
+                                            <td class="col-xs-2">
                                                 {{ $archive['size'] }}
                                             </td>
-                                            <td class="col-sm-2 visible-sm visible-md visible-lg">
-                                                {{ $archive['modified'] }}
+                                            <td class="col-xs-2 visible-sm visible-md visible-lg">
+                                                {{ $history != null ? $history->getLastUpdated() : "Never" }}
                                             </td>
                                         </tr>
                                     @endforeach
