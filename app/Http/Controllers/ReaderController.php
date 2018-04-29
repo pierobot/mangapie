@@ -7,6 +7,7 @@ use Carbon\Carbon;
 
 use \App\Manga;
 use \App\ImageArchive;
+use \App\ReaderHistory;
 
 class ReaderController extends Controller
 {
@@ -72,6 +73,25 @@ class ReaderController extends Controller
             return \Response::make(null, 400);
         // get the image count for this archive
         $page_count = count($images);
+
+        if ($page > $page_count)
+            return \Response::make(null, 400);
+
+        ReaderHistory::updateOrCreate(
+            [
+                'user_id' => \Auth::user()->getId(),
+                'manga_id' => $id,
+                'archive_name' => $archive_name,
+                'page_count' => $page_count
+            ],
+            [
+                'user_id' => \Auth::user()->getId(),
+                'manga_id' => $id,
+                'archive_name' => $archive_name,
+                'page' => $page,
+                'page_count' => $page_count
+            ]
+        );
 
         $has_prev_page = false;
         $has_next_page = false;
