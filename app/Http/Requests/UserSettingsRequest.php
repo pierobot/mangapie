@@ -28,7 +28,8 @@ class UserSettingsRequest extends FormRequest
             'new-password' => 'string',
             'confirm-password' => 'same:new-password',
             'theme' => 'regex:/\w+\/\w+/',
-            'action' => 'required|string|in:password.update,theme.update'
+            'ltr' => 'boolean',
+            'action' => 'required|string|in:password.update,theme.update,reader.update'
         ];
     }
 }
