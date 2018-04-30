@@ -24,7 +24,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'admin', 'maintainer', 'theme'
+        'name', 'email', 'password', 'admin', 'maintainer', 'theme', 'ltr'
     ];
 
     /**
@@ -87,6 +87,16 @@ class User extends Authenticatable
     {
         $this->theme = $theme;
         $this->save();
+    }
+
+    public function getLtr()
+    {
+        return $this->ltr;
+    }
+
+    public function setLtr($ltr)
+    {
+        $this->ltr = $ltr;
     }
 
     public function favorites()

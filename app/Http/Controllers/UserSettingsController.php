@@ -38,7 +38,13 @@ class UserSettingsController extends Controller
 
             $user->setPassword(\Hash::make(\Input::get('new-password')));
 
-            \Session::flash('update-success', 'Successfully updated password.');
+            \Session::flash('success', 'Successfully updated password.');
+        } else if ($action == 'reader.update') {
+            $user->setLtr(\Input::get('ltr'));
+            $user->save();
+
+            \Session::flash('success', 'Successfully updated reading direction.');
+
         } elseif ($action == 'theme.update') {
             $theme = \Input::get('theme');
             if (Theme::exists($theme) == false) {
@@ -49,7 +55,7 @@ class UserSettingsController extends Controller
 
             $user->setTheme($theme);
 
-            \Session::flash('update-success', 'Successfully updated theme.');
+            \Session::flash('success', 'Successfully updated theme.');
         }
 
         return \Redirect::action('UserSettingsController@index');
