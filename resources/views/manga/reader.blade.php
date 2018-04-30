@@ -9,16 +9,30 @@
 
 @if ($page_count != 0)
 
-    @if ($has_next_page)
-        <li class="clickable navbar-link"><a href="{{ $next_url }}" id="next-image"><span class="glyphicon glyphicon-chevron-left white"></span> Next</a></li>
-    @else
-        <li class="navbar-link disabled"><a href="#" id="next-image"><span class="glyphicon glyphicon-chevron-left white"></span> Next</a></li>
-    @endif
+    @if($ltr == false)
+        @if ($has_next_page)
+            <li class="clickable navbar-link"><a href="{{ $next_url }}" id="next-image"><span class="glyphicon glyphicon-chevron-left white"></span> Next</a></li>
+        @else
+            <li class="navbar-link disabled"><a href="#" id="next-image"><span class="glyphicon glyphicon-chevron-left white"></span> Next</a></li>
+        @endif
 
-    @if ($has_prev_page)
-        <li class="clickable navbar-link"><a href="{{ $prev_url }}" id="prev-image"><span class="glyphicon glyphicon-chevron-right white"></span> Previous</a></li>
+        @if ($has_prev_page)
+            <li class="clickable navbar-link"><a href="{{ $prev_url }}" id="prev-image"><span class="glyphicon glyphicon-chevron-right white"></span> Previous</a></li>
+        @else
+            <li class="navbar-link disabled"><a href="#" id="prev-image"><span class="glyphicon glyphicon-chevron-right white"></span> Previous</a></li>
+        @endif
     @else
-        <li class="navbar-link disabled"><a href="#" id="prev-image"><span class="glyphicon glyphicon-chevron-right white"></span> Previous</a></li>
+        @if ($has_prev_page)
+            <li class="clickable navbar-link"><a href="{{ $prev_url }}" id="prev-image"><span class="glyphicon glyphicon-chevron-left white"></span> Previous</a></li>
+        @else
+            <li class="navbar-link disabled"><a href="#" id="prev-image"><span class="glyphicon glyphicon-chevron-left white"></span> Previous</a></li>
+        @endif
+
+        @if ($has_next_page)
+            <li class="clickable navbar-link"><a href="{{ $next_url }}" id="next-image"><span class="glyphicon glyphicon-chevron-right white"></span> Next</a></li>
+        @else
+            <li class="navbar-link disabled"><a href="#" id="next-image"><span class="glyphicon glyphicon-chevron-right white"></span> Next</a></li>
+        @endif
     @endif
 
     <li class="dropdown">
@@ -61,5 +75,70 @@
 
 @section ('scripts')
     {{--<script src="http://hammerjs.github.io/dist/hammer.min.js" type="text/javascript"></script> --}}
-    <script src="{{ URL::to('/public/js/manga/reader.js') }}" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(function () {
+
+            // set up handler for key events
+            $(document).on('keyup', function (e) {
+                if (e.keyCode == 37 || e.keyCode == 65) {
+                    // left arrow or a
+                    @if ($ltr == false)
+                        window.location = $('#next-image').attr('href');
+                    @else
+                        window.location = $('#prev-image').attr('href');
+                    @endif
+                } else if (e.keyCode == 39 || e.keyCode == 68) {
+                    // right arrow or d
+                    @if ($ltr == false)
+                        window.location = $('#prev-image').attr('href');
+                    @else
+                        window.location = $('#next-image').attr('href');
+                    @endif
+                }
+            });
+
+            // go through each img in #preload and load it
+            $('#preload > img').each(function () {
+                $(this).attr('src', $(this).attr('data-src'));
+            });
+        });
+
+        /*
+            $swipe_prev_direction = 'left';
+            $swipe_next_direction = 'right';
+
+            $(function () {
+                new Hammer($(".swipe")[0], {
+                    domEvents: true
+                });
+
+                $('.swipe').on('swipeleft', function(e) {
+                    if ($swipe_prev_direction === 'left') {
+                        // swipe left for previous image
+                        $prev_url = $('.swipe').parent().attr('prev_url');
+
+                        if ($prev_url != null) {
+                            // change the href for desktops
+                            $('.swipe').parent().attr({ href : $prev_url });
+                            // change the location for mobile devices
+                            window.location = $prev_url;
+                        }
+                    }
+                });
+
+                $('.swipe').on('swiperight', function(e) {
+                    if ($swipe_next_direction === 'right') {
+                        // swipe right for next image
+                        $next_url = $('.swipe').parent().attr('href');
+
+                        if ($next_url != null) {
+                            $('.swipe').parent().attr({ href : $next_url });
+                            window.location = $next_url;
+                        }
+                    }
+                });
+
+            });
+        */
+    </script>
 @endsection

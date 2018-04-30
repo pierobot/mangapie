@@ -148,7 +148,8 @@ class ReaderController extends Controller
                                    ->with('has_next_page', $has_next_page)
                                    ->with('has_prev_page', $has_prev_page)
                                    ->with('next_url', $next_url)
-                                   ->with('prev_url', $prev_url);
+                                   ->with('prev_url', $prev_url)
+                                   ->with('ltr', \Auth::user()->getLtr());
     }
 
     public function image($id, $archive_name, $page)
