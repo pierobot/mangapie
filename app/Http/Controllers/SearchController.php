@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SearchAdvancedRequest;
 use App\Http\Requests\SearchAutoCompleteRequest;
 use App\Http\Requests\SearchRequest;
 use Illuminate\Http\Request;
@@ -21,15 +22,32 @@ class SearchController extends Controller
 
     public function index()
     {
+        // if the query parameter 'type' exists then we're being requested another page of a search
+        if (\Input::has('type')) {
+            $type = \Input::get('type');
+            $keywords = \Input::get('keywords');
+
+            if ($type == 'basic') {
+                return $this->doBasicSearch($keywords);
+            } else if ($type == 'advanced') {
+
+                $genres = \Input::get('genres');
+                $author = \Input::get('author');
+                $artist = \Input::get('artist');
+
+                return $this->doAdvancedSearch($genres, $author, $artist, $keywords);
+            }
+        }
+
         $genres = Genre::all();
 
-        return view('search.index', compact('genres'));
+        return view('search.index')->with('genres', $genres);
     }
 
-    private function doBasicSearch($query)
+    private function doBasicSearch($keywords)
     {
         // if the query is empty, then redirect to the advanced search page
-        if ($query == null)
+        if ($keywords == null)
             return \Redirect::action('SearchController@index');
 
         $user = \Auth::user();
@@ -37,12 +55,12 @@ class SearchController extends Controller
         $libraries = null;
 
         if ($user->isAdmin() == true) {
-            $manga_list = Manga::search($query)
+            $manga_list = Manga::search($keywords)
                                ->orderBy('name', 'asc')
                                ->paginate(18);
             $libraries = Library::all();
         } else {
-            $manga_list = Manga::search($query)
+            $manga_list = Manga::search($keywords)
                                ->whereIn('library_id', $library_ids)
                                ->orderBy('name', 'asc')
                                ->paginate(18);
@@ -50,24 +68,57 @@ class SearchController extends Controller
             $libraries = Library::whereIn('id', $library_ids)->get();
         }
 
-        $manga_list->withPath(env('app.url'));
+        $manga_list->withPath(\Request::getBaseUrl())
+                   ->appends([
+                       'type' => 'basic',
+                       'keywords' => $keywords
+                   ]);
 
         return view('home.index', compact('manga_list', 'libraries'));
     }
 
-    private function doAdvancedSearch($query, $genres)
+    private function doAdvancedSearch($genres, $author, $artist, $keywords)
     {
+        $results = Manga::advancedSearch($genres, $author, $artist, $keywords);
+        $total = $results->count();
+
+        $libraryIds = LibraryPrivilege::getIds(\Auth::user()->getId());
+        $libraries = Library::whereIn('id', $libraryIds)->get();
+
+        $current_page = \Input::get('page', 1);
+        $manga_list = new \Illuminate\Pagination\LengthAwarePaginator(
+            $results->forPage($current_page, 18),
+            $total,
+            18);
+
+        $manga_list = $manga_list->withPath(\Request::getBaseUrl())
+                                 ->appends([
+                                     'type' => 'advanced',
+                                     'keywords' => $keywords,
+                                     'genres' => $genres,
+                                     'author' => $author,
+                                     'artist' => $artist
+                                 ]);
+
+        return view('home.index')->with('manga_list', $manga_list)
+                                 ->with('libraries', $libraries);
     }
 
-    public function search(SearchRequest $request)
+    public function basic(SearchRequest $request)
     {
-        $query = \Input::get('query');
-        $genres = \Input::get('genres');
+        $keywords = \Input::get('keywords');
 
-        if ($genres == null)
-            return $this->doBasicSearch($query);
-        else
-            return $this->doAdvancedSearch($query, $genres);
+        return $this->doBasicSearch($keywords);
+    }
+
+    public function advanced(SearchAdvancedRequest $request)
+    {
+        $keywords = \Input::get('keywords');
+        $genres = \Input::get('genres');
+        $author = \Input::get('author');
+        $artist = \Input::get('artist');
+
+        return $this->doAdvancedSearch($genres, $author, $artist, $keywords);
     }
 
     public function autoComplete()

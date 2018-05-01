@@ -1,10 +1,10 @@
 <li>
-    {{ Form::open(['action' => 'SearchController@search', 'class' => 'navbar-form navbar-inline']) }}
-
+    {{ Form::open(['action' => 'SearchController@basic', 'class' => 'navbar-form navbar-inline']) }}
+    {{ Form::hidden('type', 'basic') }}
     <div class="input-group">
-        {{ Form::text('query', null, ['class' => 'form-control',
-                                      'placeholder' => '...',
-                                      'id' => 'autocomplete']) }}
+        {{ Form::text('keywords', null, ['class' => 'form-control',
+                                         'placeholder' => '...',
+                                         'id' => 'autocomplete']) }}
 
         <span class="input-group-btn">
             <button type="submit" class="btn btn-primary btn-navbar">

@@ -1,7 +1,7 @@
 @extends ('layout')
 
 @section ('title')
-    Index
+    Home &colon;&colon; Mangapie
 @endsection
 
 @section ('custom_navbar_right')
