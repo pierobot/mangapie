@@ -20,6 +20,10 @@
     }
 }
 
+table > tbody > tr > td {
+    vertical-align: middle !important;
+}
+
 /* ------- home/index.blade.php ------- */
 
 .thumbnail {
