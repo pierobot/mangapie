@@ -34,13 +34,19 @@
                     <div class="row">
                         <div class="col-xs-3 col-md-2">
                             <span class="glyphicon glyphicon-tags"></span>&nbsp;
-                            <label>Genres</label>
+                            <b>Genres</b>
                         </div>
                         <div class="col-xs-9 col-md-10">
                             @if ($genres != null)
-                                @foreach ($genres as $genre)
-                                    <span class="label label-default" title="{{ $genre->getDescription() }}">{{ $genre->getName() }}</span>
-                                @endforeach
+                                <div class="row">
+                                    @foreach ($genres as $genre)
+                                        <div class="col-sm-4 col-md-3 col-lg-3">
+                                            <a href="{{ \URL::action('SearchController@advanced', ['type' => 'advanced', 'genres[0]' => $genre->getName(), 'page' => 1]) }}">
+                                                {{ $genre->getName() }}
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
                             @else
                                 Unable to find genres.
                             @endif
@@ -53,13 +59,17 @@
                     <div class="row">
                         <div class="col-xs-3 col-md-2">
                             <span class="glyphicon glyphicon-list-alt"></span>&nbsp;
-                            <label>Names</label>
+                            <b>Names</b>
                         </div>
                         <div class="col-xs-9 col-md-10">
                             @if ($assoc_names != null)
-                                @foreach ($assoc_names as $assoc_name)
-                                    <span class="label label-default">{{ $assoc_name->getName() }}</span>
-                                @endforeach
+                                <div class="row">
+                                    @foreach ($assoc_names as $assoc_name)
+                                        <div class="col-sm-4 col-md-3 col-lg-3">
+                                            {{ $assoc_name->getName() }}
+                                        </div>
+                                    @endforeach
+                                </div>
                             @else
                                 Unable to find associated names.
                             @endif
@@ -71,12 +81,14 @@
                     <div class="row">
                         <div class="col-xs-3 col-md-2">
                             <span class="glyphicon glyphicon-user"></span>&nbsp;
-                            <label>Authors</label>
+                            <b>Authors</b>
                         </div>
                         <div class="col-xs-9 col-md-10">
                             @if ($authors != null)
                                 @foreach ($authors as $author)
-                                    <span class="label label-default">{{ $author->getName() }}</span>
+                                    <a href="{{ \URL::action('SearchController@advanced', ['type' => 'advanced', 'author' => $author->getName(), 'page' => 1]) }}">
+                                        {{ $author->getName() }}
+                                    </a>
                                 @endforeach
                             @else
                                 Unable to find authors.
@@ -89,12 +101,14 @@
                     <div class="row">
                         <div class="col-xs-3 col-md-2">
                             <span class="glyphicon glyphicon-user"></span>&nbsp;
-                            <label>Artists</label>
+                            <b>Artists</b>
                         </div>
                         <div class="col-xs-9 col-md-10">
                             @if ($artists != null)
                                 @foreach ($artists as $artist)
-                                    <span class="label label-default">{{ $artist->getName() }}</span>
+                                    <a href="{{ \URL::action('SearchController@advanced', ['type' => 'advanced', 'artist' => $artist->getName(), 'page' => 1]) }}">
+                                        {{ $artist->getName() }}
+                                    </a>
                                 @endforeach
                             @else
                                 Unable to find artists.
@@ -107,7 +121,7 @@
                     <div class="row">
                         <div class="col-xs-3 col-md-2">
                             <span class="glyphicon glyphicon-info-sign"></span>&nbsp;
-                            <label>Summary</label>
+                            <b>Summary</b>
                         </div>
                         <div class="col-xs-9 col-md-10">
                             @if ($description != null)
@@ -123,11 +137,11 @@
                     <div class="row">
                         <div class="col-xs-3 col-md-2">
                             <span class="glyphicon glyphicon-calendar"></span>&nbsp;
-                            <label>Year</label>
+                            <b>Year</b>
                         </div>
                         <div class="col-xs-9 col-md-10">
                             @if ($year != null)
-                                <span class="label label-default">{{ $year }}</span>
+                                {{ $year }}
                             @else
                                 Unable to find year.
                             @endif
@@ -139,7 +153,7 @@
                     <div class="row">
                         <div class="col-xs-3 col-md-2">
                             <span class="glyphicon glyphicon glyphicon-share"></span>
-                            <label>Actions</label>
+                            <b>Actions</b>
                         </div>
                         <div class="col-xs-9 col-md-10">
                             {{ Form::open(['action' => 'FavoriteController@update']) }}
@@ -167,7 +181,7 @@
                     <div class="row">
                         <div class="col-xs-3 col-md-2">
                             <span class="glyphicon glyphicon-hdd"></span>&nbsp;
-                            <label>Path</label>
+                            <b>Path</b>
                         </div>
                         <div class="col-xs-9 col-md-10">
                             {{ $path }}
@@ -182,7 +196,7 @@
     <div class="row">
         <div class="hidden-xs col-sm-12">
             <hr>
-            <table class="table table-hover table-condensed" style="word-break: break-all; ">
+            <table class="table table-hover " style="word-break: break-all; ">
                 <thead>
                 <tr>
                     <th class="col-sm-6">
@@ -194,7 +208,7 @@
                             @endif
                         </a>
                     </th>
-                    <th class="col-sm-2">Status</th>
+                    <th class="col-sm-2 col-md-1">Status</th>
                     <th class="col-sm-2">Size</th>
                     <th class="col-sm-2 visible-md visible-lg">Last Read</th>
                 </tr>
@@ -215,7 +229,7 @@
                                     {{ $archive['name'] }}
                                 </a>
                             </td>
-                            <td class="col-sm-2">
+                            <td class="col-sm-2 col-md-1">
                                 @if ($history != null)
                                     @if ($history->getPage() < $history->getPageCount())
                                         <span class="label label-warning" title="pg. {{ $history->getPage() }} of {{ $history->getPageCount() }}">Incomplete</span>
@@ -226,7 +240,7 @@
                                     <span class="label label-default">Unread</span>
                                 @endif
                             </td>
-                            <td class="col-sm-2">
+                            <td class="col-sm-2 col-md-1">
                                 {{ $archive['size'] }}
                             </td>
                             <td class="col-sm-2 visible-md visible-lg">
@@ -255,34 +269,43 @@
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <label>Genres</label>
+                                    <b>Genres</b>
                                 </div>
                                 <div class="col-xs-9">
                                     @if ($genres != null)
-                                        @foreach ($genres as $genre)
-                                            <span class="label label-default" title="{{ $genre->getDescription() }}">{{ $genre->getName() }}</span>
-                                        @endforeach
+                                        <div class="row">
+                                            @foreach ($genres as $genre)
+                                                <div class="col-xs-6">
+                                                    <a href="{{ \URL::action('SearchController@advanced', ['type' => 'advanced', 'genres[0]' => $genre->getName(), 'page' => 1]) }}">
+                                                        {{ $genre->getName() }}
+                                                    </a>
+                                                </div>
+                                            @endforeach
+                                        </div>
                                     @else
                                         Unable to find genres.
                                     @endif
                                 </div>
                             </div>
-
                         </li>
 
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <label>Names</label>
+                                    <b>Names</b>
                                 </div>
                                 <div class="col-xs-9">
-                                    @if ($assoc_names != null)
-                                        @foreach ($assoc_names as $assoc_name)
-                                            <span class="label label-default">{{ $assoc_name->getName() }}</span>
-                                        @endforeach
-                                    @else
-                                        Unable to find associated names.
-                                    @endif
+                                    <div class="row">
+                                        @if ($assoc_names != null)
+                                            @foreach ($assoc_names as $assoc_name)
+                                                <div class="col-xs-6">
+                                                    {{ $assoc_name->getName() }}
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            Unable to find associated names.
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </li>
@@ -290,16 +313,22 @@
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <label>Authors</label>
+                                    <b>Authors</b>
                                 </div>
                                 <div class="col-xs-9">
-                                    @if ($authors != null)
-                                        @foreach ($authors as $author)
-                                            <span class="label label-default">{{ $author->getName() }}</span>
-                                        @endforeach
-                                    @else
-                                        Unable to find authors.
-                                    @endif
+                                    <div class="row">
+                                        @if ($authors != null)
+                                            @foreach ($authors as $author)
+                                                <div class="col-xs-6">
+                                                    <a href="{{ \URL::action('SearchController@advanced', ['type' => 'advanced', 'author' => $author->getName(), 'page' => 1]) }}">
+                                                        {{ $author->getName() }}</label>
+                                                    </a>
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            Unable to find authors.
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </li>
@@ -307,16 +336,22 @@
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <label>Artists</label>
+                                    <b>Artists</b>
                                 </div>
                                 <div class="col-xs-9">
-                                    @if ($artists != null)
-                                        @foreach ($artists as $artist)
-                                            <span class="label label-default">{{ $artist->getName() }}</span>
-                                        @endforeach
-                                    @else
-                                        Unable to find artists.
-                                    @endif
+                                    <div class="row">
+                                        @if ($artists != null)
+                                            @foreach ($artists as $artist)
+                                                <div class="col-xs-6">
+                                                    <a href="{{ \URL::action('SearchController@advanced', ['type' => 'advanced', 'artist' => $artist->getName(), 'page' => 1]) }}">
+                                                        {{ $artist->getName() }}
+                                                    </a>
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            Unable to find artists.
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
                         </li>
@@ -324,7 +359,7 @@
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <label>Summary</label>
+                                    <b>Summary</b>
                                 </div>
                                 <div class="col-xs-9">
                                     @if ($description != null)
@@ -339,11 +374,11 @@
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <label>Year</label>
+                                    <b>Year</b>
                                 </div>
                                 <div class="col-xs-9">
                                     @if ($year != null)
-                                        <span class="label label-default">{{ $year }}</span>
+                                        {{ $year }}
                                     @else
                                         Unable to find year.
                                     @endif
@@ -354,7 +389,7 @@
                         <li class="list-group-item">
                             <div class="row">
                                 <div class="col-xs-3">
-                                    <label>Actions</label>
+                                    <b>Actions</b>
                                 </div>
                                 <div class="col-xs-9">
                                     {{ Form::open(['action' => 'FavoriteController@update']) }}
@@ -381,7 +416,7 @@
                             <li class="list-group-item">
                                 <div class="row">
                                     <div class="col-xs-3">
-                                        <label>Path</label>
+                                        <b>Path</b>
                                     </div>
                                     <div class="col-xs-9">
                                         {{ $path }}
@@ -394,65 +429,61 @@
                 </div>
 
                 <div class="tab-pane" id="files-content">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <table class="table table-hover table-condensed" style="word-break: break-all; ">
-                                <thead>
+                    <table class="table table-hover table-condensed" style="word-break: break-all; ">
+                        <thead>
+                        <tr>
+                            <th class="col-xs-6">
+                                <a href="{{ \URL::action('MangaController@index', [$id, $sort == 'ascending' ? 'descending' : 'ascending']) }}">Filename&nbsp;
+                                    @if ($sort == 'ascending')
+                                        <span class="glyphicon glyphicon-triangle-top"></span>
+                                    @else
+                                        <span class="glyphicon glyphicon-triangle-bottom"></span>
+                                    @endif
+                                </a>
+                            </th>
+                            <th class="col-xs-2">Status</th>
+                            <th class="col-xs-2">Size</th>
+                            <th class="col-sm-2 visible-sm visible-md visible-lg">Modified</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        @if (empty($archives) === false)
+                            @foreach ($archives as $archive)
                                 <tr>
-                                    <th class="col-xs-6">
-                                        <a href="{{ \URL::action('MangaController@index', [$id, $sort == 'ascending' ? 'descending' : 'ascending']) }}">Filename&nbsp;
-                                            @if ($sort == 'ascending')
-                                                <span class="glyphicon glyphicon-triangle-top"></span>
-                                            @else
-                                                <span class="glyphicon glyphicon-triangle-bottom"></span>
-                                            @endif
+                                    @php ($history = \App\ReaderHistory::where('user_id', \Auth::user()->getId())
+                                                                       ->where('manga_id', $id)
+                                                                       ->where('archive_name', $archive['name'])
+                                                                       ->first())
+                                    @endphp
+
+                                    <td class="col-xs-6">
+                                        <a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive['name']), $history != null ? $history->getPage() : 1]) }}">
+                                            {{ $archive['name'] }}
                                         </a>
-                                    </th>
-                                    <th class="col-xs-2">Status</th>
-                                    <th class="col-xs-2">Size</th>
-                                    <th class="col-sm-2 visible-sm visible-md visible-lg">Modified</th>
+                                    </td>
+                                    <td class="col-xs-2">
+                                        @if ($history != null)
+                                            @if ($history->getPage() < $history->getPageCount())
+                                                <span class="label label-warning" title="pg. {{ $history->getPage() }} of {{ $history->getPageCount() }}">Incomplete</span>
+                                            @else
+                                                <span class="label label-success" title="pg. {{ $history->getPage() }} of {{ $history->getPageCount() }}">Complete</span>
+                                            @endif
+                                        @else
+                                            <span class="label label-default">Unread</span>
+                                        @endif
+                                    </td>
+                                    <td class="col-xs-2">
+                                        {{ $archive['size'] }}
+                                    </td>
+                                    <td class="col-xs-2 visible-sm visible-md visible-lg">
+                                        {{ $history != null ? $history->getLastUpdated() : "Never" }}
+                                    </td>
                                 </tr>
-                                </thead>
-
-                                <tbody>
-                                @if (empty($archives) === false)
-                                    @foreach ($archives as $archive)
-                                        <tr>
-                                            @php ($history = \App\ReaderHistory::where('user_id', \Auth::user()->getId())
-                                                                               ->where('manga_id', $id)
-                                                                               ->where('archive_name', $archive['name'])
-                                                                               ->first())
-                                            @endphp
-
-                                            <td class="col-xs-6">
-                                                <a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive['name']), $history != null ? $history->getPage() : 1]) }}">
-                                                    {{ $archive['name'] }}
-                                                </a>
-                                            </td>
-                                            <td class="col-xs-2">
-                                                @if ($history != null)
-                                                    @if ($history->getPage() < $history->getPageCount())
-                                                        <span class="label label-warning" title="pg. {{ $history->getPage() }} of {{ $history->getPageCount() }}">Incomplete</span>
-                                                    @else
-                                                        <span class="label label-success" title="pg. {{ $history->getPage() }} of {{ $history->getPageCount() }}">Complete</span>
-                                                    @endif
-                                                @else
-                                                    <span class="label label-default">Unread</span>
-                                                @endif
-                                            </td>
-                                            <td class="col-xs-2">
-                                                {{ $archive['size'] }}
-                                            </td>
-                                            <td class="col-xs-2 visible-sm visible-md visible-lg">
-                                                {{ $history != null ? $history->getLastUpdated() : "Never" }}
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                @endif
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                            @endforeach
+                        @endif
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

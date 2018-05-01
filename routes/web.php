@@ -20,7 +20,9 @@ Route::get('/home', 'HomeController@index');
 Route::get('/home/library/{id}', 'HomeController@library')->where('id', '\d+');
 
 Route::get('/search', 'SearchController@index');
-Route::post('/search', 'SearchController@search');
+Route::post('/search/basic', 'SearchController@basic');
+Route::post('/search/advanced', 'SearchController@advanced');
+Route::get('/search/advanced', 'SearchController@index');
 Route::get('/search/autocomplete', 'SearchController@autoComplete');
 
 Route::get('/manga/{id}/{sort?}', 'MangaController@index')->where('id', '\d+')
