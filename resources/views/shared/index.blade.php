@@ -1,16 +1,27 @@
 <div class="row">
-    @foreach ($manga_list as $manga)
-        <div class="col-lg-2 col-sm-3 col-xs-6 text-center thumbnail">
-            <div>
-                <a href="{{ URL::action('MangaController@index', [$manga->getId()]) }}">
-                    {{ Html::image(URL::action('ThumbnailController@smallDefault', [$manga->getId()])) }}
-                </a>
+    @if (isset($header))
+        <h3 class="text-center">
+            <b>{{ $header }}</b>
+        </h3>
+    @endif
+    @if (isset($manga_list))
+        @foreach ($manga_list as $manga)
+            <div class="col-lg-2 col-sm-3 col-xs-6 text-center thumbnail">
+                <div>
+                    <a href="{{ URL::action('MangaController@index', [$manga->getId()]) }}">
+                        {{ Html::image(URL::action('ThumbnailController@smallDefault', [$manga->getId()])) }}
+                    </a>
+                </div>
+                <h4 title="{{ $manga->getName() }}"><a href="{{ URL::action('MangaController@index', [$manga->getId()]) }}">{{ $manga->getName() }}</a></h4>
             </div>
-            <h4 title="{{ $manga->getName() }}"><a href="{{ URL::action('MangaController@index', [$manga->getId()]) }}">{{ $manga->getName() }}</a></h4>
-        </div>
-    @endforeach
+        @endforeach
+    @else
+
+    @endif
 </div>
 
 <div class="text-center">
-    {{ $manga_list->render() }}
+    @if (isset($manga_list))
+        {{ $manga_list->render() }}
+    @endif
 </div>
