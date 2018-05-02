@@ -209,7 +209,7 @@
                         </a>
                     </th>
                     <th class="col-sm-2 col-md-1">Status</th>
-                    <th class="col-sm-2">Size</th>
+                    <th class="col-sm-2 col-md-1">Size</th>
                     <th class="col-sm-2 visible-md visible-lg">Last Read</th>
                 </tr>
                 </thead>
