@@ -6,7 +6,7 @@
     @endif
     @if (isset($manga_list))
         @foreach ($manga_list as $manga)
-            <div class="col-lg-2 col-sm-3 col-xs-6 text-center thumbnail">
+            <div class="col-lg-2 col-sm-4 col-xs-6 text-center thumbnail">
                 <div>
                     <a href="{{ URL::action('MangaController@index', [$manga->getId()]) }}">
                         {{ Html::image(URL::action('ThumbnailController@smallDefault', [$manga->getId()])) }}

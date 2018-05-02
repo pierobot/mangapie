@@ -31,7 +31,9 @@
             </div>
             <br>
             <div class="row center-block">
-                {{ Form::submit('Login', ['class' => 'btn btn-default center-block', 'type' => 'submit']) }}
+                <button type="submit" class="btn btn-default center-block">
+                    <span class="glyphicon glyphicon-log-in"></span>&nbsp; Login
+                </button>
             </div>
         {{ Form::close() }}
 
