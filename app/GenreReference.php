@@ -10,6 +10,11 @@ class GenreReference extends Model
 
     public function genre()
     {
-        return $this->hasOne('App\Genre', 'id', 'genre_id');
+        return $this->belongsTo('App\Genre');
+    }
+
+    public function manga()
+    {
+        return $this->belongsTo('App\Manga');
     }
 }

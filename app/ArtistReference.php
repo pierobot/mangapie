@@ -21,6 +21,11 @@ class ArtistReference extends Model
 
     public function artist()
     {
-        return $this->hasOne('App\Artist', 'id', 'artist_id');
+        return $this->belongsTo('App\Artist');
+    }
+
+    public function manga()
+    {
+        return $this->belongsTo('App\Manga');
     }
 }

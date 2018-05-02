@@ -197,9 +197,87 @@ class Manga
         return $genres;
     }
 
-    public function scopeSearch($query, $value)
+    public function scopeSearch($query, $keywords)
     {
-        return empty($value) ? $query : $query->whereRaw("match(name) against(? in boolean mode)", [$value]);
+        return empty($keywords) ? $query : $query->whereRaw("match(name) against(? in boolean mode)", [$keywords]);
+    }
+
+    /**
+     * Performs an advanced search based on the given data.
+     * At least one of the parameters is required to not be null.
+     *
+     * @param $genres An array of genre names.
+     * @param $author The name of an author.
+     * @param $artist The name of an artist.
+     * @param $keywords Keywords to match against.
+     * @return \Illuminate\Support\Collection
+     */
+    public static function advancedSearch($genres, $author, $artist, $keywords)
+    {
+        $libraryIds = LibraryPrivilege::getIds(\Auth::user()->getId());
+        $collection = null;
+
+        // get an Illuminate\Support\Collection object depending on whether keywords are present
+        if (empty($keywords) == false) {
+            $collection = Manga::whereRaw("match(name) against(? in boolean mode)", [$keywords])->get();
+        } else {
+            $collection = Manga::all();
+        }
+
+        $collection = $collection->sortBy('name');
+
+        // filter by library permissions
+        $collection = $collection->whereIn('library_id', $libraryIds);
+
+        // filter by genres
+        $collection = $collection->filter(function ($manga) use ($genres) {
+            if (empty($genres))
+                return true;
+
+            $keep = false;
+
+            // if any of the genres match the ones in the request then we keep the manga
+            foreach ($manga->getGenres() as $genre) {
+                if (in_array($genre->getName(), $genres) == true) {
+                    $keep = true;
+                    break;
+                }
+            }
+
+            return $keep;
+        });
+
+        // filter by author and artist
+        $collection = $collection->filter(function ($manga) use ($author, $artist) {
+            if (empty($author) && empty($artist))
+                return true;
+
+            $keep = false;
+
+            if (empty($author) == false) {
+                // if any of the authors match the ones in the request then we keep the manga
+                foreach ($manga->getAuthors() as $author_) {
+                    if (IntlString::strcmp($author_->getName(), $author) == 0) {
+                        $keep = true;
+                        break;
+                    }
+                }
+            }
+
+            if (empty($artist) == false) {
+                // if any of the artists match the ones in the request then we keep the manga
+                foreach ($manga->getArtists() as $artist_) {
+                    if (IntlString::strcmp($artist_->getName(), $artist) == 0) {
+                        $keep = true;
+                        break;
+                    }
+                }
+            }
+
+            return $keep;
+        });
+
+        return $collection;
     }
 
     public function scopeFromLibrary($library_ids)
@@ -348,7 +426,7 @@ class Manga
             $bytes /= 1024;
         }
 
-        return round($bytes, 2) . ' ' . $sizes[$i];
+        return number_format(round($bytes, 2), 2) . ' ' . $sizes[$i];
     }
 
     public function getArchives($sort = 'ascending')
