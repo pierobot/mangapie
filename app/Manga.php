@@ -121,6 +121,8 @@ class Manga
 
         Favorite::where('manga_id', '=', $id)->forceDelete();
 
+        ReaderHistory::where('manga_id', '=', $id)->forceDelete();
+
         parent::forceDelete();
     }
 
