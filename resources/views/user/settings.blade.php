@@ -17,39 +17,33 @@
             </div>
         </div>
         <div class="panel-body">
-            <div class="row">
+
                 {{ Form::open(['action' => 'UserSettingsController@update']) }}
 
-                <div class="col-xs-12 col-md-6">
-                    <h4>Password</h4>
-                    <hr>
-                    <div class="row">
-                        <div class="form-group col-xs-12 col-md-6">
-                            {{ Form::hidden('action', 'password.update') }}
-                            {{ Form::label('old password:', null, ['for' => 'old-password']) }}
-                            <input name="old-password" id="old-password" type="password" class="form-control"
-                                   placeholder="Enter old password here...">
+                <div class="form-group row">
+                    <div class="col-xs-12 col-md-3">
+                        {{ Form::hidden('action', 'password.update') }}
+                        {{ Form::label('old password:', null, ['for' => 'old-password']) }}
+                        <input name="old-password" id="old-password" type="password" class="form-control"
+                               placeholder="Enter old password here...">
 
-                            {{ Form::label('new password:', null, ['for' => 'new-password']) }}
-                            <input name="new-password" id="new-password" type="password" class="form-control"
-                                   placeholder="Enter new password here...">
+                        {{ Form::label('new password:', null, ['for' => 'new-password']) }}
+                        <input name="new-password" id="new-password" type="password" class="form-control"
+                               placeholder="Enter new password here...">
 
-                            {{ Form::label('confirm password:', null, ['for' => 'confirm-password']) }}
-                            <input name="confirm-password" id="confirm-password" type="password"
-                                   class="form-control" placeholder="Confirm new password here...">
-                        </div>
+                        {{ Form::label('confirm password:', null, ['for' => 'confirm-password']) }}
+                        <input name="confirm-password" id="confirm-password" type="password"
+                               class="form-control" placeholder="Confirm new password here...">
                     </div>
-                    <div class="row">
-                        <div class="col-xs-6">
-                            <div class="form-group">
-                                {{ Form::submit('Save', ['class' => 'btn btn-warning']) }}
-                            </div>
-                        </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-xs-12 col-md-3">
+                        {{ Form::submit('Save', ['class' => 'btn btn-warning']) }}
                     </div>
                 </div>
 
                 {{ Form::close() }}
-            </div>
+
         </div>
     </div>
 
@@ -96,9 +90,9 @@
         <div class="panel-body">
             {{ Form::open(['action' => 'UserSettingsController@update']) }}
             {{ Form::hidden('action', 'theme.update') }}
-            <div class="row">
-                <div class="col-xs-12 col-md-3">
-                    <div class="form-group">
+
+                <div class="form-group row">
+                    <div class="col-xs-12 col-md-3">
                         {{ Form::label('theme:', null, ['for' => 'theme']) }}
 
                         <select name="theme" class="form-control">
@@ -113,14 +107,14 @@
                         </select>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-6">
-                    <div class="form-group">
+
+                <div class="form-group row">
+                    <div class="col-xs-6">
+
                         {{ Form::submit('Save', ['class' => 'btn btn-success']) }}
                     </div>
                 </div>
-            </div>
+
 
             {{ Form::close() }}
             </div>

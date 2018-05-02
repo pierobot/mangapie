@@ -5,6 +5,10 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
+use App\Artist;
+use App\Author;
+use App\Genre;
+
 class RouteServiceProvider extends ServiceProvider
 {
     /**
@@ -23,7 +27,17 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Route::bind('genre', function ($name) {
+            return Genre::where('name', $name)->firstOrFail();
+        });
+
+        Route::bind('author', function ($name) {
+            return Author::where('name', $name)->firstOrFail();
+        });
+
+        Route::bind('artist', function ($name) {
+            return Artist::where('name', $name)->firstOrFail();
+        });
 
         parent::boot();
     }
