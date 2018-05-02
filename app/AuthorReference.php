@@ -21,6 +21,11 @@ class AuthorReference extends Model
 
     public function author()
     {
-        return $this->hasOne('App\Author', 'id', 'author_id');
+        return $this->belongsTo('App\Author');
+    }
+
+    public function manga()
+    {
+        return $this->belongsTo('App\Manga');
     }
 }

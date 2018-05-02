@@ -41,7 +41,7 @@
                                 <div class="row">
                                     @foreach ($genres as $genre)
                                         <div class="col-sm-4 col-md-3 col-lg-3">
-                                            <a href="{{ \URL::action('SearchController@advanced', ['type' => 'advanced', 'genres[0]' => $genre->getName(), 'page' => 1]) }}">
+                                            <a href="{{ \URL::action('GenreController@index', [$genre->getName()]) }}">
                                                 {{ $genre->getName() }}
                                             </a>
                                         </div>
@@ -86,7 +86,7 @@
                         <div class="col-xs-9 col-md-10">
                             @if ($authors != null)
                                 @foreach ($authors as $author)
-                                    <a href="{{ \URL::action('SearchController@advanced', ['type' => 'advanced', 'author' => $author->getName(), 'page' => 1]) }}">
+                                    <a href="{{ \URL::action('AuthorController@index', [$author->getName()]) }}">
                                         {{ $author->getName() }}
                                     </a>
                                 @endforeach
@@ -106,7 +106,7 @@
                         <div class="col-xs-9 col-md-10">
                             @if ($artists != null)
                                 @foreach ($artists as $artist)
-                                    <a href="{{ \URL::action('SearchController@advanced', ['type' => 'advanced', 'artist' => $artist->getName(), 'page' => 1]) }}">
+                                    <a href="{{ \URL::action('ArtistController@index', [$artist->getName()]) }}">
                                         {{ $artist->getName() }}
                                     </a>
                                 @endforeach

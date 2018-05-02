@@ -6,6 +6,7 @@ use App\Http\Requests\SearchAdvancedRequest;
 use App\Http\Requests\SearchAutoCompleteRequest;
 use App\Http\Requests\SearchRequest;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 use \App\Genre;
 use \App\Manga;
@@ -74,7 +75,9 @@ class SearchController extends Controller
                        'keywords' => $keywords
                    ]);
 
-        return view('home.index', compact('manga_list', 'libraries'));
+        return view('home.index')->with('header', 'Search Results (' . $manga_list->total() . ')')
+                                 ->with('manga_list', $manga_list)
+                                 ->with('libraries', $libraries);
     }
 
     private function doAdvancedSearch($genres, $author, $artist, $keywords)
@@ -86,10 +89,7 @@ class SearchController extends Controller
         $libraries = Library::whereIn('id', $libraryIds)->get();
 
         $current_page = \Input::get('page', 1);
-        $manga_list = new \Illuminate\Pagination\LengthAwarePaginator(
-            $results->forPage($current_page, 18),
-            $total,
-            18);
+        $manga_list = new LengthAwarePaginator($results->forPage($current_page, 18), $total, 18);
 
         $manga_list = $manga_list->withPath(\Request::getBaseUrl())
                                  ->appends([
@@ -100,7 +100,8 @@ class SearchController extends Controller
                                      'artist' => $artist
                                  ]);
 
-        return view('home.index')->with('manga_list', $manga_list)
+        return view('home.index')->with('header', 'Search Results (' . $total . ')')
+                                 ->with('manga_list', $manga_list)
                                  ->with('libraries', $libraries);
     }
 

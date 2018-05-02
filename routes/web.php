@@ -66,3 +66,7 @@ Route::get('/thumbnail/medium/{id}/{archive_name}/{page}', 'ThumbnailController@
                                                                                         ->where('archive_name', '.+')
                                                                                         ->where('page', '\d+');
 Route::post('/thumbnail/update', 'ThumbnailController@update');
+
+Route::get('/genre/{genre}', 'GenreController@index');
+Route::get('/author/{author}', 'AuthorController@index');
+Route::get('/artist/{artist}', 'ArtistController@index');
