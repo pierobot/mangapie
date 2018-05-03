@@ -38,7 +38,8 @@ class AuthorController extends Controller
                 array_push($results, $reference->manga);
         }
 
-        $results = collect($results);
+        $results = collect($results)->sortBy('name');
+
         $manga_list = new LengthAwarePaginator($results->forPage($page, 18), $results->count(), 18);
         $manga_list->withPath(\Request::getBaseUrl());
 

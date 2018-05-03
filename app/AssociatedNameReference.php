@@ -23,4 +23,9 @@ class AssociatedNameReference extends Model
     {
         return $this->hasOne('App\AssociatedName', 'id', 'assoc_name_id');
     }
+
+    public function manga()
+    {
+        return $this->belongsTo('App\Manga');
+    }
 }
