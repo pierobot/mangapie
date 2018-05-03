@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\AssociatedName;
 use App\Http\Requests\SearchAdvancedRequest;
 use App\Http\Requests\SearchAutoCompleteRequest;
 use App\Http\Requests\SearchRequest;
@@ -52,23 +53,22 @@ class SearchController extends Controller
             return \Redirect::action('SearchController@index');
 
         $user = \Auth::user();
-        $library_ids = LibraryPrivilege::getIds($user->getId());
-        $libraries = null;
+        $libraryIds = LibraryPrivilege::getIds($user->getId());
+        $libraries = $user->isAdmin() ? Library::all() : Library::whereIn('id', $libraryIds)->get();
 
-        if ($user->isAdmin() == true) {
-            $manga_list = Manga::search($keywords)
-                               ->orderBy('name', 'asc')
-                               ->paginate(18);
-            $libraries = Library::all();
-        } else {
-            $manga_list = Manga::search($keywords)
-                               ->whereIn('library_id', $library_ids)
-                               ->orderBy('name', 'asc')
-                               ->paginate(18);
+        $results = Manga::search($keywords)
+                        ->filter(function ($manga) use ($libraryIds) {
+                            foreach ($libraryIds as $libraryId) {
+                                if ($manga->getLibraryId() == $libraryId)
+                                    return true;
+                            }
 
-            $libraries = Library::whereIn('id', $library_ids)->get();
-        }
+                            return false;
+                        })
+                        ->sortBy('name');
 
+        $currentPage = \Input::get('page', 1);
+        $manga_list = new LengthAwarePaginator($results->forPage($currentPage, 18), $results->count(), 18);
         $manga_list->withPath(\Request::getBaseUrl())
                    ->appends([
                        'type' => 'basic',
@@ -82,7 +82,7 @@ class SearchController extends Controller
 
     private function doAdvancedSearch($genres, $author, $artist, $keywords)
     {
-        $results = Manga::advancedSearch($genres, $author, $artist, $keywords);
+        $results = Manga::advancedSearch($genres, $author, $artist, $keywords)->sortBy('name');
         $total = $results->count();
 
         $libraryIds = LibraryPrivilege::getIds(\Auth::user()->getId());
@@ -130,25 +130,29 @@ class SearchController extends Controller
         $library_ids = LibraryPrivilege::getIds($user->getId());
         $libraries = null;
 
-        if ($user->isAdmin() == true) {
-            $manga_list = Manga::where('name', 'like', '%' . $query . '%')
-                               ->orderBy('name', 'asc')
-                               ->get();
-        } else {
-            $manga_list = Manga::where('name', 'like', '%' . $query . '%')
-                               ->whereIn('library_id', $library_ids)
-                               ->orderBy('name', 'asc')
-                               ->get();
-        }
+        $results = Manga::where('name', 'like', '%' . $query . '%')->get();
+//        $assocResults = AssociatedName::where('name', 'like', '%' . $query . '%')->get();
+//
+//        $assocArray = [];
+//        foreach ($assocResults as $assocName) {
+//            array_push($assocArray, $assocName->reference->manga);
+//        }
+//
+//        $results = $results->merge(collect($assocArray));
 
-        $results = [];
-        foreach ($manga_list as $manga) {
-            array_push($results, [
+        if ($user->isAdmin() == false)
+            $results = $results->whereIn('library_id', $library_ids);
+
+        $results = $results->all();
+
+        $array = [];
+        foreach ($results as $manga) {
+            array_push($array, [
                 'id' => $manga->getId(),
                 'name' => $manga->getName()
             ]);
         }
 
-        return \Response::json($results);
+        return \Response::json($array);
     }
 }
