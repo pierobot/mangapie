@@ -15,19 +15,23 @@
         <b>Information &middot; {{ $name }}</b>
 
         @maintainer
-        <a href="{{ \URL::action('MangaEditController@index', [$id]) }}">
-            <b>Edit</b>
-        </a>
+        <div class="row">
+            <a href="{{ \URL::action('MangaEditController@index', [$id]) }}">
+                <b>Edit</b>
+            </a>
+        </div>
         @endmaintainer
     </h3>
 
     <h2 class="visible-sm visible-md visible-lg visible-xl text-center">
-        <b>Information &middot; {{ $name }} &middot;</b>
+        <b>Information &middot; {{ $name }}</b>
 
         @maintainer
+        <div class="row">
             <a href="{{ \URL::action('MangaEditController@index', [$id]) }}">
                 <b>Edit</b>
             </a>
+        </div>
         @endmaintainer
     </h2>
 
