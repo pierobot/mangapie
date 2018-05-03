@@ -18,4 +18,14 @@ class AssociatedName extends Model
     {
         return $this->name;
     }
+
+    public function reference()
+    {
+        return $this->belongsTo('App\AssociatedNameReference', 'id', 'assoc_name_id');
+    }
+
+    public function scopeSearch($query, $keywords)
+    {
+        return empty($keywords) ? $query : $query->whereRaw('match(name) against(? in boolean mode)', [$keywords]);
+    }
 }

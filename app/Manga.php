@@ -201,7 +201,20 @@ class Manga
 
     public function scopeSearch($query, $keywords)
     {
-        return empty($keywords) ? $query : $query->whereRaw("match(name) against(? in boolean mode)", [$keywords]);
+        $results = $query->whereRaw("match(name) against(? in boolean mode)", [$keywords])->get();
+
+        // get the associated names that match
+        $assocNames = AssociatedName::search($keywords)->get();
+        $assocArray = [];
+        // convert the associated names to a manga object and store them in an array
+        foreach ($assocNames as $assocName) {
+            array_push($assocArray, $assocName->reference->manga);
+        }
+
+        // convert the associated name array to an Illuminate\Support\Collection and merge
+        $results = $results->merge(collect($assocArray));
+
+        return empty($keywords) ? $query : $results;
     }
 
     /**
@@ -219,14 +232,12 @@ class Manga
         $libraryIds = LibraryPrivilege::getIds(\Auth::user()->getId());
         $collection = null;
 
-        // get an Illuminate\Support\Collection object depending on whether keywords are present
+        // get a Collection object depending on whether keywords are present
         if (empty($keywords) == false) {
             $collection = Manga::whereRaw("match(name) against(? in boolean mode)", [$keywords])->get();
         } else {
             $collection = Manga::all();
         }
-
-        $collection = $collection->sortBy('name');
 
         // filter by library permissions
         $collection = $collection->whereIn('library_id', $libraryIds);
