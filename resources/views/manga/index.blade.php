@@ -5,19 +5,30 @@
 @endsection
 
 @section ('custom_navbar_right')
-    @if (\Auth::user()->isAdmin() || \Auth::user()->isMaintainer())
-        <li class="clickable navbar-link"><a href="{{ URL::action('MangaEditController@index', [$id]) }}"><span class="glyphicon glyphicon-pencil"></span> Edit</a></li>
-    @endif
+    @include ('shared.searchbar')
+    @include ('shared.libraries')
 @endsection
 
 @section ('content')
 
     <h3 class="visible-xs text-center">
         <b>Information &middot; {{ $name }}</b>
+
+        @maintainer
+        <a href="{{ \URL::action('MangaEditController@index', [$id]) }}">
+            <b>Edit</b>
+        </a>
+        @endmaintainer
     </h3>
 
     <h2 class="visible-sm visible-md visible-lg visible-xl text-center">
-        <b>Information &middot; {{ $name }}</b>
+        <b>Information &middot; {{ $name }} &middot;</b>
+
+        @maintainer
+            <a href="{{ \URL::action('MangaEditController@index', [$id]) }}">
+                <b>Edit</b>
+            </a>
+        @endmaintainer
     </h2>
 
     @include ('shared.success')
@@ -176,7 +187,7 @@
                     </div>
                 </li>
 
-                @if (\Auth::user()->isAdmin())
+                @admin
                 <li class="list-group-item">
                     <div class="row">
                         <div class="col-xs-3 col-md-2">
@@ -188,7 +199,7 @@
                         </div>
                     </div>
                 </li>
-                @endif
+                @endadmin
             </ul>
         </div>
     </div>
@@ -412,7 +423,7 @@
                             </div>
                         </li>
 
-                        @if (\Auth::user()->isAdmin())
+                        @admin
                             <li class="list-group-item">
                                 <div class="row">
                                     <div class="col-xs-3">
@@ -423,7 +434,7 @@
                                     </div>
                                 </div>
                             </li>
-                        @endif
+                        @endadmin
 
                     </ul>
                 </div>

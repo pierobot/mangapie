@@ -4,6 +4,11 @@
     Admin &middot; Dashboard
 @endsection
 
+@section ('custom_navbar_right')
+    @include ('shared.searchbar')
+    @include ('shared.libraries')
+@endsection
+
 @section ('content')
     <h2 class="text-center"><b>Dashboard</b></h2>
 
@@ -59,33 +64,4 @@
             </table>
         </div>
     </div>
-
-    {{--<div class="panel panel-default">--}}
-        {{--<div class="panel-heading">--}}
-            {{--<div class="panel-title">--}}
-                {{--<span class="glyphicon glyphicon-info-sign"></span>&nbsp;Errors--}}
-                {{--@if(empty($errors_) == false)--}}
-                    {{--<span class="label label-warning">{{ count($errors_) }}</span>--}}
-                {{--@else--}}
-                    {{--<span class="label label-success">0</span>--}}
-                {{--@endif--}}
-            {{--</div>--}}
-        {{--</div>--}}
-        {{--<div class="panel-body">--}}
-            {{--<table class="table table-hover table-condensed">--}}
-                {{--<thead>--}}
-                {{--<th>Date</th>--}}
-                {{--<th>Message</th>--}}
-                {{--</thead>--}}
-                {{--<tbody>--}}
-                {{--@foreach ($errors_ as $error)--}}
-                    {{--<tr>--}}
-                        {{--<td>{{ $error['datetime'] }}</td>--}}
-                        {{--<td>{{ $error['messagectx'] }}</td>--}}
-                    {{--</tr>--}}
-                {{--@endforeach--}}
-                {{--</tbody>--}}
-            {{--</table>--}}
-        {{--</div>--}}
-    {{--</div>--}}
 @endsection

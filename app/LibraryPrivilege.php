@@ -19,19 +19,30 @@ class LibraryPrivilege extends Model
         return $this->library_id;
     }
 
-    public static function getIds($user_id)
+    public static function getIds()
     {
+        if (\Auth::check() == false)
+            return [];
+
+        $user = \Auth::user();
+        $libraries = null;
         $ids = [];
 
-        $privileges = LibraryPrivilege::where('user_id', '=', $user_id)->get();
-        if ($privileges == null)
-            return null;
+        if ($user->isAdmin()) {
+            $libraries = Library::all();
 
-        foreach ($privileges as $privilege) {
-            array_push($ids, $privilege->getLibraryId());
+            foreach ($libraries as $library) {
+                array_push($ids, $library->getId());
+            }
+        } else {
+            $privileges = LibraryPrivilege::where('user_id', '=', $user->getId())->get();
+
+            foreach ($privileges as $privilege) {
+                array_push($ids, $privilege->getLibraryId());
+            }
         }
 
-        return count($ids) > 0 ? $ids : null;
+        return $ids;
     }
 
     public function user()

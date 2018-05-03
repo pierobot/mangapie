@@ -30,7 +30,7 @@ class FavoriteController extends Controller
         if ($user->isAdmin() == true) {
             $libraries = Library::all();
         } else {
-            $library_ids = LibraryPrivilege::getIds($user->getId());
+            $library_ids = LibraryPrivilege::getIds();
             $libraries = Library::whereIn('id', $library_ids)->get();
         }
 
@@ -39,7 +39,8 @@ class FavoriteController extends Controller
 
         $favorite_list->withPath(env('app.url'));
 
-        return view('manga.favorites')->with('manga_list', $favorite_list)
+        return view('manga.favorites')->with('header', 'Favorites: (' . $total . ')')
+                                      ->with('manga_list', $favorite_list)
                                       ->with('libraries', $libraries)
                                       ->with('total', $total);
     }

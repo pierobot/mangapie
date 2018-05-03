@@ -7,6 +7,11 @@
 @section ('content')
 
 <div class="panel panel-default center-block" style="max-width:600px">
+    <div class="panel-heading">
+        <div class="panel-title">
+            Login
+        </div>
+    </div>
     <div class="panel-body">
         {{ Form::open([ 'action' => 'LoginController@login']) }}
             <div class="row">

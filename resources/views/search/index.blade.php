@@ -4,6 +4,11 @@
     Advanced Search &colon;&colon; Mangapie
 @endsection
 
+@section ('custom_navbar_right')
+    @include ('shared.searchbar')
+    @include ('shared.libraries')
+@endsection
+
 @section ('content')
     @include ('shared.errors')
 
@@ -78,6 +83,7 @@
                 </div>
             </div>
         </div>
+    </div>
 
     {{ Form::close() }}
 @endsection

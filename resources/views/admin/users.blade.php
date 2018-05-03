@@ -1,6 +1,12 @@
 @extends ('layout')
+
 @section ('title')
     Admin &middot; Users
+@endsection
+
+@section ('custom_navbar_right')
+    @include ('shared.searchbar')
+    @include ('shared.libraries')
 @endsection
 
 @section ('content')
@@ -39,6 +45,17 @@
                     <h4>Libraries</h4>
                     <hr>
                     <div class="row">
+                        @admin
+                            @php
+                                $libraries = App\Library::all();
+                            @endphp
+                        @else
+                            @php
+                                $libraryIds = App\LibraryPrivilege::getIds();
+                                $libraries = App\Library::whereIn('id', $libraryIds)->get();
+                            @endphp
+                        @endadmin
+
                         @foreach ($libraries as $library)
                             <div class="form-group col-xs-12 col-md-6">
                                 {{ Form::checkbox('libraries[]', $library->getId(), ['class' => 'form-control']) }}

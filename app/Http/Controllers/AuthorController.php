@@ -21,8 +21,7 @@ class AuthorController extends Controller
     {
         $page = \Input::get('page');
 
-        $libraryIds = LibraryPrivilege::getIds(\Auth::user()->getId());
-        $libraries = Library::whereIn('id', $libraryIds)->get();
+        $libraryIds = LibraryPrivilege::getIds();
 
         $references = AuthorReference::where('author_id', $author->getId())
                                      ->get()
@@ -44,7 +43,6 @@ class AuthorController extends Controller
         $manga_list->withPath(\Request::getBaseUrl());
 
         return view('home.index')->with('header', 'Author: ' . $author->getName() . ' (' . $results->count() . ')')
-                                 ->with('manga_list', $manga_list)
-                                 ->with('libraries', $libraries);
+                                 ->with('manga_list', $manga_list);
     }
 }
