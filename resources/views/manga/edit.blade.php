@@ -5,13 +5,8 @@
 @endsection
 
 @section ('custom_navbar_right')
-
     @include ('shared.searchbar')
-
-    <li class="clickable navbar-link">
-        <a href="{{ URL::action('MangaController@index', [$id]) }}"><span class="glyphicon glyphicon-book white"></span> Information</a>
-    </li>
-
+    @include ('shared.libraries')
 @endsection
 
 @section ('content')

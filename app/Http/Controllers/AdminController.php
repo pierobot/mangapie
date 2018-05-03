@@ -42,11 +42,9 @@ class AdminController extends Controller
         if (\Auth::user()->isAdmin() == false)
             return view('errors.403');
 
-        $libraries = Library::all();
         $users = User::all();
 
-        return view('admin.users')->with('libraries', $libraries)
-                                  ->with('users', $users);
+        return view('admin.users')->with('users', $users);
     }
 
     public function libraries()

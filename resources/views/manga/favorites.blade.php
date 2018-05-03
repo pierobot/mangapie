@@ -1,7 +1,7 @@
 @extends ('layout')
 
 @section ('title')
-    Favorites
+    Favorites :: Mangapie
 @endsection
 
 @section ('custom_navbar_right')
@@ -10,10 +10,6 @@
 @endsection
 
 @section ('content')
-    <h3 class="text-center">
-        <b>Favorites&nbsp;({{ $total }})</b>
-    </h3>
-
     @include ('shared.errors')
     @include ('shared.index')
 @endsection

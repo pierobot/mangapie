@@ -53,8 +53,7 @@ class SearchController extends Controller
             return \Redirect::action('SearchController@index');
 
         $user = \Auth::user();
-        $libraryIds = LibraryPrivilege::getIds($user->getId());
-        $libraries = $user->isAdmin() ? Library::all() : Library::whereIn('id', $libraryIds)->get();
+        $libraryIds = LibraryPrivilege::getIds();
 
         $results = Manga::search($keywords)
                         ->filter(function ($manga) use ($libraryIds) {
@@ -76,8 +75,7 @@ class SearchController extends Controller
                    ]);
 
         return view('home.index')->with('header', 'Search Results (' . $manga_list->total() . ')')
-                                 ->with('manga_list', $manga_list)
-                                 ->with('libraries', $libraries);
+                                 ->with('manga_list', $manga_list);
     }
 
     private function doAdvancedSearch($genres, $author, $artist, $keywords)
@@ -85,8 +83,7 @@ class SearchController extends Controller
         $results = Manga::advancedSearch($genres, $author, $artist, $keywords)->sortBy('name');
         $total = $results->count();
 
-        $libraryIds = LibraryPrivilege::getIds(\Auth::user()->getId());
-        $libraries = Library::whereIn('id', $libraryIds)->get();
+        $libraryIds = LibraryPrivilege::getIds();
 
         $current_page = \Input::get('page', 1);
         $manga_list = new LengthAwarePaginator($results->forPage($current_page, 18), $total, 18);
@@ -101,8 +98,7 @@ class SearchController extends Controller
                                  ]);
 
         return view('home.index')->with('header', 'Search Results (' . $total . ')')
-                                 ->with('manga_list', $manga_list)
-                                 ->with('libraries', $libraries);
+                                 ->with('manga_list', $manga_list);
     }
 
     public function basic(SearchRequest $request)
@@ -127,8 +123,7 @@ class SearchController extends Controller
         $query = \Input::get('query');
 
         $user = \Auth::user();
-        $library_ids = LibraryPrivilege::getIds($user->getId());
-        $libraries = null;
+        $library_ids = LibraryPrivilege::getIds();
 
         $results = Manga::where('name', 'like', '%' . $query . '%')->get();
 //        $assocResults = AssociatedName::where('name', 'like', '%' . $query . '%')->get();

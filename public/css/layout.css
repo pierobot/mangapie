@@ -1,8 +1,4 @@
 /* ------- Global ------- */
-.reader.navbar {
-    /* Remove the bottom margin so that the image fits snugly */
-    margin-bottom: 0;
-}
 
 /* For screens < 768px wide - basically mobile devices */
 @media screen and (max-width: 768px) {
@@ -20,14 +16,19 @@
     }
 }
 
+.navbar {
+    margin-bottom: 0px;
+}
+
 table > tbody > tr > td {
     vertical-align: middle !important;
 }
 
 /* ------- home/index.blade.php ------- */
 
-.thumbnail {
+.row > div.thumbnail {
     margin-bottom: 0;
+    border: none;
 }
 
 .thumbnail h4 {
@@ -36,7 +37,7 @@ table > tbody > tr > td {
     text-overflow: ellipsis;
 }
 
-.thumbnail img {
+.thumbnail a > img {
     max-height: 250px;
     width: auto;
     height: auto;

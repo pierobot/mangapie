@@ -4,6 +4,11 @@
     Admin &middot; Libraries
 @endsection
 
+@section ('custom_navbar_right')
+    @include ('shared.searchbar')
+    @include ('shared.libraries')
+@endsection
+
 @section ('content')
     <h2 class="text-center"><b>Libraries</b></h2>
 

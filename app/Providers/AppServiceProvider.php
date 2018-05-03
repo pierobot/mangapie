@@ -17,6 +17,14 @@ class AppServiceProvider extends ServiceProvider
     {
         \URL::forceRootUrl(config('app.url'));
         \URL::forceScheme('https');
+
+        \Blade::if('admin', function () {
+            return \Auth::check() && \Auth::user()->isAdmin();
+        });
+
+        \Blade::if('maintainer', function () {
+            return \Auth::check() && \Auth::user()->isAdmin() || \Auth::user()->isMaintainer();
+        });
     }
 
     /**

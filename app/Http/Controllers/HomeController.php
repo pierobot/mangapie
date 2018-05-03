@@ -25,22 +25,18 @@ class HomeController extends Controller
     public function index()
     {
         $user = \Auth::user();
-        $libraries = null;
 
         if ($user->isAdmin() == true) {
-            $libraries = Library::all();
-
             $manga_list = Manga::orderBy('name', 'asc')->paginate(18);
         } else {
-            $library_ids = LibraryPrivilege::getIds($user->getId());
+            $library_ids = LibraryPrivilege::getIds();
 
             $manga_list = Manga::whereIn('library_id', $library_ids)->orderBy('name', 'asc')->paginate(18);
-            $libraries = Library::whereIn('id', $library_ids)->get();
         }
 
         $manga_list->withPath(env('app.url'));
 
-        return view('home.index', compact('manga_list', 'libraries'));
+        return view('home.index', compact('manga_list'));
     }
 
     public function library($id)
@@ -67,18 +63,11 @@ class HomeController extends Controller
         $libraries = null;
         if ($can_access == true) {
             $manga_list = Manga::where('library_id', '=', $id)->orderBy('name', 'asc')->paginate(18);
-
-            if ($user->isAdmin() == true) {
-                $libraries = Library::all();
-            } else {
-                $library_ids = LibraryPrivilege::getIds($user->getId());
-                $libraries = Library::whereIn('id', $library_ids)->get();
-            }
         }
 
         $manga_list->withPath(env('app.url'));
 
-        return $can_access == true ? view('home.index', compact('manga_list', 'libraries')) :
+        return $can_access == true ? view('home.index', compact('manga_list')) :
                                      view('error.403');
     }
 }

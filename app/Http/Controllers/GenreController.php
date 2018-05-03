@@ -21,8 +21,7 @@ class GenreController extends Controller
     {
         $page = \Input::get('page');
 
-        $libraryIds = LibraryPrivilege::getIds(\Auth::user()->getId());
-        $libraries = Library::whereIn('id', $libraryIds)->get();
+        $libraryIds = LibraryPrivilege::getIds();
 
         $references = GenreReference::where('genre_id', $genre->getId())
                                     ->get()
@@ -44,7 +43,6 @@ class GenreController extends Controller
         $manga_list->withPath(\Request::getBaseUrl());
 
         return view('home.index')->with('header', 'Genre: ' . $genre->getName() . ' (' . $results->count() . ')')
-                                 ->with('manga_list', $manga_list)
-                                 ->with('libraries', $libraries);
+                                 ->with('manga_list', $manga_list);
     }
 }
