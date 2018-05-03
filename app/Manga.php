@@ -229,7 +229,7 @@ class Manga
      */
     public static function advancedSearch($genres, $author, $artist, $keywords)
     {
-        $libraryIds = LibraryPrivilege::getIds(\Auth::user()->getId());
+        $libraryIds = LibraryPrivilege::getIds();
         $collection = null;
 
         // get a Collection object depending on whether keywords are present
@@ -238,6 +238,17 @@ class Manga
         } else {
             $collection = Manga::all();
         }
+
+        // get the associated names that match
+        $assocNames = AssociatedName::search($keywords)->get();
+        $assocArray = [];
+        // convert the associated names to a manga object and store them in an array
+        foreach ($assocNames as $assocName) {
+            array_push($assocArray, $assocName->reference->manga);
+        }
+
+        // convert the associated name array to an Illuminate\Support\Collection and merge
+        $collection = $collection->merge(collect($assocArray));
 
         // filter by library permissions
         $collection = $collection->whereIn('library_id', $libraryIds);
