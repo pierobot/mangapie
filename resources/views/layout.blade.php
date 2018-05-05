@@ -5,7 +5,7 @@
 
     <title>@yield ('title')</title>
 
-    <link href="{{ URL::to('public/vendor/mangapie.css') }}" rel="stylesheet">
+    <link href="{{ URL::to('public/assets/mangapie.css') }}" rel="stylesheet">
     {{--@auth--}}
         {{--<link href="{{ URL::to(\App\Theme::path(Auth::user()->getTheme())) }}" rel="stylesheet">--}}
     {{--@else--}}
@@ -16,7 +16,7 @@
 
     @yield ('stylesheets')
 
-    <script src="{{ URL::to('public/vendor/mangapie.js') }}"></script>
+    <script src="{{ URL::to('public/assets/mangapie.js') }}"></script>
 </head>
 <body>
 
