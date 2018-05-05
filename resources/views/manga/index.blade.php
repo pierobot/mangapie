@@ -224,8 +224,8 @@
                         </a>
                     </th>
                     <th class="col-sm-2 col-md-1">Status</th>
-                    <th class="col-sm-2 col-md-1">Size</th>
-                    <th class="col-sm-2 visible-md visible-lg">Last Read</th>
+                    <th class="col-sm-2">Last Read</th>
+                    <th class="col-sm-2 col-md-1 visible-md visible-lg">Size</th>
                 </tr>
                 </thead>
 
@@ -255,11 +255,11 @@
                                     <span class="label label-default">Unread</span>
                                 @endif
                             </td>
-                            <td class="col-sm-2 col-md-1">
-                                {{ $archive['size'] }}
+                            <td class="col-sm-2">
+                                {{ $history != null ? $history->getLastUpdated()->diffForHumans() : "Never" }}
                             </td>
-                            <td class="col-sm-2 visible-md visible-lg">
-                                {{ $history != null ? $history->getLastUpdated() : "Never" }}
+                            <td class="col-sm-2 col-md-1 visible-md visible-lg">
+                                {{ $archive['size'] }}
                             </td>
                         </tr>
                     @endforeach
@@ -457,8 +457,8 @@
                                 </a>
                             </th>
                             <th class="col-xs-2">Status</th>
-                            <th class="col-xs-2">Size</th>
-                            <th class="col-sm-2 visible-sm visible-md visible-lg">Modified</th>
+                            <th class="col-sm-2">Read</th>
+                            <th class="col-xs-2 visible-sm visible-md visible-lg">Size</th>
                         </tr>
                         </thead>
 
@@ -489,10 +489,10 @@
                                         @endif
                                     </td>
                                     <td class="col-xs-2">
-                                        {{ $archive['size'] }}
+                                        {{ $history != null ? $history->getLastUpdated()->diffForHumans() : "Never" }}
                                     </td>
                                     <td class="col-xs-2 visible-sm visible-md visible-lg">
-                                        {{ $history != null ? $history->getLastUpdated() : "Never" }}
+                                        {{ $archive['size'] }}
                                     </td>
                                 </tr>
                             @endforeach
