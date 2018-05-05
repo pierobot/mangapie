@@ -6,7 +6,6 @@
     "type": "project",
     "require": {
         "php": ">=7.1.0",
-        "bassjobsen/bootstrap-3-typeahead": "dev-master",
         "components/jquery": "^3.2",
         "doctrine/dbal": "^2.5",
         "intervention/image": "^2.4",
@@ -15,9 +14,7 @@
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "~5.0",
         "php-curl-class/php-curl-class": "^7.2",
-        "predis/predis": "^1.1",
-        "thomaspark/bootswatch": "^3.3",
-        "twitter/bootstrap": "^3.3"
+        "predis/predis": "^1.1"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.4",
@@ -49,31 +46,11 @@
         ],
         "post-install-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postInstall",
-            "php artisan optimize",
-
-            "mkdir -p public/bootstrap",
-            "cp -R vendor/twitter/bootstrap/dist public/bootstrap",
-            "cp -R vendor/components/jquery public/jquery",
-
-            "mkdir -p public/bootstrap-3-typeahead",
-            "cp -R vendor/bassjobsen/bootstrap-3-typeahead public",
-
-            "mkdir -p public/themes/bootswatch",
-            "cp -R vendor/thomaspark/bootswatch public/themes/"
+            "php artisan optimize"
         ],
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
-            "php artisan optimize",
-
-            "mkdir -p public/bootstrap",
-            "cp -R vendor/twitter/bootstrap/dist public/bootstrap",
-            "cp -R vendor/components/jquery public/jquery",
-
-            "mkdir -p public/bootstrap-3-typeahead",
-            "cp -R vendor/bassjobsen/bootstrap-3-typeahead public/",
-
-            "mkdir -p public/themes/bootswatch",
-            "cp -R vendor/thomaspark/bootswatch public/themes/"
+            "php artisan optimize"
         ]
     },
     "config": {
