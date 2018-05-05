@@ -10,10 +10,6 @@
 
 /* For screens > 1200px - computers */
 @media screen and (min-width: 1200px) {
-
-    input.advanced-search-box {
-        max-width: 33%;
-    }
 }
 
 .navbar {

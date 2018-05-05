@@ -428,16 +428,16 @@
                         </li>
 
                         @admin
-                            <li class="list-group-item">
-                                <div class="row">
-                                    <div class="col-xs-3">
-                                        <b>Path</b>
-                                    </div>
-                                    <div class="col-xs-9">
-                                        {{ $path }}
-                                    </div>
+                        <li class="list-group-item">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <b>Path</b>
                                 </div>
-                            </li>
+                                <div class="col-xs-9">
+                                    {{ $path }}
+                                </div>
+                            </div>
+                        </li>
                         @endadmin
 
                     </ul>

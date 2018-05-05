@@ -81,43 +81,43 @@
         </div>
     </div>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="panel-title">
-                <span class="glyphicon glyphicon-pencil"></span>&nbsp;Themes
-            </div>
-        </div>
-        <div class="panel-body">
-            {{ Form::open(['action' => 'UserSettingsController@update']) }}
-            {{ Form::hidden('action', 'theme.update') }}
+    {{--<div class="panel panel-default">--}}
+        {{--<div class="panel-heading">--}}
+            {{--<div class="panel-title">--}}
+                {{--<span class="glyphicon glyphicon-pencil"></span>&nbsp;Themes--}}
+            {{--</div>--}}
+        {{--</div>--}}
+        {{--<div class="panel-body">--}}
+            {{--{{ Form::open(['action' => 'UserSettingsController@update']) }}--}}
+            {{--{{ Form::hidden('action', 'theme.update') }}--}}
 
-                <div class="form-group row">
-                    <div class="col-xs-12 col-md-3">
-                        {{ Form::label('theme:', null, ['for' => 'theme']) }}
+                {{--<div class="form-group row">--}}
+                    {{--<div class="col-xs-12 col-md-3">--}}
+                        {{--{{ Form::label('theme:', null, ['for' => 'theme']) }}--}}
 
-                        <select name="theme" class="form-control">
-                            <option disabled="disabled" selected="selected">{{ $current_theme }}</option>
-                                @foreach ($theme_collections as $collection_name => $theme)
-                                    <optgroup label="{{ $collection_name }}">
-                                        @foreach ($theme as $theme_name => $theme_path)
-                                            <option value="{{ $collection_name . '/' . $theme_name }}">{{ $theme_name }}</option>
-                                        @endforeach
-                                    </optgroup>
-                                @endforeach
-                        </select>
-                    </div>
-                </div>
+                        {{--<select name="theme" class="form-control">--}}
+                            {{--<option disabled="disabled" selected="selected">{{ $current_theme }}</option>--}}
+                                {{--@foreach ($theme_collections as $collection_name => $theme)--}}
+                                    {{--<optgroup label="{{ $collection_name }}">--}}
+                                        {{--@foreach ($theme as $theme_name => $theme_path)--}}
+                                            {{--<option value="{{ $collection_name . '/' . $theme_name }}">{{ $theme_name }}</option>--}}
+                                        {{--@endforeach--}}
+                                    {{--</optgroup>--}}
+                                {{--@endforeach--}}
+                        {{--</select>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
 
-                <div class="form-group row">
-                    <div class="col-xs-6">
+                {{--<div class="form-group row">--}}
+                    {{--<div class="col-xs-6">--}}
 
-                        {{ Form::submit('Save', ['class' => 'btn btn-success']) }}
-                    </div>
-                </div>
+                        {{--{{ Form::submit('Save', ['class' => 'btn btn-success']) }}--}}
+                    {{--</div>--}}
+                {{--</div>--}}
 
 
-            {{ Form::close() }}
-            </div>
-        </div>
+            {{--{{ Form::close() }}--}}
+            {{--</div>--}}
+        {{--</div>--}}
     </div>
 @endsection
