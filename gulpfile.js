@@ -16,14 +16,14 @@ var paths = {
             // compiled bootstrap scss
             'public/css/app.css'
         ],
-        dest: 'public/vendor/'
+        dest: 'public/assets/'
     },
 
     scripts: {
         src: [
             'public/js/app.js'
         ],
-        dest: 'public/vendor/'
+        dest: 'public/assets/'
     }
 }
 
