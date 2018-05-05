@@ -1,4 +1,3 @@
-<script src="{{ \URL::to('public/bootstrap-3-typeahead/bootstrap3-typeahead.js') }}" type="text/javascript"></script>
 <script type="text/javascript">
     $(function () {
         baseUrl = '{{ \URL::to('/manga') }}';

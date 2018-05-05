@@ -56,7 +56,7 @@
                 <tbody>
                     @foreach ($warnings as $warning)
                         <tr>
-                            <td>{{ $warning['datetime'] }}</td>
+                            <td>{{ \Carbon\Carbon::parse($warning['datetime'])->diffForHumans() }}</td>
                             <td>{{ $warning['messagectx'] }}</td>
                         </tr>
                     @endforeach

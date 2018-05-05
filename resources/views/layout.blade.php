@@ -5,17 +5,18 @@
 
     <title>@yield ('title')</title>
 
-    @auth
-        <link href="{{ URL::to(\App\Theme::path(Auth::user()->getTheme())) }}" rel="stylesheet">
-    @else
-        <link href="{{ URL::to('/public/themes/bootswatch/slate/bootstrap.min.css') }}" rel="stylesheet">
-    @endauth
-    <link href="{{ URL::to('/public/css/layout.css') }}" rel="stylesheet">
+    <link href="{{ URL::to('public/vendor/mangapie.css') }}" rel="stylesheet">
+    {{--@auth--}}
+        {{--<link href="{{ URL::to(\App\Theme::path(Auth::user()->getTheme())) }}" rel="stylesheet">--}}
+    {{--@else--}}
+
+        {{--<link href="{{ URL::to('/public/css/app.css') }}" rel="stylesheet">--}}
+
+    {{--@endauth--}}
 
     @yield ('stylesheets')
 
-    <script src="{{ URL::to('/public/jquery/jquery.min.js') }}" type="text/javascript"></script>
-    <script src="{{ URL::to('/public/bootstrap/dist/js/bootstrap.min.js') }}" type="text/javascript"></script>
+    <script src="{{ URL::to('public/vendor/mangapie.js') }}"></script>
 </head>
 <body>
 
@@ -26,13 +27,14 @@
 @endif
     <div class="container">
         <div class="navbar-header">
-            <a class="btn btn-navbar navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-div" aria-expanded="false">
-                <span class="glyphicon icon-bar"></span>
-                <span class="glyphicon icon-bar"></span>
-                <span class="glyphicon icon-bar"></span>
-            </a>
+            <span class="btn btn-navbar navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-div" aria-expanded="false">
+                <span class="glyphicon glyphicon-menu-hamburger"></span>
+            </span>
 
-            {{ Html::link(URL::action('HomeController@index'), 'MangaPie', ['class' => 'navbar-brand']) }}
+            <a href="{{ URL::action('HomeController@index') }}">
+                <img class="navbar-brand" src="{{ URL::to('/public/mangapie.svg') }}">
+                {{ Html::link(URL::action('HomeController@index'), 'MangaPie', ['class' => 'navbar-brand']) }}
+            </a>
         </div>
 
         <div class="collapse navbar-collapse" id="navbar-collapse-div">
