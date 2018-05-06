@@ -10,11 +10,11 @@ var del = require('del');
 var paths = {
     styles: {
         src: [
-            // our styles
-            'resources/assets/css/*.css',
-
             // compiled bootstrap scss
-            'public/css/app.css'
+            'public/css/app.css',
+
+            // our styles
+            'resources/assets/css/*.css'
         ],
         dest: 'public/assets/'
     },
