@@ -8,23 +8,11 @@
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
   "devDependencies": {
-    "axios": "^0.15.3",
+    "bootstrap-3-typeahead": "github:bassjobsen/Bootstrap-3-Typeahead#master",
     "bootstrap-sass": "^3.3.7",
     "cross-env": "^3.2.3",
     "jquery": "^3.1.1",
-    "laravel-mix": "^0.8.3",
-    "lodash": "^4.17.4",
-    "bootstrap-3-typeahead": "github:bassjobsen/Bootstrap-3-Typeahead#master",
-    "jquery-mobile": "^1.5.0-alpha.1",
-    "jquery-touchswipe": "^1.6.18"
+    "laravel-mix": "^0.8.3"
   },
-  "dependencies": {
-    "del": "^3.0.0",
-    "gulp-babel": "^7.0.1",
-    "gulp-clean-css": "^3.9.4",
-    "gulp-concat": "^2.6.1",
-    "gulp-less": "^3.5.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^3.0.0"
-  }
+  "dependencies": {}
 }
