@@ -58,9 +58,9 @@
 
     @if ($page_count !== 0)
         <div class="row text-center">
-            <a id="image" href="{{ $has_next_page ? $next_url : "#" }}">
+            {{--<a id="image" href="{{ $has_next_page ? $next_url : "#" }}">--}}
                 {{ Html::image(URL::action('ReaderController@image', [$id, rawurlencode($archive_name), $page]), 'image', ['class' => 'reader-image']) }}
-            </a>
+            {{--</a>--}}
         </div>
 
         @if ($preload !== false)
@@ -74,7 +74,6 @@
 @endsection
 
 @section ('scripts')
-    {{--<script src="http://hammerjs.github.io/dist/hammer.min.js" type="text/javascript"></script> --}}
     <script type="text/javascript">
         $(function () {
 
@@ -101,44 +100,48 @@
             $('#preload > img').each(function () {
                 $(this).attr('src', $(this).attr('data-src'));
             });
-        });
 
-        /*
-            $swipe_prev_direction = 'left';
-            $swipe_next_direction = 'right';
+            $('.reader-image').click(function (eventData) {
+                var x = eventData.screenX;
+                /*
+                    offsetX will give us an offset relative to the image
+                    screenX will guve us an offset relative to the viewport
 
-            $(function () {
-                new Hammer($(".swipe")[0], {
-                    domEvents: true
-                });
+                    If the user zooms in on the right hand side of the image the following happens:
+                        - Using offsetX
+                            - On LTR
+                                - Left side click
+                                    - window.location changes to the next image
+                                - Right side click
+                                    - window.location changes to the next image
+                        - Using screenX
+                            - On LTR
+                                - Left side click
+                                    - window.location changes to the previous image
+                                - Right side click
+                                    window.location changes to the next image
 
-                $('.swipe').on('swipeleft', function(e) {
-                    if ($swipe_prev_direction === 'left') {
-                        // swipe left for previous image
-                        $prev_url = $('.swipe').parent().attr('prev_url');
+                    I assume the vast majority of people would want the behavior of screenX.
+                */
 
-                        if ($prev_url != null) {
-                            // change the href for desktops
-                            $('.swipe').parent().attr({ href : $prev_url });
-                            // change the location for mobile devices
-                            window.location = $prev_url;
-                        }
-                    }
-                });
+                var width = $('.reader-image').width();
 
-                $('.swipe').on('swiperight', function(e) {
-                    if ($swipe_next_direction === 'right') {
-                        // swipe right for next image
-                        $next_url = $('.swipe').parent().attr('href');
-
-                        if ($next_url != null) {
-                            $('.swipe').parent().attr({ href : $next_url });
-                            window.location = $next_url;
-                        }
-                    }
-                });
-
+                if (x < (width / 2)) {
+                    // left side click
+                    @if ($ltr == false)
+                        window.location = $('#next-image').attr('href');
+                    @else
+                        window.location = $('#prev-image').attr('href');
+                    @endif
+                } else {
+                    // right side click
+                    @if ($ltr == false)
+                        window.location = $('#prev-image').attr('href');
+                    @else
+                        window.location = $('#next-image').attr('href');
+                    @endif
+                }
             });
-        */
+        });
     </script>
 @endsection
