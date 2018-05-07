@@ -25,9 +25,8 @@ public/bootstrap
 public/jquery
 public/themes
 public/bootstrap-3-typeahead
+public/assets/app.css
 public/mix-manifest.json
-public/css
-public/js
 
 .idea/*
 _ide_helper.php
