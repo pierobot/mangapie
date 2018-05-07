@@ -291,7 +291,7 @@
                                         <div class="row">
                                             @foreach ($genres as $genre)
                                                 <div class="col-xs-6">
-                                                    <a href="{{ \URL::action('SearchController@advanced', ['type' => 'advanced', 'genres[0]' => $genre->getName(), 'page' => 1]) }}">
+                                                    <a href="{{ \URL::action('GenreController@index', [$genre->getName()]) }}">
                                                         {{ $genre->getName() }}
                                                     </a>
                                                 </div>
@@ -335,7 +335,7 @@
                                         @if ($authors != null)
                                             @foreach ($authors as $author)
                                                 <div class="col-xs-6">
-                                                    <a href="{{ \URL::action('SearchController@advanced', ['type' => 'advanced', 'author' => $author->getName(), 'page' => 1]) }}">
+                                                    <a href="{{ \URL::action('AuthorController@index', [$author->getName()]) }}">
                                                         {{ $author->getName() }}</label>
                                                     </a>
                                                 </div>
@@ -358,7 +358,7 @@
                                         @if ($artists != null)
                                             @foreach ($artists as $artist)
                                                 <div class="col-xs-6">
-                                                    <a href="{{ \URL::action('SearchController@advanced', ['type' => 'advanced', 'artist' => $artist->getName(), 'page' => 1]) }}">
+                                                    <a href="{{ \URL::action('ArtistController@index', [$artist->getName()]) }}">
                                                         {{ $artist->getName() }}
                                                     </a>
                                                 </div>
