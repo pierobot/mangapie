@@ -1,11 +1,12 @@
-<li>
-    {{ Form::open(['action' => 'SearchController@basic', 'class' => 'navbar-form']) }}
-    {{ Form::hidden('type', 'basic') }}
-    <div class="input-group">
-        <div class="form-group">
+{{ Form::open(['action' => 'SearchController@basic', 'class' => 'navbar-form navbar-left']) }}
+{{ Form::hidden('type', 'basic') }}
+<div class="row">
+    <div class="col-xs-12">
+        <div class="input-group">
             {{ Form::text('keywords', null, ['class' => 'form-control',
                                              'placeholder' => 'Quick search',
                                              'id' => 'autocomplete']) }}
+
             <div class="input-group-btn">
                 <span type="submit" class="btn btn-primary">
                     <!--
@@ -19,5 +20,5 @@
             </div>
         </div>
     </div>
-    {{ Form::close() }}
-</li>
+</div>
+{{ Form::close() }}
