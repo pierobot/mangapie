@@ -67,7 +67,6 @@
                             @endif
                         </div>
                     </div>
-
                 </li>
 
                 <li class="list-group-item">
@@ -100,11 +99,15 @@
                         </div>
                         <div class="col-xs-9 col-md-10">
                             @if ($authors != null)
-                                @foreach ($authors as $author)
-                                    <a href="{{ \URL::action('AuthorController@index', [$author->getName()]) }}">
-                                        {{ $author->getName() }}
-                                    </a>
-                                @endforeach
+                                <div class="row">
+                                    @foreach ($authors as $author)
+                                        <div class="col-sm-4 col-md-3 col-lg-3">
+                                            <a href="{{ \URL::action('AuthorController@index', [$author->getName()]) }}">
+                                                {{ $author->getName() }}
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
                             @else
                                 Unable to find authors.
                             @endif
@@ -120,11 +123,15 @@
                         </div>
                         <div class="col-xs-9 col-md-10">
                             @if ($artists != null)
-                                @foreach ($artists as $artist)
-                                    <a href="{{ \URL::action('ArtistController@index', [$artist->getName()]) }}">
-                                        {{ $artist->getName() }}
-                                    </a>
-                                @endforeach
+                                <div class="row">
+                                    @foreach ($artists as $artist)
+                                        <div class="col-sm-4 col-md-3 col-lg-3">
+                                            <a href="{{ \URL::action('ArtistController@index', [$artist->getName()]) }}">
+                                                {{ $artist->getName() }}
+                                            </a>
+                                        </div>
+                                    @endforeach
+                                </div>
                             @else
                                 Unable to find artists.
                             @endif
