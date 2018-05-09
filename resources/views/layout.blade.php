@@ -38,6 +38,8 @@
         </div>
 
         <div class="collapse navbar-collapse" id="navbar-collapse-div">
+            @include ('shared.searchbar')
+
             <div class="container-fluid">
                 <ul class="nav navbar-nav navbar-right">
 
