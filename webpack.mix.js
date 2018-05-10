@@ -1,5 +1,4 @@
-const mix = require('laravel-mix');
-const fs = require('fs');
+let mix = require('laravel-mix');
 
 /*
  |--------------------------------------------------------------------------
@@ -12,9 +11,9 @@ const fs = require('fs');
  |
  */
 
-mix.setResourceRoot('./public/');
+mix.setPublicPath('public/');
+mix.setResourceRoot('/public/');
 
-mix.js('resources/assets/js/app.js', 'public/assets/mangapie.js')
-   .sass('resources/assets/sass/app.scss', 'public/assets');
-
-mix.styles([ 'public/assets/*.css', 'resources/assets/css/*.css' ], 'public/assets/mangapie.css');
+mix.sass('resources/assets/sass/app.scss', 'assets/mangapie.css')
+    .js('resources/assets/js/app.js', 'assets/mangapie.js')
+    .styles([ 'public/assets/mangapie.css', 'resources/assets/css/*.css' ], 'public/assets/mangapie.css');
