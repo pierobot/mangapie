@@ -102,28 +102,7 @@
             });
 
             $('.reader-image').click(function (eventData) {
-                var x = eventData.screenX;
-                /*
-                    offsetX will give us an offset relative to the image
-                    screenX will guve us an offset relative to the viewport
-
-                    If the user zooms in on the right hand side of the image the following happens:
-                        - Using offsetX
-                            - On LTR
-                                - Left side click
-                                    - window.location changes to the next image
-                                - Right side click
-                                    - window.location changes to the next image
-                        - Using screenX
-                            - On LTR
-                                - Left side click
-                                    - window.location changes to the previous image
-                                - Right side click
-                                    window.location changes to the next image
-
-                    I assume the vast majority of people would want the behavior of screenX.
-                */
-
+                var x = eventData.offsetX;
                 var width = $('.reader-image').width();
 
                 if (x < (width / 2)) {
