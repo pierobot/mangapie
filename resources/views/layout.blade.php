@@ -38,7 +38,9 @@
         </div>
 
         <div class="collapse navbar-collapse" id="navbar-collapse-div">
-            @include ('shared.searchbar')
+            @auth
+                @include ('shared.searchbar')
+            @endauth
 
             <div class="container-fluid">
                 <ul class="nav navbar-nav navbar-right">
