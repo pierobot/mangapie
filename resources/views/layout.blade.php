@@ -10,7 +10,7 @@
         {{--<link href="{{ URL::to(\App\Theme::path(Auth::user()->getTheme())) }}" rel="stylesheet">--}}
     {{--@else--}}
 
-        {{--<link href="{{ URL::to('/public/css/app.css') }}" rel="stylesheet">--}}
+        {{--<link href="{{ URL::to('/public/css/mangapie.css') }}" rel="stylesheet">--}}
 
     {{--@endauth--}}
 
