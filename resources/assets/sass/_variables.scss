@@ -37,12 +37,17 @@ $navbar-default-toggle-hover-bg: darken($navbar-default-bg, 10%);
 $navbar-default-toggle-icon-bar-bg: $navbar-default-color;
 $navbar-default-toggle-border-color: $navbar-default-color;
 
+.glyphicon.glyphicon-menu-hamburger {
+  color: $navbar-default-color;
+}
+
 // Navbar links
 $navbar-default-link-color: $navbar-default-color;
 $navbar-default-link-hover-color: $navbar-default-brand-color;
 $navbar-default-link-hover-bg: $navbar-default-toggle-hover-bg;
 $navbar-default-link-active-color: $navbar-default-color;
 $navbar-default-link-active-bg: $navbar-default-toggle-hover-bg;
+$navbar-default-link-disabled-color: darken(grey, 10%);
 
 // Dropdown Menus
 $dropdown-bg: $navbar-default-bg;
