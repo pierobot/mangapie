@@ -21,12 +21,8 @@ Homestead.json
 .rocketeer/
 
 nginx-log/
-public/bootstrap
-public/jquery
 public/themes
 public/bootstrap-3-typeahead
-public/assets/app.css
-public/mix-manifest.json
 
 .idea/*
 _ide_helper.php
