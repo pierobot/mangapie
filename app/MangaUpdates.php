@@ -133,7 +133,7 @@ class MangaUpdates implements AutoFillInterface
             return null;
 
         $authors = [];
-        $authors_result = preg_match_all('/\?id=(\d+).+?<u>(.+?)<\/u>/', $authors_content[0][0], $authors);
+        $authors_result = preg_match_all('/\?id=([0-9]+).+?<u>(.+?)<\/u>/', $authors_content[0][0], $authors);
         if ($authors_result != 0) {
             // url decode the authors' name
             array_walk($authors[2], function (&$author, $key) {
@@ -164,7 +164,7 @@ class MangaUpdates implements AutoFillInterface
             return null;
 
         $artists = [];
-        $artists_result = preg_match_all('/\?id=(\d+).+?<u>(.+?)<\/u>/', $artists_content[0][0], $artists);
+        $artists_result = preg_match_all('/\?id=([0-9]+).+?<u>(.+?)<\/u>/', $artists_content[0][0], $artists);
         if ($artists_result != 0) {
             // url decode the artists' name
             array_walk($artists[2], function (&$artist, $key) {
@@ -189,7 +189,7 @@ class MangaUpdates implements AutoFillInterface
     public static function year($contents)
     {
         $year = [];
-        $year_result = preg_match_all('/(\"|\')sCat(\"|\')><b>Year<\/b><\/div>\s<div class=(\"|\')sContent(\"|\')\s>(\d+)\s<\/div>/', $contents, $year);
+        $year_result = preg_match_all('/(\"|\')sCat(\"|\')><b>Year<\/b><\/div>\s<div class=(\"|\')sContent(\"|\')\s>([0-9]+)\s<\/div>/', $contents, $year);
 
         return $year_result != 0 ? $year[5][0] : null;
     }
