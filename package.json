@@ -12,7 +12,11 @@
     "bootstrap-sass": "^3.3.7",
     "cross-env": "^3.2.3",
     "jquery": "^3.1.1",
-    "laravel-mix": "^0.8.3"
+    "laravel-mix": "^0.8.3",
+    "axios": "^0.18.0",
+    "del": "^3.0.0",
+    "lodash": "^4.17.10"
   },
-  "dependencies": {}
+  "dependencies": {
+  }
 }

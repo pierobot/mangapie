@@ -16,12 +16,6 @@ use \App\LibraryPrivilege;
 
 class SearchController extends Controller
 {
-    //
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index()
     {
         // if the query parameter 'type' exists then we're being requested another page of a search

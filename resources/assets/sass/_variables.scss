@@ -63,7 +63,7 @@ $panel-default-heading-bg: darken($navbar-default-bg, 10%);
 
 // Input groups
 // TODO
-$input-color-placeholder: darken($text-color, 50%);
+$input-color-placeholder: darken($text-color, 75%);
 
 // Table
 $table-border-color: $laravel-border-color;
@@ -121,4 +121,6 @@ $pagination-disabled-border: $pagination-border;
 $badge-color: $navbar-default-bg;
 $badge-bg: $navbar-default-brand-color;
 
-
+// Modal
+$modal-content-bg: $body-bg;
+$modal-header-border-color: $laravel-border-color;

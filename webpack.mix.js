@@ -1,4 +1,5 @@
-let mix = require('laravel-mix');
+const mix = require('laravel-mix');
+const del = require('del');
 
 /*
  |--------------------------------------------------------------------------
@@ -10,6 +11,9 @@ let mix = require('laravel-mix');
  | file for the application as well as bundling up all the JS files.
  |
  */
+
+del(['public/assets/*']).then(function ($paths) {
+});
 
 mix.setPublicPath('public/');
 mix.setResourceRoot('/public/');

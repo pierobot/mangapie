@@ -3,6 +3,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    @yield('meta')
+
     <title>@yield ('title')</title>
 
     <link href="{{ URL::to('public/assets/mangapie.css') }}" rel="stylesheet">

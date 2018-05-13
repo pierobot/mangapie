@@ -19,17 +19,14 @@ class MangaController extends Controller
         $this->middleware('auth');
     }
 
-    public function index($id, $sort = 'ascending')
+    public function index(Manga $manga, $sort = 'ascending')
     {
-        $manga = Manga::find($id);
-        if ($manga == null)
-            return view('error.404');
-
         // Do we need to retrieve information from mangaupdates?
         if ($manga->getMangaUpdatesId() == null) {
             $autofillResult = MangaUpdates::autofill($manga);
         }
 
+        $id = $manga->getId();
         $name = $manga->getName();
         $path = $manga->getPath();
         $archives = $manga->getArchives($sort);
