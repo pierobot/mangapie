@@ -27,6 +27,11 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Route::pattern('id', '[0-9]+');
+        Route::pattern('archive_name', '.+');
+        Route::pattern('sort', 'ascending|descending');
+        Route::pattern('page', '[0-9]+');
+
         Route::bind('genre', function ($name) {
             return Genre::where('name', $name)->firstOrFail();
         });

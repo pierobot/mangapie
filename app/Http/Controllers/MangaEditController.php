@@ -7,34 +7,19 @@ use Carbon\Carbon;
 
 use App\Manga;
 use App\Genre;
-use App\AssociatedName;
-use App\AssociatedNameReference;
-use App\Author;
-use App\AuthorReference;
-use App\Artist;
-use App\ArtistReference;
 use App\GenreInformation;
 use App\Http\Requests\EditMangaRequest;
 use App\MangaUpdates;
 
 class MangaEditController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
-    public function index($id)
+    public function index(Manga $manga)
     {
         if (\Auth::user()->isAdmin() == false && \Auth::user()->isMaintainer() == false) {
             return view('error.403');
         }
 
-        $manga = Manga::find($id);
-        if ($manga == null) {
-            return view('error.404');
-        }
-
+        $id = $manga->getId();
         $name = $manga->getName();
         $mu_id = $manga->getMangaUpdatesId();
         $description = $manga->getDescription();

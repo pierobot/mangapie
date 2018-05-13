@@ -12,11 +12,6 @@ use App\LibraryPrivilege;
 
 class AuthorController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index(Author $author)
     {
         $page = \Input::get('page');

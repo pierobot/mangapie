@@ -11,11 +11,6 @@ use \App\ReaderHistory;
 
 class ReaderController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     private function getPageCount($archive_path)
     {
         $archive = ImageArchive::open($archive_path);
@@ -55,9 +50,9 @@ class ReaderController extends Controller
     }
 
     //
-    public function index($id, $archive_name, $page)
+    public function index(Manga $manga, $archive_name, $page)
     {
-        $manga = Manga::find($id);
+        $id = $manga->getId();
         $name = $manga->getName();
         // This controller/view implements a custom navbar
         $custom_navbar = true;
@@ -152,9 +147,8 @@ class ReaderController extends Controller
                                    ->with('ltr', \Auth::user()->getLtr());
     }
 
-    public function image($id, $archive_name, $page)
+    public function image(Manga $manga, $archive_name, $page)
     {
-        $manga = Manga::find($id);
         $image = $manga->getImage($archive_name, $page);
 
         if ($image == false)

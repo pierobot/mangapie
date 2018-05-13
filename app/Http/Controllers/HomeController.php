@@ -15,13 +15,6 @@ use \App\User;
 
 class HomeController extends Controller
 {
-    //public $perPage = 25;
-
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index()
     {
         $user = \Auth::user();
@@ -39,7 +32,7 @@ class HomeController extends Controller
         return view('home.index', compact('manga_list'));
     }
 
-    public function library($id)
+    public function library(Library $library)
     {
         $user = \Auth::user();
         $can_access = false;
@@ -52,7 +45,7 @@ class HomeController extends Controller
             $privileges = LibraryPrivilege::where('user_id', '=', $user->getId())->get();
             // a regular user needs to have library privileges
             foreach ($privileges as $privilege) {
-                if ($privilege->getLibraryId() == $id) {
+                if ($privilege->getLibraryId() == $library->getId()) {
                     $can_access = true;
                     break;
                 }
@@ -62,7 +55,7 @@ class HomeController extends Controller
         $manga_list = null;
         $libraries = null;
         if ($can_access == true) {
-            $manga_list = Manga::where('library_id', '=', $id)->orderBy('name', 'asc')->paginate(18);
+            $manga_list = Manga::where('library_id', '=', $library->getId())->orderBy('name', 'asc')->paginate(18);
         }
 
         $manga_list->withPath(env('app.url'));

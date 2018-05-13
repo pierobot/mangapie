@@ -8,20 +8,8 @@ use \Carbon\Carbon;
 use \App\Manga;
 use \App\Thumbnail;
 
-/*
- * TO-DO:
- *  1) Implement logic for determining if a cached image exists for Redis.
- *     Only local FileStore is supported at the moment.
- */
-
 class ThumbnailController extends Controller
 {
-    //
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     private function smallKey($id, $archive_name, $page)
     {
         return 'small-' . strval($id) . '-' . $archive_name . '-' . $page;
@@ -32,13 +20,8 @@ class ThumbnailController extends Controller
         return 'medium-' . strval($id) . '-' . $archive_name . '-' . $page;
     }
 
-    private function getSmallResponse($id, $archive_name, $page)
+    private function getSmallResponse(Manga $manga, $archive_name, $page)
     {
-        $manga = Manga::find($id);
-        if ($manga == null) {
-            return \Image::make('public/img/small/unknown.jpg')->response();
-        }
-
         $manga_image = $manga->getImage($archive_name, $page);
         if ($manga_image === false) {
             return \Image::make('public/img/small/unknown.jpg')->response();
@@ -56,13 +39,15 @@ class ThumbnailController extends Controller
         }
     }
 
-    public function small($id, $archive_name, $page)
+    public function small(Manga $manga, $archive_name, $page)
     {
+        $id = $manga->getId();
         $key = $this->smallKey($id, $archive_name, $page);
+
         if (\Cache::has($key)) {
             $smallResponse = \Cache::get($key);
         } else {
-            $smallResponse = $this->getSmallResponse($id, $archive_name, $page);
+            $smallResponse = $this->getSmallResponse($manga, $archive_name, $page);
             \Cache::forever($key, $smallResponse);
         }
 
@@ -72,19 +57,13 @@ class ThumbnailController extends Controller
         ]);
     }
 
-    public function smallDefault($id)
+    public function smallDefault(Manga $manga)
     {
-        return $this->small($id, null, 1);
+        return $this->small($manga, null, 1);
     }
 
-    private function getMediumResponse($id, $archive_name, $page)
+    private function getMediumResponse(Manga $manga, $archive_name, $page)
     {
-        $manga = Manga::find($id);
-        if ($manga == null) {
-
-            return \Image::make('public/img/medium/unknown.jpg')->response();
-        }
-
         $manga_image = $manga->getImage($archive_name, $page);
         if ($manga_image === false) {
 
@@ -103,13 +82,14 @@ class ThumbnailController extends Controller
         }
     }
 
-    public function medium($id, $archive_name, $page)
+    public function medium(Manga $manga, $archive_name, $page)
     {
+        $id = $manga->getId();
         $key = $this->mediumKey($id, $archive_name, $page);
         if (\Cache::has($key)) {
             $mediumResponse = \Cache::get($key);
         } else {
-            $mediumResponse = $this->getMediumResponse($id, $archive_name, $page);
+            $mediumResponse = $this->getMediumResponse($manga, $archive_name, $page);
             \Cache::forever($key, $mediumResponse);
         }
 
@@ -119,9 +99,9 @@ class ThumbnailController extends Controller
         ]);
     }
 
-    public function mediumDefault($id)
+    public function mediumDefault(Manga $manga)
     {
-        return $this->medium($id, null, 1);
+        return $this->medium($manga, null, 1);
     }
 
     public function update(Request $request)

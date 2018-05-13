@@ -13,60 +13,86 @@
 
 Route::get('/login', ['as' => 'login', 'uses' => 'LoginController@index']);
 Route::post('/login', ['as' => 'login', 'uses' => 'LoginController@login']);
-Route::get('/logout', ['as' => 'logout', 'uses' => 'LoginController@logout']);
 
-Route::get('/', 'HomeController@index');
-Route::get('/home', 'HomeController@index');
-Route::get('/home/library/{id}', 'HomeController@library')->where('id', '\d+');
+Route::middleware(['auth'])->group(function () {
 
-Route::get('/search', 'SearchController@index');
-Route::post('/search/basic', 'SearchController@basic');
-Route::post('/search/advanced', 'SearchController@advanced');
-Route::get('/search/advanced', 'SearchController@index');
-Route::get('/search/autocomplete', 'SearchController@autoComplete');
+    Route::get('/logout', ['as' => 'logout', 'uses' => 'LoginController@logout']);
 
-Route::get('/manga/{id}/{sort?}', 'MangaController@index')->where('id', '\d+')
-                                                                ->where('sort', 'ascending|descending');
+    Route::prefix('admin')->name('admin')->group(function () {
+        Route::get('/', 'AdminController@index');
+        Route::get('/users', 'AdminController@users');
+        Route::get('/libraries', 'AdminController@libraries');
+    });
 
-Route::get('/edit/{id}', 'MangaEditController@index')->where('id', '\d+');
-Route::post('/edit', 'MangaEditController@update');
+    Route::prefix('artist')->name('artist')->group(function () {
+        Route::get('/{artist}', 'ArtistController@index');
+    });
 
-Route::get('/genre/{id}', 'GenreController@index')->where('id', '\d+');
+    Route::prefix('author')->name('author')->group(function () {
+        Route::get('/{author}', 'AuthorController@index');
+    });
 
-Route::get('/reader/{id}/{archive_name}/{page}', 'ReaderController@index')->where('id', '\d+')
-                                                                          ->where('archive_name', '.+')
-                                                                          ->where('page', '\d+');
-Route::get('/image/{id}/{archive_name}/{page}', 'ReaderController@image')->where('id', '\d+')
-                                                                         ->where('archive_name', '.+')
-                                                                         ->where('page', '\d+');
+    Route::prefix('edit')->name('edit')->group(function () {
+        Route::get('/{manga}', 'MangaEditController@index');
+        Route::post('/', 'MangaEditController@update');
+    });
 
-Route::get('/favorites', 'FavoriteController@index');
-Route::post('/favorites', 'FavoriteController@update');
+    Route::prefix('favorites')->name('favorites')->group(function () {
+        Route::get('/', 'FavoriteController@index');
+        Route::post('/', 'FavoriteController@update');
+    });
 
-Route::get('/admin', 'AdminController@index');
-Route::get('/admin/users', 'AdminController@users');
-Route::get('/admin/libraries', 'AdminController@libraries');
+    Route::prefix('genre')->name('genre')->group(function () {
+        Route::get('/{genre}', 'GenreController@index');
+    });
 
-Route::post('/library/create', 'LibraryController@create');
-Route::post('/library/update', 'LibraryController@update');
-Route::post('/library/delete', 'LibraryController@delete');
+    Route::name('home')->group(function () {
+        Route::get('/', 'HomeController@index');
+        Route::get('/home', 'HomeController@index');
+        Route::get('/home/library/{library}', 'HomeController@library');
+    });
 
-Route::post('/users/create', 'UserController@create');
-Route::post('/users/edit', 'UserController@edit');
-Route::post('/users/delete', 'UserController@delete');
-Route::get('/user/settings', 'UserSettingsController@index');
-Route::post('/user/settings', 'UserSettingsController@update');
+    Route::prefix('image')->name('image')->group(function () {
+        Route::get('/{manga}/{archive_name}/{page}', 'ReaderController@image');
+    });
 
-Route::get('/thumbnail/small/{id}', 'ThumbnailController@smallDefault')->where('id', '\d+');
-Route::get('/thumbnail/medium/{id}', 'ThumbnailController@mediumDefault')->where('id', '\d+');
-Route::get('/thumbnail/small/{id}/{archive_name}/{page}', 'ThumbnailController@small')->where('id', '\d+')
-                                                                                      ->where('archive_name', '.+')
-                                                                                      ->where('page', '\d+');
-Route::get('/thumbnail/medium/{id}/{archive_name}/{page}', 'ThumbnailController@medium')->where('id', '\d+')
-                                                                                        ->where('archive_name', '.+')
-                                                                                        ->where('page', '\d+');
-Route::post('/thumbnail/update', 'ThumbnailController@update');
+    Route::prefix('library')->name('library')->group(function () {
+        Route::post('/create', 'LibraryController@create');
+        Route::post('/update', 'LibraryController@update');
+        Route::post('/delete', 'LibraryController@delete');
+    });
 
-Route::get('/genre/{genre}', 'GenreController@index');
-Route::get('/author/{author}', 'AuthorController@index');
-Route::get('/artist/{artist}', 'ArtistController@index');
+    Route::prefix('manga')->name('manga')->group(function () {
+        Route::get('/{manga}/{sort?}', 'MangaController@index');
+    });
+
+    Route::prefix('reader')->name('reader')->group(function () {
+        Route::get('/{manga}/{archive_name}/{page}', 'ReaderController@index');
+    });
+
+    Route::prefix('search')->name('search')->group(function () {
+        Route::get('/', 'SearchController@index');
+        Route::post('/basic', 'SearchController@basic');
+        Route::post('/advanced', 'SearchController@advanced');
+        Route::get('/advanced', 'SearchController@index');
+        Route::get('/autocomplete', 'SearchController@autoComplete');
+    });
+
+    Route::prefix('thumbnail')->name('thumbnail')->group(function () {
+        Route::get('/small/{manga}', 'ThumbnailController@smallDefault');
+        Route::get('/medium/{manga}', 'ThumbnailController@mediumDefault');
+
+        Route::get('/small/{manga}/{archive_name}/{page}', 'ThumbnailController@small');
+        Route::get('/medium/{manga}/{archive_name}/{page}', 'ThumbnailController@medium');
+
+        Route::post('/update', 'ThumbnailController@update');
+    });
+
+    Route::prefix('users')->name('users')->group(function () {
+        Route::post('/create', 'UserController@create');
+        Route::post('/edit', 'UserController@edit');
+        Route::post('/delete', 'UserController@delete');
+        Route::get('/settings', 'UserSettingsController@index');
+        Route::post('/settings', 'UserSettingsController@update');
+    });
+});

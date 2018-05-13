@@ -9,14 +9,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
 use \App\Library;
+use \App\Manga;
 
 class LibraryController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function create(LibraryCreateRequest $request)
     {
         $name = \Input::get('name');
