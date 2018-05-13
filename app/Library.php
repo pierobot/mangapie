@@ -41,7 +41,7 @@ class Library extends Model
 
     public static function removeParenthesis($str)
     {
-        $pattern = "/[ _\-\.]*(\((.+)\)|\[(.+)\])[ _\-\.]*/";
+        $pattern = "/[ _\-\.]*(\(.+\)|\[.+\])[ _\-\.]*/U";
 
         return preg_replace($pattern, "", $str);
     }
@@ -68,7 +68,7 @@ class Library extends Model
         */
         $pattern = "/_{1,}| {2,}/";
 
-        return preg_replace($pattern, " ", $str);
+        return trim(preg_replace($pattern, " ", $str));
     }
 
     /**
@@ -90,6 +90,7 @@ class Library extends Model
 
     public function scan()
     {
+
         // scan and add new directories
         foreach (\File::directories($this->getPath()) as $path) {
             $manga = Manga::updateOrCreate([
