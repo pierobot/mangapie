@@ -6,7 +6,6 @@
     "type": "project",
     "require": {
         "php": ">=7.1.0",
-        "components/jquery": "^3.2",
         "doctrine/dbal": "^2.5",
         "intervention/image": "^2.4",
         "ixudra/curl": "6.*",
