@@ -16,7 +16,8 @@ class Archive
         foreach ($references as $reference) {
             WatchNotification::create([
                 'user_id' => $reference->user->getId(),
-                'manga_id' => $archive->manga->getId()
+                'manga_id' => $archive->manga->getId(),
+                'archive_id' => $archive->getId()
             ]);
         }
     }

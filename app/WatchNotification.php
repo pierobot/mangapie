@@ -10,7 +10,7 @@ class WatchNotification
     extends Model
     implements NotificationInterface
 {
-    public $fillable = ['user_id', 'manga_id'];
+    public $fillable = ['user_id', 'manga_id', 'archive_id'];
 
     public function user()
     {
@@ -20,6 +20,11 @@ class WatchNotification
     public function manga()
     {
         return $this->belongsTo(\App\Manga::class);
+    }
+
+    public function archive()
+    {
+        return $this->belongsTo(\App\Archive::class);
     }
 
     /**

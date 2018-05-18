@@ -110,6 +110,7 @@ class Library extends Model
             $archive = [];
             $archive['manga_id'] = $manga_id;
             $archive['name'] = $file->getRelativePathname();
+            $archive['size'] = $file->getSize();
 
             array_push($archives, $archive);
         }

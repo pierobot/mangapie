@@ -13,6 +13,16 @@
     vertical-align: middle !important;
 }
 
+table.table.table-va-middle td {
+    vertical-align: middle;
+}
+
+div.span-label-ib span.label {
+    display: inline-block;
+    margin-top: 1px;
+    margin-bottom: 1px;
+}
+
 .dropdown-menu > .dropdown-header {
     font-size: inherit;
 }
