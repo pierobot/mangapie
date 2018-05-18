@@ -178,10 +178,6 @@ return [
         App\Providers\RouteServiceProvider::class,
 
         App\Providers\PluralizationServiceProvider::class,
-        App\Providers\GenreServiceProvider::class,
-
-        App\Providers\LibraryServiceProvider::class,
-        App\Providers\MangaServiceProvider::class,
         App\Providers\LogParserServiceProvider::class,
 
         Collective\Html\HtmlServiceProvider::class,
