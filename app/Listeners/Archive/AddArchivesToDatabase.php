@@ -29,9 +29,10 @@ class AddArchivesToDatabase implements ShouldQueue
     public function handle(NewArchives $event)
     {
         foreach ($event->newArchives as $archive) {
-            Archive::create([
+            Archive::updateOrCreate([
                 'manga_id' => $archive['manga_id'],
-                'name' => $archive['name']
+                'name' => $archive['name'],
+                'size' => $archive['size']
             ]);
         }
     }

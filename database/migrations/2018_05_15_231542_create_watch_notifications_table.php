@@ -18,6 +18,7 @@ class CreateWatchNotificationsTable extends Migration
 
             $table->unsignedInteger('user_id')->references('id')->on('users');
             $table->unsignedInteger('manga_id')->references('id')->on('manga');
+            $table->unsignedInteger('archive_id')->references('id')->on('archives');
 
             $table->timestamps();
         });

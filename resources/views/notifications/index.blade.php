@@ -25,7 +25,7 @@
 <div class="row">
     <div class="col-xs-12">
         <div class="panel panel-default">
-            <table class="table table-hover table-condensed">
+            <table class="table table-hover table-condensed table-va-middle">
                 <thead>
                 <tr>
                     <th class="col-xs-2 col-sm-1"></th>
@@ -38,13 +38,13 @@
                     @php ($manga = $notification->getData())
                     <tr>
                         <td>
-                            <img class="notification-img" src="{{ URL::action('ThumbnailController@smallDefault', [empty($manga) ? 0 : $manga->getId()]) }}" >
+                            <img class="notification-img" src="{{ URL::action('ThumbnailController@smallDefault', [empty($manga) ? 0 : $manga->getId()]) }}">
                         </td>
-                        <td class="va-middle">
+                        <td>
                             <div class="row">
                                 <div class="col-xs-12">
                                     <h4 class="text-ellipsis">
-                                        <a href="{{ URL::action('MangaController@index', [$manga->getId()]) }}">
+                                        <a href="{{ URL::action('MangaController@index', [$manga->getId(), 'descending']) }}">
                                             {{ $manga->getName() }}
                                         </a>
                                     </h4>
@@ -60,7 +60,7 @@
                                 </div>
                             </div>
                         </td>
-                        <td class="va-middle">
+                        <td>
                             <div>
                                 {{ $notification->getDateTime()->diffForHumans() }}
                             </div>

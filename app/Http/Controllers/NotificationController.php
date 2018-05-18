@@ -26,7 +26,7 @@ class NotificationController extends Controller
         $watchNotifications = \Request::get('watch');
         if (empty($watchNotifications) == false) {
             foreach ($watchNotifications as $notificationId) {
-                WatchNotification::find($notificationId)->forceDelete();
+                \Auth::user()->watchNotifications->find($notificationId)->forceDelete();
             }
         }
 

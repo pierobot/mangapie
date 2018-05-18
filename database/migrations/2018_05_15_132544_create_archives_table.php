@@ -19,6 +19,7 @@ class CreateArchivesTable extends Migration
             $table->unsignedInteger('manga_id')->references('id')->on('manga');
 
             $table->text('name');
+            $table->unsignedInteger('size')->required();
 
             $table->timestamps();
         });
