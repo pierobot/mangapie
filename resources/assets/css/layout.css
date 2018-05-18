@@ -1,23 +1,48 @@
 /* ------- Global ------- */
 
-/* For screens < 768px wide - basically mobile devices */
-@media screen and (max-width: 768px) {
-}
-
-/* For screens > 992px - tablets */
-@media screen and (min-width: 992px) {
-}
-
-/* For screens > 1200px - computers */
-@media screen and (min-width: 1200px) {
-}
+@media(max-width:767px){}
+@media(min-width:768px){}
+@media(min-width:992px){}
+@media(min-width:1200px){}
 
 .navbar {
     margin-bottom: 0;
 }
 
-table > tbody > tr > td {
+.va-middle {
     vertical-align: middle !important;
+}
+
+.dropdown-menu > .dropdown-header {
+    font-size: inherit;
+}
+
+.dropdown-menu > .dropdown-header > li.disabled {
+    cursor: text;
+}
+
+.dropdown-menu > .dropdown-header > li.disabled > a {
+    pointer-events: none;
+}
+
+@keyframes wiggle {
+    0% { transform: rotate(0deg); }
+    80% { transform: rotate(0deg); }
+    85% { transform: rotate(5deg); }
+    95% { transform: rotate(-5deg); }
+    100% { transform: rotate(0deg); }
+}
+
+li.wiggle {
+    -webkit-animation-name: wiggle;
+    -moz-animation-name: wiggle;
+    -o-animation-name: wiggle;
+    animation-name: wiggle;
+
+    -webkit-animation-duration: 2s;
+    -moz-animation-duration: 2s;
+    -o-animation-duration: 2s;
+    animation-duration: 2s;
 }
 
 /* ------- home/index.blade.php ------- */
@@ -89,5 +114,46 @@ img.reader-image {
     width: auto;
 }
 
-/* ------- admin/libraries.blade.php ------- */
+/* ------- notifications/index.blade.php ------- */
 
+/* xs */
+@media screen and (max-width: 767px) {
+    img.notification-img {
+        height: 33%;
+    }
+
+    .text-ellipsis {
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+/* sm */
+@media screen and (min-width: 768px) {
+    img.notification-img {
+        height: 40%;
+    }
+
+    .text-ellipsis {
+        max-width: 300px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+/* lg and xl */
+@media screen and (min-width: 992px) {
+    img.notification-img {
+        height: 50%;
+    }
+
+    .text-ellipsis {
+        max-width: 500px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}

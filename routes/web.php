@@ -66,6 +66,11 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{manga}/{sort?}', 'MangaController@index');
     });
 
+    Route::prefix('notifications')->name('notifications')->group(function () {
+        Route::get('/', 'NotificationController@index');
+        Route::post('/dismiss', 'NotificationController@dismiss');
+    });
+
     Route::prefix('reader')->name('reader')->group(function () {
         Route::get('/{manga}/{archive_name}/{page}', 'ReaderController@index');
     });
@@ -94,5 +99,9 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/delete', 'UserController@delete');
         Route::get('/settings', 'UserSettingsController@index');
         Route::post('/settings', 'UserSettingsController@update');
+    });
+
+    Route::prefix('watch')->name('watch')->group(function () {
+        Route::post('/update', 'WatchController@update');
     });
 });

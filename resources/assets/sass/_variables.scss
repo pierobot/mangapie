@@ -56,10 +56,13 @@ $dropdown-link-active-bg: $navbar-default-link-active-bg;
 $dropdown-link-active-color: $navbar-default-link-active-color;
 $dropdown-link-hover-color: $navbar-default-color;
 $dropdown-link-hover-bg: $navbar-default-toggle-hover-bg;
+$dropdown-divider-bg: $navbar-default-color;
 
 // Panels
 $panel-bg: $body-bg;
 $panel-default-heading-bg: darken($navbar-default-bg, 10%);
+
+$panel-footer-bg: $panel-bg;
 
 // Input groups
 // TODO
@@ -90,6 +93,12 @@ $list-group-border: $laravel-border-color;
 $btn-default-color: $navbar-default-color;
 $btn-default-bg: $navbar-default-bg;
 $btn-default-border: $laravel-border-color;
+
+$btn-primary-border: $laravel-border-color;
+$btn-success-border: $laravel-border-color;
+$btn-warning-border: $laravel-border-color;
+$btn-info-border: $laravel-border-color;
+$btn-danger-border: $laravel-border-color;
 
 // Inputs
 $input-border: lighten($text-color, 40%);

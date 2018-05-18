@@ -177,22 +177,46 @@
                             <b>Actions</b>
                         </div>
                         <div class="col-xs-9 col-md-10">
-                            {{ Form::open(['action' => 'FavoriteController@update']) }}
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-4 col-md-3">
+                                    {{ Form::open(['action' => 'FavoriteController@update']) }}
 
-                            {{ Form::hidden('id', $id) }}
-                            @if ($is_favorited == false)
-                                {{ Form::hidden('action', 'favorite') }}
-                                <button class="btn btn-success" type="submit">
-                                    <span class="glyphicon glyphicon-heart"></span>&nbsp;Favorite
-                                </button>
-                            @else
-                                {{ Form::hidden('action', 'unfavorite') }}
-                                <button class="btn btn-danger" type="submit">
-                                    <span class="glyphicon glyphicon-remove"></span>&nbsp;Unfavorite
-                                </button>
-                            @endif
+                                    {{ Form::hidden('id', $id) }}
+                                    @if ($is_favorited == false)
+                                        {{ Form::hidden('action', 'favorite') }}
+                                        <button class="btn btn-success" type="submit">
+                                            <span class="glyphicon glyphicon-heart"></span>&nbsp;Favorite
+                                        </button>
+                                    @else
+                                        {{ Form::hidden('action', 'unfavorite') }}
+                                        <button class="btn btn-danger" type="submit">
+                                            <span class="glyphicon glyphicon-remove"></span>&nbsp;Unfavorite
+                                        </button>
+                                    @endif
 
-                            {{ Form::close() }}
+                                    {{ Form::close() }}
+                                </div>
+
+                                <div class="col-xs-6 col-sm-4 col-md-3">
+                                    {{ Form::open(['action' => 'WatchController@update']) }}
+
+                                    {{ Form::hidden('id', $id) }}
+
+                                    @if ($isWatching == false)
+                                        {{ Form::hidden('action', 'watch') }}
+                                        <button class="btn btn-success" type="submit" title="Get notifications for new archives">
+                                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;Watch
+                                        </button>
+                                    @else
+                                        {{ Form::hidden('action', 'unwatch') }}
+                                        <button class="btn btn-danger" type="submit" title="Do not get notifications for new archives">
+                                            <span class="glyphicon glyphicon-eye-close"></span>&nbsp;Unwatch
+                                        </button>
+                                    @endif
+
+                                    {{ Form::close() }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </li>
@@ -250,7 +274,7 @@
                                     {{ $archive['name'] }}
                                 </a>
                             </td>
-                            <td class="col-sm-2 col-md-1">
+                            <td class="col-sm-2 col-md-1 va-middle">
                                 @if ($history != null)
                                     @if ($history->getPage() < $history->getPageCount())
                                         <span class="label label-warning" title="pg. {{ $history->getPage() }} of {{ $history->getPageCount() }}">Incomplete</span>

@@ -13,8 +13,12 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\SomeEvent' => [
-            'App\Listeners\EventListener',
+        'App\Events\Archive\NewArchives' => [
+            'App\Listeners\Archive\AddArchivesToDatabase',
+        ],
+
+        'App\Events\Archive\RemovedArchives' => [
+            'App\Listeners\Archive\RemoveArchivesFromDatabase'
         ],
     ];
 
@@ -27,6 +31,6 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        //
+        \App\Archive::observe(\App\Observers\Archive::class);
     }
 }

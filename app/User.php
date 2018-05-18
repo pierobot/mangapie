@@ -5,15 +5,6 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-/*
-        \App\User::firstOrCreate([
-            'name' => 'dev',
-            'email' => 'fake@email.com',
-            'password' => '$2y$10$5q/qypVAXnS.qHF7A.C0ke9R5NM0.UHae3WbWIg60BSeBnynFi0m6',
-            'admin' => true
-        ]);
-*/
-
 class User extends Authenticatable
 {
     use Notifiable;
@@ -107,5 +98,15 @@ class User extends Authenticatable
     public function privileges()
     {
         return $this->hasMany('App\LibraryPrivilege', 'user_id', 'id');
+    }
+
+    public function watchReferences()
+    {
+        return $this->hasMany(\App\WatchReference::class, 'user_id', 'id');
+    }
+
+    public function watchNotifications()
+    {
+        return $this->hasMany(\App\WatchNotification::class, 'user_id', 'id');
     }
 }
