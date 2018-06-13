@@ -1,3 +1,5 @@
+@auth
+
 {{ Form::open(['action' => 'SearchController@basic', 'class' => 'navbar-form navbar-left']) }}
 {{ Form::hidden('type', 'basic') }}
 <div class="row">
@@ -22,3 +24,5 @@
     </div>
 </div>
 {{ Form::close() }}
+
+@endauth

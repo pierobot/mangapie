@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\LogParser;
+
 use Illuminate\Support\ServiceProvider;
 
 class LogParserServiceProvider extends ServiceProvider

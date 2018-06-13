@@ -177,22 +177,46 @@
                             <b>Actions</b>
                         </div>
                         <div class="col-xs-9 col-md-10">
-                            {{ Form::open(['action' => 'FavoriteController@update']) }}
+                            <div class="row">
+                                <div class="col-xs-6 col-sm-4 col-md-3">
+                                    {{ Form::open(['action' => 'FavoriteController@update']) }}
 
-                            {{ Form::hidden('id', $id) }}
-                            @if ($is_favorited == false)
-                                {{ Form::hidden('action', 'favorite') }}
-                                <button class="btn btn-success" type="submit">
-                                    <span class="glyphicon glyphicon-heart"></span>&nbsp;Favorite
-                                </button>
-                            @else
-                                {{ Form::hidden('action', 'unfavorite') }}
-                                <button class="btn btn-danger" type="submit">
-                                    <span class="glyphicon glyphicon-remove"></span>&nbsp;Unfavorite
-                                </button>
-                            @endif
+                                    {{ Form::hidden('id', $id) }}
+                                    @if ($is_favorited == false)
+                                        {{ Form::hidden('action', 'favorite') }}
+                                        <button class="btn btn-success" type="submit">
+                                            <span class="glyphicon glyphicon-heart"></span>&nbsp;Favorite
+                                        </button>
+                                    @else
+                                        {{ Form::hidden('action', 'unfavorite') }}
+                                        <button class="btn btn-danger" type="submit">
+                                            <span class="glyphicon glyphicon-remove"></span>&nbsp;Unfavorite
+                                        </button>
+                                    @endif
 
-                            {{ Form::close() }}
+                                    {{ Form::close() }}
+                                </div>
+
+                                <div class="col-xs-6 col-sm-4 col-md-3">
+                                    {{ Form::open(['action' => 'WatchController@update']) }}
+
+                                    {{ Form::hidden('id', $id) }}
+
+                                    @if ($isWatching == false)
+                                        {{ Form::hidden('action', 'watch') }}
+                                        <button class="btn btn-success" type="submit" title="Get notifications for new archives">
+                                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;Watch
+                                        </button>
+                                    @else
+                                        {{ Form::hidden('action', 'unwatch') }}
+                                        <button class="btn btn-danger" type="submit" title="Do not get notifications for new archives">
+                                            <span class="glyphicon glyphicon-eye-close"></span>&nbsp;Unwatch
+                                        </button>
+                                    @endif
+
+                                    {{ Form::close() }}
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </li>
@@ -217,10 +241,10 @@
     <div class="row">
         <div class="hidden-xs col-sm-12">
             <hr>
-            <table class="table table-hover " style="word-break: break-all; ">
+            <table class="table table-hover table-va-middle" style="word-break: break-all; ">
                 <thead>
                 <tr>
-                    <th class="col-sm-6">
+                    <th class="col-sm-6 col-md-7">
                         <a href="{{ \URL::action('MangaController@index', [$id, $sort == 'ascending' ? 'descending' : 'ascending']) }}">Filename&nbsp;
                             @if ($sort == 'ascending')
                                 <span class="glyphicon glyphicon-triangle-top"></span>
@@ -230,7 +254,7 @@
                         </a>
                     </th>
                     <th class="col-sm-2 col-md-1">Status</th>
-                    <th class="col-sm-2">Last Read</th>
+                    <th class="col-sm-2 col-md-2">Last Read</th>
                     <th class="col-sm-2 col-md-1 visible-md visible-lg">Size</th>
                 </tr>
                 </thead>
@@ -241,31 +265,44 @@
                         <tr>
                             @php ($history = \App\ReaderHistory::where('user_id', \Auth::user()->getId())
                                                                ->where('manga_id', $id)
-                                                               ->where('archive_name', $archive['name'])
+                                                               ->where('archive_name', $archive->getSize())
                                                                ->first())
                             @endphp
 
-                            <td class="col-sm-6">
-                                <a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive['name']), $history != null ? $history->getPage() : 1]) }}">
-                                    {{ $archive['name'] }}
+                            <td class="col-sm-6 col-md-7">
+                                <a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive->getName()), $history != null ? $history->getPage() : 1]) }}">
+                                    <div>
+                                        {{ $archive->getName() }}
+                                    </div>
                                 </a>
                             </td>
                             <td class="col-sm-2 col-md-1">
-                                @if ($history != null)
-                                    @if ($history->getPage() < $history->getPageCount())
-                                        <span class="label label-warning" title="pg. {{ $history->getPage() }} of {{ $history->getPageCount() }}">Incomplete</span>
-                                    @else
-                                        <span class="label label-success" title="pg. {{ $history->getPage() }} of {{ $history->getPageCount() }}">Complete</span>
-                                    @endif
-                                @else
-                                    <span class="label label-default">Unread</span>
-                                @endif
+                                <div class="row">
+                                    <div class="col-xs-12 span-label-ib">
+                                        @if ($history != null)
+                                            @if ($history->getPage() < $history->getPageCount())
+                                                <span class="label label-warning" title="pg. {{ $history->getPage() }} of {{ $history->getPageCount() }}">Incomplete</span>
+                                            @else
+                                                <span class="label label-success" title="pg. {{ $history->getPage() }} of {{ $history->getPageCount() }}">Complete</span>
+                                            @endif
+                                        @else
+                                            <span class="label label-default">Unread</span>
+                                        @endif
+                                    </div>
+                                    <div class="col-xs-12 span-label-ib">
+                                        @if (\Auth::user()->watchNotifications->where('manga_id', $id)
+                                                                              ->where('archive_id', $archive->getId())
+                                                                              ->first() != null)
+                                            <span class="label label-success">&nbsp;New!&nbsp;</span>
+                                        @endif
+                                    </div>
+                                </div>
                             </td>
-                            <td class="col-sm-2">
+                            <td class="col-sm-1 col-md-2">
                                 {{ $history != null ? $history->getLastUpdated()->diffForHumans() : "Never" }}
                             </td>
-                            <td class="col-sm-2 col-md-1 visible-md visible-lg">
-                                {{ $archive['size'] }}
+                            <td class="col-sm-1 col-md-1 visible-md visible-lg">
+                                {{ $archive->getSize() }}
                             </td>
                         </tr>
                     @endforeach
@@ -450,7 +487,7 @@
                 </div>
 
                 <div class="tab-pane" id="files-content">
-                    <table class="table table-hover table-condensed" style="word-break: break-all; ">
+                    <table class="table table-hover table-condensed table-va-middle" style="word-break: break-all; ">
                         <thead>
                         <tr>
                             <th class="col-xs-6">
@@ -474,31 +511,42 @@
                                 <tr>
                                     @php ($history = \App\ReaderHistory::where('user_id', \Auth::user()->getId())
                                                                        ->where('manga_id', $id)
-                                                                       ->where('archive_name', $archive['name'])
+                                                                       ->where('archive_name', $archive->getName())
                                                                        ->first())
                                     @endphp
 
                                     <td class="col-xs-6">
-                                        <a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive['name']), $history != null ? $history->getPage() : 1]) }}">
-                                            {{ $archive['name'] }}
+                                        <a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive->getName()), $history != null ? $history->getPage() : 1]) }}">
+                                            {{ $archive->getName() }}
                                         </a>
                                     </td>
                                     <td class="col-xs-2">
-                                        @if ($history != null)
-                                            @if ($history->getPage() < $history->getPageCount())
-                                                <span class="label label-warning" title="pg. {{ $history->getPage() }} of {{ $history->getPageCount() }}">Incomplete</span>
-                                            @else
-                                                <span class="label label-success" title="pg. {{ $history->getPage() }} of {{ $history->getPageCount() }}">Complete</span>
-                                            @endif
-                                        @else
-                                            <span class="label label-default">Unread</span>
-                                        @endif
+                                        <div class="row">
+                                            <div class="col-xs-12 span-label-ib">
+                                                @if ($history != null)
+                                                    @if ($history->getPage() < $history->getPageCount())
+                                                        <span class="label label-warning" title="pg. {{ $history->getPage() }} of {{ $history->getPageCount() }}">Incomplete</span>
+                                                    @else
+                                                        <span class="label label-success" title="pg. {{ $history->getPage() }} of {{ $history->getPageCount() }}">Complete</span>
+                                                    @endif
+                                                @else
+                                                    <span class="label label-default">Unread</span>
+                                                @endif
+                                            </div>
+                                            <div class="col-xs-12 span-label-ib">
+                                                @if (\Auth::user()->watchNotifications->where('manga_id', $id)
+                                                                                      ->where('archive_id', $archive->getId())
+                                                                                      ->first() != null)
+                                                    <span class="label label-success">&nbsp;New!&nbsp;</span>
+                                                @endif
+                                            </div>
+                                        </div>
                                     </td>
                                     <td class="col-xs-2">
                                         {{ $history != null ? $history->getLastUpdated()->diffForHumans() : "Never" }}
                                     </td>
                                     <td class="col-xs-2 visible-sm visible-md visible-lg">
-                                        {{ $archive['size'] }}
+                                        {{ $archive->getSize() }}
                                     </td>
                                 </tr>
                             @endforeach

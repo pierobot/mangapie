@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use \Symfony\Component\Finder\Finder;
+use \Carbon\Carbon;
 
 use \App\Manga;
 
@@ -88,9 +90,36 @@ class Library extends Model
         return $result;
     }
 
+    public function getArchives($manga_id, $path, $sort = 'ascending')
+    {
+        // get all the files in the path and filter by archives
+        $files = Finder::create()->in($path)
+                                  ->name('*.zip')
+                                  ->name('*.cbz')
+                                  ->name('*.rar')
+                                  ->name('*.cbr');
+
+        // sort by number tokens
+        $files->sort(function ($left, $right) use ($sort) {
+            return $sort == 'ascending' ? strnatcasecmp($left->getFilename(), $right->getFilename()) :
+                                          strnatcasecmp($right->getFilename(), $left->getFilename());
+        });
+
+        $archives = [];
+        foreach ($files as $file) {
+            $archive = [];
+            $archive['manga_id'] = $manga_id;
+            $archive['name'] = $file->getRelativePathname();
+            $archive['size'] = $file->getSize();
+
+            array_push($archives, $archive);
+        }
+
+        return $archives;
+    }
+
     public function scan()
     {
-
         // scan and add new directories
         foreach (\File::directories($this->getPath()) as $path) {
             $manga = Manga::updateOrCreate([
@@ -98,6 +127,35 @@ class Library extends Model
                 'path' => $path,
                 'library_id' => Library::where('name','=',$this->getName())->first()->id
             ]);
+
+            // scan for new archives
+            $archives = self::getArchives($manga->getId(), $path);
+            if (empty($archives) == true)
+                continue;
+
+            $names = [];
+            foreach ($archives as $archive) {
+                array_push($names, $archive['name']);
+            }
+
+            $allArchives = Archive::where('manga_id', $manga->getId())->get();
+            // filter out the ones that are not present in the database
+            $newArchives = collect($archives)->reject(function ($archive) use ($allArchives) {
+                return $allArchives->where('name', $archive['name'])->first() != null;
+            });
+
+            // filter out the ones that still exist
+            $removedArchives = $allArchives->reject(function ($archive) use ($names) {
+                return in_array($archive->getName(), $names);
+            });
+
+            if ($removedArchives->count() > 0) {
+                \Event::fire(new Events\Archive\RemovedArchives($removedArchives));
+            }
+
+            if ($newArchives->count() > 0) {
+                \Event::fire(new Events\Archive\NewArchives($newArchives));
+            }
         }
 
         // iterate through all the manga in the library
@@ -107,16 +165,6 @@ class Library extends Model
             if (\File::exists($manga_->getPath()) === false) {
                 $manga_->forceDelete();
             }
-        }
-
-        // refresh the collection
-        $manga = Manga::where('library_id', '=', $this->getId())->get();
-        foreach ($manga as $manga_) {
-            // skip if there is already information or set to ignore
-            if ($manga_->getMangaUpdatesId() != null || $manga_->getIgnoreOnScan() == true)
-                continue;
-
-            MangaUpdates::autofill($manga_);
         }
     }
 

@@ -5,7 +5,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-use \Symfony\Component\Finder\Finder;
 use \Carbon\Carbon;
 
 use App\ArtistReference;
@@ -113,15 +112,19 @@ class Manga
 
         $id = $this->getId();
 
-        ArtistReference::where('manga_id', '=', $id)->forceDelete();
+        ArtistReference::where('manga_id', $id)->forceDelete();
 
-        AuthorReference::where('manga_id', '=', $id)->forceDelete();
+        AuthorReference::where('manga_id', $id)->forceDelete();
 
-        GenreReference::where('manga_id', '=', $id)->forceDelete();
+        GenreReference::where('manga_id', $id)->forceDelete();
 
-        Favorite::where('manga_id', '=', $id)->forceDelete();
+        Favorite::where('manga_id', $id)->forceDelete();
 
-        ReaderHistory::where('manga_id', '=', $id)->forceDelete();
+        Archive::where('manga_id', $id)->forceDelete();
+
+        ReaderHistory::where('manga_id', $id)->forceDelete();
+
+        WatchNotification::where('manga_id', $id)->forceDelete();
 
         parent::forceDelete();
     }
@@ -442,42 +445,17 @@ class Manga
         ];
     }
 
-    private function convertSizeToReadable($bytes)
+    public function archives()
     {
-        $sizes = [ 'B', 'KB', 'MB', 'GB' ];
-
-        for ($i = 0; $bytes > 1024; $i++) {
-            $bytes /= 1024;
-        }
-
-        return number_format(round($bytes, 2), 2) . ' ' . $sizes[$i];
+        return $this->hasMany(\App\Archive::class);
     }
 
     public function getArchives($sort = 'ascending')
     {
-        // get all the files in the path and filter by archives
-        $files = Finder::create()->in($this->path)
-                                 ->name('*.zip')
-                                 ->name('*.cbz')
-                                 ->name('*.rar')
-                                 ->name('*.cbr');
-
-        // sort by number tokens
-        $files->sort(function ($left, $right) use ($sort) {
-            return $sort == 'ascending' ? strnatcasecmp($left->getFilename(), $right->getFilename()) :
-                                          strnatcasecmp($right->getFilename(), $left->getFilename());
+        $archives = $this->archives->sort(function ($left, $right) use ($sort) {
+            return $sort == 'ascending' ? strnatcasecmp($left->getName(), $right->getName()) :
+                                          strnatcasecmp($right->getName(), $left->getName());
         });
-
-        $archives = [];
-        foreach ($files as $file) {
-            $archive = [];
-            $archive['name'] = $file->getRelativePathname();
-            $archive['size'] = $this->convertSizeToReadable($file->getSize());
-            $time = Carbon::createFromTimestamp($file->getMTime());
-            $archive['modified'] = $time->toDateTimeString();
-
-            array_push($archives, $archive);
-        }
 
         return $archives;
     }

@@ -11,6 +11,7 @@ use \App\Genre;
 use \App\GenreInformation;
 use \App\Manga;
 use \App\MangaUpdates;
+use App\WatchReference;
 
 class MangaController extends Controller
 {
@@ -21,11 +22,6 @@ class MangaController extends Controller
 
     public function index(Manga $manga, $sort = 'ascending')
     {
-        // Do we need to retrieve information from mangaupdates?
-        if ($manga->getMangaUpdatesId() == null) {
-            $autofillResult = MangaUpdates::autofill($manga);
-        }
-
         $id = $manga->getId();
         $name = $manga->getName();
         $path = $manga->getPath();
@@ -47,10 +43,12 @@ class MangaController extends Controller
                             ->where('manga_id', $id)
                             ->get();
         $is_favorited = $favorite->count() != 0;
+        $isWatching = \Auth::user()->watchReferences->where('manga_id', $id)->first();
 
         return view('manga.index')->with('id', $id)
                                   ->with('mu_id', $mu_id)
                                   ->with('is_favorited', $is_favorited)
+                                  ->with('isWatching', $isWatching)
                                   ->with('name', $name)
                                   ->with('description', $description)
                                   ->with('type', $type)

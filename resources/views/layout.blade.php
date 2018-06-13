@@ -40,12 +40,25 @@
         </div>
 
         <div class="collapse navbar-collapse" id="navbar-collapse-div">
-            @auth
-                @include ('shared.searchbar')
-            @endauth
-
             <div class="container-fluid">
+
+                @include ('shared.searchbar')
+
                 <ul class="nav navbar-nav navbar-right">
+
+                    @auth
+                        @php ($notificationCount = \Auth::user()->watchNotifications->count())
+
+                        <li @if ($notificationCount > 0) class="wiggle" @endif>
+                            <a href="{{ URL::action('NotificationController@index') }}">
+                                <span class="glyphicon glyphicon-bell"></span>&nbsp;Notifications&nbsp;
+
+                                @if ($notificationCount > 0)
+                                    <span class="badge" id="notification-count">{{ $notificationCount }}</span>
+                                @endif
+                            </a>
+                        </li>
+                    @endauth
 
                     @yield ('custom_navbar_right')
 
@@ -58,7 +71,9 @@
                             <ul class="dropdown-menu" style="color: black;">
                                 <li>
                                     <a href="{{ URL::action('AdminController@index') }}"><span class="glyphicon glyphicon-th-large"></span>&nbsp;Dashboard</a>
-                                    <a href="{{ URL::action('AdminController@users') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;Users</a>
+                                </li>
+                                <li><a href="{{ URL::action('AdminController@users') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;Users</a></li>
+                                <li>
                                     <a href="{{ URL::action('AdminController@libraries') }}"><span class="glyphicon glyphicon-book"></span>&nbsp;Libraries</a>
                                 </li>
                             </ul>
