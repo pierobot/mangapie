@@ -219,22 +219,16 @@ class WatchTest extends TestCase
         ]);
     }
 
-    /**
-     * @expectedException ErrorException
-     */
-    public function testTrackEmptyPathThrowsException()
+    public function testTrackEmptyPathReturnsFalse()
     {
         $watch = new Watcher();
         $this->assertFalse($watch->track(""));
     }
 
-    /**
-     * @expectedException ErrorException
-     */
-    public function testInvalidPathThrowsException()
+    public function testInvalidPathReturnsFalse()
     {
         $watch = new Watcher();
-        $watch->track("/a/b/c/d/asd/this/probably/does/not/exist");
+        $this->assertFalse($watch->track("/a/b/c/d/asd/this/probably/does/not/exist"));
     }
 
     public function testDirectoryDescriptor()

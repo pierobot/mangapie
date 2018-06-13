@@ -108,11 +108,6 @@ final class Watcher
         stream_set_blocking($this->fd, false);
     }
 
-    public function dump()
-    {
-        echo var_dump($this);
-    }
-
     public function track($path, $data = [], $parentWd = false, $recursive = false)
     {
         $isDirectory = is_dir($path);
@@ -122,6 +117,9 @@ final class Watcher
 
     protected function trackEx($path, $isDirectory, $parentWd, $data = [], $recursive = false)
     {
+        if (file_exists($path) === false)
+            return false;
+
         // add a watch for the given path
         $wd = inotify_add_watch($this->fd, $path, IN_CREATE | IN_DELETE | IN_CLOSE_WRITE |
                                                   IN_MOVED_FROM | IN_MOVED_TO |
@@ -278,6 +276,8 @@ final class Watcher
 
                 $path = $descriptor->getPath() . DIRECTORY_SEPARATOR . $name;
 
+//                echo var_dump($event) . "\n";
+
                 /**
                  * Determine if the event is for a symbolic link. If so, determine if it points to a directory.
                  *
@@ -412,20 +412,22 @@ final class Watcher
 
         $rootDescriptor = $this->descriptor($wd);
 
-        \Event::fire(new Events\NewDirectoryEvent(
-            $name,
-            $path,
-            $rootDescriptor->getPath(),
-            $parentDescriptor->getData(),
-            false
-        ));
-
         $newWd = $this->trackEx($path,
             true,
             $wd,
             $parentDescriptor->getData(),
             true
         );
+
+        if ($newWd !== false) {
+            \Event::fire(new Events\NewDirectoryEvent(
+                $name,
+                $path,
+                $rootDescriptor->getPath(),
+                $parentDescriptor->getData(),
+                false
+            ));
+        }
 
         return $newWd !== false;
     }
@@ -440,19 +442,21 @@ final class Watcher
 
         $rootDescriptor = $this->root($parentDescriptor);
 
-        \Event::fire(new Events\NewArchiveEvent(
-            $name,
-            $path,
-            $rootDescriptor->getPath(),
-            $parentDescriptor->getData()
-        ));
-
         $newWd = $this->trackEx(
             $path,
             false,
             $wd,
             $parentDescriptor->getData()
         );
+
+        if ($newWd !== false) {
+            \Event::fire(new Events\NewArchiveEvent(
+                $name,
+                $path,
+                $rootDescriptor->getPath(),
+                $parentDescriptor->getData()
+            ));
+        }
 
         return $newWd !== false;
     }
