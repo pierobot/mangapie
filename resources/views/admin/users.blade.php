@@ -57,8 +57,10 @@
 
                         @foreach ($libraries as $library)
                             <div class="form-group col-xs-12 col-md-6">
-                                {{ Form::checkbox('libraries[]', $library->getId(), ['class' => 'form-control']) }}
-                                {{ Form::label($library->getName(), null, ['for' => 'libraries[]', 'title' => $library->getPath()]) }}
+                                <div class="checkbox checkbox-success">
+                                    <input id="libraries[{{$library->getId()}}]" name="libraries[{{$library->getId()}}]" type="checkbox">
+                                    <label for="libraries[{{$library->getId()}}]" title="{{ $library->getPath() }}">{{ $library->getName() }}</label>
+                                </div>
                             </div>
                         @endforeach
                     </div>
@@ -69,13 +71,17 @@
                     <hr>
                     <div class="row">
                         <div class="form-group col-xs-12 col-md-6">
-                            {{ Form::checkbox('admin', 1, ['class' => 'form-control']) }}
-                            {{ Form::label('admin-label', 'Admin', ['for' => 'admin']) }}
+                            <div class="checkbox checkbox-success">
+                                <input id="admin" name="admin" type="checkbox">
+                                <label for="admin">Admin</label>
+                            </div>
                         </div>
 
                         <div class="form-group col-xs-12 col-md-6">
-                            {{ Form::checkbox('maintainer', 1, ['class' => 'form-control']) }}
-                            {{ Form::label('maintainer-label', 'Maintainer', ['for' => 'maintainer']) }}
+                            <div class="checkbox checkbox-success">
+                                <input id="maintainer" name="maintainer" type="checkbox">
+                                <label for="maintainer">Maintainer</label>
+                            </div>
                         </div>
                     </div>
                 </div>

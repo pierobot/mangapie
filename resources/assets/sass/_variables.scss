@@ -1,3 +1,11 @@
+$font-family-icon: 'Glyphicons Halflings';
+$check-icon: "\e013";
+
+.checkbox label:after {
+  padding-left: 4px;
+  font-size: 9px;
+}
+
 // Body
 $body-bg: #343434;
 
