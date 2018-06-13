@@ -5,7 +5,6 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 
-use \Symfony\Component\Finder\Finder;
 use \Carbon\Carbon;
 
 use App\ArtistReference;
@@ -120,6 +119,8 @@ class Manga
         GenreReference::where('manga_id', $id)->forceDelete();
 
         Favorite::where('manga_id', $id)->forceDelete();
+
+        Archive::where('manga_id', $id)->forceDelete();
 
         ReaderHistory::where('manga_id', $id)->forceDelete();
 

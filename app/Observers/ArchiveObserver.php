@@ -2,12 +2,13 @@
 
 namespace App\Observers;
 
+use App\Archive;
 use App\WatchNotification;
 use App\WatchReference;
 
-class Archive
+class ArchiveObserver
 {
-    public function created(\App\Archive $archive)
+    public function created(Archive $archive)
     {
         $mangaId = $archive->manga->getId();
         // get a watch reference to all the users that are watching the manga

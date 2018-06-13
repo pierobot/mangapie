@@ -166,16 +166,6 @@ class Library extends Model
                 $manga_->forceDelete();
             }
         }
-
-        // refresh the collection
-        $manga = Manga::where('library_id', '=', $this->getId())->get();
-        foreach ($manga as $manga_) {
-            // skip if there is already information or set to ignore
-            if ($manga_->getMangaUpdatesId() != null || $manga_->getIgnoreOnScan() == true)
-                continue;
-
-            MangaUpdates::autofill($manga_);
-        }
     }
 
     public function forceDelete()

@@ -27,4 +27,5 @@ public/bootstrap-3-typeahead
 .idea/*
 _ide_helper.php
 config/ide-helper.php
-
+phpunit.xml
+coverage/

@@ -14,7 +14,8 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         Commands\Init::class,
-        Commands\Scan::class
+        Commands\Scan::class,
+        Commands\Watch::class
     ];
 
     /**
@@ -25,8 +26,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('mangapie:scan')
-                 ->everyFiveMinutes();
+//        $schedule->command('mangapie:scan')
+//                 ->everyFiveMinutes();
     }
 
     /**

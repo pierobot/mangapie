@@ -13,13 +13,18 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\Archive\NewArchives' => [
-            'App\Listeners\Archive\AddArchivesToDatabase',
+        \App\Events\Archive\NewArchives::class => [
+            \App\Listeners\Archive\AddArchivesToDatabase::class
         ],
 
-        'App\Events\Archive\RemovedArchives' => [
-            'App\Listeners\Archive\RemoveArchivesFromDatabase'
+        \App\Events\Archive\RemovedArchives::class => [
+            \App\Listeners\Archive\RemoveArchivesFromDatabase::class
         ],
+    ];
+
+    protected $subscribe = [
+        \App\Listeners\ArchiveEventSubscriber::class,
+        \App\Listeners\DirectoryEventSubscriber::class,
     ];
 
     /**
@@ -31,6 +36,7 @@ class EventServiceProvider extends ServiceProvider
     {
         parent::boot();
 
-        \App\Archive::observe(\App\Observers\Archive::class);
+        \App\Archive::observe(\App\Observers\ArchiveObserver::class);
+        \App\Manga::observe(\App\Observers\MangaObserver::class);
     }
 }
