@@ -123,6 +123,7 @@ class ThumbnailController extends Controller
                             ->withErrors($validator, 'update');
         }
 
+        $manga = Manga::findOrFail($id);
         $archive_name = \Input::get('archive_name');
         $page = \Input::get('page');
         // archive name and page are always null for the default thumbnail
@@ -132,13 +133,13 @@ class ThumbnailController extends Controller
         if (\Cache::has($small_key)) {
 
             \Cache::forget($small_key);
-            \Cache::forever($small_key, $this->getSmallResponse($id, $archive_name, $page));
+            \Cache::forever($small_key, $this->getSmallResponse($manga, $archive_name, $page));
         }
 
         if (\Cache::has($medium_key)) {
 
             \Cache::forget($medium_key);
-            \Cache::forever($medium_key, $this->getMediumResponse($id, $archive_name, $page));
+            \Cache::forever($medium_key, $this->getMediumResponse($manga, $archive_name, $page));
         }
 
         \Session::flash('thumbnail-update-success', 'The thumbnail was successfully updated');
