@@ -28,15 +28,14 @@
                     <h4>Information</h4>
                     <hr>
                     <div class="form-group">
-                        {{ Form::label('name:', null, ['for' => 'name']) }}
-                        {{ Form::text('name', null, ['class' => 'form-control', 'placeholder' => 'Enter name here...']) }}
+                        <label for="name">Name:</label>
+                        <input id="name" name="name" type="text" class="form-control" placeholder="Enter name here">
 
-                        {{ Form::label('email:', null, ['for' => 'email']) }}
-                        {{ Form::text('email', null, ['class' => 'form-control', 'placeholder' => 'Enter e-mail here...']) }}
+                        <label for="email">Email:</label>
+                        <input id="email" name="email" type="text" class="form-control" placeholder="Enter e-mail here">
 
-                        {{ Form::label('password:', null, ['for' => 'password']) }}
-                        {{-- Form::password doesn't seem to display properly? hardcoded html for now. --}}
-                        <input name="password" id="password" type="password" class="form-control" placeholder="Enter password here...">
+                        <label for="password">Password:</label>
+                        <input id="password" name="password" type="password" class="form-control" placeholder="Enter password here...">
                     </div>
                 </div>
 
@@ -58,8 +57,8 @@
                         @foreach ($libraries as $library)
                             <div class="form-group col-xs-12 col-md-6">
                                 <div class="checkbox checkbox-success">
-                                    <input id="libraries[{{$library->getId()}}]" name="libraries[{{$library->getId()}}]" type="checkbox">
-                                    <label for="libraries[{{$library->getId()}}]" title="{{ $library->getPath() }}">{{ $library->getName() }}</label>
+                                    <input id="libraries[{{ $library->getId() }}]" name="libraries[{{ $library->getId() }}]" type="checkbox" value="{{ $library->getId() }}">
+                                    <label for="libraries[{{ $library->getId() }}]" title="{{ $library->getPath() }}">{{ $library->getName() }}</label>
                                 </div>
                             </div>
                         @endforeach
@@ -72,14 +71,14 @@
                     <div class="row">
                         <div class="form-group col-xs-12 col-md-6">
                             <div class="checkbox checkbox-success">
-                                <input id="admin" name="admin" type="checkbox">
+                                <input id="admin" name="admin" type="checkbox" value="1">
                                 <label for="admin">Admin</label>
                             </div>
                         </div>
 
                         <div class="form-group col-xs-12 col-md-6">
                             <div class="checkbox checkbox-success">
-                                <input id="maintainer" name="maintainer" type="checkbox">
+                                <input id="maintainer" name="maintainer" type="checkbox" value="1">
                                 <label for="maintainer">Maintainer</label>
                             </div>
                         </div>

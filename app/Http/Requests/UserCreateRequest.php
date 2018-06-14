@@ -28,6 +28,7 @@ class UserCreateRequest extends FormRequest
             'email' => 'required|email|unique:users',
             'password' => 'required|string',
             'libraries' => 'required|array',
+            'libraries.*' => 'required|exists:libraries,id',
             'admin' => 'boolean',
             'maintainer' => 'boolean'
         ];

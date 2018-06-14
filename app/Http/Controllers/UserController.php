@@ -31,9 +31,6 @@ class UserController extends Controller
         if ($user != null) {
             // create the privileges for each library
             foreach (\Input::get('libraries') as $library_id) {
-                if (Library::find($library_id) == null)
-                    continue;
-
                 LibraryPrivilege::create([
                     'user_id' => $user->getId(),
                     'library_id' => $library_id

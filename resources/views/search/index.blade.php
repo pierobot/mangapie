@@ -28,8 +28,8 @@
                 @foreach ($genres as $genre)
                     <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
                         <div class="checkbox checkbox-success">
-                            <input type="checkbox" name="genres[{{$genre->getId()}}]" id="genres[{{$genre->getId()}}]" value="{{ $genre->getName() }}" autocomplete="off" >
-                            <label for="genres[{{$genre->getId()}}]" title="{{ $genre->getDescription() }}">
+                            <input type="checkbox" name="genres[{{ $genre->getId() }}]" id="genres[{{ $genre->getId() }}]" value="{{ $genre->getName() }}" autocomplete="off" >
+                            <label for="genres[{{ $genre->getId() }}]" title="{{ $genre->getDescription() }}">
                                 {{ $genre->getName() }}
                             </label>
                         </div>
@@ -48,14 +48,14 @@
         <div class="panel-body">
             <div class="form-group row">
                 <div class="col-xs-12 col-md-3">
-                    {{ Form::label('Author:', null, ['for' => 'author']) }}
-                    {{ Form::text('author', null, ['class' => 'form-control', 'placeholder' => '...']) }}
+                    <label for="author">Author:</label>
+                    <input class="form-control" type="text" id="author" name="author" placeholder="...">
                 </div>
             </div>
             <div class="form-group row">
                 <div class="col-xs-12 col-md-3">
-                    {{ Form::label('Artist:', null, ['for' => 'artist']) }}
-                    {{ Form::text('artist', null, ['class' => 'form-control', 'placeholder' => '...']) }}
+                    <label for="artist">Artist:</label>
+                    <input class="form-control" type="text" id="artist" name="artist" placeholder="...">
                 </div>
             </div>
         </div>
@@ -70,9 +70,8 @@
         <div class="panel-body">
             <div class="form-group row">
                 <div class="col-xs-12 col-md-3">
-                    {{ Form::label('Keywords:', null, ['for' => 'keywords']) }}
-                    {{ Form::text('keywords', null, ['class' => 'form-control', 'placeholder' => '...']) }}
-
+                    <label for="keywords">Keywords:</label>
+                    <input class="form-control" type="text" id="keywords" name="keywords" placeholder="...">
                 </div>
             </div>
 
