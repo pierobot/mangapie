@@ -2,56 +2,67 @@
 
 namespace Tests\Unit;
 
+use App\IntlString;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use \App\JaroWinkler;
 
+/**
+ * @requires extension mbstring
+ * @requires extension intl
+ *
+ * @covers \App\IntlString
+ * @covers \App\JaroWinkler
+ */
 class JaroWinklerTest extends TestCase
 {
     /**
-     * Asserts that two strings are equal.
-     *
-     * @return void
+     * @testWith ["Urusei Yatsura", "Urusei Yatsura"]
      */
-    public function testdistance_equal()
+    public function testdistanceLatinExact(string $left, $right)
     {
-        $str = 'Urusei Yatsura';
-        $d = JaroWinkler::distance($str, 'Urusei Yatsura');
-
-        $this->assertTrue($d == 1.0);
-        
-        $str = 'うる星やつら';
-        $d = JaroWinkler::distance($str, 'うる星やつら');
-
-        $this->assertTrue($d == 1.0);
+        $this->assertEquals(1.0, JaroWinkler::distance($left, $right));
     }
 
-    public function testdistance()
+    /**
+     * @testWith ["うる星やつら", "うる星やつら"]
+     */
+    public function testdistanceJapaneseExact(string $left, $right)
     {
-        $str = 'うる星やつら';
+        $this->assertEquals(1.0, JaroWinkler::distance($left, $right));
+    }
 
-        $d1 = JaroWinkler::distance($str, 'うる星や');
-        $d2 = JaroWinkler::distance($str, 'うる星やつ');
+    /**
+     * @testWith ["Urusei", "Urus"]
+     */
+    public function testdistanceLatinNotExact(string $left, string $right)
+    {
+        $this->assertEquals(0.9333, floatval(number_format(JaroWinkler::distance($left, $right), 4)));
+    }
 
-        // assert the distance is within the bounds of 0 and 1
-        $this->assertTrue($d1 < 1.0);
-        $this->assertTrue($d1 > 0.0);
-        $this->assertTrue($d2 < 1.0);
-        $this->assertTrue($d2 > 0.0);
+    /**
+     * @testWith ["うる星やつら", "うる星や"]
+     */
+    public function testdistanceJapaneseNotExact(string $left, string $right)
+    {
+        $this->assertEquals(0.9333, floatval(number_format(JaroWinkler::distance($left, $right), 4)));
+    }
 
-        $this->assertTrue($d1 < $d2);
+    /**
+     * @testWith ["asd", "xyz"]
+     */
+    public function testdistanceLatinZero(string $left, string $right)
+    {
+        $this->assertEquals(0.0, JaroWinkler::distance($left, $right));
+    }
 
-        $str = 'Urusei Yatsura';
-        $d1 = JaroWinkler::distance($str, 'Urusei Ya');
-        $d2 = JaroWinkler::distance($str, 'Urusei Yatsu');
-
-        $this->assertTrue($d1 < 1.0);
-        $this->assertTrue($d1 > 0.0);
-        $this->assertTrue($d2 < 1.0);
-        $this->assertTrue($d2 > 0.0);
-
-        $this->assertTrue($d1 < $d2);
+    /**
+     * @testWith ["あえい", "ンおう"]
+     */
+    public function testdistanceJapaneseZero(string $left, string $right)
+    {
+        $this->assertEquals(0.0, JaroWinkler::distance($left, $right));
     }
 }

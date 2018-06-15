@@ -16,24 +16,28 @@ class JaroWinkler {
     private static function matching_cp($str1, $str1_len, $str2, $str2_len, $range)
     {
         $matches = [];
-        for ($i = 0, $current_1 = 0, $next_1 = 0; $i < $str1_len; $i++) {
 
-            $g_1 = IntlString::grapheme($str1, ($current_1 = $next_1), $next_1);
-            $cp_1 = \IntlChar::ord($g_1);
+        $nextGraphemeOffset1 = 0;
+        for ($i = 0; $i < $str1_len; $i++) {
 
-            for ($j = 0, $current_2 = 0, $next_2 = 0; $j < $range; $j++) {
+            $currentGraphemeOffset1 = $nextGraphemeOffset1;
+            $grapheme1 = IntlString::grapheme($str1, $currentGraphemeOffset1, $nextGraphemeOffset1);
 
-                $g_2 = IntlString::grapheme($str2, ($current_2 = $current_1 + $next_2), $next_2);
-                $cp_2 = \IntlChar::ord($g_2);
+            $currentGraphemeOffset2 = 0;
+            $nextGraphemeOffset2 = 0;
+            for ($j = 0; $j < $str2_len; $j++) {
 
-                // make sure we're within range
-                if ($j <= $range) {
+                $grapheme2 = IntlString::grapheme($str2, $currentGraphemeOffset2, $nextGraphemeOffset2);
 
-                    if ($cp_1 == $cp_2)
-                        array_push($matches, $cp_1);
+                $codepoint1 = \IntlChar::ord($grapheme1);
+                $codepoint2 = \IntlChar::ord($grapheme2);
 
+                if ($codepoint1 == $codepoint2 && abs($j - $i) <= $range) {
+                    array_push($matches, \IntlChar::chr($codepoint1));
                     break;
                 }
+
+                $currentGraphemeOffset2 = $nextGraphemeOffset2;
             }
         }
 
@@ -52,26 +56,32 @@ class JaroWinkler {
                 ++$count;
         }
 
-        return $count;
+        return $count / 2;
     }
 
     // getst the prefix length to use
-    private static function prefix_len($str1, $str1_len, $str2, $str2_len, $default_len = 4)
+    public static function prefix_len($str1, $str1_len, $str2, $str2_len, $default_len = 4)
     {
         $min = min([$str1_len, $str2_len, $default_len]);
+        $result = 0;
 
-        for ($i = 0, $current_1 = 0, $current_2 = 0, $next_1 = 0, $next_2 = 0; $i < $min; $i++) {
+        $nextGraphemeOffset1 = 0;
+        $nextGraphemeOffset2 = 0;
+        for ($i = 0; $i < $min; $i++, $result++) {
+            $currentGraphemeOffset1 = $nextGraphemeOffset1;
+            $currentGraphemeOffset2 = $nextGraphemeOffset2;
 
-            $g_1 = IntlString::grapheme($str1, ($current_1 = $next_1), $next_1);
-            $g_2 = IntlString::grapheme($str2, ($current_2 = $current_1 + $next_2), $next_2);
-            $cp_1 = \IntlChar::ord($g_1);
-            $cp_2 = \IntlChar::ord($g_2);
+            $grapheme1 = IntlString::grapheme($str1, $currentGraphemeOffset1, $nextGraphemeOffset1);
+            $grapheme2 = IntlString::grapheme($str2, $currentGraphemeOffset2, $nextGraphemeOffset2);
 
-            if ($cp_1 != $cp_2)
-                return $i;
+            $codepoint1 = \IntlChar::ord($grapheme1);
+            $codepoint2 = \IntlChar::ord($grapheme2);
+
+            if ($codepoint1 != $codepoint2)
+                break;
         }
 
-        return $min;
+        return $result;
     }
 
     /**
@@ -109,22 +119,18 @@ class JaroWinkler {
             return 0.0;
 
         // calculate the # of transpositions
-        $transpositions = JaroWinkler::transpositions($cp1_matches, $cp2_matches) / 2.0;
+        $transpositions = JaroWinkler::transpositions($cp1_matches, $cp2_matches);
 
         // calculate Jaro distance
         $jaro_distance = ((count($cp1_matches)/$str1_len) +
-                          (count($cp2_matches)/$str2_len) +
+                          (count($cp1_matches)/$str2_len) +
                           ((count($cp1_matches) - $transpositions)/count($cp1_matches))) / 3.0;
 
-        // calculate Jaro-Winkler distance
+        $jaro_winkler_distance = $jaro_distance;
         // only apply the prefix bonus if the jaro distance meets the threshold
-        if ($jaro_distance < $threshold) {
-
-            $jaro_winkler_distance = $jaro_distance;
-        } else {
-
+        if ($jaro_distance > $threshold) {
             $prefix_len = JaroWinkler::prefix_len($str1_utf8, $str1_len, $str2_utf8, $str2_len);
-            $jaro_winkler_distance = $jaro_distance + (($prefix_len * $scaling_factor) * (1 - $jaro_distance));
+            $jaro_winkler_distance += (($prefix_len * $scaling_factor) * (1.0 - $jaro_distance));
         }
 
         return $jaro_winkler_distance;
