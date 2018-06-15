@@ -121,10 +121,12 @@ class JaroWinkler {
         // calculate the # of transpositions
         $transpositions = JaroWinkler::transpositions($cp1_matches, $cp2_matches);
 
+        $min_matches = min($cp1_matches, $cp2_matches);
+
         // calculate Jaro distance
-        $jaro_distance = ((count($cp1_matches)/$str1_len) +
-                          (count($cp1_matches)/$str2_len) +
-                          ((count($cp1_matches) - $transpositions)/count($cp1_matches))) / 3.0;
+        $jaro_distance = ((count($min_matches)/$str1_len) +
+                          (count($min_matches)/$str2_len) +
+                          ((count($min_matches) - $transpositions)/count($min_matches))) / 3.0;
 
         $jaro_winkler_distance = $jaro_distance;
         // only apply the prefix bonus if the jaro distance meets the threshold
