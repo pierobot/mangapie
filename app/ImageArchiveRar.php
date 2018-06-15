@@ -14,8 +14,6 @@ class ImageArchiveRar implements ImageArchiveInterface
         $this->m_file_path = $file_path;
 
         $this->m_rar = \RarArchive::open($file_path);
-        if ($this->m_rar === false)
-            $this->m_rar = false;
     }
 
     public function __destruct()

@@ -8,65 +8,33 @@ class ImageArchive
 {
     public static function getExtension($name)
     {
-        $extension_start = mb_strrpos($name, '.');
-        if ($extension_start > 0) {
-            return mb_strtolower(mb_substr($name, $extension_start + 1));
-        }
+        $extension = [];
 
-        return false;
+        $result = preg_match('/\.(\w+)$/m', $name, $extension);
+
+        return $result != 0 ? $extension[1] : false;
     }
 
     public static function isJunk($name)
     {
-        $all_junk = [
-            '__MACOSX',
-            '.DS_STORE'
-        ];
-
-        foreach ($all_junk as $junk) {
-
-            $result = IntlString::strncmp(
-                IntlString::convert($name),
-                IntlString::convert($junk),
-                IntlString::strlen($junk));
-
-            if ($result == 0)
-                return true;
-        }
-
-        return false;
+        return preg_match('/^(__MACOSX|\.DS_STORE)/m', $name) == true;
     }
 
     public static function isImage($name)
     {
         // there are some images in junk folders that we don't care about
-        if (ImageArchive::isJunk($name) === true) {
+        if (ImageArchive::isJunk($name) != true) {
+            $image_extensions = [
+                'jpg',
+                'jpeg',
+                'png',
+                'gif' // really rare but I've come across this.
+            ];
 
-            return false;
+            return in_array(self::getExtension($name), $image_extensions);
         }
 
-        $image_extensions = [
-            'jpg',
-            'jpeg',
-            'png',
-            'gif' // really rare but I've come across this.
-        ];
-
-        $found = false;
-        $name_extension = ImageArchive::getExtension($name);
-        if ($name_extension === false)
-            return false;
-
-        foreach ($image_extensions as $extension) {
-
-            if ($extension == $name_extension) {
-
-                $found = true;
-                break;
-            }
-        }
-
-        return $found;
+        return false;
     }
 
     /**
