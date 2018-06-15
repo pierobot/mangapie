@@ -12,7 +12,6 @@ class NotificationController extends Controller
     public function index()
     {
         $watchNotifications = \Auth::user()->watchNotifications;
-
         $notificationCount = $watchNotifications->count();
 
         return view('notifications.index')

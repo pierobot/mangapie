@@ -7,7 +7,6 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use Tests\TestCase;
-use Tests\DatabaseSetup;
 
 use App\Library;
 use App\Watcher;
