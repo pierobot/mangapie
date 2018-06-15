@@ -8,55 +8,165 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 use \App\IntlString;
 
+/**
+ * @requires extension intl
+ *
+ * @covers \App\IntlString
+ */
 class IntlStringTest extends TestCase
 {
     /**
-     * Asserts that two strings are equal.
-     *
-     * @return void
+     * @testWith ["Maison Ikkoku"]
      */
-    public function teststrcmp_equal()
+    public function testconvertLatinToUTF8(string $str)
     {
-        $this->assertTrue(IntlString::strcmp('Maison Ikkoku', 'Maison Ikkoku') == 0);
-        $this->assertTrue(IntlString::strcmp('めぞん一刻', 'めぞん一刻') == 0);
+        $convertedStr = IntlString::convert($str);
+        $this->assertEquals('ASCII', mb_detect_encoding($str));
     }
 
     /**
-     * Asserts that one string is less than the other.
-     *
-     * @return void
+     * @testWith ["めぞん一刻"]
      */
-    public function teststrcmp_less()
+    public function testconvertJapaneseToUTF8(string $str)
     {
-        $this->assertTrue(IntlString::strcmp('Maison', 'Maison Ikkoku') < 0);
-        $this->assertTrue(IntlString::strcmp('めぞん一', 'めぞん一刻') < 0);
+        $convertedStr = IntlString::convert($str);
+        $this->assertEquals('UTF-8', mb_detect_encoding($str));
     }
 
     /**
-     * Asserts that one string is greater than the other.
-     *
-     * @return void
+     * @testWith ["Maison Ikkoku"]
      */
-    public function teststrcmp_greater()
+    public function teststrlenLatin(string $str)
     {
-        $this->assertTrue(IntlString::strcmp('Maison Ikkoku', 'Maison') > 0);
-        $this->assertTrue(IntlString::strcmp('めぞん一刻', 'めぞん一') > 0);
+        $this->assertTrue(IntlString::strlen($str) === 13);
     }
 
     /**
-     * Asserts that that the graphemes of a string are correct.
-     *
-     * @return void
+     * @testWith ["めぞん一刻"]
      */
-     public function testgrapheme()
+    public function teststrlenJapanese(string $str)
+    {
+        $this->assertTrue(IntlString::strlen($str) === 5);
+    }
+
+    public function teststrcmpEmptyStringEqual()
+    {
+        $this->assertTrue(IntlString::strcmp('', '') === 0);
+    }
+
+    /**
+     * @testWith ["Maison Ikkoku", "Maison Ikkoku"]
+     */
+    public function teststrcmpLatinEqual(string $left, string $right)
+    {
+        $this->assertTrue(IntlString::strcmp($left, $right) === 0);
+    }
+
+    /**
+     * @testWith ["Maison", "Maison Ikkoku"]
+     */
+    public function teststrcmpLatinLess(string $left, string $right)
+    {
+        $this->assertTrue(IntlString::strcmp($left, $right) < 0);
+    }
+
+    /**
+     * @testWith ["Maison Ikkoku", "Maison"]
+     */
+    public function teststrcmpLatinGreater(string $left, string $right)
+    {
+        $this->assertTrue(IntlString::strcmp($left, $right) > 0);
+    }
+
+    /**
+     * @testWith ["めぞん一刻", "めぞん一刻"]
+     */
+    public function teststrcmpJapaneseEqual(string $left, string $right)
+    {
+        $this->assertTrue(IntlString::strcmp($left, $right) === 0);
+    }
+
+    /**
+     * @testWith ["めぞん一", "めぞん一刻"]
+     */
+    public function teststrcmpJapaneseLess(string $left, string $right)
+    {
+        $this->assertTrue(IntlString::strcmp($left, $right) < 0);
+    }
+
+    /**
+     * @testWith ["めぞん一刻", "めぞん一"]
+     */
+    public function teststrcmpJapaneseGreater(string $left, string $right)
+    {
+        $this->assertTrue(IntlString::strcmp($left, $right) > 0);
+    }
+
+    public function teststrncmpEmptyStringEqual()
+    {
+        $this->assertTrue(IntlString::strncmp('', '', 10) === 0);
+    }
+
+    /**
+     * @testWith ["Maison Ikkoku", "Maison Ikkoku"]
+     */
+    public function teststrncmpLatinEqual(string $left, string $right)
+    {
+        $this->assertTrue(IntlString::strncmp($left, $right, 13) === 0);
+    }
+
+    /**
+     * @testWith ["Maison", "Maison Ikkoku"]
+     */
+    public function teststrncmpLatinLess(string $left, string $right)
+    {
+        $this->assertTrue(IntlString::strncmp($left, $right, 13) < 0);
+    }
+
+    /**
+     * @testWith ["Maison Ikkoku", "Maison"]
+     */
+    public function teststrncmpLatinGreater(string $left, string $right)
+    {
+        $this->assertTrue(IntlString::strncmp($left, $right, 13) > 0);
+    }
+
+    /**
+     * @testWith ["めぞん一刻", "めぞん一刻"]
+     */
+    public function teststrncmpJapaneseEqual(string $left, string $right)
+    {
+        $this->assertTrue(IntlString::strncmp($left, $right, 5) === 0);
+    }
+
+    /**
+     * @testWith ["めぞん一", "めぞん一刻"]
+     */
+    public function teststrncmpJapaneseLess(string $left, string $right)
+    {
+        $this->assertTrue(IntlString::strncmp($left, $right, 5) < 0);
+    }
+
+    /**
+     * @testWith ["めぞん一刻", "めぞん一"]
+     */
+    public function teststrncmpJapaneseGreater(string $left, string $right)
+    {
+        $this->assertTrue(IntlString::strncmp($left, $right, 5) > 0);
+    }
+
+    /**
+     * @testWith ["めぞん一刻"]
+     */
+     public function testgrapheme($str)
      {
         $current = 0;
         $next = 0;
 
-        $this->assertTrue(IntlString::grapheme('めぞん一刻', ($current = $next), $next) == 'め');
-        $this->assertTrue(IntlString::grapheme('めぞん一刻', ($current = $next), $next) == 'ぞ');
-        $this->assertTrue(IntlString::grapheme('めぞん一刻', ($current = $next), $next) == 'ん');
-        $this->assertTrue(IntlString::grapheme('めぞん一刻', ($current = $next), $next) == '一');
-        $this->assertTrue(IntlString::grapheme('めぞん一刻', ($current = $next), $next) == '刻');
+        $this->assertTrue(IntlString::grapheme($str, ($current = $next), $next) == 'め');
+        $this->assertTrue(IntlString::grapheme($str, ($current = $next), $next) == 'ぞ');
+        $this->assertTrue(IntlString::grapheme($str, ($current = $next), $next) == 'ん');
+        $this->assertTrue(IntlString::grapheme($str, ($current = $next), $next) == '一');
+        $this->assertTrue(IntlString::grapheme($str, ($current = $next), $next) == '刻');
      }
 }

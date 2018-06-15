@@ -65,7 +65,6 @@ class IntlString {
      */
     public static function strcmp($str1, $str2)
     {
-
         // iterate until $current_1 and $current_2 reach the $min grapheme length
         for ($current_1 = 0, $current_2 = 0, $next_1 = 0, $next_2 = 0;;) {
 
@@ -73,8 +72,11 @@ class IntlString {
             // this will let us get the next grapheme on the next call
             $g_1 = IntlString::grapheme($str1, ($current_1 = $next_1), $next_1);
             $g_2 = IntlString::grapheme($str2, ($current_2 = $next_2), $next_2);
-            if ($g_1 === false && $g_2 === false)
+            if ($g_1 === false && $g_2 === false) {
                 break;
+            } elseif ($g_1 === false || $g_2 === false) {
+                return $g_1 === false ? -1 : 1;
+            }
 
             // get the code point for the grapheme for comparison
             $cp_1 = \IntlChar::ord($g_1);
