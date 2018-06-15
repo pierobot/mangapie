@@ -9,12 +9,13 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use \App\MangaUpdates;
 use \App\IntlString;
 
+/**
+ * @covers \App\MangaUpdates
+ */
 class MangaUpdatesTest extends TestCase
 {
     /**
      *  Asserts whether information extraction is successful or not.
-     *
-     *  @return void
      */
     public function testinformation_ex()
     {
@@ -90,8 +91,6 @@ class MangaUpdatesTest extends TestCase
     /**
      *  Asserts whether or not we can correctly match a title that is several pages deep in search results.
      *  The first four pages, and first half of the fifth, are all yaoi doujinshi.
-     *
-     *  @return void
      */
     public function testsearch_ex()
     {

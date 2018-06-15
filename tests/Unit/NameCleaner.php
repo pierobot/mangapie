@@ -10,8 +10,6 @@ class NameCleaner extends TestCase
 {
     /**
      * Asserts whether or not the clean function will return Name.
-     *
-     * @return void
      */
     public function testClean()
     {
@@ -64,14 +62,12 @@ class NameCleaner extends TestCase
         ];
 
         foreach ($arrayName as $name) {
-            $this->assertTrue('Name' === \App\Library::clean($name));
+            $this->assertEquals('Name', \App\Library::clean($name));
         }
     }
 
     /**
      * Asserts whether or not the clean function will return A Very Long Name.
-     *
-     * @return void
      */
     public function testCleanLongName()
     {
@@ -124,7 +120,7 @@ class NameCleaner extends TestCase
         ];
 
         foreach ($longNameArray as $name) {
-            $this->assertTrue('A Very Long Name' === \App\Library::clean($name));
+            $this->assertEquals('A Very Long Name', \App\Library::clean($name));
         }
     }
 }
