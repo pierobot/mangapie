@@ -179,6 +179,7 @@ return [
 
         App\Providers\PluralizationServiceProvider::class,
         App\Providers\LogParserServiceProvider::class,
+        App\Providers\ViewComposerServiceProvider::class,
 
         Collective\Html\HtmlServiceProvider::class,
 

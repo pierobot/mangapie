@@ -47,8 +47,6 @@
                 <ul class="nav navbar-nav navbar-right">
 
                     @auth
-                        @php ($notificationCount = \Auth::user()->watchNotifications->count())
-
                         <li @if ($notificationCount > 0) class="wiggle" @endif>
                             <a href="{{ URL::action('NotificationController@index') }}">
                                 <span class="glyphicon glyphicon-bell"></span>&nbsp;Notifications&nbsp;

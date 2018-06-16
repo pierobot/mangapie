@@ -11,24 +11,27 @@ class NotificationController extends Controller
 {
     public function index()
     {
-        $watchNotifications = \Auth::user()->watchNotifications;
-        $notificationCount = $watchNotifications->count();
-
-        return view('notifications.index')
-               ->with('notificationCount', $notificationCount)
-               ->with('watchNotifications', $watchNotifications);
+        return view('notifications.index');
     }
 
     public function dismiss(NotificationRequest $request)
     {
-        // remove all the given watch notifications
-        $watchNotifications = \Request::get('watch');
-        if (empty($watchNotifications) == false) {
-            foreach ($watchNotifications as $notificationId) {
-                \Auth::user()->watchNotifications->find($notificationId)->forceDelete();
+        $action = \Request::get('action');
+        $watchNotificationIds= \Request::get('ids');
+        $watchNotifications = \Auth::user()->watchNotifications;
+
+        if ($action === 'dismiss.selected') {
+            if (empty($watchNotificationIds) == false) {
+                foreach ($watchNotificationIds as $notificationId) {
+                    $watchNotifications->find($notificationId)->forceDelete();
+                }
+            }
+        } elseif ($action === 'dismiss.all') {
+            foreach ($watchNotifications as $watchNotification) {
+                $watchNotification->forceDelete();
             }
         }
 
-        return \Response::make('', 200);
+        return \Redirect::action('NotificationController@index');
     }
 }
