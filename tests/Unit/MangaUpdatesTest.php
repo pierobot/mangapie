@@ -3,117 +3,115 @@
 namespace Tests\Unit;
 
 use Tests\TestCase;
+
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
-use \App\MangaUpdates;
-use \App\IntlString;
+use App\Artist;
+use App\AssociatedName;
+use App\Author;
+use App\Genre;
+use App\Library;
+use App\Manga;
+use App\MangaUpdates;
 
 /**
  * @covers \App\MangaUpdates
  */
 class MangaUpdatesTest extends TestCase
 {
-    /**
-     *  Asserts whether information extraction is successful or not.
-     */
-    public function testinformation_ex()
+    use DatabaseMigrations, RefreshDatabase;
+
+    public function setUp()
     {
-        $contents = file_get_contents('tests/Data/MangaUpdates/Maison-Ikkoku.html');
+        parent::setUp();
 
-        $information = MangaUpdates::information_ex(1051, $contents);
+        $this->seed();
 
-        $this->assertTrue(empty($information) === false);
-        $this->assertTrue(array_key_exists('mu_id', $information));
-        $this->assertTrue(array_key_exists('description', $information));
-        $this->assertTrue(array_key_exists('type', $information));
-        $this->assertTrue(array_key_exists('assoc_names', $information));
-        $this->assertTrue(array_key_exists('genres', $information));
-        $this->assertTrue(array_key_exists('authors', $information));
-        $this->assertTrue(array_key_exists('artists', $information));
-        $this->assertTrue(array_key_exists('year', $information));
-
-        $this->assertTrue($information['mu_id'] == 1051);
-
-        // $description = $information['description'];
-        // $expected_description = 'Travel into Japan\'s nuttiest apartment house and meet its volatile inhabitants: Kyoko, the beautiful and mysterious new apartment manager; Yusaku, the exam-addled college student; Mrs. Ichinose, the drunken gossip; Kentaro, her bratty son; Akemi, the boozy bar hostess; and the mooching and peeping Mr. Yotsuya.';
-        // $this->assertTrue(IntlString::strcmp($description, $expected_description) == 0);
-
-        $type = $information['type'];
-        $expected_type = 'Manga';
-        $this->assertTrue(IntlString::strcmp($type, $expected_type) == 0);
-
-        $assoc_names = $information['assoc_names'];
-        $expected_assoc_names = [
-            'Доходный дом Иккоку',
-            'めぞん一刻',
-            'Mezon Ikkoku'
-        ];
-        $this->assertTrue(empty($assoc_names) === false);
-        foreach ($assoc_names as $index => $assoc_name) {
-
-            $this->assertTrue(IntlString::strcmp($assoc_name, $expected_assoc_names[$index]) == 0);
-        }
-
-        $genres = $information['genres'];
-        $expected_genres = [
-            'Comedy',
-            'Drama',
-            'Romance',
-            'Seinen',
-            'Slice of Life'
-        ];
-        $this->assertTrue(empty($genres) === false);
-        foreach ($genres as $index => $genre) {
-
-            $this->assertTrue(IntlString::strcmp($genre, $expected_genres[$index]) == 0);
-        }
-
-        $authors = $information['authors'];
-        $expected_authors = [ 'TAKAHASHI Rumiko' ];
-        foreach ($authors as $index => $author) {
-
-            $this->assertTrue(IntlString::strcmp($author, $expected_authors[$index]) == 0);
-        }
-
-        $artists = $information['artists'];
-        $expected_artists = [ 'TAKAHASHI Rumiko' ];
-        foreach ($artists as $index => $artist) {
-
-            $this->assertTrue(IntlString::strcmp($artist, $expected_artists[$index]) == 0);
-        }
-
-        $year = $information['year'];
-        $expected_year = '1980';
-        $this->assertTrue(IntlString::strcmp($year, $expected_year) == 0);
+        $this->app->bind(\App\Observers\MangaObserver::class, function () {
+            return $this->getMockBuilder(\App\Observers\MangaObserver::class)->disableOriginalConstructor()->getMock();
+        });
     }
 
     /**
-     *  Asserts whether or not we can correctly match a title that is several pages deep in search results.
-     *  The first four pages, and first half of the fifth, are all yaoi doujinshi.
+     * @testWith [118, "Yu Yu Hakusho", "Manga", "", ["Отчёт о буйстве духов", "幽游白书", "幽遊白書", "คนเก่งฟ้าประทาน", "Hành Trình U Linh Giới", "Yū Yū Hakush", "Yuu Yuu Hakusho", "YuYu Hakusho"], ["TOGASHI Yoshihiro"], ["TOGASHI Yoshihiro"], ["Action","Adventure","Comedy","Drama","Fantasy","Shounen","Supernatural"], 1990]
+     *
+     * Yes, I know "Yū Yū Hakush" is missing the o.
+     * If this ever fails in the future, it's probably because they finally fixed it.
      */
-    public function testsearch_ex()
+    public function testAutofillLatin($id, $name, $type, $description, $assocNames, $authors, $artists, $genres, $year)
     {
-        $title = 'Yu Yu Hakusho';
-        $page3_contents = file_get_contents('tests/Data/MangaUpdates/Yu-Yu-Hakusho-Page-3.json');
+        $manga = factory(Manga::class)->create([
+            'name' => $name,
+            'library_id' => factory(Library::class)->create()->getId()
+        ]);
 
-        $page3_results = MangaUpdates::search_ex($title, $page3_contents);
+        $this->assertTrue(MangaUpdates::autofill($manga));
 
-        $this->assertTrue(empty($page3_results) === false);
+        $this->assertEquals($id, $manga->getMangaUpdatesId());
+//        $this->assertEquals($description, $manga->getDescription());
+        $this->assertEquals($type, $manga->getType());
+        $this->assertEquals($year, $manga->getYear());
 
-        foreach ($page3_results as $index => $result) {
+        $actualAssocNames = array_map(function (AssociatedName $assocName) {
+            return $assocName->getName();
+        }, $manga->getAssociatedNames());
 
-            $this->assertTrue(array_key_exists('distance', $result));
-            $this->assertTrue(array_key_exists('mu_id', $result));
-            $this->assertTrue(array_key_exists('name', $result));
-            $this->assertTrue(array_key_exists('url', $result));
-        }
+        $actualArtists = array_map(function (Artist $artist) {
+            return $artist->getName();
+        }, $manga->getArtists());
 
-        // Jaro-Winkler distance should be 1.0 since they are equal
-        $this->assertTrue($page3_results[0]['distance'] == 1.0);
+        $actualAuthors = array_map(function (Author $author) {
+            return $author->getName();
+        }, $manga->getAuthors());
 
-        $this->assertTrue($page3_results[0]['mu_id'] == 118);
+        $actualGenres = array_map(function (Genre $genre) {
+            return $genre->getName();
+        }, $manga->getGenres());
 
-        $this->assertTrue(IntlString::strcmp($page3_results[0]['url'], 'https://www.mangaupdates.com/series.html?id=118') == 0);
+        $this->assertEquals($assocNames, $actualAssocNames);
+        $this->assertEquals($artists, $actualArtists);
+        $this->assertEquals($authors, $actualAuthors);
+        $this->assertEquals($genres, $actualGenres);
+    }
+
+    /**
+     * @testWith [1051, "めぞん一刻", "Manga", "Travel into Japan's nuttiest apartment house and meet its volatile inhabitants: Kyoko, the beautiful and mysterious new apartment manager; Yusaku, the exam-addled college student; Mrs. Ichinose, the drunken gossip; Kentaro, her bratty son; Akemi, the boozy bar hostess; and the mooching and peeping Mr. Yotsuya.", ["Доходный дом Иккоку", "めぞん一刻", "相聚一刻", "Mezon Ikkoku"], ["TAKAHASHI Rumiko"], ["TAKAHASHI Rumiko"], ["Comedy", "Drama", "Romance", "Seinen", "Slice of Life"], 1980]
+     */
+    public function testAutofillJapanese($id, $name, $type, $description, $assocNames, $authors, $artists, $genres, $year)
+    {
+        $manga = factory(Manga::class)->create([
+            'name' => $name,
+            'library_id' => factory(Library::class)->create()->getId()
+        ]);
+
+        $this->assertTrue(MangaUpdates::autofill($manga));
+
+        $this->assertEquals($id, $manga->getMangaUpdatesId());
+        $this->assertEquals($description, $manga->getDescription());
+        $this->assertEquals($type, $manga->getType());
+        $this->assertEquals($year, $manga->getYear());
+
+        $actualAssocNames = array_map(function (AssociatedName $assocName) {
+            return $assocName->getName();
+        }, $manga->getAssociatedNames());
+
+        $actualArtists = array_map(function (Artist $artist) {
+            return $artist->getName();
+        }, $manga->getArtists());
+
+        $actualAuthors = array_map(function (Author $author) {
+            return $author->getName();
+        }, $manga->getAuthors());
+
+        $actualGenres = array_map(function (Genre $genre) {
+            return $genre->getName();
+        }, $manga->getGenres());
+
+        $this->assertEquals($assocNames, $actualAssocNames);
+        $this->assertEquals($artists, $actualArtists);
+        $this->assertEquals($authors, $actualAuthors);
+        $this->assertEquals($genres, $actualGenres);
     }
 }

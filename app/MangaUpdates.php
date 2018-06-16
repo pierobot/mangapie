@@ -9,15 +9,36 @@ use App\Interfaces\AutoFillInterface;
 
 class MangaUpdates implements AutoFillInterface
 {
+    public static function encodeNCR($str)
+    {
+        $result = '';
+
+        $length = IntlString::strlen($str);
+        for ($i = 0, $offset = 0, $next = 0; $i < $length; $i++) {
+            $grapheme = IntlString::grapheme($str, $offset, $next);
+            $codepoint = mb_ord($grapheme, 'UTF-8');
+
+            // If the code point is not ASCII then we have to append &#codepoint;
+            if ($codepoint > 255)
+                $result .= '&#' . $codepoint . ';';
+            else
+                $result .= $grapheme;
+
+            $offset = $next;
+        }
+
+        return $result;
+    }
+
     public static function search($title, $page, $perpage = 50)
     {
         $contents = \Curl::to('https://www.mangaupdates.com/series.html')->withData([
             'stype' => 'title',
-            'search' => urlencode($title),
+            'search' => self::encodeNCR($title),
             'page' => strval($page),
             'perpage' => strval($perpage),
             'output' => 'json'
-        ])->get();
+        ])->post();
 
         return MangaUpdates::search_ex($title, $contents);
     }
@@ -38,7 +59,7 @@ class MangaUpdates implements AutoFillInterface
         foreach ($items as $item) {
             $mu_id = intval($item->{'id'});
             $url = 'https://www.mangaupdates.com/series.html?id=' . $item->{'id'};
-            $item_title = $item->{'title'};
+            $item_title = \Html::decode($item->{'title'});
             $distance = JaroWinkler::distance($title, $item_title);
 
             array_push($results, [
