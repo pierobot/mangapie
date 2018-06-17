@@ -25,7 +25,7 @@ class FavoriteRequest extends FormRequest
     {
         return [
             'id' => 'required|integer',
-            'action' => ['required', 'regex:/favorite|unfavorite/']
+            'action' => 'required|string|in:favorite,unfavorite'
         ];
     }
 }

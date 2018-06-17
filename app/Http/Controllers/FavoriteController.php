@@ -17,9 +17,9 @@ class FavoriteController extends Controller
         $libraries = null;
 
         $ids = [];
-        $favorites = Favorite::where('user_id', $user->getId())->get();
+        $favorites = $user->favorites;
         foreach ($favorites as $favorite) {
-            array_push($ids, $favorite->getMangaId());
+            array_push($ids, $favorite->manga->getId());
         }
 
         if ($user->isAdmin() == true) {
