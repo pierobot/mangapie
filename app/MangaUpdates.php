@@ -3,6 +3,7 @@
 namespace App;
 
 use \Carbon\Carbon;
+use Symfony\Component\DomCrawler\Crawler;
 
 use App\IntlString;
 use App\Interfaces\AutoFillInterface;
@@ -92,139 +93,112 @@ class MangaUpdates implements AutoFillInterface
         return MangaUpdates::information_ex($mu_id, $contents);
     }
 
-    public static function description($contents)
+    public static function description(Crawler $crawler)
     {
-        $description = [];
-        $description_result = preg_match_all('/<div class=(\"|\')sCat(\"|\')><b>Description<\/b><\/div>\s<div class=(\"|\')sContent(\"|\').+?\">(.+?)\s<\/div>/', $contents, $description);
-        if ($description_result != 0) {
-            // url decode the description
-            array_walk($description[5], function (&$desc, $key) {
-                $desc = IntlString::convert(\Html::decode($desc));
-            });
+        return trim($crawler->filter('div.sMember > div.sCat + div.sContent')
+                            ->eq(0)
+                            ->text());
+    }
 
-            return $description[5][0];
+    public static function type(Crawler $crawler)
+    {
+        return trim($crawler->filter('div.sMember > div.sCat + div.sContent')
+                            ->eq(1)
+                            ->text());
+    }
+
+    public static function associated_names(Crawler $crawler)
+    {
+        $currentElement = $crawler->filter('div.sContainer')
+                                  ->eq(0) 
+                                  ->filter('div.sMember > div.sCat + div.sContent')
+                                  ->eq(3)
+                                  ->getNode(0)
+                                  ->firstChild;
+
+        $assocNames = [];
+        while (empty($currentElement) == false) {
+            if (empty($currentElement->textContent) == false)
+                array_push($assocNames, $currentElement->textContent);
+
+            $currentElement = $currentElement->nextSibling;
         }
 
-        return null;
+        return $assocNames;
     }
 
-    public static function type($contents)
+    public static function genres(Crawler $crawler)
     {
-        $type = [];
-        $type_result = preg_match_all('/<div class=(\"|\')sCat(\"|\')><b>Type<\/b><\/div>\s<div class=(\"|\')sContent(\"|\')\s+>(.+?)\s<\/div>/', $contents, $type);
+        $genreLinks = $crawler->filter('div.sContainer')
+                                  ->eq(1) 
+                                  ->filter('div.sMember > div.sCat + div.sContent')
+                                  ->eq(1)
+                                  ->filter('a > u');
 
-        return $type_result != 0 ? $type[5][0] : null;
-    }
-
-    public static function associated_names($contents)
-    {
-        $assoc_names_content = [];
-        $assoc_names_content_result = preg_match_all('/<div class=(\"|\')sCat(\"|\')><b>Associated Names<\/b><\/div>\s<div class=(\"|\')sContent(\"|\')\s>(.+?)\s<\/div>/', $contents, $assoc_names_content);
-        if ($assoc_names_content_result == 0)
-            return null;
-
-        $assoc_names = [];
-        $assoc_names_result = preg_match_all('/(.+?)(<br\s\/>)/', $assoc_names_content[5][0], $assoc_names);
-        if ($assoc_names_result != 0) {
-            // the names are url encoded. take care of that.
-            array_walk($assoc_names[1], function (&$name, $key) {
-
-                $name = IntlString::convert(\Html::decode($name));
-            }, null);
-
-            return $assoc_names[1];
-        }
-
-        return null;
-    }
-
-    public static function genres($contents)
-    {
         $genres = [];
-        $genres_result = preg_match_all('/<a rel=(\"|\').+?genre=.+?<u>(.+?)<\/u><\/a>/', $contents, $genres);
-
-        return $genres_result != 0 ? $genres[2] : null;
+        foreach ($genreLinks as $genreLink) {
+            array_push($genres, $genreLink->textContent);
+        }
+        
+        return $genres;
     }
 
-    public static function authors($contents)
+    public static function authors(Crawler $crawler)
     {
-        $authors_content = [];
-        $authors_content_result = preg_match_all('/Author\(s\)<\/b><\/div>\s.+?sContent(\"|\')\s>.+?\s<\/div>/', $contents, $authors_content);
-        if ($authors_content_result == 0)
-            return null;
+        $authorLinks = $crawler->filter('div.sContainer')
+                               ->eq(1) 
+                               ->filter('div.sMember > div.sCat + div.sContent')
+                               ->eq(5)
+                               ->filter('a > u');
 
         $authors = [];
-        $authors_result = preg_match_all('/\?id=([0-9]+).+?<u>(.+?)<\/u>/', $authors_content[0][0], $authors);
-        if ($authors_result != 0) {
-            // url decode the authors' name
-            array_walk($authors[2], function (&$author, $key) {
-                $author = IntlString::convert(\Html::decode($author));
-            });
-
-            return $authors[2];
-        } else {
-            $authors_result = preg_match_all('/(\"|\')sContent(\"|\')\s?>(.+)&nbsp/', $authors_content[0][0], $authors);
-            if ($authors_result != 0) {
-                // url decode the authors' name
-                array_walk($authors[3], function (&$author, $key) {
-                    $author = IntlString::convert(\Html::decode($author));
-                });
-
-                return $authors[3];
-            }
+        foreach ($authorLinks as $authorLink) {
+            array_push($authors, $authorLink->textContent);
         }
 
-        return null;
+        return $authors;
     }
 
-    public static function artists($contents)
+    public static function artists(Crawler $crawler)
     {
-        $artists_content = [];
-        $artists_content_result = preg_match_all('/(Artist\(s\)<\/b><\/div>\s.+?sContent(\"|\')\s>).+?\s<\/div>/', $contents, $artists_content);
-        if ($artists_content_result == 0)
-            return null;
+        $artistLinks = $crawler->filter('div.sContainer')
+                               ->eq(1) 
+                               ->filter('div.sMember > div.sCat + div.sContent')
+                               ->eq(6)
+                               ->filter('a > u');
 
         $artists = [];
-        $artists_result = preg_match_all('/\?id=([0-9]+).+?<u>(.+?)<\/u>/', $artists_content[0][0], $artists);
-        if ($artists_result != 0) {
-            // url decode the artists' name
-            array_walk($artists[2], function (&$artist, $key) {
-                $artist = IntlString::convert(\Html::decode($artist));
-            });
-
-            return $artists[2];
-        } else {
-            $artists_result = preg_match_all('/(\"|\')sContent(\"|\')\s?>(.+)&nbsp/', $artists_content[0][0], $artists);
-            if ($artists_result != 0) {
-                array_walk($artists[3], function (&$artist, $key) {
-                    $artist = IntlString::convert(\Html::decode($artist));
-                });
-
-                return $artists[3];
-            }
+        foreach ($artistLinks as $artistLink) {
+            array_push($artists, $artistLink->textContent);
         }
 
-        return null;
+        return $artists;
     }
 
-    public static function year($contents)
+    public static function year(Crawler $crawler)
     {
-        $year = [];
-        $year_result = preg_match_all('/(\"|\')sCat(\"|\')><b>Year<\/b><\/div>\s<div class=(\"|\')sContent(\"|\')\s>([0-9]+)\s<\/div>/', $contents, $year);
+        $year = $crawler->filter('div.sContainer')
+                        ->eq(1) 
+                        ->filter('div.sMember > div.sCat + div.sContent')
+                        ->eq(7)
+                        ->getNode(0)
+                        ->textContent;
 
-        return $year_result != 0 ? $year[5][0] : null;
+        return intval($year);
     }
 
     public static function information_ex($mu_id, $contents)
     {
+        $crawler = new Crawler($contents);
+
         $information['mu_id'] = $mu_id;
-        $information['description'] = MangaUpdates::description($contents);
-        $information['type'] = MangaUpdates::type($contents);
-        $information['assoc_names'] = MangaUpdates::associated_names($contents);
-        $information['genres'] = MangaUpdates::genres($contents);
-        $information['authors'] = MangaUpdates::authors($contents);
-        $information['artists'] = MangaUpdates::artists($contents);
-        $information['year'] = MangaUpdates::year($contents);
+        $information['description'] = MangaUpdates::description($crawler);
+        $information['type'] = MangaUpdates::type($crawler);
+        $information['assoc_names'] = MangaUpdates::associated_names($crawler);
+        $information['genres'] = MangaUpdates::genres($crawler);
+        $information['authors'] = MangaUpdates::authors($crawler);
+        $information['artists'] = MangaUpdates::artists($crawler);
+        $information['year'] = MangaUpdates::year($crawler);
 
         return $information;
     }

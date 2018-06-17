@@ -19,6 +19,8 @@ use App\WatchReference;
  * @covers \App\Manga
  * @covers \App\WatchReference
  * @covers \App\WatchNotification
+ *
+ * @covers \App\Http\ViewComposers\NotificationComposer
  */
 class WatchNotificationTest extends TestCase
 {

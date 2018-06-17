@@ -6,10 +6,6 @@ use Illuminate\Contracts\View\View;
 
 class NotificationComposer
 {
-    public function __construct()
-    {
-    }
-
     /**
      * Binds the relevant notification information to the view.
      *
