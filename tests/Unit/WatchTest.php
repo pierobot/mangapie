@@ -185,6 +185,9 @@ class WatchTest extends TestCase
     {
         parent::setUp();
 
+        // start eating the echo output from App\Watcher
+        ob_start();
+
         if (\App\Library::count() !== 0)
             return;
 
@@ -216,6 +219,14 @@ class WatchTest extends TestCase
             'name' => 'manga5',
             'path' => self::$root5 . DIRECTORY_SEPARATOR . 'dest'
         ]);
+    }
+
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        // stop eating the output from App\Watcher
+        ob_end_clean();
     }
 
     public function testTrackEmptyPathReturnsFalse()
