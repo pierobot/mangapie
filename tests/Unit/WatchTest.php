@@ -25,6 +25,11 @@ use App\Console\Commands\Watch;
  * @covers \App\DirectoryDescriptor
  * @covers \App\WatchDescriptor
  *
+ * @covers \App\Events\NewArchiveEvent
+ * @covers \App\Events\NewDirectoryEvent
+ * @covers \App\Events\RemovedArchiveEvent
+ * @covers \App\Events\RemovedDirectoryEvent
+ *
  * @covers \App\Listeners\ArchiveEventSubscriber
  * @covers \App\Listeners\DirectoryEventSubscriber
  *

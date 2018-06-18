@@ -20,7 +20,7 @@ use App\WatchReference;
  * @covers \App\WatchReference
  * @covers \App\WatchNotification
  *
- * @covers \App\Http\ViewComposers\NotificationComposer
+ * @covers \App\Http\ViewComposers\NotificationsComposer
  */
 class WatchNotificationTest extends TestCase
 {

@@ -38,12 +38,12 @@ class FavoriteTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-            ->withSession(['foo' => 'bar'])
-            ->followingRedirects()
-            ->post(\URL::action('FavoriteController@update'), [
-                'id' => $manga->getId(),
-                'action' => 'favorite'
-            ]);
+                         ->withSession(['foo' => 'bar'])
+                         ->followingRedirects()
+                         ->post(\URL::action('FavoriteController@update'), [
+                             'id' => $manga->getId(),
+                             'action' => 'favorite'
+                         ]);
 
         $response->assertSeeText('You have favorited this manga.');
     }
@@ -57,12 +57,12 @@ class FavoriteTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-            ->withSession(['foo' => 'bar'])
-            ->followingRedirects()
-            ->post(\URL::action('FavoriteController@update'), [
-                'id' => $manga->getId(),
-                'action' => 'unfavorite'
-            ]);
+                         ->withSession(['foo' => 'bar'])
+                         ->followingRedirects()
+                         ->post(\URL::action('FavoriteController@update'), [
+                             'id' => $manga->getId(),
+                             'action' => 'unfavorite'
+                         ]);
 
         $response->assertSeeText('You have unfavorited this manga.');
     }
@@ -76,7 +76,7 @@ class FavoriteTest extends TestCase
                          ->withSession(['foo' => 'bar'])
                          ->get(\URL::action('FavoriteController@index'));
 
-        $response->assertViewIs('manga.favorites');
+        $response->assertViewIs('favorites.index');
         $response->assertSeeText('Favorites: (1)');
         $response->assertSeeText($favorite->manga->getName());
 
@@ -96,7 +96,7 @@ class FavoriteTest extends TestCase
                          ->withSession(['foo' => 'bar'])
                          ->get(\URL::action('FavoriteController@index'));
 
-        $response->assertViewIs('manga.favorites');
+        $response->assertViewIs('favorites.index');
         $response->assertSeeText('Favorites: (0)');
         $response->assertDontSeeText($favorite->manga->getName());
     }
