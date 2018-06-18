@@ -4,7 +4,7 @@ namespace App\Http\ViewComposers;
 
 use Illuminate\Contracts\View\View;
 
-class NotificationComposer
+class NotificationsComposer
 {
     /**
      * Binds the relevant notification information to the view.

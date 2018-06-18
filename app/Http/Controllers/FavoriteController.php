@@ -14,29 +14,21 @@ class FavoriteController extends Controller
     public function index()
     {
         $user = \Auth::user();
-        $libraries = null;
+        $total = $user->favorites->count();
+        $favoriteIds = [];
 
-        $ids = [];
-        $favorites = $user->favorites;
-        foreach ($favorites as $favorite) {
-            array_push($ids, $favorite->manga->getId());
-        }
+        $user->favorites->each(function (Favorite $favorite) use (&$favoriteIds) {
+            $favoriteIds[] = $favorite->manga->getId();
+        });
 
-        if ($user->isAdmin() == true) {
-            $libraries = Library::all();
-        } else {
-            $library_ids = LibraryPrivilege::getIds();
-            $libraries = Library::whereIn('id', $library_ids)->get();
-        }
+        $favoriteList = Manga::whereIn('id', $favoriteIds)
+                             ->orderBy('name', 'asc')
+                             ->paginate(18);
 
-        $favorite_list = Manga::whereIn('id', $ids)->orderBy('name', 'asc')->paginate(18);
-        $total = count($favorites);
+        $favoriteList->withPath(\Config::get('app.url'));
 
-        $favorite_list->withPath(env('app.url'));
-
-        return view('manga.favorites')->with('header', 'Favorites: (' . $total . ')')
-                                      ->with('manga_list', $favorite_list)
-                                      ->with('libraries', $libraries)
+        return view('favorites.index')->with('manga_list', $favoriteList)
+                                      ->with('header', 'Favorites: (' . $total . ')')
                                       ->with('total', $total);
     }
 

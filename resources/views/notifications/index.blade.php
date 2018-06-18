@@ -9,7 +9,6 @@
 @endsection
 
 @section ('custom_navbar_right')
-    @include ('shared.libraries')
 @endsection
 
 @section ('content')

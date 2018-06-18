@@ -19,48 +19,22 @@ class HomeController extends Controller
     {
         $user = \Auth::user();
 
-        if ($user->isAdmin() == true) {
-            $manga_list = Manga::orderBy('name', 'asc')->paginate(18);
+        if ($user->isAdmin()) {
+            $mangaList = Manga::orderBy('name', 'asc')
+                              ->paginate(18);
         } else {
-            $library_ids = LibraryPrivilege::getIds();
-
-            $manga_list = Manga::whereIn('library_id', $library_ids)->orderBy('name', 'asc')->paginate(18);
+            $libraryIds = [];
+            $user->privileges->each(function (LibraryPrivilege $privilege) use (&$libraryIds) {
+                $libraryIds[] = $privilege->getLibraryId();
+            });
+            
+            $mangaList = Manga::whereIn('library_id', $libraryIds)
+                              ->orderBy('name', 'asc')
+                              ->paginate(18);
         }
 
-        $manga_list->withPath(env('app.url'));
+        $mangaList->withPath(\Config::get('app.url'));
 
-        return view('home.index', compact('manga_list'));
-    }
-
-    public function library(Library $library)
-    {
-        $user = \Auth::user();
-        $can_access = false;
-
-        // check if the user has sufficient privileges
-        if ($user->isAdmin() == true) {
-            // admin can always access everything
-            $can_access = true;
-        } else {
-            $privileges = LibraryPrivilege::where('user_id', '=', $user->getId())->get();
-            // a regular user needs to have library privileges
-            foreach ($privileges as $privilege) {
-                if ($privilege->getLibraryId() == $library->getId()) {
-                    $can_access = true;
-                    break;
-                }
-            }
-        }
-
-        $manga_list = null;
-        $libraries = null;
-        if ($can_access == true) {
-            $manga_list = Manga::where('library_id', '=', $library->getId())->orderBy('name', 'asc')->paginate(18);
-        }
-
-        $manga_list->withPath(env('app.url'));
-
-        return $can_access == true ? view('home.index', compact('manga_list')) :
-                                     view('error.403');
+        return view('home.index')->with('manga_list', $mangaList);
     }
 }

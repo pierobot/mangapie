@@ -20,11 +20,14 @@ class NotificationRequest extends FormRequest
         $ownsNotifications = true;
 
         $notificationIds = \Input::get('ids');
-        foreach ($notificationIds as $notificationId) {
-            $owns = WatchNotification::find($notificationId) !== null;
-            if ($owns == false) {
-                $ownsNotifications = false;
-                break;
+        if (empty($notificationIds) == false) {
+            foreach ($notificationIds as $notificationId) {
+                $owns = WatchNotification::find($notificationId) !== null;
+
+                if ($owns == false) {
+                    $ownsNotifications = false;
+                    break;
+                }
             }
         }
 
