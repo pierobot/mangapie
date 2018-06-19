@@ -27,20 +27,24 @@
             {{ Form::open(['action' => 'NotificationController@dismiss']) }}
             <table class="table table-hover table-condensed table-va-middle">
                 <thead>
-                <tr>
-                    <th class="col-xs-2 col-sm-1"></th>
-                    <th class="col-xs-6 col-sm-8">Message</th>
-                    <th class="col-xs-4 col-sm-3">Date</th>
-                </tr>
+                    <tr>
+                        <th class="col-xs-2 col-sm-1"></th>
+                        <th class="col-xs-6 col-sm-8">Message</th>
+                        <th class="col-xs-4 col-sm-3">Date</th>
+                    </tr>
                 </thead>
                 <tbody>
                 @foreach ($watchNotifications as $index => $notification)
                     @php ($manga = $notification->getData())
                     <tr>
                         <td>
-                            <a href="{{ URL::action('MangaController@index', [$manga->getId(), 'descending']) }}">
-                                <img class="notification-img" src="{{ URL::action('ThumbnailController@smallDefault', [empty($manga) ? 0 : $manga->getId()]) }}">
-                            </a>
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <a href="{{ URL::action('MangaController@index', [$manga->getId(), 'descending']) }}">
+                                        <img class="notification-img" src="{{ URL::action('ThumbnailController@smallDefault', [empty($manga) ? 0 : $manga->getId()]) }}">
+                                    </a>
+                                </div>
+                            </div>
                         </td>
                         <td>
                             <div class="row">

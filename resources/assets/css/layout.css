@@ -126,44 +126,10 @@ img.reader-image {
 
 /* ------- notifications/index.blade.php ------- */
 
-/* xs */
-@media screen and (max-width: 767px) {
-    img.notification-img {
-        height: 33%;
-    }
-
-    .text-ellipsis {
-        max-width: 150px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-}
-
-/* sm */
-@media screen and (min-width: 768px) {
-    img.notification-img {
-        height: 40%;
-    }
-
-    .text-ellipsis {
-        max-width: 300px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-}
-
-/* lg and xl */
-@media screen and (min-width: 992px) {
-    img.notification-img {
-        height: 50%;
-    }
-
-    .text-ellipsis {
-        max-width: 500px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
+img.notification-img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    max-height: 100%;
 }
