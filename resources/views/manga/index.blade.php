@@ -246,9 +246,9 @@
                     <th class="col-sm-6 col-md-7">
                         <a href="{{ \URL::action('MangaController@index', [$id, $sort == 'ascending' ? 'descending' : 'ascending']) }}">Filename&nbsp;
                             @if ($sort == 'ascending')
-                                <span class="glyphicon glyphicon-triangle-top"></span>
-                            @else
                                 <span class="glyphicon glyphicon-triangle-bottom"></span>
+                            @else
+                                <span class="glyphicon glyphicon-triangle-top"></span>
                             @endif
                         </a>
                     </th>
