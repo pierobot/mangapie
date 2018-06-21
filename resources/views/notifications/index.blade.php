@@ -49,12 +49,14 @@
                         <td>
                             <div class="row">
                                 <div class="col-xs-12">
-                                    <h4 class="text-ellipsis">
-                                        <div class="checkbox checkbox-success">
-                                            <input type="checkbox" id="ids[{{ $notification->getId() }}]" name="ids[{{ $notification->getId() }}]" value="{{ $notification->getId() }}">
-                                            <label for="ids[{{ $notification->getId() }}]">{{ $manga->getName() }}</label>
-                                        </div>
-                                    </h4>
+                                    <div class="checkbox checkbox-success">
+                                        <input type="checkbox" id="ids[{{ $notification->getId() }}]" name="ids[{{ $notification->getId() }}]" value="{{ $notification->getId() }}">
+                                        <label for="ids[{{ $notification->getId() }}]">
+                                            <div class="truncate-ellipsis">
+                                                <span>{{ $manga->getName() }}</span>
+                                            </div>
+                                        </label>
+                                    </div>
                                 </div>
                                 <div class="col-xs-12">
                                     <div class="row">

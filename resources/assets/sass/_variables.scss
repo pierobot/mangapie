@@ -1,9 +1,22 @@
 $font-family-icon: 'Glyphicons Halflings';
 $check-icon: "\e013";
 
-.checkbox label:after {
-  padding-left: 4px;
-  font-size: 9px;
+//.checkbox label:after {
+//  padding-left: 4px;
+//  font-size: 9px;
+//}
+
+// Used to center the checkbox and checkmark
+// Note: This will break if the label's text wraps across several lines
+// I don't plan on having that, so this is fine for now.
+.radio, .checkbox {
+
+  label {
+
+    &::before, &::after { top: 50%; }
+    &::before { margin-top: -9px; }
+    &::after { margin-top: 3px; }
+  }
 }
 
 // Body
