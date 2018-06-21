@@ -9,6 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 use App\Library;
+use App\Manga;
 use App\Watcher;
 
 use App\Console\Commands\Watch;
@@ -193,34 +194,34 @@ class WatchTest extends TestCase
         // start eating the echo output from App\Watcher
         ob_start();
 
-        if (\App\Library::count() !== 0)
+        if (Library::count() !== 0)
             return;
 
         $this->app->bind(\App\Observers\ArchiveObserver::class, function () {
             return $this->getMockBuilder(\App\Observers\ArchiveObserver::class)->disableOriginalConstructor()->getMock();
         });
 
-        \App\Library::create([
+        Library::create([
             'name' => 'manga1',
             'path' => self::$root1
         ]);
 
-        \App\Library::create([
+        Library::create([
             'name' => 'manga2',
             'path' => self::$root2
         ]);
 
-        \App\Library::create([
+        Library::create([
             'name' => 'manga3',
             'path' => self::$root3
         ]);
 
-        \App\Library::create([
+        Library::create([
             'name' => 'manga4',
             'path' => self::$root4 . DIRECTORY_SEPARATOR . 'dest'
         ]);
 
-        \App\Library::create([
+        Library::create([
             'name' => 'manga5',
             'path' => self::$root5 . DIRECTORY_SEPARATOR . 'dest'
         ]);
@@ -342,7 +343,7 @@ class WatchTest extends TestCase
 
             mkdir($path);
 
-            \App\Manga::create([
+            Manga::create([
                 'name' => $name,
                 'path' => $path,
                 'library_id' => 2
@@ -405,7 +406,7 @@ class WatchTest extends TestCase
                 'path' => $sourcePath,
             ]);
 
-            $sourceId = \App\Manga::where('name', $sourceName)->first()->getId();
+            $sourceId = Manga::where('name', $sourceName)->first()->getId();
 
             foreach ($item['archives'] as $archive) {
                 $archiveSourcePath = $sourcePath . DIRECTORY_SEPARATOR . $archive;
@@ -429,7 +430,7 @@ class WatchTest extends TestCase
                 'path' => $destinationPath,
             ]);
 
-            $destinationId = \App\Manga::where('name', $destinationName)->first()->getId();
+            $destinationId = Manga::where('name', $destinationName)->first()->getId();
 
             foreach ($item['archives'] as $archive) {
                 $this->assertDatabaseMissing('archives', [
