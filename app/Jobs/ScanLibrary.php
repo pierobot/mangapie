@@ -15,7 +15,7 @@ use App\Scanner;
 
 class ScanLibrary implements ShouldQueue
 {
-    use InteractsWithQueue, Queueable, SerializesModels, Trackable;
+    use InteractsWithQueue, Dispatchable, Queueable, SerializesModels, Trackable;
 
     private $libraryId;
 

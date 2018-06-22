@@ -90,4 +90,9 @@ class Scanner
 
         return $archives;
     }
+
+    public static function scan(Library $library)
+    {
+        Jobs\ScanLibrary::dispatch($library);
+    }
 }

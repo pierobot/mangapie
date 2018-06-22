@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Scanner;
 use Illuminate\Console\Command;
 
 use \App\Library;
@@ -57,7 +58,8 @@ class Scan extends Command
 
         foreach ($libraries as $library) {
             $this->comment('Updating '. $library->getName());
-            $library->scan();
+
+            Scanner::scan($library);
         }
 
         $this->comment('Finished updating libraries');
