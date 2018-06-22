@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LibraryUpdateRequest extends FormRequest
+class LibraryStatusRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class LibraryUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::user()->isAdmin();
+        return \Auth::check() && \Auth::user()->isAdmin();
     }
 
     /**
@@ -24,8 +24,8 @@ class LibraryUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'ids'=> 'required|array',
-            'ids.*' => 'required|int|exists:libraries,id'
+            'ids' => 'required|array',
+            'ids.*' => 'required|int|exists:job_statuses,id'
         ];
     }
 }

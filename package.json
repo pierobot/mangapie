@@ -18,6 +18,5 @@
     "lodash": "^4.17.10",
     "awesome-bootstrap-checkbox": "^0.3.7"
   },
-  "dependencies": {
-  }
+  "dependencies": {}
 }

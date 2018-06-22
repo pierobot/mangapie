@@ -366,7 +366,7 @@ class Manga
 
         $archive_path = $this->getPath() . '/' . $archive_name;
         $archive = ImageArchive::open($archive_path);
-        if ($archive === false)
+        if ($archive === false || $archive->good() === false)
             return false;
 
         $images = $archive->getImages();

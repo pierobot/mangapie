@@ -2,14 +2,17 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LibraryCreateRequest;
-use App\Http\Requests\LibraryDeleteRequest;
-use App\Http\Requests\LibraryUpdateRequest;
+use App\Http\Requests\LibraryStatusRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
+use App\Http\Requests\LibraryCreateRequest;
+use App\Http\Requests\LibraryDeleteRequest;
+use App\Http\Requests\LibraryUpdateRequest;
+
 use \App\Library;
 use \App\Manga;
+use Imtigger\LaravelJobStatus\JobStatus;
 
 class LibraryController extends Controller
 {
@@ -47,25 +50,61 @@ class LibraryController extends Controller
 
     public function update(LibraryUpdateRequest $request)
     {
-        $id = \Input::get('id');
+        $libraries = Library::whereIn('id', \Request::get('ids'))->get();
 
-        $library = Library::findOrFail($id);
-        $library->scan();
+        $jobs = [];
+        foreach ($libraries as $library) {
+            $job = new \App\Jobs\ScanLibrary($library);
 
-        \Session::flash('success', 'The selected libraries were successfully updated.');
+            $this->dispatch($job);
 
-        return \Redirect::action('AdminController@libraries');
+            $jobs[] = [
+                'id' => $job->getJobStatusId(),
+                'name' => $library->getName(),
+            ];
+        }
+
+        return \Response::json([
+            'jobs' => $jobs
+        ]);
+    }
+
+    public function status(LibraryStatusRequest $request)
+    {
+        $jobIds = \Request::get('ids');
+
+        $jobs = [];
+        foreach ($jobIds as $jobId) {
+            $job = JobStatus::find($jobId);
+
+            if ($job !== null)
+                if ($job->progress_now == 0 && $job->is_ended) {
+                    $job->progress_now = 1;
+                    $job->progress_max = 1;
+                }
+
+                $jobs[] = [
+                    'id' => $jobId,
+                    'status' => $job->status,
+                    'progress' => $job->progress_percentage,
+                ];
+        }
+
+        return \Response::json([
+            'jobs' => $jobs
+        ]);
     }
 
     public function delete(LibraryDeleteRequest $request)
     {
-        $id = \Input::get('id');
+        $libraries = Library::whereIn('id', \Request::get('ids'))->get();
 
-        $library = Library::findOrFail($id);
-        $library->forceDelete();
+        foreach ($libraries as $library) {
+            $library->forceDelete();
+        }
 
         \Session::flash('success', 'The selected libraries were successfully deleted.');
 
-        return \Redirect::action('AdminController@libraries');
+        return \Response::json();
     }
 }

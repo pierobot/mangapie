@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3c41177ca302b7bc2901aa213673a1b5",
+    "content-hash": "ccfd7eb2aad61cc53b78303f27b29b18",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -684,6 +684,63 @@
                 "url"
             ],
             "time": "2017-03-20T17:10:46+00:00"
+        },
+        {
+            "name": "imtigger/laravel-job-status",
+            "version": "v0.1.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/imTigger/laravel-job-status.git",
+                "reference": "c8d57d6253d793b23488f90f5b8c680d90c83630"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/imTigger/laravel-job-status/zipball/c8d57d6253d793b23488f90f5b8c680d90c83630",
+                "reference": "c8d57d6253d793b23488f90f5b8c680d90c83630",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/contracts": ">=5.3",
+                "illuminate/database": ">=5.3",
+                "illuminate/queue": ">=5.3",
+                "illuminate/support": ">=5.3",
+                "nesbot/carbon": ">=1.21",
+                "php": ">=5.6.4"
+            },
+            "require-dev": {
+                "orchestra/testbench": ">=3.4",
+                "phpunit/phpunit": ">=5.7"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Imtigger\\LaravelJobStatus\\LaravelJobStatusServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Imtigger\\LaravelJobStatus\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tiger",
+                    "email": "tiger@tiger-workshop.com"
+                }
+            ],
+            "description": "Laravel Job Status",
+            "keywords": [
+                "job",
+                "laravel",
+                "queue"
+            ],
+            "time": "2018-02-28T08:37:55+00:00"
         },
         {
             "name": "intervention/image",

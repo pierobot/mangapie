@@ -16,7 +16,7 @@ class ImageArchiveZip implements ImageArchiveInterface
         $this->m_file_path = $file_path;
 
         $this->m_zip = new ZipArchive;
-        if ($this->m_zip->open($this->m_file_path) === false)
+        if ($this->m_zip->open($this->m_file_path) !== true)
             $this->m_zip = false;
     }
 

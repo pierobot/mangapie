@@ -59,6 +59,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('library')->name('library')->group(function () {
         Route::post('/create', 'LibraryController@create');
         Route::post('/update', 'LibraryController@update');
+        Route::post('/status', 'LibraryController@status');
         Route::post('/delete', 'LibraryController@delete');
     });
 

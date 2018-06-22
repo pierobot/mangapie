@@ -24,7 +24,8 @@ class LibraryDeleteRequest extends FormRequest
     public function rules()
     {
         return [
-            'id'=> 'required|integer|exists:libraries'
+            'ids'=> 'required|array',
+            'ids.*' => 'required|int|exists:libraries,id'
         ];
     }
 }
