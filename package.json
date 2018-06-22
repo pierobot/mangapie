@@ -16,7 +16,8 @@
     "axios": "^0.18.0",
     "del": "^3.0.0",
     "lodash": "^4.17.10",
-    "awesome-bootstrap-checkbox": "^0.3.7"
+    "awesome-bootstrap-checkbox": "^0.3.7",
+    "hoek": "^4.2.1"
   },
   "dependencies": {}
 }
