@@ -12,11 +12,8 @@ class UserSettingsController extends Controller
     public function index()
     {
         $user = \Auth::user();
-        $current_theme = $user->getTheme();
-        // get all the themes but without the paths
-        $theme_collections = Theme::all(false);
 
-        return view('user.settings', compact('current_theme', 'theme_collections'));
+        return view('user.settings');
     }
 
     public function update(UserSettingsRequest $request)
