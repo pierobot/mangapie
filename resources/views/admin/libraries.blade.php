@@ -214,15 +214,18 @@
                     return;
                 }
 
+                if (! jobsAreDone(progressTableBody)) {
+                    $('#modal').modal();
+
+                    return;
+                }
+
                 $(progressTableBody).find('tr').remove();
 
                 axios.post('{{ \URL::action('LibraryController@update') }}', { ids: libraryIds })
                      .then(function (response) {
 
-                         $('#modal').show();
-
-                         if (! jobsAreDone(progressTableBody))
-                             return;
+                         $('#modal').modal();
 
                          let jobIds = [];
                          let jobs = response.data['jobs'];
@@ -242,8 +245,13 @@
                                           updateJobRow(progressTableBody, job);
                                       });
 
-                                      if (jobsAreDone(progressTableBody))
+                                      if (jobsAreDone(progressTableBody)) {
                                           clearInterval(timerId);
+
+                                          setTimeout(function () {
+                                              window.location = '{{ \URL::action('AdminController@libraries') }}';
+                                          }, 1500);
+                                      }
                                   })
                                   .catch(function (error) {
                                       clearInterval(timerId);

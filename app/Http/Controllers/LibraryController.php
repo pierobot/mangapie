@@ -71,13 +71,15 @@ class LibraryController extends Controller
 
     public function status(LibraryStatusRequest $request)
     {
+        $jobsAreDone = true;
+        $jobsAreSuccessful = true;
         $jobIds = \Request::get('ids');
 
         $jobs = [];
         foreach ($jobIds as $jobId) {
             $job = JobStatus::find($jobId);
 
-            if ($job !== null)
+            if ($job !== null) {
                 if ($job->progress_now == 0 && $job->is_ended) {
                     $job->progress_now = 1;
                     $job->progress_max = 1;
@@ -88,6 +90,19 @@ class LibraryController extends Controller
                     'status' => $job->status,
                     'progress' => $job->progress_percentage,
                 ];
+
+                if ($job->is_failed)
+                    $jobsAreSuccessful = false;
+
+                if ($job->is_ended == false)
+                    $jobsAreDone = false;
+            }
+        }
+
+        if ($jobsAreDone) {
+            if ($jobsAreSuccessful) {
+                \Session::flash('success', 'The selected libraries have been updated successfully.');
+            }
         }
 
         return \Response::json([
