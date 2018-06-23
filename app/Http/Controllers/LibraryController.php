@@ -40,9 +40,6 @@ class LibraryController extends Controller
             ]);
         }
 
-        // scan and populate the library
-        $library->scan();
-
         \Session::flash('success', 'Library was successfully created.');
 
         return \Redirect::action('AdminController@libraries');
