@@ -18,7 +18,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/logout', ['as' => 'logout', 'uses' => 'LoginController@logout']);
 
-    Route::prefix('admin')->name('admin')->group(function () {
+    Route::prefix('admin')->middleware('admin')->name('admin')->group(function () {
         Route::get('/', 'AdminController@index');
         Route::get('/users', 'AdminController@users');
         Route::get('/libraries', 'AdminController@libraries');
@@ -32,7 +32,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{author}', 'AuthorController@index');
     });
 
-    Route::prefix('edit')->name('edit')->group(function () {
+    Route::prefix('edit')->middleware('maintainer')->name('edit')->group(function () {
         Route::get('/{manga}', 'MangaEditController@index');
         Route::post('/', 'MangaEditController@update');
 
@@ -68,7 +68,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{manga}/{archive_name}/{page}', 'ReaderController@image');
     });
 
-    Route::prefix('library')->name('library')->group(function () {
+    Route::prefix('library')->middleware('admin')->name('library')->group(function () {
         Route::post('/create', 'LibraryController@create');
         Route::post('/update', 'LibraryController@update');
         Route::post('/status', 'LibraryController@status');
@@ -103,7 +103,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/small/{manga}/{archive_name}/{page}', 'ThumbnailController@small');
         Route::get('/medium/{manga}/{archive_name}/{page}', 'ThumbnailController@medium');
 
-        Route::post('/update', 'ThumbnailController@update');
+        Route::post('/update', 'ThumbnailController@update')->middleware('maintainer');
     });
 
     Route::prefix('users')->name('users')->group(function () {

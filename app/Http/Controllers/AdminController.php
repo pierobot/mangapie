@@ -16,9 +16,6 @@ class AdminController extends Controller
 {
     public function index()
     {
-        if (\Auth::user()->isAdmin() == false)
-            return view('errors.403');
-
         $info = null;
 
         $admin_count = User::where('admin', '=', true)->get()->count();
@@ -34,9 +31,6 @@ class AdminController extends Controller
 
     public function users()
     {
-        if (\Auth::user()->isAdmin() == false)
-            return view('errors.403');
-
         $users = User::all();
 
         return view('admin.users')->with('users', $users);
@@ -44,9 +38,6 @@ class AdminController extends Controller
 
     public function libraries()
     {
-        if (\Auth::user()->isAdmin() == false)
-            return view('errors.403');
-
         $libraries = Library::all();
 
         return view('admin.libraries')->with('libraries', $libraries);
