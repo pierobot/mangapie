@@ -35,12 +35,10 @@ class Library extends Model
 
     public function forceDelete()
     {
-        // get all the manga that have library_id to ours
-        $manga = Manga::where('library_id', '=', $this->getId())->get();
         // and delete them
-        foreach ($manga as $manga_) {
-            // Manga::forceDelete deletes all the references to other tables (artists, authors, manga_information, etc..)
-            $manga_->forceDelete();
+        foreach ($this->manga as $manga) {
+            // Manga::forceDelete deletes all the references to other tables (artists, authors, etc..)
+            $manga->forceDelete();
         }
 
         parent::forceDelete();

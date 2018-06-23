@@ -35,6 +35,18 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('edit')->name('edit')->group(function () {
         Route::get('/{manga}', 'MangaEditController@index');
         Route::post('/', 'MangaEditController@update');
+
+        Route::get('/mangaupdates/{manga}', 'MangaEditController@mangaupdates');
+
+        Route::get('/description/{manga}', 'MangaEditController@description');
+        Route::get('/type/{manga}', 'MangaEditController@type');
+        Route::get('/names/{manga}', 'MangaEditController@names');
+        Route::get('/genres/{manga}', 'MangaEditController@genres');
+        Route::get('/authors/{manga}', 'MangaEditController@authors');
+        Route::get('/artists/{manga}', 'MangaEditController@artists');
+        Route::get('/year/{manga}', 'MangaEditController@year');
+
+        Route::get('/covers/{manga}', 'MangaEditController@covers');
     });
 
     Route::prefix('favorites')->name('favorites')->group(function () {

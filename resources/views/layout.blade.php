@@ -34,7 +34,7 @@
             </span>
 
             <a href="{{ URL::action('HomeController@index') }}">
-                <img class="navbar-brand" src="{{ URL::to('/public/mangapie.svg') }}">
+                {{--<img class="navbar-brand" src="{{ URL::to('/public/mangapie.svg') }}">--}}
                 {{ Html::link(URL::action('HomeController@index'), 'MangaPie', ['class' => 'navbar-brand']) }}
             </a>
         </div>
