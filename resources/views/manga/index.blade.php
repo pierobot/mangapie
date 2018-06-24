@@ -378,7 +378,7 @@
                                             @foreach ($authors as $author)
                                                 <div class="col-xs-6">
                                                     <a href="{{ \URL::action('AuthorController@index', [$author->getName()]) }}">
-                                                        {{ $author->getName() }}</label>
+                                                        {{ $author->getName() }}
                                                     </a>
                                                 </div>
                                             @endforeach
@@ -461,6 +461,24 @@
                                         {{ Form::hidden('action', 'unfavorite') }}
                                         <button class="btn btn-danger" type="submit">
                                             <span class="glyphicon glyphicon-remove"></span>&nbsp;Unfavorite
+                                        </button>
+                                    @endif
+
+                                    {{ Form::close() }}
+
+                                    {{ Form::open(['action' => 'WatchController@update']) }}
+
+                                    {{ Form::hidden('id', $id) }}
+
+                                    @if ($isWatching == false)
+                                        {{ Form::hidden('action', 'watch') }}
+                                        <button class="btn btn-success" type="submit" title="Get notifications for new archives">
+                                            <span class="glyphicon glyphicon-eye-open"></span>&nbsp;Watch
+                                        </button>
+                                    @else
+                                        {{ Form::hidden('action', 'unwatch') }}
+                                        <button class="btn btn-danger" type="submit" title="Do not get notifications for new archives">
+                                            <span class="glyphicon glyphicon-eye-close"></span>&nbsp;Unwatch
                                         </button>
                                     @endif
 
