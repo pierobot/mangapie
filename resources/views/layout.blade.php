@@ -2,8 +2,7 @@
 <head lang="en">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    @yield('meta')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield ('title')</title>
 
@@ -103,6 +102,9 @@
 
 </div>
 
-@yield ('scripts')
+@auth
+    @include ('shared.autocomplete')
+    @yield ('scripts')
+@endauth
 
 </body>

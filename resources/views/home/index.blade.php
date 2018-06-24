@@ -11,7 +11,3 @@
     @include ('shared.errors')
     @include ('shared.index')
 @endsection
-
-@section ('scripts')
-    @include ('shared.autocomplete')
-@endsection

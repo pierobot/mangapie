@@ -7,7 +7,8 @@
     <div class="input-group">
         {{ Form::text('keywords', null, ['class' => 'form-control',
                                          'placeholder' => 'Quick search',
-                                         'id' => 'autocomplete']) }}
+                                         'id' => 'autocomplete',
+                                         'autocomplete' => 'off']) }}
 
         <div class="input-group-btn">
             <button type="submit" class="btn btn-primary">
