@@ -15,7 +15,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'admin', 'maintainer', 'theme', 'ltr'
+        'name', 'email', 'password', 'admin', 'maintainer', 'theme', 'ltr', 'about', 'last_seen'
     ];
 
     /**
@@ -90,14 +90,29 @@ class User extends Authenticatable
         $this->ltr = $ltr;
     }
 
+    public function getLastSeen()
+    {
+        return $this->last_seen;
+    }
+
+    public function getJoined()
+    {
+        return $this->created_at;
+    }
+
+    public function getAbout()
+    {
+        return $this->about;
+    }
+
     public function favorites()
     {
-        return $this->hasMany('App\Favorite', 'user_id', 'id');
+        return $this->hasMany(\App\Favorite::class, 'user_id', 'id');
     }
 
     public function privileges()
     {
-        return $this->hasMany('App\LibraryPrivilege', 'user_id', 'id');
+        return $this->hasMany(\App\LibraryPrivilege::class, 'user_id', 'id');
     }
 
     public function watchReferences()
@@ -108,5 +123,10 @@ class User extends Authenticatable
     public function watchNotifications()
     {
         return $this->hasMany(\App\WatchNotification::class, 'user_id', 'id');
+    }
+
+    public function readerHistory()
+    {
+        return $this->hasMany(\App\ReaderHistory::class, 'user_id', 'id');
     }
 }

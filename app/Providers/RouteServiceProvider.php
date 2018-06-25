@@ -8,6 +8,7 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use App\Artist;
 use App\Author;
 use App\Genre;
+use App\User;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -43,6 +44,8 @@ class RouteServiceProvider extends ServiceProvider
         Route::bind('artist', function ($name) {
             return Artist::where('name', $name)->firstOrFail();
         });
+
+        Route::model('user', User::class);
 
         parent::boot();
     }
