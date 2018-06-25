@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\UserSettingsRequest;
 use Illuminate\Http\Request;
 
-use \App\Theme;
+use App\Theme;
+use App\User;
 
 class UserSettingsController extends Controller
 {
@@ -13,7 +14,21 @@ class UserSettingsController extends Controller
     {
         $user = \Auth::user();
 
-        return view('user.settings');
+        return view('settings.index')->with('user', $user);
+    }
+
+    public function account()
+    {
+        $user = \Auth::user();
+
+        return view('settings.account')->with('user', $user);
+    }
+
+    public function visuals()
+    {
+        $user = \Auth::user();
+
+        return view('settings.visuals')->with('user', $user);
     }
 
     public function update(UserSettingsRequest $request)

@@ -13,8 +13,25 @@ use App\LibraryPrivilege;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(User $user)
     {
+        return view('user.index')->with('user', $user);
+    }
+
+    public function profile(User $user)
+    {
+        return view('user.profile')->with('user', $user);
+    }
+
+    public function activity(User $user)
+    {
+        $recentFavorites = $user->favorites->sortByDesc('created_at')->take(6)->load('manga');
+        $recentReads = $user->readerHistory->sortByDesc('created_at')->take(6)->load('manga');
+
+        return view('user.activity')
+            ->with('user', $user)
+            ->with('recentFavorites', $recentFavorites)
+            ->with('recentReads', $recentReads);
     }
 
     public function create(UserCreateRequest $request)

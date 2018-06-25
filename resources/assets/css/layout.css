@@ -70,12 +70,12 @@ li.wiggle {
 
 /* ------- home/index.blade.php ------- */
 
-.row > div.thumbnail {
+.thumbnail {
     margin-bottom: 0;
     border: none;
 }
 
-.thumbnail h4 {
+.thumbnail h4,p {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
