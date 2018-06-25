@@ -7,30 +7,24 @@
         </div>
     </div>
     <div class="row">
-        <div class="visible-xs">
-            <div class="col-xs-12">
+        <div class="col-xs-12 col-sm-2">
+            <div class="visible-xs">
                 <ul class="nav nav-pills">
-                    <li><a href="{{ URL::action('UserController@index', [$user->getId()]) }}">Profile</a></li>
-                    <li><a href="{{ URL::action('UserController@activity', [$user->getId()]) }}">Activity</a></li>
-                    <li class="disabled"><a href="">Comments</a></li>
+                    <li @if ($currentNavPill === 'profile') class="active" @endif><a href="{{ URL::action('UserController@index', [$user->getId()]) }}">Profile</a></li>
+                    <li @if ($currentNavPill === 'activity') class="active" @endif><a href="{{ URL::action('UserController@activity', [$user->getId()]) }}">Activity</a></li>
+                    <li @if ($currentNavPill === 'comments') class="active" @endif class="disabled"><a>Comments</a></li>
                 </ul>
             </div>
-            <div class="col-xs-12">
-                @yield ('tab-content')
+            <div class="visible-sm visible-md visible-lg">
+                <ul class="nav nav-pills nav-stacked">
+                    <li @if ($currentNavPill === 'profile') class="active" @endif><a href="{{ URL::action('UserController@index', [$user->getId()]) }}">Profile</a></li>
+                    <li @if ($currentNavPill === 'activity') class="active" @endif><a href="{{ URL::action('UserController@activity', [$user->getId()]) }}">Activity</a></li>
+                    <li @if ($currentNavPill === 'comments') class="active" @endif class="disabled"><a>Comments</a></li>
+                </ul>
             </div>
         </div>
-
-        <div class="visible-sm visible-md visible-lg">
-            <div class="col-sm-2">
-                <ul class="nav nav-pills nav-stacked">
-                    <li><a href="{{ URL::action('UserController@index', [$user->getId()]) }}">Profile</a></li>
-                    <li><a href="{{ URL::action('UserController@activity', [$user->getId()]) }}">Activity</a></li>
-                    <li class="disabled"><a href="">Comments</a></li>
-                </ul>
-            </div>
-            <div class="col-sm-10">
-                @yield ('tab-content')
-            </div>
+        <div class="col-xs-12 col-sm-10">
+            @yield ('tab-content')
         </div>
     </div>
 @endsection

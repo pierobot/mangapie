@@ -1,3 +1,5 @@
+@php ($currentNavPill = 'visuals')
+
 @extends ('settings.layout')
 
 @section ('tab-content')

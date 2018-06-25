@@ -1,3 +1,5 @@
+@php ($currentNavPill = 'activity')
+
 @extends ('user.layout')
 
 @section ('tab-content')

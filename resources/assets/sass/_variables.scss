@@ -154,3 +154,6 @@ $badge-bg: $navbar-default-brand-color;
 // Modal
 $modal-content-bg: $body-bg;
 $modal-header-border-color: $laravel-border-color;
+
+// Nav-pills
+$nav-pills-active-link-hover-bg: darken($body-bg, 05%);

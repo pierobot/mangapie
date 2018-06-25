@@ -1,3 +1,5 @@
+@php ($currentNavPill = 'account')
+
 @extends ('settings.layout')
 
 @section ('tab-content')

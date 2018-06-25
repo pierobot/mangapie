@@ -16,38 +16,22 @@
     @include ('shared.errors')
 
     <div class="row">
-        <div class="visible-xs">
-            <div class="col-xs-12">
-                <ul class="nav nav-pills">
-                    <li role="presentation">
-                        <a href="{{ URL::action('UserSettingsController@account') }}">Account</a>
-                    </li>
-
-                    <li role="presentation">
-                        <a href="{{ URL::action('UserSettingsController@visuals') }}">Visuals</a>
-                    </li>
-                </ul>
+            <div class="col-xs-12 col-sm-2">
+                <div class="visible-xs">
+                    <ul class="nav nav-pills">
+                        <li @if ($currentNavPill === 'account') class="active" @endif><a href="{{ URL::action('UserSettingsController@account') }}">Account</a></li>
+                        <li @if ($currentNavPill === 'visuals') class="active" @endif><a href="{{ URL::action('UserSettingsController@visuals') }}">Visuals</a></li>
+                    </ul>
+                </div>
+                <div class="visible-sm visible-md visible-lg">
+                    <ul class="nav nav-pills nav-stacked">
+                        <li @if ($currentNavPill === 'account') class="active" @endif><a href="{{ URL::action('UserSettingsController@account') }}">Account</a></li>
+                        <li @if ($currentNavPill === 'visuals') class="active" @endif><a href="{{ URL::action('UserSettingsController@visuals') }}">Visuals</a></li>
+                    </ul>
+                </div>
             </div>
-            <div class="col-xs-12">
+            <div class="col-xs-12 col-sm-10">
                 @yield('tab-content')
             </div>
-        </div>
-
-        <div class="visible-sm visible-md visible-lg">
-            <div class="col-sm-2">
-                <ul class="nav nav-pills nav-stacked">
-                    <li role="presentation">
-                        <a href="{{ URL::action('UserSettingsController@account') }}">Account</a>
-                    </li>
-
-                    <li role="presentation">
-                        <a href="{{ URL::action('UserSettingsController@visuals') }}">Visuals</a>
-                    </li>
-                </ul>
-            </div>
-            <div class="col-sm-10">
-                @yield('tab-content')
-            </div>
-        </div>
     </div>
 @endsection
