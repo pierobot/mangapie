@@ -15,7 +15,7 @@
                         @if (! empty($recentFavorites))
                             <div class="row">
                                 @foreach ($recentFavorites as $favorite)
-                                    <div class="col-xs-6 col-sm-4 col-md-2 text-center thumbnail">
+                                    <div class="col-xs-6 col-sm-4 col-md-3 text-center thumbnail">
                                         <div>
                                             <a href="{{ URL::action('MangaController@index', [$favorite->manga->getId()]) }}">
                                                 {{ Html::image(URL::action('ThumbnailController@smallDefault', [$favorite->manga->getId()])) }}
@@ -42,7 +42,7 @@
                         @if (! empty($recentReads))
                             <div class="row">
                                 @foreach ($recentReads as $read)
-                                    <div class="col-xs-6 col-sm-4 col-md-2 text-center thumbnail">
+                                    <div class="col-xs-6 col-sm-4 col-md-3 text-center thumbnail">
                                         <div>
                                             <a href="{{ URL::action('MangaController@index', [$read->manga->getId()]) }}">
                                                 {{ Html::image(URL::action('ThumbnailController@smallDefault', [$read->manga->getId()])) }}
