@@ -25,8 +25,10 @@ class MangaController extends Controller
         $id = $manga->getId();
         $name = $manga->getName();
         $path = $manga->getPath();
-        $archives = $manga->getArchives($sort);
 
+        $manga->load('archives', 'associatedNameReferences', 'genreReferences', 'authorReferences', 'artistReferences');
+
+        $archives = $manga->getArchives($sort);
         $mu_id = $manga->getMangaUpdatesId();
         $description = $manga->getDescription();
         $type = $manga->getType();
@@ -37,13 +39,11 @@ class MangaController extends Controller
         $year = $manga->getYear();
         $lastUpdated = $manga->getLastUpdated();
 
-        // determine whether or not the manga has been favorited
-        $user_id = \Auth::user()->getId();
-        $favorite = Favorite::where('user_id', $user_id)
-                            ->where('manga_id', $id)
-                            ->get();
-        $is_favorited = $favorite->count() != 0;
-        $isWatching = \Auth::user()->watchReferences->where('manga_id', $id)->first();
+        $user = \Auth::user()->load('favorites', 'readerHistory', 'watchReferences', 'watchNotifications');
+        $is_favorited = $user->favorites->where('user_id', $user->getId())->first() !== null;
+        $isWatching = $user->watchReferences->where('manga_id', $id)->first() !== null;
+        $watchNotifications = $user->watchNotifications->where('manga_id', $id);
+        $readerHistory = $user->readerHistory->where('manga_id', $id);
 
         return view('manga.index')->with('id', $id)
                                   ->with('mu_id', $mu_id)
@@ -59,6 +59,8 @@ class MangaController extends Controller
                                   ->with('year', $year)
                                   ->with('lastUpdated', $lastUpdated)
                                   ->with('archives', $archives)
+                                  ->with('readerHistory', $readerHistory)
+                                  ->with('watchNotifications', $watchNotifications)
                                   ->with('path', $path)
                                   ->with('sort', $sort);
     }
