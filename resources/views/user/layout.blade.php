@@ -3,7 +3,7 @@
 @section ('content')
     <div class="row">
         <div class="col-xs-12">
-            <h3 class="text-center"><b>{{ $user->getName() }}</b></h3>
+            <h3 class="text-center"><b>{{ $user->getName() }}&apos;s Profile</b></h3>
         </div>
     </div>
     <div class="row">
