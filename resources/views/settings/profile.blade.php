@@ -5,11 +5,14 @@
 @section ('tab-content')
     <div class="tab-content">
         <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    <span class="glyphicon glyphicon-question-sign"></span>&nbsp;About
+                </div>
+            </div>
             <div class="panel-body">
                 <div class="row">
                     <div class="col-xs-12">
-                        <h4><b>About</b></h4>
-                        <hr>
                         {{ Form::open(['action' => 'UserSettingsController@updateProfile']) }}
                         <div class="row">
                             <div class="col-xs-12 col-sm-6 col-md-9">

@@ -5,12 +5,13 @@
 @section ('tab-content')
     <div class="tab-pane">
         <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Recently Favorited
+                </div>
+            </div>
             <div class="panel-body">
                 <div class="row">
-                    <div class="col-xs-12">
-                        <h4 class="text-center"><b>Recently Favorited</b></h4>
-                    </div>
-
                     <div class="col-xs-12">
                         @if (! empty($recentFavorites))
                             <div class="row">
@@ -32,12 +33,17 @@
                         @endif
                     </div>
                 </div>
-                <hr>
-                <div class="row">
-                    <div class="col-xs-12">
-                        <h4 class="text-center"><b>Recently Read</b></h4>
-                    </div>
+            </div>
+        </div>
 
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
+                    Recently Read
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
                     <div class="col-xs-12">
                         @if (! empty($recentReads))
                             <div class="row">
