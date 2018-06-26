@@ -119,10 +119,12 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
 
     Route::prefix('settings')->name('settings')->group(function () {
         Route::get('/', 'UserSettingsController@index');
-        Route::get('/account/', 'UserSettingsController@account');
-        Route::get('/visuals/', 'UserSettingsController@visuals');
+        Route::get('/account', 'UserSettingsController@account');
+        Route::get('/visuals', 'UserSettingsController@visuals');
+        Route::get('/profile', 'UserSettingsController@profile');
 
         Route::post('/', 'UserSettingsController@update');
+        Route::post('/profile', 'UserSettingsController@updateProfile');
     });
 
     Route::prefix('watch')->name('watch')->group(function () {

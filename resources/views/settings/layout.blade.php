@@ -21,12 +21,14 @@
                     <ul class="nav nav-pills">
                         <li @if ($currentNavPill === 'account') class="active" @endif><a href="{{ URL::action('UserSettingsController@account') }}">Account</a></li>
                         <li @if ($currentNavPill === 'visuals') class="active" @endif><a href="{{ URL::action('UserSettingsController@visuals') }}">Visuals</a></li>
+                        <li @if ($currentNavPill === 'profile') class="active" @endif><a href="{{ URL::action('UserSettingsController@profile') }}">Profile</a></li>
                     </ul>
                 </div>
                 <div class="visible-sm visible-md visible-lg">
                     <ul class="nav nav-pills nav-stacked">
                         <li @if ($currentNavPill === 'account') class="active" @endif><a href="{{ URL::action('UserSettingsController@account') }}">Account</a></li>
                         <li @if ($currentNavPill === 'visuals') class="active" @endif><a href="{{ URL::action('UserSettingsController@visuals') }}">Visuals</a></li>
+                        <li @if ($currentNavPill === 'profile') class="active" @endif><a href="{{ URL::action('UserSettingsController@profile') }}">Profile</a></li>
                     </ul>
                 </div>
             </div>

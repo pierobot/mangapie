@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserSettingsRequest;
+use App\Http\Requests\UserUpdateProfileRequest;
 use Illuminate\Http\Request;
 
 use App\Theme;
@@ -29,6 +30,24 @@ class UserSettingsController extends Controller
         $user = \Auth::user();
 
         return view('settings.visuals')->with('user', $user);
+    }
+
+    public function profile()
+    {
+        $user = \Auth::user();
+
+        return view('settings.profile')->with('user', $user);
+    }
+
+    public function updateProfile(UserUpdateProfileRequest $request)
+    {
+        $user = \Auth::user();
+
+        $user->update([
+            'about' => $request->get('about')
+        ]);
+
+        return view('settings.profile')->with('user', $user);
     }
 
     public function update(UserSettingsRequest $request)
@@ -67,4 +86,6 @@ class UserSettingsController extends Controller
 
         return \Redirect::action('UserSettingsController@index');
     }
+
+
 }

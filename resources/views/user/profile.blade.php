@@ -44,7 +44,7 @@
                             </div>
                             <div class="col-xs-9">
                                 @if (! empty($user->getAbout()))
-                                    {{ $user->getAbout() }}
+                                    {!! nl2br(e($user->getAbout())) !!}
                                 @else
                                     Nothing but default text here.
                                 @endif

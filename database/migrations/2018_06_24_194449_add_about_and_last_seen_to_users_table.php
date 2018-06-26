@@ -14,7 +14,7 @@ class AddAboutAndLastSeenToUsersTable extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->multiLineString('about')->nullable();
+            $table->string('about', 1024)->nullable();
             $table->timestamp('last_seen')->nullable();
         });
     }
