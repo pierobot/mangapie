@@ -1,9 +1,5 @@
 @extends ('layout')
 
-@section ('title')
-    Settings &middot; {{ \Auth::user()->getName() }}
-@endsection
-
 @section ('content')
     <div class="visible-xs">
         <h3 class="text-center"><b>Settings</b></h3>

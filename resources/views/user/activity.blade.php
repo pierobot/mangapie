@@ -1,5 +1,9 @@
 @php ($currentNavPill = 'activity')
 
+@section ('title')
+    {{ $user->getName() }}&apos;s Activity :: Mangapie
+@endsection
+
 @extends ('user.layout')
 
 @section ('tab-content')

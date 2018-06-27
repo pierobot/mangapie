@@ -1,5 +1,9 @@
 @php ($currentNavPill = 'visuals')
 
+@section ('title')
+    Visual Settings :: Mangapie
+@endsection
+
 @extends ('settings.layout')
 
 @section ('tab-content')

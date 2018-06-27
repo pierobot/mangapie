@@ -1,5 +1,9 @@
 @php($currentNavPill = 'profile')
 
+@section ('title')
+    Profile Settings :: Mangapie
+@endsection
+
 @extends ('settings.layout')
 
 @section ('tab-content')
@@ -19,9 +23,10 @@
                                 {{ Form::textarea('about', ! empty($user->getAbout()) ? $user->getAbout() : "", ['class' => 'form-control', 'maxlength' => 1024]) }}
                             </div>
                         </div>
+                        <br>
                         <div class="row">
                             <div class="col-xs-12 col-sm-6 col-md-2">
-                                {{ Form::submit('update', ['class' => 'btn btn-success form-control']) }}
+                                {{ Form::submit('Update', ['class' => 'btn btn-success form-control']) }}
                             </div>
                         </div>
                         {{ Form::close() }}

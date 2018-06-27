@@ -1,5 +1,9 @@
 @php($currentNavPill = 'profile')
 
+@section ('title')
+    {{ $user->getName() }}&apos;s Profile :: Mangapie
+@endsection
+
 @extends ('user.layout')
 
 @section ('tab-content')

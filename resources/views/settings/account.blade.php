@@ -1,5 +1,9 @@
 @php ($currentNavPill = 'account')
 
+@section ('title')
+    Account Settings :: Mangapie
+@endsection
+
 @extends ('settings.layout')
 
 @section ('tab-content')
