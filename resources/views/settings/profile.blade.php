@@ -11,6 +11,33 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <div class="panel-title">
+                    <span class="">&nbsp;Avatar</span>
+                </div>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-xs-12">
+                        {{ Form::open(['action' => 'UserSettingsController@updateAvatar', 'files' => true]) }}
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6 col-md-2">
+                                {{ Form::file('avatar') }}
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-6 col-md-2">
+                                {{ Form::submit('Update', ['class' => 'btn btn-success form-control']) }}
+                            </div>
+                        </div>
+                        {{ Form::close() }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <div class="panel-title">
                     <span class="glyphicon glyphicon-question-sign"></span>&nbsp;About
                 </div>
             </div>
