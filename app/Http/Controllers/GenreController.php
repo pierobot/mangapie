@@ -20,6 +20,7 @@ class GenreController extends Controller
 
         $references = GenreReference::where('genre_id', $genre->getId())
                                     ->get()
+                                    ->load('manga')
                                     ->filter(function ($reference) use ($libraryIds) {
                                         foreach ($libraryIds as $libraryId) {
                                             return $reference->manga->getLibraryId() == $libraryId;
@@ -37,7 +38,8 @@ class GenreController extends Controller
         $manga_list = new LengthAwarePaginator($results->forPage($page, 18), $results->count(), 18);
         $manga_list->withPath(\Request::getBaseUrl());
 
-        return view('home.index')->with('header', 'Genre: ' . $genre->getName() . ' (' . $results->count() . ')')
-                                 ->with('manga_list', $manga_list);
+        return view('home.index')
+            ->with('header', 'Genre: ' . $genre->getName() . ' (' . $results->count() . ')')
+            ->with('manga_list', $manga_list);
     }
 }

@@ -143,7 +143,7 @@ class Manga
     {
         $assocNames = [];
 
-        $references = $this->associatedNameReferences;
+        $references = $this->associatedNameReferences->load('associatedName');
         foreach ($references as $reference) {
             array_push($assocNames, $reference->associatedName);
         }
@@ -160,7 +160,7 @@ class Manga
     {
         $authors = [];
 
-        $references = $this->authorReferences;
+        $references = $this->authorReferences->load('author');
         foreach ($references as $reference) {
             array_push($authors, $reference->author);
         }
@@ -177,7 +177,7 @@ class Manga
     {
         $artists = [];
 
-        $references = $this->artistReferences;
+        $references = $this->artistReferences->load('artist');
         foreach ($references as $reference) {
             array_push($artists, $reference->artist);
         }
@@ -194,7 +194,7 @@ class Manga
     {
         $genres = [];
 
-        $references = $this->genreReferences;
+        $references = $this->genreReferences->load('genre');
         foreach ($references as $reference) {
             array_push($genres, $reference->genre);
         }

@@ -14,10 +14,11 @@ class FavoriteController extends Controller
     public function index()
     {
         $user = \Auth::user();
-        $total = $user->favorites->count();
+        $favorites = $user->favorites->load('manga');
+        $total = $favorites->count();
         $favoriteIds = [];
 
-        $user->favorites->each(function (Favorite $favorite) use (&$favoriteIds) {
+        $favorites->each(function (Favorite $favorite) use (&$favoriteIds) {
             $favoriteIds[] = $favorite->manga->getId();
         });
 
