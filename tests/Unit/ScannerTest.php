@@ -62,7 +62,7 @@ class NameCleaner extends TestCase
         ];
 
         foreach ($arrayName as $name) {
-            $this->assertEquals('Name', \App\Library::clean($name));
+            $this->assertEquals('Name', \App\Scanner::clean($name));
         }
     }
 
@@ -120,7 +120,7 @@ class NameCleaner extends TestCase
         ];
 
         foreach ($longNameArray as $name) {
-            $this->assertEquals('A Very Long Name', \App\Library::clean($name));
+            $this->assertEquals('A Very Long Name', \App\Scanner::clean($name));
         }
     }
 }
