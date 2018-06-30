@@ -14,9 +14,9 @@ class NotificationsComposer
      */
     public function compose(View $view)
     {
-        if (\Auth::check()) {
+        $user = \Auth::user()->load('watchNotifications');
 
-            $user = \Auth::user()->load('watchNotifications');
+        if (auth()->check()) {
             $notificationCount = 0;
 
             $watchNotifications = $user->watchNotifications;
