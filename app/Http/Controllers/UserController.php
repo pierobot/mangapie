@@ -26,7 +26,7 @@ class UserController extends Controller
     public function activity(User $user)
     {
         $recentFavorites = $user->favorites->sortByDesc('updated_at')->take(4)->load('manga');
-        $recentReads = $user->readerHistory->sortByDesc('updated_at')->take(4)->load('manga');
+        $recentReads = $user->readerHistory->sortByDesc('updated_at')->unique('manga_id')->take(4)->load('manga');
 
         return view('user.activity')
             ->with('user', $user)
