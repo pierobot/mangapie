@@ -479,21 +479,18 @@ class Manga
 
         // find the index of $name in $archives
         for ($i = 0, $max = count($archives) - 1; $i < $max; $i++) {
-            // ensure we have a valid object
-            if (array_key_exists('name', $archives[$i])) {
-                // if the names match then we can get the next archive
-                if ($archives[$i]['name'] == $name) {
-                    if ($next === false) {
-                        // previous archive wanted
-                        // check if we were given the first archive
-                        if ($i == 0)
-                            break;
+            // if the names match then we can get the next archive
+            if ($archives[$i]->getName() == $name) {
+                if ($next === false) {
+                    // previous archive wanted
+                    // check if we were given the first archive
+                    if ($i == 0)
+                        break;
 
-                        return $archives[$i - 1];
-                    } else {
-                        // next archive wanted
-                        return $archives[$i + 1];
-                    }
+                    return $archives[$i - 1];
+                } else {
+                    // next archive wanted
+                    return $archives[$i + 1];
                 }
             }
         }
