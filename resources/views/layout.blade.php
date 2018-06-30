@@ -21,11 +21,7 @@
 </head>
 <body>
 
-@if (empty($page_count) == true)
-<div class="navbar navbar-default navbar-static-top">
-@else
-<div class="reader navbar navbar-default navbar-static-top">
-@endif
+<div class="navbar navbar-default navbar-static-top @if (! empty($page_count)) reader @endif">
     <div class="container">
         <div class="navbar-header">
             <span class="btn btn-navbar navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-div" aria-expanded="false">
@@ -83,6 +79,9 @@
                             </a>
                             <ul class="dropdown-menu" style="color: black;">
                                 <li>
+                                    @auth
+                                    <a href="{{ URL::action('UserController@index', [\Auth::user()->getId()]) }}">&nbsp;Profile</a>
+                                    @endauth
                                     <a href="{{ URL::action('FavoriteController@index') }}"><span class="glyphicon glyphicon-heart"></span>&nbsp;Favorites</a>
                                     <a href="{{ URL::action('UserSettingsController@index') }}"><span class="glyphicon glyphicon-cog"></span>&nbsp;Settings</a>
                                     <a href="{{ URL::action('LoginController@logout') }}"><span class="glyphicon glyphicon-off"></span>&nbsp;Logout</a>
@@ -97,9 +96,7 @@
 </div>
 
 <div class="container">
-
     @yield ('content')
-
 </div>
 
 @auth

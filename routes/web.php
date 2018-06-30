@@ -14,7 +14,7 @@
 Route::get('/login', ['as' => 'login', 'uses' => 'LoginController@index']);
 Route::post('/login', ['as' => 'login', 'uses' => 'LoginController@login']);
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'last_seen'])->group(function () {
 
     Route::get('/logout', ['as' => 'logout', 'uses' => 'LoginController@logout']);
 
@@ -61,7 +61,6 @@ Route::middleware(['auth'])->group(function () {
     Route::name('home')->group(function () {
         Route::get('/', 'HomeController@index');
         Route::get('/home', 'HomeController@index');
-        Route::get('/home/library/{library}', 'HomeController@library');
     });
 
     Route::prefix('image')->name('image')->group(function () {
@@ -106,12 +105,29 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/update', 'ThumbnailController@update')->middleware('maintainer');
     });
 
-    Route::prefix('users')->name('users')->group(function () {
+    Route::prefix('user')->name('user')->group(function () {
+        Route::get('/{user}', 'UserController@index');
+        Route::get('/{user}/profile', 'UserController@profile');
+        Route::get('/{user}/activity', 'UserController@activity');
+
+        Route::get('/{user}/avatar', 'UserController@avatar');
+    });
+
+    Route::prefix('users')->middleware('admin')->name('users')->group(function () {
         Route::post('/create', 'UserController@create');
         Route::post('/edit', 'UserController@edit');
         Route::post('/delete', 'UserController@delete');
-        Route::get('/settings', 'UserSettingsController@index');
-        Route::post('/settings', 'UserSettingsController@update');
+    });
+
+    Route::prefix('settings')->name('settings')->group(function () {
+        Route::get('/', 'UserSettingsController@index');
+        Route::get('/account', 'UserSettingsController@account');
+        Route::get('/visuals', 'UserSettingsController@visuals');
+        Route::get('/profile', 'UserSettingsController@profile');
+
+        Route::post('/', 'UserSettingsController@update');
+        Route::post('/profile', 'UserSettingsController@updateProfile');
+        Route::post('/avatar', 'UserSettingsController@updateAvatar');
     });
 
     Route::prefix('watch')->name('watch')->group(function () {

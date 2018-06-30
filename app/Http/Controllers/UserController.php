@@ -13,24 +13,53 @@ use App\LibraryPrivilege;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(User $user)
     {
+        return view('user.index')->with('user', $user);
+    }
+
+    public function profile(User $user)
+    {
+        return view('user.profile')->with('user', $user);
+    }
+
+    public function activity(User $user)
+    {
+        $recentFavorites = $user->favorites->sortByDesc('updated_at')->take(4)->load('manga');
+        $recentReads = $user->readerHistory->sortByDesc('updated_at')->take(4)->load('manga');
+
+        return view('user.activity')
+            ->with('user', $user)
+            ->with('recentFavorites', $recentFavorites)
+            ->with('recentReads', $recentReads);
+    }
+
+    public function avatar(User $user)
+    {
+        $filePath = storage_path('app/public/avatars') . DIRECTORY_SEPARATOR . $user->getId();
+        $accelPath = '/avatars' . DIRECTORY_SEPARATOR . $user->getId();
+
+        return response()->make('', 200, [
+            'Content-Type' => \Image::make($filePath)->mime,
+            'X-Accel-Redirect' => $accelPath,
+            'X-Accel-Charset' => 'utf-8'
+        ]);
     }
 
     public function create(UserCreateRequest $request)
     {
         // create the user
         $user = User::create([
-            'name' => \Input::get('name'),
-            'email' => \Input::get('email'),
-            'password' => \Hash::make(\Input::get('password')),
-            'admin' => \Input::get('admin') == null ? false : \Input::get('admin'),
-            'maintainer' => \Input::get('maintainer') == null ? false : \Input::get('maintainer')
+            'name' => $request->get('name'),
+            'email' => $request->get('email'),
+            'password' => \Hash::make($request->get('password')),
+            'admin' => $request->get('admin') == null ? false : $request->get('admin'),
+            'maintainer' => $request->get('maintainer') == null ? false : $request->get('maintainer')
         ]);
 
         if ($user != null) {
             // create the privileges for each library
-            $libraryIds = \Input::get('libraries');
+            $libraryIds = $request->get('libraries');
 
             foreach ($libraryIds as $libraryId) {
                 LibraryPrivilege::create([
@@ -39,33 +68,33 @@ class UserController extends Controller
                 ]);
             }
 
-            \Session::flash('success', 'User was successfully created!');
+            $request->session()->flash('success', 'User was successfully created!');
         }
 
-        return \Redirect::action('AdminController@users');
+        return redirect()->action('AdminController@users');
     }
 
     public function edit(UserEditRequest $request)
     {
-        $user = User::where('name', '=', \Input::get('old-name'))->first();
+        $user = User::where('name', $request->get('old-name'))->first();
         if ($user != null) {
-            $user->setName(\Input::get('new-name'));
+            $user->setName($request->get('new-name'));
 
-            \Session::flash('success', 'User was successfully edited!');
+            $request->session()->flash('success', 'User was successfully edited!');
         }
 
-        return \Redirect::action('AdminController@users');
+        return redirect()->action('AdminController@users');
     }
 
     public function delete(UserDeleteRequest $request)
     {
-        $user = User::where('name', '=', \Input::get('name'))->first();
+        $user = User::where('name', $request->get('name'))->first();
         if ($user != null) {
             $user->forceDelete();
 
-            \Session::flash('success', 'User was successfully deleted!');
+            $request->session()->flash('success', 'User was successfully deleted!');
         }
 
-        return \Redirect::action('AdminController@users');
+        return redirect()->action('AdminController@users');
     }
 }

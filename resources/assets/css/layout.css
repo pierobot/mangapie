@@ -23,6 +23,11 @@ div.span-label-ib span.label {
     margin-bottom: 1px;
 }
 
+textarea {
+    max-width: 100%;
+    max-height: 100%;
+}
+
 .truncate-ellipsis {
     display: table;
     table-layout: fixed;
@@ -70,12 +75,12 @@ li.wiggle {
 
 /* ------- home/index.blade.php ------- */
 
-.row > div.thumbnail {
+.thumbnail {
     margin-bottom: 0;
     border: none;
 }
 
-.thumbnail h4 {
+.thumbnail h4,p {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

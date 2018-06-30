@@ -79,10 +79,13 @@ $dropdown-link-hover-color: $navbar-default-color;
 $dropdown-link-hover-bg: $navbar-default-toggle-hover-bg;
 $dropdown-divider-bg: $navbar-default-color;
 
+// Nav-pills
+$nav-pills-active-link-hover-bg: darken($body-bg, 05%);
+
 // Panels
 $panel-bg: $body-bg;
-$panel-default-heading-bg: darken($navbar-default-bg, 10%);
-
+$panel-default-heading-bg: darken($body-bg, 05%);
+$panel-default-text: $navbar-default-bg;
 $panel-footer-bg: $panel-bg;
 
 // Input groups
@@ -154,3 +157,4 @@ $badge-bg: $navbar-default-brand-color;
 // Modal
 $modal-content-bg: $body-bg;
 $modal-header-border-color: $laravel-border-color;
+
