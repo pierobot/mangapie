@@ -145,7 +145,7 @@
                         </div>
                         <div class="col-xs-9 col-md-10">
                             @if ($description != null)
-                                {{ Html::decode($description) }}
+                                {!! nl2br(e($description)) !!}
                             @else
                                 Unable to find description.
                             @endif
