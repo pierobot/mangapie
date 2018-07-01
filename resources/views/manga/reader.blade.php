@@ -45,7 +45,7 @@
         <ul class="dropdown-menu" style="color: black;">
             @for ($i = 1; $i <= $page_count; $i++)
             <li>
-                {{ Html::link(URL::action('ReaderController@index', [$id, rawurlencode($archive_name), $i]), $i) }}
+                {{ Html::link(URL::action('ReaderController@index', [$id, $archive->getId(), $i]), $i) }}
             </li>
             @endfor
         </ul>
@@ -59,7 +59,7 @@
     @if ($page_count !== 0)
         <div class="row text-center">
             {{--<a id="image" href="{{ $has_next_page ? $next_url : "#" }}">--}}
-                {{ Html::image(URL::action('ReaderController@image', [$id, rawurlencode($archive_name), $page]), 'image', ['class' => 'reader-image']) }}
+                {{ Html::image(URL::action('ReaderController@image', [$id, $archive->getId(), $page]), 'image', ['class' => 'reader-image']) }}
             {{--</a>--}}
         </div>
 

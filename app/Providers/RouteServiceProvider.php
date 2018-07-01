@@ -5,9 +5,11 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
+use App\Archive;
 use App\Artist;
 use App\Author;
 use App\Genre;
+use App\Manga;
 use App\User;
 
 class RouteServiceProvider extends ServiceProvider
@@ -45,7 +47,9 @@ class RouteServiceProvider extends ServiceProvider
             return Artist::where('name', $name)->firstOrFail();
         });
 
+        Route::model('archive', Archive::class);
         Route::model('user', User::class);
+        Route::model('manga', Manga::class);
 
         parent::boot();
     }

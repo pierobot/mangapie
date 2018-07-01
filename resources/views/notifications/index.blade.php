@@ -41,7 +41,7 @@
                             <div class="row">
                                 <div class="col-xs-12">
                                     <a href="{{ URL::action('MangaController@index', [$manga->getId(), 'descending']) }}">
-                                        <img class="notification-img" src="{{ URL::action('ThumbnailController@smallDefault', [empty($manga) ? 0 : $manga->getId()]) }}">
+                                        <img class="notification-img" src="{{ URL::action('CoverController@smallDefault', [empty($manga) ? 0 : $manga->getId()]) }}">
                                     </a>
                                 </div>
                             </div>
