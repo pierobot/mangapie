@@ -19,6 +19,7 @@ Homestead.json
 
 # Config for additional packages
 config/debugbar.php
+config/ide-helper.php
 config/image.php
 
 # Rocketeer PHP task runner and deployment package. https://github.com/rocketeers/rocketeer
@@ -31,6 +32,5 @@ public/bootstrap-3-typeahead
 .idea/*
 .vscode/*
 _ide_helper.php
-config/ide-helper.php
 phpunit.xml
 coverage/
