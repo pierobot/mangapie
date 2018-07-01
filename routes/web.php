@@ -74,7 +74,7 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
     });
 
     Route::prefix('image')->name('image')->group(function () {
-        Route::get('/{manga}/{archive_name}/{page}', 'ReaderController@image');
+        Route::get('/{manga}/{archive}/{page}', 'ReaderController@image');
     });
 
     Route::prefix('library')->middleware('admin')->name('library')->group(function () {
