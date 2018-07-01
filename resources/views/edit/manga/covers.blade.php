@@ -16,7 +16,7 @@
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
                                         <h3 class="panel-title">
-                                            <a data-toggle="collapse" href="#{{ $archive_index }}">{{ $archive['name'] }}</a>
+                                            <a data-toggle="collapse" href="#{{ $archive_index }}">{{ $archive->getName() }}</a>
                                         </h3>
                                     </div>
                                     <div id="{{ $archive_index }}" class="panel-collapse collapse">
@@ -24,17 +24,17 @@
                                             <div class="row">
                                                 @for ($i = 1; $i <= 4; $i++)
                                                     <div class="col-lg-2 col-sm-4 col-xs-6 set-cover thumbnail">
-                                                        {{ Form::open(['action' => 'ThumbnailController@update'], [$id]) }}
+                                                        {{ Form::open(['action' => 'CoverController@update'], [$id]) }}
 
-                                                        {{ Form::hidden('id', $id) }}
-                                                        {{ Form::hidden('archive_name', $archive['name']) }}
+                                                        {{ Form::hidden('manga_id', $id) }}
+                                                        {{ Form::hidden('archive_id', $archive->getId()) }}
                                                         {{ Form::hidden('page', $i) }}
 
                                                         <div>
-                                                            {{ Html::image(URL::action('ThumbnailController@small', [
-                                                            $id,
-                                                            rawurlencode($archive['name']),
-                                                            $i]), null, ['class' => 'center-block'])
+                                                            {{ Html::image(URL::action('CoverController@small', [
+                                                                $id,
+                                                                $archive->getId(),
+                                                                $i]), null, ['class' => 'center-block'])
                                                             }}
                                                         </div>
 

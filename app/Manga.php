@@ -28,7 +28,9 @@ class Manga
         'year',
         'ignore_on_scan',
         'mu_name',
-        'distance'
+        'distance',
+        'cover_archive_id',
+        'cover_archive_page'
     ];
 
     public function getId()
@@ -104,6 +106,21 @@ class Manga
     public function getLastUpdated()
     {
         return $this->updated_at;
+    }
+
+    public function getCoverArchiveId()
+    {
+        return $this->cover_archive_id;
+    }
+
+    public function getCoverArchive()
+    {
+        return $this->archives->where('id', $this->getCoverArchiveId())->first();
+    }
+
+    public function getCoverPage()
+    {
+        return $this->cover_archive_page;
     }
 
     public function forceDelete()
@@ -349,27 +366,19 @@ class Manga
         return array_key_exists($extension, $image_extensions) == true ? $image_extensions[$extension] : false;
     }
 
-    public function getImage($archive_name, $page)
+    public function getImage(Archive $archive, $page)
     {
-        if ($page < 1)
+        if ($page < 1 || empty($archive))
             return false;
 
-        // Get the first archive if no name is specified
-        if (empty($archive_name) === true) {
-
-            $archives = $this->getArchives();
-            if (empty($archives) === true)
-                return false;
-
-            $archive_name = $archives[0]['name'];
-        }
-
+        $archive_name = $archive->getName();
         $archive_path = $this->getPath() . '/' . $archive_name;
-        $archive = ImageArchive::open($archive_path);
-        if ($archive === false || $archive->good() === false)
+
+        $imgArchive = ImageArchive::open($archive_path);
+        if ($imgArchive === false || $imgArchive->good() === false)
             return false;
 
-        $images = $archive->getImages();
+        $images = $imgArchive->getImages();
         if (empty($images) === true)
             return false;
 
@@ -377,8 +386,11 @@ class Manga
            return strnatcasecmp($left['name'], $right['name']);
         });
 
+        if ($page > count($images))
+            return false;
+
         $index = $images[$page - 1]['index'];
-        $image = $archive->getInfo($index);
+        $image = $imgArchive->getInfo($index);
         $name = $image['name'];
         $size = 0;
 
@@ -386,7 +398,7 @@ class Manga
         if ($mime === false)
             return false;
 
-        $contents = $archive->getImage($index, $size);
+        $contents = $imgArchive->getImage($index, $size);
         if ($contents === false)
             return false;
 
@@ -397,27 +409,19 @@ class Manga
         ];
     }
 
-    public function getImageAsUrl($archive_name, $page)
+    public function getImageAsUrl(Archive $archive, $page)
     {
-        if ($page < 1)
+        if ($page < 1 || empty($archive))
             return false;
 
-        // Get the first archive if no name is specified
-        if (empty($archive_name) === true) {
-
-            $archives = $this->getArchives();
-            if (empty($archives) === true)
-                return false;
-
-            $archive_name = $archives[0]['name'];
-        }
+        $archive_name = $archive->getName();
 
         $archive_path = $this->getPath() . '/' . $archive_name;
-        $archive = ImageArchive::open($archive_path);
-        if ($archive === false)
+        $imgArchive = ImageArchive::open($archive_path);
+        if ($imgArchive === false)
             return false;
 
-        $images = $archive->getImages();
+        $images = $imgArchive->getImages();
         if (empty($images) === true)
             return false;
 
@@ -425,8 +429,11 @@ class Manga
             return strnatcasecmp($left['name'], $right['name']);
         });
 
+        if ($page > count($images))
+            return false;
+
         $index = $images[$page - 1]['index'];
-        $image = $archive->getInfo($index);
+        $image = $imgArchive->getInfo($index);
         $name = $image['name'];
         $size = 0;
 
@@ -434,7 +441,7 @@ class Manga
         if ($mime === false)
             return false;
 
-        $urlPath = $archive->getImageUrlPath($index, $size);
+        $urlPath = $imgArchive->getImageUrlPath($index, $size);
         if ($urlPath === false)
             return false;
 
@@ -450,6 +457,12 @@ class Manga
         return $this->hasMany(\App\Archive::class);
     }
 
+    /**
+     * @param string $sort
+     * @return mixed
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
     public function getArchives($sort = 'ascending')
     {
         $archives = $this->archives->sort(function ($left, $right) use ($sort) {

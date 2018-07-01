@@ -38,7 +38,7 @@
 
     <div class="row">
         <div class="col-xs-12 col-sm-4">
-            {{ Html::image(URL::action('ThumbnailController@mediumDefault', [$id]), '', ['class' => 'information-img center-block']) }}
+            {{ Html::image(URL::action('CoverController@mediumDefault', [$id]), '', ['class' => 'information-img center-block']) }}
         </div>
 
         <div class="hidden-xs col-sm-8">
@@ -265,7 +265,7 @@
 
                         <tr>
                             <td class="col-sm-6 col-md-7">
-                                <a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive->getName()), $archiveHistory != null ? $archiveHistory->getPage() : 1]) }}">
+                                <a href="{{ URL::action('ReaderController@index', [$id, $archive->getId(), $archiveHistory != null ? $archiveHistory->getPage() : 1]) }}">
                                     <div>
                                         {{ $archive->getName() }}
                                     </div>
@@ -524,7 +524,7 @@
 
                                 <tr>
                                     <td class="col-xs-6">
-                                        <a href="{{ URL::action('ReaderController@index', [$id, rawurlencode($archive->getName()), $archiveHistory != null ? $archiveHistory->getPage() : 1]) }}">
+                                        <a href="{{ URL::action('ReaderController@index', [$id, $archive->getId(), $archiveHistory != null ? $archiveHistory->getPage() : 1]) }}">
                                             {{ $archive->getName() }}
                                         </a>
                                     </td>

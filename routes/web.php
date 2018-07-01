@@ -32,6 +32,16 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::get('/{author}', 'AuthorController@index');
     });
 
+    Route::prefix('cover')->name('cover')->group(function () {
+        Route::get('/small/{manga}', 'CoverController@smallDefault');
+        Route::get('/medium/{manga}', 'CoverController@mediumDefault');
+
+        Route::get('/small/{manga}/{archive}/{page}', 'CoverController@small');
+        Route::get('/medium/{manga}/{archive}/{page}', 'CoverController@medium');
+
+        Route::post('/update', 'CoverController@update')->middleware('maintainer');
+    });
+
     Route::prefix('edit')->middleware('maintainer')->name('edit')->group(function () {
         Route::get('/{manga}', 'MangaEditController@index');
         Route::post('/', 'MangaEditController@update');
@@ -64,7 +74,7 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
     });
 
     Route::prefix('image')->name('image')->group(function () {
-        Route::get('/{manga}/{archive_name}/{page}', 'ReaderController@image');
+        Route::get('/{manga}/{archive}/{page}', 'ReaderController@image');
     });
 
     Route::prefix('library')->middleware('admin')->name('library')->group(function () {
@@ -84,7 +94,7 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
     });
 
     Route::prefix('reader')->name('reader')->group(function () {
-        Route::get('/{manga}/{archive_name}/{page}', 'ReaderController@index');
+        Route::get('/{manga}/{archive}/{page}', 'ReaderController@index');
     });
 
     Route::prefix('search')->name('search')->group(function () {
@@ -93,16 +103,6 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::post('/advanced', 'SearchController@advanced');
         Route::get('/advanced', 'SearchController@index');
         Route::get('/autocomplete', 'SearchController@autoComplete');
-    });
-
-    Route::prefix('thumbnail')->name('thumbnail')->group(function () {
-        Route::get('/small/{manga}', 'ThumbnailController@smallDefault');
-        Route::get('/medium/{manga}', 'ThumbnailController@mediumDefault');
-
-        Route::get('/small/{manga}/{archive_name}/{page}', 'ThumbnailController@small');
-        Route::get('/medium/{manga}/{archive_name}/{page}', 'ThumbnailController@medium');
-
-        Route::post('/update', 'ThumbnailController@update')->middleware('maintainer');
     });
 
     Route::prefix('user')->name('user')->group(function () {

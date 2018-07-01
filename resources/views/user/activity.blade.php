@@ -23,7 +23,7 @@
                                     <div class="col-xs-6 col-sm-4 col-md-3 text-center thumbnail">
                                         <div>
                                             <a href="{{ URL::action('MangaController@index', [$favorite->manga->getId()]) }}">
-                                                {{ Html::image(URL::action('ThumbnailController@smallDefault', [$favorite->manga->getId()])) }}
+                                                {{ Html::image(URL::action('CoverController@smallDefault', [$favorite->manga->getId()])) }}
                                             </a>
                                         </div>
                                         <h4 title="{{ $favorite->manga->getName() }}">
@@ -55,7 +55,7 @@
                                     <div class="col-xs-6 col-sm-4 col-md-3 text-center thumbnail">
                                         <div>
                                             <a href="{{ URL::action('MangaController@index', [$read->manga->getId()]) }}">
-                                                {{ Html::image(URL::action('ThumbnailController@smallDefault', [$read->manga->getId()])) }}
+                                                {{ Html::image(URL::action('CoverController@smallDefault', [$read->manga->getId()])) }}
                                             </a>
                                         </div>
                                         <h4 title="{{ $read->manga->getName() }}">
