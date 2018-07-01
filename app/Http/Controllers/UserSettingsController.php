@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UserSettingsRequest;
-use App\Http\Requests\UserUpdateAvatarRequest;
+use App\Http\Requests\AvatarUpdateRequest;
 use App\Http\Requests\UserUpdateProfileRequest;
 use Illuminate\Http\Request;
 
@@ -87,17 +87,5 @@ class UserSettingsController extends Controller
         }
 
         return redirect()->action('UserSettingsController@index');
-    }
-
-    public function updateAvatar(UserUpdateAvatarRequest $request)
-    {
-        $storeResult = $request->file('avatar')->storeAs('public/avatars', $request->user()->getId());
-
-        if ($storeResult !== false)
-            $request->session()->flash('success', 'Your avatar has been updated.');
-        else
-            $request->session()->flash('failure', 'Unable to update your avatar. Contact an admin.');
-
-        return redirect()->action('UserSettingsController@profile');
     }
 }

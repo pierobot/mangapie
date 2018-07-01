@@ -2,49 +2,20 @@
 
 namespace App;
 
+use \Carbon\Carbon;
+
+use App\Image;
+
 class Cover
 {
     /**
-     *  Makes a cover from an image buffer.
-     *  Specifying a value for width or image and null for the other will
-     *  result in a proportionally resized image.
+     * Gets the root path of the covers disk.
      *
-     *  @param string $contents The image buffer contents.
-     *  @param int $width The desired width.
-     *  @param int $height The desired height.
-     *  @return mixed An instance of Intervention/Image that has been resized or FALSE on failure.
+     * @return string
      */
-    public static function make($contents, $width, $height)
+    public static function rootPath()
     {
-        if ($width == null || $height == null)
-            $image = \Image::make($contents)->resize($width, $height, function($constraint) {
-                $constraint->aspectRatio();
-            });
-        else
-            $image = \Image::make($contents)->resize($width, $height);
-
-        return $image->encode('jpg', 75);
-    }
-
-    public static function storage_path()
-    {
-        return storage_path('app' . DIRECTORY_SEPARATOR . 'public' . DIRECTORY_SEPARATOR . 'covers');
-    }
-
-    /**
-     * @param Manga $manga
-     * @param Archive $archive
-     * @param bool $small
-     * @return bool
-     */
-    public static function createPath(Manga $manga, Archive $archive, bool $small = true)
-    {
-        $path = self::storage_path() . DIRECTORY_SEPARATOR
-            . ($small === true ? 'small' : 'medium') . DIRECTORY_SEPARATOR
-            . strval($manga->getId()) . DIRECTORY_SEPARATOR
-            . strval($archive->getId());
-
-        return \File::exists($path) ? false : \File::makeDirectory($path, 755, true);
+        return \Storage::disk('covers')->path('');
     }
 
     /**
@@ -75,7 +46,7 @@ class Cover
      */
     public static function xaccelDefaultPath(bool $small = true)
     {
-        return ($small === true ? 'small' : 'medium') . DIRECTORY_SEPARATOR . 'unknown.jpg';
+        return ($small === true ? 'small' : 'medium') . DIRECTORY_SEPARATOR . 'default.jpg';
     }
 
     /**
@@ -92,8 +63,74 @@ class Cover
         if (empty($archive))
             $archive = $manga->archives->first();
 
-        $coverPath = self::storage_path(). DIRECTORY_SEPARATOR . self::xaccelPath($manga, $archive, $page, $small);
+        return \Storage::disk('covers')->exists(self::xaccelPath($manga, $archive, $page, $small));
+    }
 
-        return \File::exists($coverPath);
+    /**
+     * Saves the contents of an image to the appropriate path.
+     *
+     * @param string $contents The raw contents of the cover.
+     * @param Manga $manga
+     * @param Archive $archive
+     * @param int $page
+     * @param bool $small
+     * @return bool
+     */
+    public static function save(string $contents, Manga $manga, Archive $archive, int $page = 1, bool $small = true)
+    {
+        $path = self::xaccelPath($manga, $archive, $page, $small);
+
+        try {
+            $image = Image::make($contents, null, ($small === true ? 250 : 500));
+        } catch (\Intervention\Image\Exception\ImageException $e) {
+            return false;
+        }
+
+        return \Storage::disk('covers')->putStream(
+            $path,
+            $image->stream('jpg')->detach());
+    }
+
+    /**
+     * Creates a response compatible with X-Accel-Redirect for a cover.
+     *
+     * @param Manga $manga
+     * @param Archive $archive
+     * @param int $page
+     * @param bool $small
+     * @return \Illuminate\Http\Response
+     */
+    public static function response(Manga $manga, Archive $archive, int $page, bool $small = true)
+    {
+        $path = self::xaccelPath($manga, $archive, $page, $small);
+        $mime = \Storage::disk('covers')->mimeType($path);
+
+        return response()->make('', 200, [
+            'Content-Type' => $mime,
+            'Cache-Control' => 'public, max-age=2629800',
+            'Expires' => Carbon::now()->addMonth()->toRfc2822String(),
+            'X-Accel-Redirect' => '/covers/' . $path,
+            'X-Accel-Charset' => 'utf-8'
+        ]);
+    }
+
+    /**
+     * Creates a response compatible with X-Accel-Redirect for the default cover.
+     *
+     * @param bool $small
+     * @return \Illuminate\Http\Response
+     */
+    public static function defaultResponse(bool $small = true)
+    {
+        $path = self::xaccelDefaultPath($small);
+        $mime = \Storage::disk('covers')->mimeType($path);
+
+        return response()->make('', 200, [
+            'Content-Type' => $mime,
+            'Cache-Control' => 'public, max-age=2629800',
+            'Expires' => Carbon::now()->addMonth()->toRfc2822String(),
+            'X-Accel-Redirect' => '/covers/' . $path,
+            'X-Accel-Charset' => 'utf-8'
+        ]);
     }
 }

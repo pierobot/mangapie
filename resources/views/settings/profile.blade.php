@@ -17,7 +17,7 @@
             <div class="panel-body">
                 <div class="row">
                     <div class="col-xs-12">
-                        {{ Form::open(['action' => 'UserSettingsController@updateAvatar', 'files' => true]) }}
+                        {{ Form::open(['action' => 'AvatarController@update', 'files' => true]) }}
                         <div class="row">
                             <div class="col-xs-12 col-sm-6 col-md-2">
                                 {{ Form::file('avatar') }}

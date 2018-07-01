@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-xs-12">
                 <div class="thumbnail">
-                    <img class="img-rounded" src="{{ URL::action('UserController@avatar', [$user->getId()]) }}">
+                    <img class="img-rounded" src="{{ URL::action('AvatarController@index', [$user->getId()]) }}">
                     <h3 class="text-center">{{ $user->getName() }}</h3>
                 </div>
             </div>
@@ -24,7 +24,7 @@
             </div>
             <div class="hidden-xs text-center">
                 <div class="thumbnail">
-                    <img class="img-rounded" src="{{ URL::action('UserController@avatar', [$user->getId()]) }}">
+                    <img class="img-rounded" src="{{ URL::action('AvatarController@index', [$user->getId()]) }}">
                     <h3>{{ $user->getName() }}</h3>
                 </div>
                 <ul class="nav nav-pills nav-stacked">

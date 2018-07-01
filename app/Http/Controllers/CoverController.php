@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CoverUpdateRequest;
 use App\Listeners\DirectoryEventSubscriber;
 use Illuminate\Http\Request;
-use \Carbon\Carbon;
 
 use App\Archive;
 use App\Manga;
@@ -15,36 +14,16 @@ class CoverController extends Controller
 {
     public function small(Manga $manga, Archive $archive, int $page)
     {
-        $response = response()->make('', 200, [
-            'Content-Type' => 'image/jpeg',
-            'Cache-Control' => 'public, max-age=2629800',
-            'Expires' => Carbon::now()->addMonth()->toRfc2822String(),
-            'X-Accel-Redirect' => '/covers/' . Cover::xaccelPath($manga, $archive, $page),
-            'X-Accel-Charset' => 'utf-8'
-        ]);
-
         if (Cover::exists($manga, $archive, $page))
-            return $response;
+            return Cover::response($manga, $archive, $page);
 
         $image = $manga->getImage($archive, $page);
-        if ($image === false) {
-            $response->header('X-Accel-Redirect', '/covers/' . Cover::xaccelDefaultPath());
+        if ($image === false)
+            return Cover::defaultResponse();
 
-            return $response;
-        }
+        $saved = Cover::save($image['contents'], $manga, $archive, $page);
 
-        try {
-            Cover::createPath($manga, $archive);
-
-            $path = Cover::storage_path() . DIRECTORY_SEPARATOR . Cover::xaccelPath($manga, $archive, $page);
-            $cover = Cover::make($image['contents'], null, 250)->save($path);
-
-            return $response;
-        } catch (\Intervention\Image\Exception\NotReadableException $e) {
-            $response->header('X-Accel-Redirect', '/covers/' . Cover::xaccelDefaultPath());
-
-            return $response;
-        }
+        return $saved === true ? Cover::response($manga, $archive, $page) : Cover::defaultResponse();
     }
 
     public function smallDefault(Manga $manga)
@@ -65,36 +44,16 @@ class CoverController extends Controller
 
     public function medium(Manga $manga, Archive $archive, int $page)
     {
-        $response = response()->make('', 200, [
-            'Content-Type' => 'image/jpeg',
-            'Cache-Control' => 'public, max-age=2629800',
-            'Expires' => Carbon::now()->addMonth()->toRfc2822String(),
-            'X-Accel-Redirect' => '/covers/' . Cover::xaccelPath($manga, $archive, $page, false),
-            'X-Accel-Charset' => 'utf-8'
-        ]);
-
         if (Cover::exists($manga, $archive, $page, false))
-            return $response;
+            return Cover::response($manga, $archive, $page, false);
 
         $image = $manga->getImage($archive, $page);
-        if ($image === false) {
-            $response->header('X-Accel-Redirect', '/covers/' . Cover::xaccelDefaultPath(false));
+        if ($image === false)
+            return Cover::defaultResponse(false);
 
-            return $response;
-        }
+        $saved = Cover::save($image['contents'], $manga, $archive, $page, false);
 
-        try {
-            Cover::createPath($manga, $archive, false);
-
-            $path = Cover::storage_path() . DIRECTORY_SEPARATOR . Cover::xaccelPath($manga, $archive, $page, false);
-            $cover = Cover::make($image['contents'], null, 500)->save($path);
-
-            return $response;
-        } catch (\Intervention\Image\Exception\NotReadableException $e) {
-            $response->header('X-Accel-Redirect', '/covers/' . Cover::xaccelDefaultPath(false));
-
-            return $response;
-        }
+        return $saved === true ? Cover::response($manga, $archive, $page, false) : Cover::defaultResponse(false);
     }
 
     public function mediumDefault(Manga $manga)
@@ -124,7 +83,7 @@ class CoverController extends Controller
             'cover_archive_page' => $page
         ]);
 
-        session()->flash('success', 'The thumbnail was successfully updated');
+        session()->flash('success', 'The cover was successfully updated');
 
         return \Redirect::action('MangaController@index', [$manga->getId()]);
     }

@@ -529,4 +529,3 @@ final class Watcher
         return $this->unset($wd);
     }
 }
-

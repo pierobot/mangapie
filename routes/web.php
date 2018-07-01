@@ -32,6 +32,12 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::get('/{author}', 'AuthorController@index');
     });
 
+    Route::prefix('avatar')->name('avatar')->group(function () {
+        Route::get('/{user}', 'AvatarController@index');
+
+        Route::post('/', 'AvatarController@update');
+    });
+
     Route::prefix('cover')->name('cover')->group(function () {
         Route::get('/small/{manga}', 'CoverController@smallDefault');
         Route::get('/medium/{manga}', 'CoverController@mediumDefault');
@@ -109,8 +115,6 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::get('/{user}', 'UserController@index');
         Route::get('/{user}/profile', 'UserController@profile');
         Route::get('/{user}/activity', 'UserController@activity');
-
-        Route::get('/{user}/avatar', 'UserController@avatar');
     });
 
     Route::prefix('users')->middleware('admin')->name('users')->group(function () {
@@ -127,7 +131,6 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
 
         Route::post('/', 'UserSettingsController@update');
         Route::post('/profile', 'UserSettingsController@updateProfile');
-        Route::post('/avatar', 'UserSettingsController@updateAvatar');
     });
 
     Route::prefix('watch')->name('watch')->group(function () {
