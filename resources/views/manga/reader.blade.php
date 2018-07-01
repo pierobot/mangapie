@@ -65,8 +65,8 @@
 
         @if ($preload !== false)
         <div id="preload" style="display: none;">
-            @foreach ($preload as $preload_url)
-                <img id="{{ $preload_url['id'] }}" data-src="{{ $preload_url['url'] }}">
+            @foreach ($preload as $index => $preload_url)
+                <img id="{{ $index }}" data-src="{{ $preload_url }}">
             @endforeach
         </div>
         @endif
