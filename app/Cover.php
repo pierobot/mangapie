@@ -48,7 +48,8 @@ class Cover
     }
 
     /**
-     * Gets the path for usage with X-Accel-Redirect.
+     * Gets the path for the requested archive image.
+     * The path is intended for use with X-Accel-Redirect.
      * Essentially, this will return (small|medium)/manga_id/archive_id/page
      *
      * @param Manga $manga
@@ -63,6 +64,18 @@ class Cover
             . strval($manga->getId()) . DIRECTORY_SEPARATOR
             . strval($archive->getId()) . DIRECTORY_SEPARATOR
             . strval($page);
+    }
+
+    /**
+     * Gets the path of the default archive image.
+     * The path is intended for use with X-Accel-Redirect.
+     *
+     * @param bool $small
+     * @return string
+     */
+    public static function xaccelDefaultPath(bool $small = true)
+    {
+        return ($small === true ? 'small' : 'medium') . DIRECTORY_SEPARATOR . 'unknown.jpg';
     }
 
     /**

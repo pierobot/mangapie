@@ -27,9 +27,11 @@ class CoverController extends Controller
             return $response;
 
         $image = $manga->getImage($archive, $page);
-        if ($image === false)
-            // TODO: REPLACE WITH X-Accel-Redirect
-            return \Image::make('public/img/small/unknown.jpg')->response();
+        if ($image === false) {
+            $response->header('X-Accel-Redirect', '/covers/' . Cover::xaccelDefaultPath());
+
+            return $response;
+        }
 
         try {
             Cover::createPath($manga, $archive);
@@ -39,8 +41,9 @@ class CoverController extends Controller
 
             return $response;
         } catch (\Intervention\Image\Exception\NotReadableException $e) {
-            // TODO: REPLACE WITH X-Accel-Redirect
-            return \Image::make('public/img/small/unknown.jpg')->response();
+            $response->header('X-Accel-Redirect', '/covers/' . Cover::xaccelDefaultPath());
+
+            return $response;
         }
     }
 
@@ -74,9 +77,11 @@ class CoverController extends Controller
             return $response;
 
         $image = $manga->getImage($archive, $page);
-        if ($image === false)
-            // TODO: REPLACE WITH X-Accel-Redirect
-            return \Image::make('public/img/medium/unknown.jpg')->response();
+        if ($image === false) {
+            $response->header('X-Accel-Redirect', '/covers/' . Cover::xaccelDefaultPath(false));
+
+            return $response;
+        }
 
         try {
             Cover::createPath($manga, $archive, false);
@@ -86,8 +91,9 @@ class CoverController extends Controller
 
             return $response;
         } catch (\Intervention\Image\Exception\NotReadableException $e) {
-            // TODO: REPLACE WITH X-Accel-Redirect
-            return \Image::make('public/img/medium/unknown.jpg')->response();
+            $response->header('X-Accel-Redirect', '/covers/' . Cover::xaccelDefaultPath(false));
+
+            return $response;
         }
     }
 

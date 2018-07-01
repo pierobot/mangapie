@@ -386,6 +386,9 @@ class Manga
            return strnatcasecmp($left['name'], $right['name']);
         });
 
+        if ($page > count($images))
+            return false;
+
         $index = $images[$page - 1]['index'];
         $image = $imgArchive->getInfo($index);
         $name = $image['name'];
@@ -425,6 +428,9 @@ class Manga
         usort($images, function ($left, $right) {
             return strnatcasecmp($left['name'], $right['name']);
         });
+
+        if ($page > count($images))
+            return false;
 
         $index = $images[$page - 1]['index'];
         $image = $imgArchive->getInfo($index);
