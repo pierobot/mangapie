@@ -10,6 +10,16 @@ use App\User;
 class Avatar
 {
     /**
+     * Gets the avatars disk.
+     *
+     * @return \Illuminate\Filesystem\FilesystemAdapter
+     */
+    public static function disk()
+    {
+        return \Storage::disk('avatars');
+    }
+
+    /**
      * Gets the root path of the avatars disk.
      *
      * @return string
@@ -17,6 +27,24 @@ class Avatar
     public static function rootPath()
     {
         return \Storage::disk('avatars')->path('');
+    }
+
+    /**
+     * Gets the size, in bytes, of the avatars disk.
+     *
+     * @return int
+     */
+    public static function size()
+    {
+        $size = 0;
+        $covers = \Storage::disk('avatars');
+        $files = $covers->allFiles();
+
+        foreach ($files as $file) {
+            $size += $covers->size($file);
+        }
+
+        return $size;
     }
 
     /**

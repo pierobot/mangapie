@@ -23,7 +23,7 @@ class Archive extends Model
         return $this->name;
     }
 
-    private static function convertSizeToReadable($bytes)
+    public static function convertSizeToReadable($bytes)
     {
         $sizes = [ 'B', 'KB', 'MB', 'GB' ];
 

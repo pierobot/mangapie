@@ -8,9 +8,11 @@ use App\Http\Requests\UserEditRequest;
 use App\LogParser;
 use Illuminate\Http\Request;
 
-use \App\Library;
-use \App\LibraryPrivilege;
-use \App\User;
+use App\Avatar;
+use App\Cover;
+use App\Library;
+use App\LibraryPrivilege;
+use App\User;
 
 class AdminController extends Controller
 {
@@ -23,10 +25,11 @@ class AdminController extends Controller
         $warnings = \LogParser::get('warning');
 //      $errors_ = \LogParser::get('error'); // the underscore at the end is to avoid collisions with Laravel's $error variable
 
-        return view('admin.index')->with('info', $info)
-                                  ->with('admin_count', $admin_count)
-                                  ->with('user_count', $user_count)
-                                  ->with('warnings', $warnings);
+        return view('admin.index')
+            ->with('info', $info)
+            ->with('admin_count', $admin_count)
+            ->with('user_count', $user_count)
+            ->with('warnings', $warnings);
     }
 
     public function users()

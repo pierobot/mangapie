@@ -18,16 +18,44 @@
         </div>
         <div class="panel-body">
             <div class="row">
-                <ul class="list-group">
-                    <div class="col-xs-12 col-md-4">
-                        <h4>Users</h4>
-                        <hr>
-                        <div class="col-xs-12">
-                            <label>Number of admins:</label> {{ $admin_count }} <br>
-                            <label>Number of users:</label> {{ $user_count }} <br>
-                        </div>
+                <div class="col-xs-12 col-md-4">
+                    <div class="col-xs-12">
+                        <h4><b>Users</b></h4>
                     </div>
-                </ul>
+                    <div class="col-xs-12">
+                        <label>Number of admins:</label> {{ $admin_count }} <br>
+                        <label>Number of users:</label> {{ $user_count }} <br>
+                    </div>
+                    <div class="col-xs-12">
+                        <hr>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-md-4">
+                    <div class="col-xs-12">
+                        <h4><b>Avatars</b></h4>
+                    </div>
+                    <div class="col-xs-12">
+                        <label>Size:</label> {{ App\Archive::convertSizeToReadable(App\Avatar::size()) }}<br>
+                        <label>Path:</label> {{ App\Avatar::disk()->path('') }}
+                    </div>
+                    <div class="col-xs-12">
+                        <hr>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-md-4">
+                    <div class="col-xs-12">
+                        <h4><b>Covers</b></h4>
+                    </div>
+                    <div class="col-xs-12">
+                        <label>Size:</label> {{ App\Archive::convertSizeToReadable(App\Cover::size()) }}<br>
+                        <label>Path:</label> {{ App\Cover::disk()->path('') }}
+                    </div>
+                    <div class="col-xs-12">
+                        <hr>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

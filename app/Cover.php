@@ -9,6 +9,16 @@ use App\Image;
 class Cover
 {
     /**
+     * Gets the covers disk.
+     *
+     * @return \Illuminate\Filesystem\FilesystemAdapter
+     */
+    public static function disk()
+    {
+        return \Storage::disk('covers');
+    }
+
+    /**
      * Gets the root path of the covers disk.
      *
      * @return string
@@ -16,6 +26,24 @@ class Cover
     public static function rootPath()
     {
         return \Storage::disk('covers')->path('');
+    }
+
+    /**
+     * Gets the size, in bytes, of the covers disk.
+     *
+     * @return int
+     */
+    public static function size()
+    {
+        $size = 0;
+        $covers = \Storage::disk('covers');
+        $files = $covers->allFiles();
+
+        foreach ($files as $file) {
+            $size += $covers->size($file);
+        }
+
+        return $size;
     }
 
     /**
