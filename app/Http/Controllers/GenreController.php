@@ -38,8 +38,9 @@ class GenreController extends Controller
         $manga_list = new LengthAwarePaginator($results->forPage($page, 18), $results->count(), 18);
         $manga_list->withPath(\Request::getBaseUrl());
 
-        return view('home.index')
+        return view('home.genre')
             ->with('header', 'Genre: ' . $genre->getName() . ' (' . $results->count() . ')')
+            ->with('genre', $genre)
             ->with('manga_list', $manga_list);
     }
 }

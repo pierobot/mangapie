@@ -41,7 +41,7 @@ class ImageArchive
      *  Opens an archive for accessing image files.
      *
      *  @param string $file_path The file path to the archive.
-     *  @return ImageArchiveInterface|FALSE
+     *  @return ImageArchiveInterface|false
      */
     public static function open($file_path)
     {

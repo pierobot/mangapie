@@ -29,7 +29,7 @@ class AuthorController extends Controller
         $results = [];
         foreach ($references as $reference) {
             if ($reference->manga->getLibraryId())
-                array_push($results, $reference->manga);
+                $results[] = $reference->manga;
         }
 
         $results = collect($results)->sortBy('name');
@@ -37,7 +37,9 @@ class AuthorController extends Controller
         $manga_list = new LengthAwarePaginator($results->forPage($page, 18), $results->count(), 18);
         $manga_list->withPath(\Request::getBaseUrl());
 
-        return view('home.index')->with('header', 'Author: ' . $author->getName() . ' (' . $results->count() . ')')
-                                 ->with('manga_list', $manga_list);
+        return view('home.author')
+            ->with('header', 'Author: ' . $author->getName() . ' (' . $results->count() . ')')
+            ->with('author', $author)
+            ->with('manga_list', $manga_list);
     }
 }

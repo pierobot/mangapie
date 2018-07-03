@@ -68,8 +68,9 @@ class SearchController extends Controller
                        'keywords' => $keywords
                    ]);
 
-        return view('home.index')->with('header', 'Search Results (' . $manga_list->total() . ')')
-                                 ->with('manga_list', $manga_list);
+        return view('home.index')
+            ->with('header', 'Search Results (' . $manga_list->total() . ')')
+            ->with('manga_list', $manga_list);
     }
 
     private function doAdvancedSearch($genres, $author, $artist, $keywords)
@@ -91,8 +92,9 @@ class SearchController extends Controller
                                      'artist' => $artist
                                  ]);
 
-        return view('home.index')->with('header', 'Search Results (' . $total . ')')
-                                 ->with('manga_list', $manga_list);
+        return view('home.advancedsearch')
+            ->with('header', 'Search Results (' . $total . ')')
+            ->with('manga_list', $manga_list);
     }
 
     public function basic(SearchRequest $request)
