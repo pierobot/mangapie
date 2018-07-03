@@ -14,7 +14,7 @@ class AddDefaultCoverArchiveIdToManga extends Migration
     public function up()
     {
         Schema::table('manga', function (Blueprint $table) {
-            $table->unsignedInteger('cover_archive_id')->references('id')->on('archives');
+            $table->unsignedInteger('cover_archive_id')->default(0)->references('id')->on('archives');
             $table->unsignedInteger('cover_archive_page')->default(1);
         });
     }
