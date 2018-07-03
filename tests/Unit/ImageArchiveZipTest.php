@@ -29,6 +29,18 @@ class ImageArchiveZipTest extends TestCase
         $this->assertTrue($archive_cbz->good());
     }
 
+    public function testgoodFailsOnNonexistingFile()
+    {
+        $archive_zip = ImageArchive::open('this.does.not.exist.zip');
+        $archive_cbz = ImageArchive::open('this.does.not.exist.cbz');
+
+        $this->assertNotFalse($archive_zip);
+        $this->assertNotFalse($archive_cbz);
+
+        $this->assertFalse($archive_zip->good());
+        $this->assertFalse($archive_cbz->good());
+    }
+
     public function testgetImages()
     {
         $archive_zip = ImageArchive::open($this->path_zip);
@@ -59,6 +71,11 @@ class ImageArchiveZipTest extends TestCase
         $images_zip = $archive_zip->getImages();
         $images_cbz = $archive_cbz->getImages();
 
+        $this->assertFalse(empty($images_zip));
+        $this->assertFalse(empty($images_cbz));
+
+        $this->assertEquals(count($images_zip), count($images_cbz));
+
         $size_zip = 0;
         $size_cbz = 0;
 
@@ -70,10 +87,40 @@ class ImageArchiveZipTest extends TestCase
             $contents_zip = $archive_zip->getImage($image_zip['index'], $size_zip);
             $contents_cbz = $archive_cbz->getImage($image_cbz['index'], $size_cbz);
 
-            $this->assertFalse(empty($contents_zip));
-            $this->assertFalse(empty($contents_cbz));
+            $this->assertNotEmpty($contents_zip);
+            $this->assertNotEmpty($contents_cbz);
 
             $this->assertEquals($contents_zip, $contents_cbz);
+        }
+    }
+
+    public function testgetImageUrlPath()
+    {
+        $archive_zip = ImageArchive::open($this->path_zip);
+        $archive_cbz = ImageArchive::open($this->path_cbz);
+
+        $images_zip = $archive_zip->getImages();
+        $images_cbz = $archive_cbz->getImages();
+
+        $this->assertNotEmpty($images_zip);
+        $this->assertNotEmpty($images_cbz);
+
+        $this->assertEquals(count($images_zip), count($images_cbz));
+
+        $size = 0;
+
+        foreach ($images_zip as $image_zip) {
+            $expectedUrl = 'zip://' . rawurlencode($this->path_zip) . '#' . rawurlencode($image_zip['name']);
+            $actualUrl = $archive_zip->getImageUrlPath($image_zip['index'], $size);
+
+            $this->assertEquals($expectedUrl, $actualUrl);
+        }
+
+        foreach ($images_cbz as $index => $image_cbz) {
+            $expectedUrl = 'zip://' . rawurlencode($this->path_cbz) . '#' . rawurlencode($image_cbz['name']);
+            $actualUrl = $archive_cbz->getImageUrlPath($image_cbz['index'], $size);
+
+            $this->assertEquals($expectedUrl, $actualUrl);
         }
     }
 }

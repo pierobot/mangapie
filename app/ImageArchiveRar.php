@@ -13,7 +13,11 @@ class ImageArchiveRar implements ImageArchiveInterface
     {
         $this->m_file_path = $file_path;
 
-        $this->m_rar = \RarArchive::open($file_path);
+        try {
+            $this->m_rar = \RarArchive::open($file_path);
+        } catch (\Exception $e) {
+            $this->m_rar = false;
+        }
     }
 
     public function __destruct()
@@ -43,9 +47,7 @@ class ImageArchiveRar implements ImageArchiveInterface
 
         $entries = $this->m_rar->getEntries();
         foreach ($entries as $idx => $entry) {
-
             if ($index == $idx) {
-
                 $name = $entry->getName();
                 $size = $entry->getUnpackedSize();
 
@@ -72,9 +74,7 @@ class ImageArchiveRar implements ImageArchiveInterface
         foreach ($entries as $idx => $entry) {
 
             if ($index == $idx) {
-
                 $stream = $entry->getStream();
-
                 $size = $entry->getUnpackedSize();
 
                 return stream_get_contents($stream, $size);
@@ -88,9 +88,7 @@ class ImageArchiveRar implements ImageArchiveInterface
     {
         $entries = $this->m_rar->getEntries();
         foreach ($entries as $idx => $entry) {
-
             if ($index == $idx) {
-
                 $size = $entry->getUnpackedSize();
 
                 return 'rar://' . rawurlencode($this->m_file_path) . '#' . rawurlencode($entry->getName());
@@ -111,17 +109,15 @@ class ImageArchiveRar implements ImageArchiveInterface
 
         $entries = $this->m_rar->getEntries();
         foreach ($entries as $index => $entry) {
-
             $name = $entry->getName();
             $size = $entry->getUnpackedSize();
 
             if (ImageArchive::isImage($name)) {
-
-                array_push($images, [
+                $images[] = [
                     'name' => $name,
                     'size' => $size,
                     'index' => $index
-                ]);
+                ];
             }
         }
 

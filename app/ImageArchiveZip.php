@@ -59,36 +59,29 @@ class ImageArchiveZip implements ImageArchiveInterface
     public function getImage($index, &$size)
     {
         $images = $this->getImages();
-        if ($images === false)
-            return false;
-
         $data = $this->getInfo($index);
-        if ($data === false)
-            return false;
+        $contents = false;
 
-        $contents = $this->m_zip->getFromIndex($index);
-        if ($contents === false)
-            return false;
-
-        $size = $data['size'];
+        if (! empty($images) && ! empty($data)) {
+            $size = $data['size'];
+            $contents = $this->m_zip->getFromIndex($index);
+        }
 
         return $contents;
     }
 
     public function getImageUrlPath($index, &$size)
     {
-        $images = $this->getImages();
-        if ($images === false)
-            return false;
-
         $data = $this->getInfo($index);
-        if ($data === false)
-            return false;
 
-        $size = $data['size'];
-        $name = $data['name'];
+        if (! empty($data)) {
+            $size = $data['size'];
+            $name = $data['name'];
 
-        return 'zip://' . rawurlencode($this->m_file_path) . '#' . rawurlencode($name);
+            return 'zip://' . rawurlencode($this->m_file_path) . '#' . rawurlencode($name);
+        }
+
+        return false;
     }
 
     /**
@@ -101,22 +94,19 @@ class ImageArchiveZip implements ImageArchiveInterface
         $images = [];
 
         for ($i = 0; $i < $this->m_zip->numFiles; $i++) {
-
             $data = $this->getInfo($i);
 
-            if ($data === false)
-                continue;
+            if (! empty($data)) {
+                $name = $data['name'];
+                $size = $data['size'];
 
-            $name = $data['name'];
-            $size = $data['size'];
-
-            if (ImageArchive::isImage($name)) {
-
-                array_push($images, [
-                    'name' => $name,
-                    'size' => $size,
-                    'index' => $i
-                ]);
+                if (ImageArchive::isImage($name)) {
+                    $images[] = [
+                        'name' => $name,
+                        'size' => $size,
+                        'index' => $i
+                    ];
+                }
             }
         }
 
