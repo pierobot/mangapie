@@ -40,7 +40,7 @@ class MangaController extends Controller
         $lastUpdated = $manga->getLastUpdated();
 
         $user = \Auth::user()->load('favorites', 'readerHistory', 'watchReferences', 'watchNotifications');
-        $is_favorited = $user->favorites->where('user_id', $user->getId())->first() !== null;
+        $is_favorited = $user->favorites->where('manga_id', $manga->getId())->first() !== null;
         $isWatching = $user->watchReferences->where('manga_id', $id)->first() !== null;
         $watchNotifications = $user->watchNotifications->where('manga_id', $id);
         $readerHistory = $user->readerHistory->where('manga_id', $id);
