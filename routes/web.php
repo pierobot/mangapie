@@ -38,6 +38,11 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::post('/', 'AvatarController@update');
     });
 
+    Route::prefix('comments')->name('comments')->group(function () {
+        Route::put('/', 'CommentController@put');
+        Route::delete('/', 'CommentController@delete');
+    });
+
     Route::prefix('cover')->name('cover')->group(function () {
         Route::get('/small/{manga}', 'CoverController@smallDefault');
         Route::get('/medium/{manga}', 'CoverController@mediumDefault');
@@ -92,6 +97,8 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
 
     Route::prefix('manga')->name('manga')->group(function () {
         Route::get('/{manga}/{sort?}', 'MangaController@index');
+        Route::get('/{manga}/files', 'MangaController@files');
+        Route::get('/{manga}/comments', 'MangaController@comments');
     });
 
     Route::prefix('notifications')->name('notifications')->group(function () {

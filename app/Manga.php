@@ -17,20 +17,10 @@ class Manga
     extends Model
     implements EditableInterface
 {
-    //
-    protected $fillable = [
-        'name',
-        'path',
-        'library_id',
-        'mu_id',
-        'type',
-        'description',
-        'year',
-        'ignore_on_scan',
-        'mu_name',
-        'distance',
-        'cover_archive_id',
-        'cover_archive_page'
+    protected $guarded = [
+        'id',
+        'created_at',
+        'updated_at'
     ];
 
     public function getId()
@@ -144,6 +134,16 @@ class Manga
         WatchNotification::where('manga_id', $id)->forceDelete();
 
         parent::forceDelete();
+    }
+
+    public function archives()
+    {
+        return $this->hasMany(\App\Archive::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(\App\Comment::class);
     }
 
     public function library()
@@ -450,11 +450,6 @@ class Manga
             'size' => $size,
             'mime' => $mime
         ];
-    }
-
-    public function archives()
-    {
-        return $this->hasMany(\App\Archive::class);
     }
 
     /**

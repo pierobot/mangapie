@@ -22,46 +22,57 @@ class MangaController extends Controller
 
     public function index(Manga $manga, $sort = 'ascending')
     {
-        $id = $manga->getId();
-        $name = $manga->getName();
-        $path = $manga->getPath();
+        $manga = $manga->load([
+            'archives',
+            'associatedNameReferences.associatedName',
+            'authorReferences.author',
+            'artistReferences.artist',
+            'genreReferences.genre',
+            'comments',
+        ]);
 
-        $manga->load('archives', 'associatedNameReferences', 'genreReferences', 'authorReferences', 'artistReferences');
+        $user = \Auth::user()->load('favorites', 'readerHistory', 'watchReferences');
 
-        $archives = $manga->getArchives($sort);
-        $mu_id = $manga->getMangaUpdatesId();
-        $description = $manga->getDescription();
-        $type = $manga->getType();
-        $assoc_names = $manga->getAssociatedNames();
-        $genres = $manga->getGenres();
-        $authors = $manga->getAuthors();
-        $artists = $manga->getArtists();
-        $year = $manga->getYear();
-        $lastUpdated = $manga->getLastUpdated();
+        return view('manga.index')
+            ->with('user', $user)
+            ->with('manga', $manga)
+            ->with('sort', $sort);
+    }
 
-        $user = \Auth::user()->load('favorites', 'readerHistory', 'watchReferences', 'watchNotifications');
-        $is_favorited = $user->favorites->where('manga_id', $manga->getId())->first() !== null;
-        $isWatching = $user->watchReferences->where('manga_id', $id)->first() !== null;
-        $watchNotifications = $user->watchNotifications->where('manga_id', $id);
-        $readerHistory = $user->readerHistory->where('manga_id', $id);
+    public function files(Manga $manga)
+    {
+        $manga = $manga->load([
+            'archives',
+            'associatedNameReferences.associatedName',
+            'authorReferences.author',
+            'artistReferences.artist',
+            'genreReferences.genre',
+            'comments',
+        ]);
 
-        return view('manga.index')->with('id', $id)
-                                  ->with('mu_id', $mu_id)
-                                  ->with('is_favorited', $is_favorited)
-                                  ->with('isWatching', $isWatching)
-                                  ->with('name', $name)
-                                  ->with('description', $description)
-                                  ->with('type', $type)
-                                  ->with('assoc_names', $assoc_names)
-                                  ->with('genres', $genres)
-                                  ->with('authors', $authors)
-                                  ->with('artists', $artists)
-                                  ->with('year', $year)
-                                  ->with('lastUpdated', $lastUpdated)
-                                  ->with('archives', $archives)
-                                  ->with('readerHistory', $readerHistory)
-                                  ->with('watchNotifications', $watchNotifications)
-                                  ->with('path', $path)
-                                  ->with('sort', $sort);
+        $user = \Auth::user()->load('favorites', 'readerHistory', 'watchReferences');
+
+        return view('manga.files')
+            ->with('user', $user)
+            ->with('manga', $manga)
+            ->with('sort', 'ascending');
+    }
+
+    public function comments(Manga $manga)
+    {
+        $manga = $manga->load([
+            'archives',
+            'associatedNameReferences.associatedName',
+            'authorReferences.author',
+            'artistReferences.artist',
+            'genreReferences.genre',
+            'comments',
+        ]);
+
+        $user = \Auth::user()->load('favorites', 'readerHistory', 'watchReferences');
+
+        return view('manga.comments')
+            ->with('user', $user)
+            ->with('manga', $manga);
     }
 }
