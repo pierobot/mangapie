@@ -39,7 +39,8 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
     });
 
     Route::prefix('comments')->name('comments')->group(function () {
-        Route::put('/', 'CommentController@create');
+        Route::put('/', 'CommentController@put');
+        Route::delete('/', 'CommentController@delete');
     });
 
     Route::prefix('cover')->name('cover')->group(function () {
