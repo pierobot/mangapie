@@ -140,6 +140,12 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::post('/profile', 'UserSettingsController@updateProfile');
     });
 
+    Route::prefix('vote')->name('votes')->group(function() {
+        Route::put('/', 'VoteController@put');
+        Route::patch('/', 'VoteController@patch');
+        Route::delete('/', 'VoteController@delete');
+    });
+
     Route::prefix('watch')->name('watch')->group(function () {
         Route::post('/update', 'WatchController@update');
     });

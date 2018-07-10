@@ -6,7 +6,14 @@ use App\Interfaces\ImageArchiveInterface;
 
 class ImageArchiveRar implements ImageArchiveInterface
 {
+    /**
+     * @var string
+     */
     private $m_file_path;
+
+    /**
+     * @var \RarArchive
+     */
     private $m_rar;
 
     public function __construct($file_path)

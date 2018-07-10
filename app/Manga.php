@@ -116,22 +116,14 @@ class Manga
     public function forceDelete()
     {
         // delete all information and references that belongs to this manga
-
-        $id = $this->getId();
-
-        ArtistReference::where('manga_id', $id)->forceDelete();
-
-        AuthorReference::where('manga_id', $id)->forceDelete();
-
-        GenreReference::where('manga_id', $id)->forceDelete();
-
-        Favorite::where('manga_id', $id)->forceDelete();
-
-        Archive::where('manga_id', $id)->forceDelete();
-
-        ReaderHistory::where('manga_id', $id)->forceDelete();
-
-        WatchNotification::where('manga_id', $id)->forceDelete();
+        $this->artistReferences()->forceDelete();
+        $this->authorReferences()->forceDelete();
+        $this->genreReferences()->forceDelete();
+        $this->favorites()->forceDelete();
+        $this->archives()->forceDelete();
+        $this->readerHistory()->forceDelete();
+        $this->watchNotifications()->forceDelete();
+        $this->votes()->forceDelete();
 
         parent::forceDelete();
     }
@@ -144,6 +136,26 @@ class Manga
     public function comments()
     {
         return $this->hasMany(\App\Comment::class);
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(\App\Favorite::class);
+    }
+
+    public function readerHistory()
+    {
+        return $this->hasMany(\App\ReaderHistory::class);
+    }
+
+    public function votes()
+    {
+        return $this->hasMany(\App\Vote::class);
+    }
+
+    public function watchNotifications()
+    {
+        return $this->hasMany(\App\WatchNotification::class);
     }
 
     public function library()
