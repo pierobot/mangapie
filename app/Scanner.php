@@ -65,12 +65,16 @@ class Scanner
 
     public static function getArchives($manga_id, $path, $sort = 'ascending')
     {
-        // get all the files in the path and filter by archives
-        $files = Finder::create()->in($path)
-                                 ->name('*.zip')
-                                 ->name('*.cbz')
-                                 ->name('*.rar')
-                                 ->name('*.cbr');
+        try {
+            // get all the files in the path and filter by archives
+            $files = Finder::create()->in($path)
+                ->name('*.zip')
+                ->name('*.cbz')
+                ->name('*.rar')
+                ->name('*.cbr');
+        } catch (\InvalidArgumentException $e) {
+            return false;
+        }
 
         // sort by number tokens
         $files->sort(function ($left, $right) use ($sort) {

@@ -53,6 +53,22 @@ textarea {
     pointer-events: none;
 }
 
+span.glyphicon.glyphicon-size-1x {
+    font-size: 1em;
+}
+
+span.glyphicon.glyphicon-size-2x {
+    font-size: 2em;
+}
+
+span.glyphicon.glyphicon-size-3x {
+    font-size: 3em;
+}
+
+span.glyphicon.glyphicon-size-4x {
+    font-size: 4em;
+}
+
 @keyframes wiggle {
     0% { transform: rotate(0deg); }
     80% { transform: rotate(0deg); }

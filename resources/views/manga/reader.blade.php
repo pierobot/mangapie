@@ -6,51 +6,6 @@
 
 @section ('custom_navbar_right')
     <li class="clickable navbar-link"><a href="{{ URL::action('MangaController@index', [$id]) }}"><span class="glyphicon glyphicon-book white"></span> Information</a></li>
-
-@if ($page_count != 0)
-
-    @if($ltr == false)
-        @if ($has_next_page)
-            <li class="clickable navbar-link"><a href="{{ $next_url }}" id="next-image"><span class="glyphicon glyphicon-chevron-left white"></span> Next</a></li>
-        @else
-            <li class="navbar-link disabled"><a href="#" id="next-image"><span class="glyphicon glyphicon-chevron-left white"></span> Next</a></li>
-        @endif
-
-        @if ($has_prev_page)
-            <li class="clickable navbar-link"><a href="{{ $prev_url }}" id="prev-image"><span class="glyphicon glyphicon-chevron-right white"></span> Previous</a></li>
-        @else
-            <li class="navbar-link disabled"><a href="#" id="prev-image"><span class="glyphicon glyphicon-chevron-right white"></span> Previous</a></li>
-        @endif
-    @else
-        @if ($has_prev_page)
-            <li class="clickable navbar-link"><a href="{{ $prev_url }}" id="prev-image"><span class="glyphicon glyphicon-chevron-left white"></span> Previous</a></li>
-        @else
-            <li class="navbar-link disabled"><a href="#" id="prev-image"><span class="glyphicon glyphicon-chevron-left white"></span> Previous</a></li>
-        @endif
-
-        @if ($has_next_page)
-            <li class="clickable navbar-link"><a href="{{ $next_url }}" id="next-image"><span class="glyphicon glyphicon-chevron-right white"></span> Next</a></li>
-        @else
-            <li class="navbar-link disabled"><a href="#" id="next-image"><span class="glyphicon glyphicon-chevron-right white"></span> Next</a></li>
-        @endif
-    @endif
-
-    <li class="dropdown">
-        <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            <span class="glyphicon glyphicon-file"></span>&nbsp;Page
-            <span class="badge">{{ $page }}</span> of
-            <span class="badge">{{ $page_count }}</span>
-            <span class="glyphicon glyphicon-chevron-down white"></span>
-        </a>
-        <ul class="dropdown-menu" style="color: black;">
-            @for ($i = 1; $i <= $page_count; $i++)
-            <li>
-                {{ Html::link(URL::action('ReaderController@index', [$id, $archive->getId(), $i]), $i) }}
-            </li>
-            @endfor
-        </ul>
-    </li>
-@endif
 @endsection
 
 @section ('content')
@@ -58,9 +13,99 @@
 
     @if ($page_count !== 0)
         <div class="row text-center">
-            {{--<a id="image" href="{{ $has_next_page ? $next_url : "#" }}">--}}
-                {{ Html::image(URL::action('ReaderController@image', [$id, $archive->getId(), $page]), 'image', ['class' => 'reader-image']) }}
-            {{--</a>--}}
+            {{ Html::image(URL::action('ReaderController@image', [$id, $archive->getId(), $page]), 'image', ['class' => 'reader-image']) }}
+        </div>
+
+        <div class="row">
+            <div class="col-xs-12">
+                <table class="table table-va-middle">
+                    <tbody>
+                        <tr>
+                            <td class="col-xs-2 text-center">
+                                <div class="hidden-xs">
+                                    @if ($ltr)
+                                        @if ($has_prev_page)
+                                            <a href="{{ $prev_url }}">
+                                                <span class="glyphicon glyphicon-arrow-left glyphicon-size-4x"></span>
+                                            </a>
+                                        @endif
+                                    @else
+                                        @if ($has_next_page)
+                                            <a href="{{ $next_url }}">
+                                                <span class="glyphicon glyphicon-arrow-right glyphicon-size-4x"></span>
+                                            </a>
+                                        @endif
+                                    @endif
+                                </div>
+
+                                <div class="visible-xs">
+                                    @if ($ltr)
+                                        @if ($has_prev_page)
+                                            <a href="{{ $prev_url }}">
+                                                <span class="glyphicon glyphicon-arrow-left glyphicon-size-2x"></span>
+                                            </a>
+                                        @endif
+                                    @else
+                                        @if ($has_next_page)
+                                            <a href="{{ $next_url }}">
+                                                <span class="glyphicon glyphicon-arrow-right glyphicon-size-2x"></span>
+                                            </a>
+                                        @endif
+                                    @endif
+                                </div>
+                            </td>
+
+                            <td class="col-xs-8 text-center">
+                                <div class="hidden-xs">
+                                    <h2>
+                                        <b>Page {{ $page }} of {{ $page_count }}</b>
+                                    </h2>
+                                </div>
+
+                                <div class="visible-xs">
+                                    <h4>
+                                        <b>Page {{ $page }} of {{ $page_count }}</b>
+                                    </h4>
+                                </div>
+                            </td>
+
+                            <td class="col-xs-2 text-center">
+                                <div class="hidden-xs">
+                                    @if ($ltr)
+                                        @if ($has_next_page)
+                                            <a href="{{ $next_url }}">
+                                                <span class="glyphicon glyphicon-arrow-right glyphicon-size-4x"></span>
+                                            </a>
+                                        @endif
+                                    @else
+                                        @if ($has_prev_page)
+                                            <a href="{{ $prev_url }}">
+                                                <span class="glyphicon glyphicon-arrow-left glyphicon-size-4x"></span>
+                                            </a>
+                                        @endif
+                                    @endif
+                                </div>
+
+                                <div class="visible-xs">
+                                    @if ($ltr)
+                                        @if ($has_next_page)
+                                            <a href="{{ $next_url }}">
+                                                <span class="glyphicon glyphicon-arrow-right glyphicon-size-2x"></span>
+                                            </a>
+                                        @endif
+                                    @else
+                                        @if ($has_prev_page)
+                                            <a href="{{ $prev_url }}">
+                                                <span class="glyphicon glyphicon-arrow-left glyphicon-size-2x"></span>
+                                            </a>
+                                        @endif
+                                    @endif
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         @if ($preload !== false)
@@ -70,7 +115,35 @@
             @endforeach
         </div>
         @endif
-    @endif
+
+        <div class="hidden">
+            @if($ltr)
+                @if ($has_prev_page)
+                    <a href="{{ $prev_url }}" id="prev-image"><span class="glyphicon glyphicon-chevron-left white"></span> Previous</a>
+                @else
+                    <a href="#" id="prev-image"><span class="glyphicon glyphicon-chevron-left white"></span> Previous</a>
+                @endif
+
+                @if ($has_next_page)
+                    <a href="{{ $next_url }}" id="next-image"><span class="glyphicon glyphicon-chevron-right white"></span> Next</a>
+                @else
+                    <a href="#" id="next-image"><span class="glyphicon glyphicon-chevron-right white"></span> Next</a>
+                @endif
+            @else
+                @if ($has_next_page)
+                    <a href="{{ $next_url }}" id="next-image"><span class="glyphicon glyphicon-chevron-left white"></span> Next</a>
+                @else
+                    <a href="#" id="next-image"><span class="glyphicon glyphicon-chevron-left white"></span> Next</a>
+                @endif
+
+                @if ($has_prev_page)
+                    <a href="{{ $prev_url }}" id="prev-image"><span class="glyphicon glyphicon-chevron-right white"></span> Previous</a>
+                @else
+                    <a href="#" id="prev-image"><span class="glyphicon glyphicon-chevron-right white"></span> Previous</a>
+                @endif
+            @endif
+            @endif
+        </div>
 @endsection
 
 @section ('scripts')
@@ -79,14 +152,14 @@
 
             // set up handler for key events
             $(document).on('keyup', function (e) {
-                if (e.keyCode == 37 || e.keyCode == 65) {
+                if (e.keyCode === 37 || e.keyCode === 65) {
                     // left arrow or a
                     @if ($ltr == false)
                         window.location = $('#next-image').attr('href');
                     @else
                         window.location = $('#prev-image').attr('href');
                     @endif
-                } else if (e.keyCode == 39 || e.keyCode == 68) {
+                } else if (e.keyCode === 39 || e.keyCode === 68) {
                     // right arrow or d
                     @if ($ltr == false)
                         window.location = $('#prev-image').attr('href');
@@ -102,8 +175,8 @@
             });
 
             $('.reader-image').click(function (eventData) {
-                var x = eventData.offsetX;
-                var width = $('.reader-image').width();
+                const x = eventData.offsetX;
+                const width = $('.reader-image').width();
 
                 if (x < (width / 2)) {
                     // left side click
