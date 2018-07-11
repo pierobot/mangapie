@@ -58,13 +58,43 @@
                             <td class="col-xs-8 text-center">
                                 <div class="hidden-xs">
                                     <h2>
-                                        <b>Page {{ $page }} of {{ $page_count }}</b>
+                                        <b>Page {{ $page }}
+                                            <div class="dropdown btn-group">
+                                                <a role="button" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span class="glyphicon glyphicon-triangle-bottom"></span>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    @for ($i = 1; $i <= $page_count; $i++)
+                                                        <li>
+                                                            {{ Html::link(URL::action('ReaderController@index', [$id, $archive->getId(), $i]), $i) }}
+                                                        </li>
+                                                    @endfor
+                                                </ul>
+                                            </div>
+
+                                            of {{ $page_count }}
+                                        </b>
                                     </h2>
                                 </div>
 
                                 <div class="visible-xs">
                                     <h4>
-                                        <b>Page {{ $page }} of {{ $page_count }}</b>
+                                        <b>Page {{ $page }}
+                                            <div class="dropdown btn-group">
+                                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                    <span class="glyphicon glyphicon-triangle-bottom"></span>
+                                                </a>
+                                                <ul class="dropdown-menu">
+                                                    @for ($i = 1; $i <= $page_count; $i++)
+                                                        <li tabindex="-1">
+                                                            {{ Html::link(URL::action('ReaderController@index', [$id, $archive->getId(), $i]), $i) }}
+                                                        </li>
+                                                    @endfor
+                                                </ul>
+                                            </div>
+
+                                            of {{ $page_count }}
+                                        </b>
                                     </h4>
                                 </div>
                             </td>
