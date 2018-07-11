@@ -22,6 +22,7 @@ class MangaController extends Controller
 
     public function index(Manga $manga, $sort = 'ascending')
     {
+        // these are all required because of the responsive layouts
         $manga = $manga->load([
             'archives',
             'associatedNameReferences.associatedName',
@@ -29,9 +30,10 @@ class MangaController extends Controller
             'artistReferences.artist',
             'genreReferences.genre',
             'comments',
+            'votes'
         ]);
 
-        $user = \Auth::user()->load('favorites', 'readerHistory', 'watchReferences');
+        $user = \Auth::user()->load(['favorites', 'readerHistory', 'watchReferences']);
 
         return view('manga.index')
             ->with('user', $user)
@@ -41,6 +43,7 @@ class MangaController extends Controller
 
     public function files(Manga $manga)
     {
+        // these are all required because of the responsive layouts
         $manga = $manga->load([
             'archives',
             'associatedNameReferences.associatedName',
@@ -48,9 +51,10 @@ class MangaController extends Controller
             'artistReferences.artist',
             'genreReferences.genre',
             'comments',
+            'votes'
         ]);
 
-        $user = \Auth::user()->load('favorites', 'readerHistory', 'watchReferences');
+        $user = \Auth::user()->load(['favorites', 'readerHistory', 'watchReferences']);
 
         return view('manga.files')
             ->with('user', $user)
@@ -60,6 +64,7 @@ class MangaController extends Controller
 
     public function comments(Manga $manga)
     {
+        // these are all required because of the responsive layouts
         $manga = $manga->load([
             'archives',
             'associatedNameReferences.associatedName',
@@ -67,9 +72,10 @@ class MangaController extends Controller
             'artistReferences.artist',
             'genreReferences.genre',
             'comments',
+            'votes'
         ]);
 
-        $user = \Auth::user()->load('favorites', 'readerHistory', 'watchReferences');
+        $user = \Auth::user()->load(['favorites', 'readerHistory', 'watchReferences']);
 
         return view('manga.comments')
             ->with('user', $user)

@@ -129,4 +129,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\ReaderHistory::class, 'user_id', 'id');
     }
+
+    public function votes()
+    {
+        return $this->hasMany(\App\Vote::class, 'user_id', 'id');
+    }
 }

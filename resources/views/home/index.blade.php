@@ -8,6 +8,7 @@
 @endsection
 
 @section ('content')
+    @include ('shared.success')
     @include ('shared.errors')
     @include ('shared.index')
 @endsection

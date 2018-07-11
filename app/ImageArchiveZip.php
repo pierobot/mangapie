@@ -8,7 +8,14 @@ use App\Interfaces\ImageArchiveInterface;
 
 class ImageArchiveZip implements ImageArchiveInterface
 {
+    /**
+     * @var string
+     */
     private $m_file_path;
+
+    /**
+     * @var ZipArchive
+     */
     private $m_zip;
 
     public function __construct($file_path)

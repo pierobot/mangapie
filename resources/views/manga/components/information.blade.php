@@ -137,6 +137,80 @@
     <li class="list-group-item">
         <div class="row">
             <div class="col-xs-3 col-md-2">
+                <span class="glyphicon glyphicon-star"></span>
+                <b>Rating</b>
+            </div>
+            <div  class="col-xs-9 col-md-10">
+                <div class="row">
+                    <div class="col-xs-6 col-sm-4">
+                        <label>Average</label><Br>
+                        @if ($manga->votes->count() > 0)
+                            @php
+                                $averageRating = \App\Rating::average($manga);
+                                if ($averageRating !== false)
+                                    $averageRating = round($averageRating);
+
+                                $userVote = $user->votes->where('manga_id', $manga->id)->first();
+                            @endphp
+
+                            <p>
+                                {{ $averageRating }}
+                                @if (! empty($userVote))
+                                    <span class="glyphicon glyphicon-ok text-success" title="You've voted!"></span>
+                                @endif
+                            </p>
+                        @else
+                            <p>N/A</p>
+                        @endif
+                    </div>
+                    <div class="col-xs-6 col-sm-4">
+                        <label title="Lower bound Wilson score">Wilson&nbsp;<a href="https://www.evanmiller.org/how-not-to-sort-by-average-rating.html">&lbrack;&quest;&rbrack;</a></label>
+                        @if ($manga->votes->count() > 0)
+                            @php
+                                $rating = \App\Rating::get($manga);
+                                if ($rating !== false)
+                                    $rating = round($rating, 2);
+                            @endphp
+                            <p title="Lower bound Wilson score">{{$rating }}</p>
+                        @else
+                            <p title="Lower bound Wilson score">N/A</p>
+                        @endif
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xs-12">
+                        <label>Vote</label><br>
+
+                        <div class="row">
+                            <div class="col-xs-12">
+                                @if (empty($userVote))
+                                    {{ Form::open(['action' => 'VoteController@put', 'method' => 'put', 'style' => 'display:inline-block;']) }}
+                                    {{ Form::hidden('manga_id', $manga->id) }}
+                                @else
+                                    {{ Form::open(['action' => 'VoteController@patch', 'method' => 'patch', 'style' => 'display:inline-block;']) }}
+                                    {{ Form::hidden('vote_id', $userVote->id) }}
+                                @endif
+                                {{ Form::selectRange('rating', 100, 1, ! empty($userVote) ? $userVote->rating : 70 ) }}
+                                <button type="submit" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-ok"></span>&#8203;</button>
+                                {{ Form::close() }}
+
+                                @if (! empty($userVote))
+                                    {{ Form::open(['action' => 'VoteController@delete', 'method' => 'delete', 'style' => 'display:inline-block']) }}
+                                    {{ Form::hidden('vote_id', $userVote->id) }}
+                                    <button type="submit" class="btn btn-sm btn-danger"><span class="glyphicon glyphicon-remove"></span>&#8203;</button>
+                                    {{ Form::close() }}
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-xs-3 col-md-2">
                 <span class="glyphicon glyphicon glyphicon-share"></span>
                 <b>Actions</b>
             </div>
