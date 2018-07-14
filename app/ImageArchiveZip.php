@@ -138,14 +138,12 @@ class ImageArchiveZip implements ImageArchiveInterface
             });
 
             $entryName = $images[$index]['name'];
+            $size = $images[$index]['size'];
             $destPath = $path . DIRECTORY_SEPARATOR . $name;
 
-            if ($this->m_zip->extractTo($path, [$entryName])) {
-                rename($path . DIRECTORY_SEPARATOR . $entryName, $destPath);
-                \File::deleteDirectory($path . DIRECTORY_SEPARATOR . $entryName);
-
-                return true;
-            }
+            $stream = $this->m_zip->getStream($entryName);
+            if (! empty($stream))
+                return file_put_contents($destPath, $stream, LOCK_EX) === $size ? true : false;
         }
 
         return false;
