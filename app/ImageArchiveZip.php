@@ -119,4 +119,35 @@ class ImageArchiveZip implements ImageArchiveInterface
 
         return $images;
     }
+
+    /**
+     * Extracts the image at the given index to the given path.
+     *
+     * @param $index
+     * @param $path
+     * @param $name
+     * @return bool
+     */
+    public function extract($index, $path, $name)
+    {
+        if ($index >= 0 && !empty($path)) {
+            $images = $this->getImages();
+
+            usort($images, function ($left, $right) {
+                return strnatcasecmp($left['name'], $right['name']);
+            });
+
+            $entryName = $images[$index]['name'];
+            $destPath = $path . DIRECTORY_SEPARATOR . $name;
+
+            if ($this->m_zip->extractTo($path, [$entryName])) {
+                rename($path . DIRECTORY_SEPARATOR . $entryName, $destPath);
+                \File::deleteDirectory($path . DIRECTORY_SEPARATOR . $entryName);
+
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

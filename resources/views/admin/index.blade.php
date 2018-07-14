@@ -56,6 +56,19 @@
                         <hr>
                     </div>
                 </div>
+
+                <div class="col-xs-12 col-md-4">
+                    <div class="col-xs-12">
+                        <h4><b>Images</b></h4>
+                    </div>
+                    <div class="col-xs-12">
+                        <label>Size:</label> {{ App\Archive::convertSizeToReadable(App\Image::size()) }}<br>
+                        <label>Path:</label> {{ App\Image::disk()->path('') }}
+                    </div>
+                    <div class="col-xs-12">
+                        <hr>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

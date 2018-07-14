@@ -130,4 +130,31 @@ class ImageArchiveRar implements ImageArchiveInterface
 
         return $images;
     }
+
+    /**
+     * Extracts the image at the given index to the given path.
+     *
+     * @param $index
+     * @param $path
+     * @param $name
+     * @return bool
+     */
+    public function extract($index, $path, $name)
+    {
+        $images = $this->getImages();
+        if ($index >= 0 && (count($images) - 1 >= $index) && ! empty($path)) {
+            usort($images, function ($left, $right) {
+                return strnatcasecmp($left['name'], $right['name']);
+            });
+
+            $entryName = $images[$index]['name'];
+            $destPath = $path . DIRECTORY_SEPARATOR . $name;
+            $size = 0;
+
+            return $this->m_rar->getEntry($entryName)->extract(false, $destPath);
+//            return copy($this->getImageUrlPath($index, $size), $destPath);
+        }
+
+        return false;
+    }
 }

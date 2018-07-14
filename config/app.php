@@ -124,6 +124,8 @@ return [
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
+    'extract' => env('APP_EXTRACT', false),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
