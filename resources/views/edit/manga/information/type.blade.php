@@ -14,9 +14,8 @@
                         <div class="col-xs-6">
                             <h4>New</h4>
                             <hr>
-                            {{ Form::open(['action' => 'MangaEditController@update']) }}
-                            {{ Form::hidden('id', $id) }}
-                            {{ Form::hidden('action', 'type.update') }}
+                            {{ Form::open(['action' => 'MangaEditController@patchType', 'method' => 'patch']) }}
+                            {{ Form::hidden('manga_id', $id) }}
                             <div class="row">
                                 <div class="col-xs-12 col-md-6">
                                     <select name="type" class="form-control">
@@ -40,10 +39,8 @@
                                     </div>
                                 </div>
                                 <br>
-
-                                {{ Form::open(['action' => 'MangaEditController@update']) }}
-                                {{ Form::hidden('id', $id) }}
-                                {{ Form::hidden('action', 'type.delete') }}
+                                {{ Form::open(['action' => 'MangaEditController@deleteType', 'method' => 'delete']) }}
+                                {{ Form::hidden('manga_id', $id) }}
                                 {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
                                 {{ Form::close() }}
                             @endif

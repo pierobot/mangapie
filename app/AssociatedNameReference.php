@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class AssociatedNameReference extends Model
 {
-    //
     protected $fillable = ['manga_id', 'assoc_name_id'];
 
     public function getMangaId()

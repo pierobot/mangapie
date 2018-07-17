@@ -58,7 +58,22 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
 
     Route::prefix('edit')->middleware('maintainer')->name('edit')->group(function () {
         Route::get('/{manga}', 'MangaEditController@index');
-        Route::post('/', 'MangaEditController@update');
+
+        Route::patch('/artist', 'MangaEditController@patchArtist');
+        Route::patch('/author', 'MangaEditController@patchAuthor');
+        Route::patch('/assocname', 'MangaEditController@patchAssocName');
+        Route::patch('/genres', 'MangaEditController@updateGenres');
+        Route::patch('/autofill', 'MangaEditController@patchAutofill');
+        Route::patch('/description', 'MangaEditController@patchDescription');
+        Route::patch('/type', 'MangaEditController@patchType');
+        Route::patch('/year', 'MangaEditController@patchYear');
+
+        Route::delete('/artist', 'MangaEditController@deleteArtist');
+        Route::delete('/author', 'MangaEditController@deleteAuthor');
+        Route::delete('/assocname', 'MangaEditController@deleteAssocName');
+        Route::delete('/description', 'MangaEditController@deleteDescription');
+        Route::delete('/type', 'MangaEditController@deleteType');
+        Route::delete('/year','MangaEditController@deleteYear');
 
         Route::get('/mangaupdates/{manga}', 'MangaEditController@mangaupdates');
 

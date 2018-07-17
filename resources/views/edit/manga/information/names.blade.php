@@ -14,14 +14,13 @@
                         <div class="col-xs-6">
                             <h4>New</h4>
                             <hr>
-                            {{ Form::open(['action' => 'MangaEditController@update']) }}
-                            {{ Form::hidden('id', $id) }}
-                            {{ Form::hidden('action', 'assoc_name.add') }}
+                            {{ Form::open(['action' => 'MangaEditController@patchAssocName', 'method' => 'patch']) }}
+                            {{ Form::hidden('manga_id', $id) }}
                             <div class="row">
                                 <div class="col-xs-12 col-md-6">
                                     {{ Form::input('assoc_name', null, null, ['class' => 'form-control',
                                     'placeholder' => 'Enter name...',
-                                    'name' => 'assoc_name']) }}
+                                    'name' => 'name']) }}
                                 </div>
                             </div>
                             <br>
@@ -32,15 +31,14 @@
                              style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">
                             <h4>Current</h4>
                             <hr>
-                            @if (isset($assoc_names))
-                                {{ Form::open(['action' => 'MangaEditController@update']) }}
-                                {{ Form::hidden('id', $id) }}
-                                {{ Form::hidden('action', 'assoc_name.delete') }}
+                            @if (isset($assocNameReferences))
+                                {{ Form::open(['action' => 'MangaEditController@deleteAssocName', 'method' => 'delete']) }}
+                                {{ Form::hidden('manga_id', $id) }}
                                 <div class="row">
                                     <div class="col-xs-12 col-md-6">
-                                        <select name="assoc_name" class="form-control">
-                                            @foreach ($assoc_names as $name_)
-                                                <option value="{{ $name_->getName() }}">{{ $name_->getName() }}</option>
+                                        <select name="associated_name_reference_id" class="form-control">
+                                            @foreach ($assocNameReferences as $assocNameReference)
+                                                <option value="{{ $assocNameReference->id }}">{{ $assocNameReference->associatedName->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

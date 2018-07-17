@@ -135,7 +135,7 @@ class MangaUpdates implements AutoFillInterface
         $assocNames = [];
         while (empty($currentElement) == false) {
             if (empty($currentElement->textContent) == false)
-                array_push($assocNames, $currentElement->textContent);
+                $assocNames[] = $currentElement->textContent;
 
             $currentElement = $currentElement->nextSibling;
         }
@@ -153,7 +153,7 @@ class MangaUpdates implements AutoFillInterface
 
         $genres = [];
         foreach ($genreLinks as $genreLink) {
-            array_push($genres, $genreLink->textContent);
+            $genres[] = $genreLink->textContent;
         }
 
         return $genres;
@@ -169,7 +169,7 @@ class MangaUpdates implements AutoFillInterface
 
         $authors = [];
         foreach ($authorLinks as $authorLink) {
-            array_push($authors, $authorLink->textContent);
+            $authors[] = $authorLink->textContent;
         }
 
         return $authors;
@@ -185,7 +185,7 @@ class MangaUpdates implements AutoFillInterface
 
         $artists = [];
         foreach ($artistLinks as $artistLink) {
-            array_push($artists, $artistLink->textContent);
+            $artists[] = $artistLink->textContent;
         }
 
         return $artists;
@@ -232,8 +232,8 @@ class MangaUpdates implements AutoFillInterface
      * Automatically scrapes information about a manga from mangaupdates.
      * This function also saves, and overwrites, the information to the database.
      *
-     * @param App\Manga $manga The manga to autofill.
-     * @return bool TRUE on success and FALSE on failure.
+     * @param Manga $manga The manga to autofill.
+     * @return bool
      */
     public static function autofill($manga)
     {
@@ -255,12 +255,23 @@ class MangaUpdates implements AutoFillInterface
         return $result;
     }
 
+    /**
+     * Automatically fills information about a manga from mangaupdates.
+     * @param Manga $manga The manga to autofill.
+     * @param int $id The mangaupdates id.
+     * @return bool
+     */
     public static function autofillFromId($manga, $id)
     {
         $result = false;
         $information = self::information($id);
 
-        if (empty($information) == false) {
+        if (! empty($information)) {
+            $manga->authorReferences()->forceDelete();
+            $manga->artistReferences()->forceDelete();
+            $manga->genreReferences()->forceDelete();
+            $manga->associatedNameReferences()->forceDelete();
+
             $manga->setMangaUpdatesId($information['mu_id']);
             $manga->setType($information['type']);
             $manga->setDescription($information['description']);
