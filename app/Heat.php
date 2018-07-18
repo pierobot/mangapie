@@ -116,9 +116,14 @@ final class Heat
         self::initialize();
 
         $heatData = self::data($model);
-        $temperature = $increment ?
-            self::heat($heatData->temperature) :
-            self::cooldown($heatData->temperature, $heatData->lastUpdated);
+        if (empty($heatData)) {
+            $heatData = new HeatData($model->id, self::$defaultTemperature);
+            $temperature = $heatData->temperature;
+        } else {
+            $temperature = $increment ?
+                self::heat($heatData->temperature) :
+                self::cooldown($heatData->temperature, $heatData->lastUpdated);
+        }
 
         if ($model instanceof Archive)
             self::setArchiveHeatData($model->id, $temperature);
