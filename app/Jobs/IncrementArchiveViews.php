@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Archive;
+use App\Heat;
 use App\User;
 use Carbon\Carbon;
 
@@ -54,6 +55,8 @@ class IncrementArchiveViews implements ShouldQueue
             $views->create([
                 'archive_id' => $this->archive->id
             ]);
+
+            Heat::update($this->archive);
         }
     }
 }

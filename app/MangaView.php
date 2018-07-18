@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class MangaViews extends Model
+class MangaView extends Model
 {
     protected $fillable = [
         'user_id',

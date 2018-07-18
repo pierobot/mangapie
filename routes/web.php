@@ -22,6 +22,9 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::get('/', 'AdminController@index');
         Route::get('/users', 'AdminController@users');
         Route::get('/libraries', 'AdminController@libraries');
+
+        Route::patch('/images', 'AdminController@patchImages');
+        Route::delete('/images', 'AdminController@deleteImages');
     });
 
     Route::prefix('artist')->name('artist')->group(function () {

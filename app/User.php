@@ -142,6 +142,6 @@ class User extends Authenticatable
 
     public function mangaViews()
     {
-        return $this->hasMany(\App\MangaViews::class);
+        return $this->hasMany(\App\MangaView::class);
     }
 }

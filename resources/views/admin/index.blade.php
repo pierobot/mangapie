@@ -10,6 +10,9 @@
 @section ('content')
     <h2 class="text-center"><b>Dashboard</b></h2>
 
+    @include ('shared.errors')
+    @include ('shared.success')
+
     <div class="panel panel-default">
         <div class="panel-heading">
             <div class="panel-title">
@@ -64,6 +67,16 @@
                     <div class="col-xs-12">
                         <label>Size:</label> {{ App\Archive::convertSizeToReadable(App\Image::size()) }}<br>
                         <label>Path:</label> {{ App\Image::disk()->path('') }}
+                    </div>
+                    <div class="col-xs-6">
+                        {{ Form::open(['action' => 'AdminController@patchImages', 'method' => 'patch']) }}
+                        {{ Form::submit('Clean', ['class' => 'btn btn-warning form-control']) }}
+                        {{ Form::close() }}
+                    </div>
+                    <div class="col-xs-6">
+                        {{ Form::open(['action' => 'AdminController@deleteImages', 'method' => 'delete']) }}
+                        {{ Form::submit('Wipe', ['class' => 'btn btn-danger form-control']) }}
+                        {{ Form::close() }}
                     </div>
                     <div class="col-xs-12">
                         <hr>

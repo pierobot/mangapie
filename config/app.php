@@ -124,7 +124,39 @@ return [
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
 
+    /*
+     |--------------------------------------------------------------------------
+     | Image Extraction Configuration
+     |--------------------------------------------------------------------------
+     |
+     | These variables define the behavior for image extraction.
+     |
+     | The threshold should be a value less than 100. By default, after 72 hours with no views,
+     | the heat value will drop to approximately 1/2 the value. If the value drops
+     | below the threshold, then those images will be removed.
+     |
+     | To get a different behavior, use 'php artisan tinker' to find a value that
+     | fits your needs. I have left App\Heat::heat and App\Heat::cooldown publicly visible
+     | so use those functions to play around with the values.
+     |
+     | Here are some example calls:
+     |
+     | # This cools the heat value by 3 days
+     | App\Heat::cooldown(100, \Carbon\Carbon::now()->subDays(3));
+     |
+     | # This heats the value by one increment
+     | $temperature = 100;
+     | App\Heat::heat($temperature);
+     |
+     */
     'extract' => env('APP_EXTRACT', false),
+    'heat' => [
+        'enabled' => env('APP_HEAT_ENABLED', true),
+        'default' => env('APP_HEAT_DEFAULT', 100.0),
+        'cooldown' => env('APP_HEAT_COOLDOWN_RATE', 0.01),
+        'heat' => env('APP_HEAT_HEAT_RATE', 3.0),
+        'threshold' => env('APP_HEAT_THRESHOLD, 50.0'),
+    ],
 
     /*
     |--------------------------------------------------------------------------

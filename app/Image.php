@@ -98,7 +98,7 @@ class Image
                     return true;
 
                 if (! \File::exists($path))
-                    \File::makeDirectory($path, 0755, true);
+                    \File::makeDirectory($path, 0775, true);
 
                 $imgArchive = ImageArchive::open($manga->getPath() . DIRECTORY_SEPARATOR . $archive->getName());
                 if ($imgArchive->good()) {
@@ -108,6 +108,11 @@ class Image
         }
 
         return false;
+    }
+
+    public static function relativePath(Manga $manga, Archive $archive)
+    {
+        return strval($manga->id) . DIRECTORY_SEPARATOR . strval($archive->id) . DIRECTORY_SEPARATOR;
     }
 
     /**

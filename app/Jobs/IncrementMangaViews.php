@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Heat;
 use App\Manga;
 use App\User;
 use Carbon\Carbon;
@@ -54,6 +55,8 @@ class IncrementMangaViews implements ShouldQueue
             $views->create([
                 'manga_id' => $this->manga->id
             ]);
+
+            Heat::update($this->manga);
         }
     }
 }
