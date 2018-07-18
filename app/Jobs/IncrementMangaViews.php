@@ -4,6 +4,8 @@ namespace App\Jobs;
 
 use App\Manga;
 use App\User;
+use Carbon\Carbon;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -41,8 +43,17 @@ class IncrementMangaViews implements ShouldQueue
      */
     public function handle()
     {
-        $this->user->mangaViews()->create([
-            'manga_id' => $this->manga->id
-        ]);
+        $views = $this->user->mangaViews();
+        // only increment if the last view was >= 12 hours ago
+        $lastView = $views->where('manga_id', $this->manga->id)
+            ->whereTime('created_at', '<=', Carbon::createFromTime(12))
+            ->orderByDesc('created_at')
+            ->first();
+
+        if (empty($lastView)) {
+            $views->create([
+                'manga_id' => $this->manga->id
+            ]);
+        }
     }
 }

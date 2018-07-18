@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Archive;
 use App\User;
+use Carbon\Carbon;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -42,8 +43,17 @@ class IncrementArchiveViews implements ShouldQueue
      */
     public function handle()
     {
-        $this->user->archiveViews()->create([
-            'archive_id' => $this->archive->id
-        ]);
+        $views = $this->user->archiveViews();
+        // only increment if the last view was >= 12 hours ago
+        $lastView = $views->where('archive_id', $this->archive->id)
+            ->whereTime('created_at', '<=', Carbon::createFromTime(12))
+            ->orderByDesc('created_at')
+            ->first();
+
+        if (empty($lastView)) {
+            $views->create([
+                'archive_id' => $this->archive->id
+            ]);
+        }
     }
 }

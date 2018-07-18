@@ -20,7 +20,7 @@ class RecordArchiveViews
             $user = auth()->guard()->user();
             $archive = $request->route('archive');
 
-            \Queue::push(new IncrementArchiveViews($user, $archive), null, 'increment_views');
+            \Queue::push(new IncrementArchiveViews($user, $archive));
         }
 
         return $next($request);

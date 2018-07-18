@@ -20,7 +20,7 @@ class RecordMangaViews
             $user = auth()->guard()->user();
             $manga = $request->route('manga');
 
-            \Queue::push(new IncrementMangaViews($user, $manga), null, 'increment_views');
+            \Queue::push(new IncrementMangaViews($user, $manga));
         }
 
         return $next($request);
