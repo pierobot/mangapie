@@ -9,15 +9,16 @@ use App\Manga;
 use App\User;
 use Carbon\Carbon;
 use Tests\TestCase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /**
  * @covers \App\Heat
+ * @covers \App\Jobs\AdjustHeats
  */
 class HeatTest extends TestCase
 {
     use RefreshDatabase;
+
     /**
      * Asserts that the heat is increased as expected.
      * @param $heat
@@ -63,7 +64,7 @@ class HeatTest extends TestCase
     }
 
     /**
-     * Asserts that the update function for an archive works as intended.
+     * Asserts that the update function for an archive works as expected.
      */
     public function testUpdate()
     {
@@ -81,9 +82,44 @@ class HeatTest extends TestCase
         $this->assertEquals($expectedHeat, $actualHeat);
 
         Heat::update($archive);
-
         $actualHeat = Heat::get($archive);
 
         $this->assertGreaterThan($expectedHeat, $actualHeat);
+
+        $heatData = \Cache::tags('archive_heat')->get($archive->id);
+        $heatData->lastUpdated->subHours(1);
+
+        Heat::update($archive, false);
+        $priorHeat = $actualHeat;
+        $actualHeat = Heat::get($archive);
+
+        $this->assertLessThan($priorHeat, $actualHeat);
+    }
+
+    /**
+     * Asserts that the AdjustsHeatsJob works as expected.
+     */
+    public function testAdjustHeatsJob()
+    {
+        $archive = factory(Archive::class)->create([
+            'manga_id' => factory(Manga::class)->create([
+                'library_id' => factory(Library::class)->create()
+            ])
+        ]);
+
+        Heat::update($archive);
+        Heat::update($archive->manga);
+
+        $archiveHeatData = \Cache::tags('archive_heat')->get($archive->id);
+        $mangaHeatData = \Cache::tags('manga_heat')->get($archive->manga->id);
+
+        $archiveHeatData->lastUpdated->subHours(1);
+        $mangaHeatData->lastUpdated->subHours(1);
+
+        \Queue::push(new \App\Jobs\AdjustHeats());
+
+        $default = \Config::get('app.heat.default');
+        $this->assertLessThan($default, Heat::get($archive));
+        $this->assertLessThan($default, Heat::get($archive->manga));
     }
 }

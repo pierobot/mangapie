@@ -10,7 +10,7 @@ final class HeatData
     /**
      * @var int
      */
-    private $modelId;
+    public $modelId;
 
     /**
      * @var float
@@ -228,7 +228,6 @@ final class Heat
 
         $hourDifference = Carbon::now()->diffInHours($lastUpdated);
 
-        // (Current T) = (Last T) × exp( −(Cooling rate) × (Hours since last T) )
         return $lastTemperature * exp(-(self::$cooldownRate) * $hourDifference);
     }
 }

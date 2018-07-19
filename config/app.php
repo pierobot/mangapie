@@ -131,8 +131,9 @@ return [
      |
      | These variables define the behavior for image extraction.
      |
-     | The threshold should be a value less than 100. By default, after 72 hours with no views,
-     | the heat value will drop to approximately 1/2 the value. If the value drops
+     | The threshold should be a value less than default.
+     | By default, after 72 hours with no views, the heat value will
+     | drop to approximately 1/2 the value. If the value drops
      | below the threshold, then those images will be removed.
      |
      | To get a different behavior, use 'php artisan tinker' to find a value that
