@@ -3,6 +3,7 @@
 namespace App;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 final class HeatData
@@ -11,12 +12,10 @@ final class HeatData
      * @var int
      */
     public $modelId;
-
     /**
      * @var float
      */
     public $temperature;
-
     /**
      * @var Carbon
      */
@@ -25,13 +24,12 @@ final class HeatData
     /**
      * HeatData constructor.
      *
-     * @param int $modelId
-     * @param float $temperature
+     * @param Model $model
      */
-    public function __construct(int $modelId, float $temperature)
+    public function __construct(Model $model)
     {
-        $this->modelId = $modelId;
-        $this->temperature = $temperature;
+        $this->modelId = $model->id;
+        $this->temperature = \Config::get('app.heat.default');
         $this->lastUpdated = Carbon::now();
     }
 
@@ -55,6 +53,38 @@ final class HeatData
     {
         return $modelId;
     }
+
+    /**
+     * Sets the temperature.
+     *
+     * @param float $temperature
+     * @return void
+     */
+    public function setTemperature(float $temperature)
+    {
+        $this->temperature = $temperature;
+        $this->lastUpdated = Carbon::now();
+    }
+
+    /**
+     * Gets the temperature.
+     *
+     * @return float
+     */
+    public function temperature()
+    {
+        return $this->temperature;
+    }
+
+    /**
+     * Gets the time when a user's heat data was last updated.
+     *
+     * @return Carbon
+     */
+    public function lastUpdated()
+    {
+        return $this->lastUpdated;
+    }
 }
 
 // https://www.evanmiller.org/rank-hotness-with-newtons-law-of-cooling.html
@@ -74,7 +104,35 @@ final class Heat
     protected static $cooldownRate;
 
     /**
-     * Initializes the static variables used with the heat and cooldown methods.
+     * @var Model
+     */
+    private $model;
+    /**
+     * @var HeatData
+     */
+    private $data;
+
+    /**
+     * Heat constructor.
+     *
+     * @param User $user
+     * @param Model $model
+     *
+     * @throws \InvalidArgumentException
+     */
+    public function __construct(Model $model)
+    {
+        self::initialize();
+
+        if (! ($model instanceof Archive) && ! ($model instanceof Manga))
+            throw new \InvalidArgumentException('Unsupported model.');
+
+        $this->model = $model;
+        $this->data = $this->data();
+    }
+
+    /**
+     * Initializes the static variables used with the increase and decrease methods.
      *
      * @return void
      */
@@ -88,75 +146,110 @@ final class Heat
     }
 
     /**
-     * Gets the heat value for a given model.
-     * The supported models are Archive and Manga.
+     * Gets the temperature.
      *
-     * @param Model $model
      * @return float|false
      */
-    public static function get(Model $model)
+    public function temperature()
     {
-        self::initialize();
+        return ! empty($this->data) ? $this->data->temperature() : false;
+    }
 
-        $data = self::data($model);
-
-        return ! empty($data) ? $data->temperature : false;
+    /**
+     * Gets the time when the data was last updated.
+     *
+     * @return Carbon|false
+     */
+    public function lastUpdated()
+    {
+        return ! empty($this->data) ? $this->data->lastUpdated() : false;
     }
 
     /**
      * Updates the heat value for a given model.
      * The supported models are Archive and Manga.
      *
-     * @param Model $model
-     * @param bool $increment
+     * @param bool $increase
      * @return void
      */
-    public static function update(Model $model, bool $increment = true)
+    public function update(bool $increase = true)
     {
         self::initialize();
 
-        $heatData = self::data($model);
-        if (empty($heatData)) {
-            $heatData = new HeatData($model->id, self::$defaultTemperature);
-            $temperature = $heatData->temperature;
-        } else {
-            $temperature = $increment ?
-                self::heat($heatData->temperature) :
-                self::cooldown($heatData->temperature, $heatData->lastUpdated);
-        }
+        if (! empty($this->data)) {
+            $temperature = $increase ?
+                self::increase($this->data->temperature()) :
+                self::decrease($this->data->temperature(), $this->data->lastUpdated());
 
-        if ($model instanceof Archive)
-            self::setArchiveHeatData($model->id, $temperature);
-        elseif ($model instanceof Manga)
-             self::setMangaHeatData($model->id, $temperature);
+            $this->data->setTemperature($temperature);
+
+            $this->saveData();
+        }
+    }
+
+    /**
+     * Updates the heat values for all users and given models.
+     * The values will be decreased.
+     *
+     * @param Collection $models
+     *
+     * @throws \InvalidArgumentException
+     */
+    public static function updateAll(Collection $models)
+    {
+        foreach ($models as $model) {
+            $heat = new Heat($model);
+            $heat->update(false);
+        }
+    }
+
+    /**
+     * Saves the HeatData to cache.
+     *
+     * @return void
+     */
+    public function saveData()
+    {
+        if ($this->model instanceof Archive)
+            self::setArchiveHeatData($this->data);
+        elseif ($this->model instanceof Manga)
+            self::setMangaHeatData($this->data);
+
+        $this->data = $this->data();
     }
 
     /**
      * Gets the heat data for a given model.
      * The supported models are Archive and Manga.
      *
-     * @param Model $model
-     * @return HeatData|false
+     * @return HeatData
      */
-    private static function data(Model $model)
+    public function data()
     {
-        if ($model instanceof Archive)
-            return self::archiveHeatData($model->id);
-        elseif ($model instanceof Manga)
-            return self::mangaHeatData($model->id);
+        if ($this->model instanceof Archive)
+            $data = self::archiveHeatData($this->model);
+        elseif ($this->model instanceof Manga)
+            $data = self::mangaHeatData($this->model);
+        else
+            return null;
 
-        return false;
+        if (empty($data)) {
+            $data = $this->data = new HeatData($this->model);
+            $this->saveData();
+        }
+
+        return $data;
     }
 
     /**
      * Retrieves the last heat data for a manga from the cache.
      *
-     * @param int $id
+     * @param Manga $manga
      * @return HeatData
      */
-    private static function mangaHeatData(int $id)
+    private static function mangaHeatData(Manga $manga)
     {
-        $key = HeatData::keyFor($id);
+        $key = HeatData::keyFor($manga->id);
 
         return \Cache::tags('manga_heat')->get($key);
     }
@@ -164,12 +257,12 @@ final class Heat
     /**
      * Retrieves the last heat data for an archive from the cache.
      *
-     * @param int $id
+     * @param Archive $archive
      * @return HeatData
      */
-    private static function archiveHeatData(int $id)
+    private static function archiveHeatData(Archive $archive)
     {
-        $key = HeatData::keyFor($id);
+        $key = HeatData::keyFor($archive->id);
 
         return \Cache::tags('archive_heat')->get($key);
     }
@@ -177,28 +270,22 @@ final class Heat
     /**
      * Sets the heat data for a manga.
      *
-     * @param int $id
-     * @param float $temperature
+     * @param HeatData $heatData
      * @return void
      */
-    private static function setMangaHeatData(int $id, float $temperature)
+    private static function setMangaHeatData(HeatData $heatData)
     {
-        $heatData = new HeatData($id, $temperature);
-
         \Cache::tags('manga_heat')->forever($heatData->key(), $heatData);
     }
 
     /**
      * Sets the heat data for an archive.
      *
-     * @param int $id
-     * @param float $temperature
+     * @param HeatData $heatData
      * @return void
      */
-    private static function setArchiveHeatData(int $id, float $temperature)
+    private static function setArchiveHeatData(HeatData $heatData)
     {
-        $heatData = new HeatData($id, $temperature);
-
         \Cache::tags('archive_heat')->forever($heatData->key(), $heatData);
     }
 
@@ -208,7 +295,7 @@ final class Heat
      * @param float $lastTemperature
      * @return float
      */
-    public static function heat(float $lastTemperature)
+    public static function increase(float $lastTemperature)
     {
         self::initialize();
 
@@ -222,7 +309,7 @@ final class Heat
      * @param Carbon $lastUpdated
      * @return float
      */
-    public static function cooldown(float $lastTemperature, Carbon $lastUpdated)
+    public static function decrease(float $lastTemperature, Carbon $lastUpdated)
     {
         self::initialize();
 

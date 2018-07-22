@@ -66,8 +66,8 @@ class CleanupImageDisk implements ShouldQueue
             }
 
             // only clean if the heat is below the threshold
-            $heat = Heat::get($archive);
-            if (! empty($heat) && $heat < $this->threshold) {
+            $heat = new Heat($archive);
+            if ($heat->temperature() < $this->threshold) {
                 $deletedSuccessfully = Image::disk()->deleteDirectory(Image::relativePath($manga, $archive));
 
                 if (! $deletedSuccessfully)

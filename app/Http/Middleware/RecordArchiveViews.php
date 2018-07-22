@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Jobs\IncreaseArchiveHeat;
 use App\Jobs\IncrementArchiveViews;
 use Closure;
 
@@ -20,7 +21,11 @@ class RecordArchiveViews
             $user = auth()->guard()->user();
             $archive = $request->route('archive');
 
-            \Queue::push(new IncrementArchiveViews($user, $archive));
+            if (\Config::get('app.views.enabled') === true)
+                \Queue::push(new IncrementArchiveViews($user, $archive));
+
+            if (\Config::get('app.heat.enabled') === true)
+                \Queue::push(new IncreaseArchiveHeat($user, $archive));
         }
 
         return $next($request);

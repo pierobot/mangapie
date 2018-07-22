@@ -131,6 +131,21 @@ return [
      |
      | These variables define the behavior for image extraction.
      |
+     | By default, the cleanup job is run once daily if enabled.
+     | You can force running the clean job through the admin dashboard.
+     */
+    'image' => [
+        'extract' => env('APP_IMAGE_EXTRACT', false),
+        'clean' => env('APP_IMAGE_CLEAN', true),
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
+     | Heat Configuration
+     |--------------------------------------------------------------------------
+     |
+     | Here you can control how heat increases and decreases.
+     |
      | The threshold should be a value less than default.
      | By default, after 72 hours with no views, the heat value will
      | drop to approximately 1/2 the value. If the value drops
@@ -148,15 +163,36 @@ return [
      | # This heats the value by one increment
      | $temperature = 100;
      | App\Heat::heat($temperature);
-     |
      */
-    'extract' => env('APP_EXTRACT', false),
     'heat' => [
         'enabled' => env('APP_HEAT_ENABLED', true),
+
         'default' => env('APP_HEAT_DEFAULT', 100.0),
         'cooldown' => env('APP_HEAT_COOLDOWN_RATE', 0.01),
         'heat' => env('APP_HEAT_HEAT_RATE', 3.0),
-        'threshold' => env('APP_HEAT_THRESHOLD, 50.0'),
+        'threshold' => env('APP_HEAT_THRESHOLD', 50.0),
+    ],
+
+    /*
+     |--------------------------------------------------------------------------
+     | View counting configuration
+     |--------------------------------------------------------------------------
+     | Here you can control the behavior for counting views.
+     |
+     | 'time.threshold' indicates the amount of time that should have passed from
+     | a user's last view in order for the count to be increased.
+     |
+     | The default time required is 3 hours (3h).
+     | In order to always count views, regardless of time passed, set 'time.enabled' to false.
+     |
+     */
+    'views' => [
+        'enabled' => env('APP_VIEWS_ENABLED', true),
+
+        'time' => [
+            'enabled' => env('APP_VIEWS_TIME_ENABLED', true),
+            'threshold' => env('APP_VIEWS_TIME_THRESHOLD', '3h'),
+        ],
     ],
 
     /*

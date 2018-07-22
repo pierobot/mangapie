@@ -89,7 +89,7 @@ class Image
      */
     public static function extract(Manga $manga, Archive $archive, int $page)
     {
-        if (\Config::get('app.extract') === true) {
+        if (\Config::get('app.image.extract') === true) {
             if (! empty($manga) && ! empty($archive) && $page > 0) {
                 $path = self::storagePath($manga, $archive);
 

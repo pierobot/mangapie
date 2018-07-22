@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Archive;
 use App\Heat;
+use App\HeatData;
 use App\Library;
 use App\Manga;
 use App\User;
@@ -13,59 +14,50 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /**
  * @covers \App\Heat
- * @covers \App\Jobs\AdjustHeats
+ * @covers \App\Jobs\DecreaseHeats
  */
 class HeatTest extends TestCase
 {
     use RefreshDatabase;
 
     /**
-     * Asserts that the heat is increased as expected.
-     * @param $heat
+     * @param float $heat
      *
      * @testWith [100.0]
      */
-    public function testHeat($heat)
+    public function testIncrease(float $heat)
     {
         $expected = $heat + \Config::get('app.heat.heat');
-        $actual = Heat::heat($heat);
+        $actual = Heat::increase($heat);
 
         $this->assertEquals($expected, $actual);
     }
 
     /**
-     * Asserts that the heat is cooled as expected.
-     *
-     * @param $heat
+     * @param float $heat
      *
      * @testWith [100.0]
      */
-    public function testCooldown($heat)
+    public function testCooldown(float $heat)
     {
-        $after1Hour = Heat::cooldown($heat, Carbon::now()->subHour());
-        $after2Hour = Heat::cooldown($after1Hour, Carbon::now()->subHour());
-        $after3Hour = Heat::cooldown($after2Hour, Carbon::now()->subHour());
+        $after1Hour = Heat::decrease($heat, Carbon::now()->subHour());
+        $after2Hour = Heat::decrease($after1Hour, Carbon::now()->subHour());
+        $after3Hour = Heat::decrease($after2Hour, Carbon::now()->subHour());
 
         $this->assertLessThan($heat, $after1Hour);
         $this->assertLessThan($after1Hour, $after2Hour);
         $this->assertLessThan($after2Hour, $after3Hour);
     }
 
-    /**
-     * Asserts that the get function returns false on an unsupported model.
-     */
-    public function testGetOnUnsupportedModelReturnsFalse()
+    public function testHeatConstructorThrowsOnUnsupportedModel()
     {
-        $manga = factory(User::class)->make();
+        $user = factory(User::class)->create();
 
-        $heat = Heat::get($manga);
+        $this->expectException(\InvalidArgumentException::class);
 
-        $this->assertFalse($heat);
+        $heat = new Heat($user, $user);
     }
 
-    /**
-     * Asserts that the update function for an archive works as expected.
-     */
     public function testUpdate()
     {
         $archive = factory(Archive::class)->create([
@@ -74,30 +66,32 @@ class HeatTest extends TestCase
             ])
         ]);
 
-        Heat::update($archive);
+        $heat = new Heat($archive);
 
-        $expectedHeat = \Config::get('app.heat.default');
-        $actualHeat = Heat::get($archive);
+        $expectedTemp = \Config::get('app.heat.default');
+        $actualTemp = $heat->temperature();
 
-        $this->assertEquals($expectedHeat, $actualHeat);
+        $this->assertEquals($expectedTemp, $actualTemp);
 
-        Heat::update($archive);
-        $actualHeat = Heat::get($archive);
+        $heat->update();
+        $actualTemp = $heat->temperature();
 
-        $this->assertGreaterThan($expectedHeat, $actualHeat);
+        $this->assertGreaterThan($expectedTemp, $actualTemp);
 
-        $heatData = \Cache::tags('archive_heat')->get($archive->id);
-        $heatData->lastUpdated->subHours(1);
+        $heatData = $heat->data();
+        $heatData->lastUpdated = $heatData->lastUpdated->subHours(3);
+        $heat->update(false);
 
-        Heat::update($archive, false);
-        $priorHeat = $actualHeat;
-        $actualHeat = Heat::get($archive);
+        $priorTemp = $actualTemp;
+        $actualTemp = $heat->temperature();
 
-        $this->assertLessThan($priorHeat, $actualHeat);
+        $this->assertLessThan($priorTemp, $actualTemp);
     }
 
     /**
      * Asserts that the AdjustsHeatsJob works as expected.
+     *
+     * @return void
      */
     public function testAdjustHeatsJob()
     {
@@ -107,19 +101,22 @@ class HeatTest extends TestCase
             ])
         ]);
 
-        Heat::update($archive);
-        Heat::update($archive->manga);
+        $archiveHeat = new Heat($archive);
+        $mangaHeat = new Heat($archive->manga);
 
-        $archiveHeatData = \Cache::tags('archive_heat')->get($archive->id);
-        $mangaHeatData = \Cache::tags('manga_heat')->get($archive->manga->id);
+        $archiveHeatData = $archiveHeat->data();
+        $mangaHeatData = $mangaHeat->data();
 
-        $archiveHeatData->lastUpdated->subHours(1);
-        $mangaHeatData->lastUpdated->subHours(1);
+        $archiveHeatData->lastUpdated = $archiveHeatData->lastUpdated->subHours(3);
+        $mangaHeatData->lastUpdated = $mangaHeatData->lastUpdated->subHours(3);
 
-        \Queue::push(new \App\Jobs\AdjustHeats());
+        $archiveHeat->saveData();
+        $mangaHeat->saveData();
+
+        \Queue::push(new \App\Jobs\DecreaseHeats());
 
         $default = \Config::get('app.heat.default');
-        $this->assertLessThan($default, Heat::get($archive));
-        $this->assertLessThan($default, Heat::get($archive->manga));
+        $this->assertLessThan($default, $archiveHeat->temperature());
+        $this->assertLessThan($default, $mangaHeat->temperature());
     }
 }

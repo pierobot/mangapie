@@ -3,9 +3,9 @@
 namespace App\Jobs;
 
 use App\Archive;
+use App\Heat;
 use App\User;
 use Carbon\Carbon;
-
 use Carbon\CarbonInterval;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -13,7 +13,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 
-class IncrementArchiveViews implements ShouldQueue
+class IncreaseArchiveHeat implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -21,15 +21,16 @@ class IncrementArchiveViews implements ShouldQueue
      * @var User
      */
     private $user;
-
     /**
      * @var Archive
      */
     private $archive;
+
     /**
      * Create a new job instance.
      *
-     * @return void
+     * @param User $user
+     * @param Archive $archive
      */
     public function __construct(User $user, Archive $archive)
     {
@@ -46,25 +47,21 @@ class IncrementArchiveViews implements ShouldQueue
     {
         $timeEnabled = \Config::get('app.views.time.enabled');
         $timeThreshold = CarbonInterval::fromString(\Config::get('app.views.time.threshold'));
+        $lastView = $this->user->archiveViews->sortByDesc('created_at')->first();
+        $needsUpdate = true;
 
-        $views = $this->user->archiveViews();
-        $shouldIncrement = true;
+        $heat = new Heat($this->archive);
 
-        if ($timeEnabled) {
-            // only increment if the last view was >= the time threshold
-            $lastView = $views->where('manga_id', $this->archive->id)
-                ->where('created_at', '<=', Carbon::now()->sub($timeThreshold))
-                ->orderByDesc('created_at')
-                ->first();
+        if (! empty($lastView) && $timeEnabled === true) {
+            $createdAt = Carbon::createfromTimeString($lastView->created_at);
+            $timeElapsed = Carbon::now()->diffAsCarbonInterval($createdAt);
 
-            if (empty($lastView))
-                $shouldIncrement = false;
+            if ($timeElapsed->compare($timeThreshold) < 0)
+                $needsUpdate = false;
         }
 
-        if ($shouldIncrement) {
-            $views->create([
-                'archive_id' => $this->archive->id
-            ]);
+        if ($needsUpdate) {
+            $heat->update();
         }
     }
 }

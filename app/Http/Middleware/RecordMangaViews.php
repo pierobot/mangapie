@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Jobs\IncreaseMangaHeat;
 use App\Jobs\IncrementMangaViews;
 use Closure;
 
@@ -20,7 +21,11 @@ class RecordMangaViews
             $user = auth()->guard()->user();
             $manga = $request->route('manga');
 
-            \Queue::push(new IncrementMangaViews($user, $manga));
+            if (\Config::get('app.views.enabled') === true)
+                \Queue::push(new IncrementMangaViews($user, $manga));
+
+            if (\Config::get('app.heat.enabled') === true)
+                \Queue::push(new IncreaseMangaHeat($user, $manga));
         }
 
         return $next($request);
