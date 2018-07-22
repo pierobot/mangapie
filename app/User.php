@@ -134,4 +134,14 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\Vote::class, 'user_id', 'id');
     }
+
+    public function archiveViews()
+    {
+        return $this->hasMany(\App\ArchiveView::class);
+    }
+
+    public function mangaViews()
+    {
+        return $this->hasMany(\App\MangaView::class);
+    }
 }

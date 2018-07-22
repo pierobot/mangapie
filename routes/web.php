@@ -22,6 +22,9 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::get('/', 'AdminController@index');
         Route::get('/users', 'AdminController@users');
         Route::get('/libraries', 'AdminController@libraries');
+
+        Route::patch('/images', 'AdminController@patchImages');
+        Route::delete('/images', 'AdminController@deleteImages');
     });
 
     Route::prefix('artist')->name('artist')->group(function () {
@@ -95,7 +98,7 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::post('/delete', 'LibraryController@delete');
     });
 
-    Route::prefix('manga')->name('manga')->group(function () {
+    Route::prefix('manga')->middleware('manga_views')->name('manga')->group(function () {
         Route::get('/{manga}/{sort?}', 'MangaController@index');
         Route::get('/{manga}/files', 'MangaController@files');
         Route::get('/{manga}/comments', 'MangaController@comments');
@@ -106,7 +109,7 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::post('/dismiss', 'NotificationController@dismiss');
     });
 
-    Route::prefix('reader')->name('reader')->group(function () {
+    Route::prefix('reader')->middleware('archive_views')->name('reader')->group(function () {
         Route::get('/{manga}/{archive}/{page}', 'ReaderController@index');
     });
 

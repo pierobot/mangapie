@@ -1,4 +1,4 @@
-@if (\Session::has('warnings.data'))
+@if (session()->has('warnings.data'))
     <div class="alert alert-warning alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>

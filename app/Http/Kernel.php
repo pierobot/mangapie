@@ -59,5 +59,7 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\RequiresAdmin::class,
         'maintainer' => \App\Http\Middleware\RequiresMaintainer::class,
         'last_seen' => \App\Http\Middleware\UpdateLastSeen::class,
+        'archive_views' => \App\Http\Middleware\RecordArchiveViews::class,
+        'manga_views' => \App\Http\Middleware\RecordMangaViews::class,
     ];
 }

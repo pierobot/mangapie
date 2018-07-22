@@ -28,6 +28,12 @@ class Kernel extends ConsoleKernel
     {
 //        $schedule->command('mangapie:scan')
 //                 ->everyFiveMinutes();
+
+        if (\Config::get('app.heat.enabled') === true)
+            $schedule->job(new \App\Jobs\DecreaseHeats())->hourly();
+
+        if (\Config::get('app.image.clean') === true)
+            $schedule->job(new \App\Jobs\CleanupImageDisk())->daily();
     }
 
     /**

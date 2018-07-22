@@ -7,6 +7,7 @@ use Carbon\Carbon;
 
 use App\Archive;
 use App\Manga;
+use App\Image;
 use App\ImageArchive;
 use App\ReaderHistory;
 
@@ -150,16 +151,6 @@ class ReaderController extends Controller
 
     public function image(Manga $manga, Archive $archive, $page)
     {
-        $image = $manga->getImage($archive, $page);
-
-        if ($image == false)
-            return response()->make(null, 400);
-
-        return response()->make($image['contents'], 200, [
-            'Content-Type' => $image['mime'],
-            'Content-Length' => $image['size'],
-            'Cache-Control' => 'public, max-age=2629800',
-            'Expires' => Carbon::now()->addMonth()->toRfc2822String()
-        ]);
+        return Image::response($manga, $archive, $page);
     }
 }

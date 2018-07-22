@@ -13,4 +13,5 @@ interface ImageArchiveInterface
     public function getImage($index, &$size);
     public function getImageUrlPath($index, &$size);
     public function getImages();
+    public function extract($index, $path, $name);
 }
