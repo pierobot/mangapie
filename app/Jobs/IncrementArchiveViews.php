@@ -52,7 +52,7 @@ class IncrementArchiveViews implements ShouldQueue
 
         if ($timeEnabled) {
             // only increment if the last view was >= the time threshold
-            $lastView = $views->where('manga_id', $this->archive->id)
+            $lastView = $views->where('archive_id', $this->archive->id)
                 ->where('created_at', '<=', Carbon::now()->sub($timeThreshold))
                 ->orderByDesc('created_at')
                 ->first();
