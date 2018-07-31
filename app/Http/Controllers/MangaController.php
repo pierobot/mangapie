@@ -10,7 +10,7 @@ use \App\Favorite;
 use \App\Genre;
 use \App\GenreInformation;
 use \App\Manga;
-use \App\MangaUpdates;
+use \App\Sources\MangaUpdates;
 use App\WatchReference;
 
 class MangaController extends Controller

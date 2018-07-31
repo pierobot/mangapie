@@ -19,7 +19,7 @@ use App\Author;
 use App\Manga;
 use App\Genre;
 use App\Http\Requests\EditMangaGenresRequest;
-use App\MangaUpdates;
+use App\Sources\MangaUpdates;
 
 class MangaEditController extends Controller
 {

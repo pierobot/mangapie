@@ -1,41 +1,40 @@
 <?php
 
-namespace App;
-
-use \Carbon\Carbon;
-use Symfony\Component\DomCrawler\Crawler;
+namespace App\Sources\MangaUpdates;
 
 use App\IntlString;
-use App\Interfaces\AutoFillInterface;
+use App\JaroWinkler;
 
-class MangaUpdates implements AutoFillInterface
+use Symfony\Component\DomCrawler\Crawler;
+
+class Series
 {
-    private static function encodeNCR($str)
-    {
-        $result = '';
-
-        $length = IntlString::strlen($str);
-        for ($i = 0, $offset = 0, $next = 0; $i < $length; $i++) {
-            $grapheme = IntlString::grapheme($str, $offset, $next);
-            $codepoint = mb_ord($grapheme, 'UTF-8');
-
-            // If the code point is not ASCII then we have to append &#codepoint;
-            $result .= $codepoint > 255 ? ('&#' . $codepoint . ';') : $grapheme;
-
-            $offset = $next;
-        }
-
-        return $result;
-    }
+//    private static function encodeNCR($str)
+//    {
+//        $result = '';
+//
+//        $length = IntlString::strlen($str);
+//        for ($i = 0, $offset = 0, $next = 0; $i < $length; $i++) {
+//            $grapheme = IntlString::grapheme($str, $offset, $next);
+//            $codepoint = mb_ord($grapheme, 'UTF-8');
+//
+//            // If the code point is not ASCII then we have to append &#codepoint;
+//            $result .= $codepoint > 255 ? ('&#' . $codepoint . ';') : $grapheme;
+//
+//            $offset = $next;
+//        }
+//
+//        return $result;
+//    }
 
     /**
      * Searches mangaupdates for the given title.
      * The results are sorted by jaro winkler distance from highest to lowest.
-     * 
+     *
      * @param string $title The title of the manga.
      * @param int $pageLimit The number of pages to limit the search by.
      * @param int $perPage The number of results to request per page.
-     * 
+     *
      * @return array A two dimensional array where the second has keys 'mu_id', 'url', 'name', and 'distance'.
      */
     public static function search(string $title, int $pageLimit = 3, int $perPage = 50)
@@ -45,7 +44,7 @@ class MangaUpdates implements AutoFillInterface
         for ($i = 1, $found = false; $i <= $pageLimit && $found == false; $i++) {
             $contents = \Curl::to('https://www.mangaupdates.com/series.html')->withData([
                 'stype' => 'title',
-                'search' => self::encodeNCR($title),
+                'search' => $title,
                 'page' => strval($i),
                 'perpage' => strval($perPage),
                 'output' => 'json'
@@ -112,25 +111,25 @@ class MangaUpdates implements AutoFillInterface
     private static function description(Crawler $crawler)
     {
         return trim($crawler->filter('div.sMember > div.sCat + div.sContent')
-                            ->eq(0)
-                            ->text());
+            ->eq(0)
+            ->text());
     }
 
     private static function type(Crawler $crawler)
     {
         return trim($crawler->filter('div.sMember > div.sCat + div.sContent')
-                            ->eq(1)
-                            ->text());
+            ->eq(1)
+            ->text());
     }
 
     private static function associated_names(Crawler $crawler)
     {
         $currentElement = $crawler->filter('div.sContainer')
-                                  ->eq(0)
-                                  ->filter('div.sMember > div.sCat + div.sContent')
-                                  ->eq(3)
-                                  ->getNode(0)
-                                  ->firstChild;
+            ->eq(0)
+            ->filter('div.sMember > div.sCat + div.sContent')
+            ->eq(3)
+            ->getNode(0)
+            ->firstChild;
 
         $assocNames = [];
         while (empty($currentElement) == false) {
@@ -146,10 +145,10 @@ class MangaUpdates implements AutoFillInterface
     private static function genres(Crawler $crawler)
     {
         $genreLinks = $crawler->filter('div.sContainer')
-                              ->eq(1)
-                              ->filter('div.sMember > div.sCat + div.sContent')
-                              ->eq(1)
-                              ->filter('a > u');
+            ->eq(1)
+            ->filter('div.sMember > div.sCat + div.sContent')
+            ->eq(1)
+            ->filter('a > u');
 
         $genres = [];
         foreach ($genreLinks as $genreLink) {
@@ -162,10 +161,10 @@ class MangaUpdates implements AutoFillInterface
     private static function authors(Crawler $crawler)
     {
         $authorLinks = $crawler->filter('div.sContainer')
-                               ->eq(1)
-                               ->filter('div.sMember > div.sCat + div.sContent')
-                               ->eq(5)
-                               ->filter('a > u');
+            ->eq(1)
+            ->filter('div.sMember > div.sCat + div.sContent')
+            ->eq(5)
+            ->filter('a > u');
 
         $authors = [];
         foreach ($authorLinks as $authorLink) {
@@ -178,10 +177,10 @@ class MangaUpdates implements AutoFillInterface
     private static function artists(Crawler $crawler)
     {
         $artistLinks = $crawler->filter('div.sContainer')
-                               ->eq(1)
-                               ->filter('div.sMember > div.sCat + div.sContent')
-                               ->eq(6)
-                               ->filter('a > u');
+            ->eq(1)
+            ->filter('div.sMember > div.sCat + div.sContent')
+            ->eq(6)
+            ->filter('a > u');
 
         $artists = [];
         foreach ($artistLinks as $artistLink) {
@@ -194,11 +193,11 @@ class MangaUpdates implements AutoFillInterface
     private static function year(Crawler $crawler)
     {
         $year = $crawler->filter('div.sContainer')
-                        ->eq(1)
-                        ->filter('div.sMember > div.sCat + div.sContent')
-                        ->eq(7)
-                        ->getNode(0)
-                        ->textContent;
+            ->eq(1)
+            ->filter('div.sMember > div.sCat + div.sContent')
+            ->eq(7)
+            ->getNode(0)
+            ->textContent;
 
         return intval($year);
     }
@@ -226,66 +225,5 @@ class MangaUpdates implements AutoFillInterface
         ])->get();
 
         return self::collectInformation($mu_id, $contents);
-    }
-
-    /**
-     * Automatically scrapes information about a manga from mangaupdates.
-     * This function also saves, and overwrites, the information to the database.
-     *
-     * @param Manga $manga The manga to autofill.
-     * @return bool
-     */
-    public static function autofill($manga)
-    {
-        $result = false;
-
-        if ($manga != null || $manga->getIgnoreOnScan() == false) {
-            $results = self::search($manga->getName());
-
-            if (empty($results) == false) {
-                $manga->setMangaUpdatesName($results[0]['name']);
-                $manga->setDistance($results[0]['distance']);
-                $manga->save();
-    
-                // autofill from the id of the name that best matched
-                $result = self::autofillFromId($manga, $results[0]['mu_id']);
-            }
-        }            
-
-        return $result;
-    }
-
-    /**
-     * Automatically fills information about a manga from mangaupdates.
-     * @param Manga $manga The manga to autofill.
-     * @param int $id The mangaupdates id.
-     * @return bool
-     */
-    public static function autofillFromId($manga, $id)
-    {
-        $result = false;
-        $information = self::information($id);
-
-        if (! empty($information)) {
-            $manga->authorReferences()->forceDelete();
-            $manga->artistReferences()->forceDelete();
-            $manga->genreReferences()->forceDelete();
-            $manga->associatedNameReferences()->forceDelete();
-
-            $manga->setMangaUpdatesId($information['mu_id']);
-            $manga->setType($information['type']);
-            $manga->setDescription($information['description']);
-            $manga->addAssociatedNames($information['assoc_names']);
-            $manga->addAuthors($information['authors']);
-            $manga->addArtists($information['artists']);
-            $manga->addGenres($information['genres']);
-            $manga->setYear($information['year']);
-    
-            $manga->save();
-
-            $result = true;
-        }
-
-        return $result;
     }
 }

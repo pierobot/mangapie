@@ -6,7 +6,7 @@ use \Symfony\Component\Finder\Finder;
 
 use App\Archive;
 use App\Manga;
-use App\MangaUpdates;
+use App\Sources\MangaUpdates;
 
 class MangaObserver
 {

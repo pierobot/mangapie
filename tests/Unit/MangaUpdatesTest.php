@@ -14,10 +14,10 @@ use App\Author;
 use App\Genre;
 use App\Library;
 use App\Manga;
-use App\MangaUpdates;
+use App\Sources\MangaUpdates;
 
 /**
- * @covers \App\MangaUpdates
+ * @covers \App\Sources\MangaUpdates
  */
 class MangaUpdatesTest extends TestCase
 {
@@ -54,26 +54,37 @@ class MangaUpdatesTest extends TestCase
         $this->assertEquals($type, $manga->getType());
         $this->assertEquals($year, $manga->getYear());
 
-        $actualAssocNames = array_map(function (AssociatedName $assocName) {
+        $actualAssocNames = collect(array_map(function (AssociatedName $assocName) {
             return $assocName->getName();
-        }, $manga->getAssociatedNames());
+        }, $manga->getAssociatedNames()))->values();
 
-        $actualArtists = array_map(function (Artist $artist) {
+        $actualArtists = collect(array_map(function (Artist $artist) {
             return $artist->getName();
-        }, $manga->getArtists());
+        }, $manga->getArtists()));
 
-        $actualAuthors = array_map(function (Author $author) {
+        $actualAuthors = collect(array_map(function (Author $author) {
             return $author->getName();
-        }, $manga->getAuthors());
+        }, $manga->getAuthors()));
 
-        $actualGenres = array_map(function (Genre $genre) {
+        $actualGenres = collect(array_map(function (Genre $genre) {
             return $genre->getName();
-        }, $manga->getGenres());
+        }, $manga->getGenres()));
 
-        $this->assertEquals($assocNames, $actualAssocNames);
-        $this->assertEquals($artists, $actualArtists);
-        $this->assertEquals($authors, $actualAuthors);
-        $this->assertEquals($genres, $actualGenres);
+        foreach ($assocNames as $assocName) {
+            $this->assertTrue($actualAssocNames->contains($assocName));
+        }
+
+        foreach ($artists as $artist) {
+            $this->assertTrue($actualArtists->contains($artist));
+        }
+
+        foreach ($authors as $author) {
+            $this->assertTrue($actualAuthors->contains($author));
+        }
+
+        foreach ($genres as $genre) {
+            $this->assertTrue($actualGenres->contains($genre));
+        }
     }
 
     /**
@@ -93,25 +104,36 @@ class MangaUpdatesTest extends TestCase
         $this->assertEquals($type, $manga->getType());
         $this->assertEquals($year, $manga->getYear());
 
-        $actualAssocNames = array_map(function (AssociatedName $assocName) {
+        $actualAssocNames = collect(array_map(function (AssociatedName $assocName) {
             return $assocName->getName();
-        }, $manga->getAssociatedNames());
+        }, $manga->getAssociatedNames()))->values();
 
-        $actualArtists = array_map(function (Artist $artist) {
+        $actualArtists = collect(array_map(function (Artist $artist) {
             return $artist->getName();
-        }, $manga->getArtists());
+        }, $manga->getArtists()));
 
-        $actualAuthors = array_map(function (Author $author) {
+        $actualAuthors = collect(array_map(function (Author $author) {
             return $author->getName();
-        }, $manga->getAuthors());
+        }, $manga->getAuthors()));
 
-        $actualGenres = array_map(function (Genre $genre) {
+        $actualGenres = collect(array_map(function (Genre $genre) {
             return $genre->getName();
-        }, $manga->getGenres());
+        }, $manga->getGenres()));
 
-        $this->assertEquals($assocNames, $actualAssocNames);
-        $this->assertEquals($artists, $actualArtists);
-        $this->assertEquals($authors, $actualAuthors);
-        $this->assertEquals($genres, $actualGenres);
+        foreach ($assocNames as $assocName) {
+            $this->assertTrue($actualAssocNames->contains($assocName));
+        }
+
+        foreach ($artists as $artist) {
+            $this->assertTrue($actualArtists->contains($artist));
+        }
+
+        foreach ($authors as $author) {
+            $this->assertTrue($actualAuthors->contains($author));
+        }
+
+        foreach ($genres as $genre) {
+            $this->assertTrue($actualGenres->contains($genre));
+        }
     }
 }
