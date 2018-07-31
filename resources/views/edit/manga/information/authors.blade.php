@@ -14,14 +14,13 @@
                         <div class="col-xs-6">
                             <h4>New</h4>
                             <hr>
-                            {{ Form::open(['action' => 'MangaEditController@update']) }}
-                            {{ Form::hidden('id', $id) }}
-                            {{ Form::hidden('action', 'author.add') }}
+                            {{ Form::open(['action' => 'MangaEditController@patchAuthor', 'method' => 'patch']) }}
+                            {{ Form::hidden('manga_id', $id) }}
                             <div class="row">
                                 <div class="col-xs-12 col-md-6">
                                     {{ Form::input('author', null, null, ['class' => 'form-control',
                                     'placeholder' => 'Enter name...',
-                                    'name' => 'author']) }}
+                                    'name' => 'name']) }}
                                 </div>
                             </div>
                             <br>
@@ -31,15 +30,14 @@
                         <div class="col-xs-6">
                             <h4>Current</h4>
                             <hr>
-                            @if (isset($authors))
-                                {{ Form::open(['action' => 'MangaEditController@update']) }}
-                                {{ Form::hidden('id', $id) }}
-                                {{ Form::hidden('action', 'author.delete') }}
+                            @if (isset($authorReferences))
+                                {{ Form::open(['action' => 'MangaEditController@deleteAuthor', 'method' => 'delete']) }}
+                                {{ Form::hidden('manga_id', $id) }}
                                 <div class="row">
                                     <div class="col-xs-12 col-md-6">
-                                        <select name="author" class="form-control">
-                                            @foreach ($authors as $author)
-                                                <option value="{{ $author->getName() }}">{{ $author->getName() }}</option>
+                                        <select name="author_reference_id" class="form-control">
+                                            @foreach ($authorReferences as $authorReference)
+                                                <option value="{{ $authorReference->id }}">{{ $authorReference->author->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

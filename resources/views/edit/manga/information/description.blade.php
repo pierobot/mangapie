@@ -14,9 +14,8 @@
                         <div class="col-xs-12 col-md-6">
                             <h4>New</h4>
                             <hr>
-                            {{ Form::open(['action' => 'MangaEditController@update']) }}
-                            {{ Form::hidden('id', $id) }}
-                            {{ Form::hidden('action', 'description.update') }}
+                            {{ Form::open(['action' => 'MangaEditController@patchDescription', 'method' => 'patch']) }}
+                            {{ Form::hidden('manga_id', $id) }}
                             {{ Form::textarea('description', null, ['class' => 'form-control',
                             'placeholder' => 'Enter description...']) }}
                             <br>
@@ -28,9 +27,8 @@
                             <hr>
                             @if (isset($description))
                                 {{ $description }}
-                                {{ Form::open(['action' => 'MangaEditController@update']) }}
-                                {{ Form::hidden('id', $id) }}
-                                {{ Form::hidden('action', 'description.delete') }}
+                                {{ Form::open(['action' => 'MangaEditController@deleteDescription', 'method' => 'delete']) }}
+                                {{ Form::hidden('manga_id', $id) }}
                                 <br>
                                 {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
                                 {{ Form::close() }}

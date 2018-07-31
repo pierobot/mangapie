@@ -12,9 +12,8 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-xs-12">
-                            {{ Form::open(['action' => 'MangaEditController@update']) }}
-                            {{ Form::hidden('id', $id) }}
-                            {{ Form::hidden('action', 'autofill') }}
+                            {{ Form::open(['action' => 'MangaEditController@patchAutofill', 'method' => 'patch']) }}
+                            {{ Form::hidden('manga_id', $id) }}
                             <div class="input-group">
                                 {{ Form::label('id:', '', ['for' => 'mu_id']) }}
                                 @if (isset($mu_id))

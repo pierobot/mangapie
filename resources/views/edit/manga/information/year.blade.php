@@ -14,9 +14,8 @@
                         <div class="col-xs-6">
                             <h4>New</h4>
                             <hr>
-                            {{ Form::open(['action' => 'MangaEditController@update']) }}
-                            {{ Form::hidden('id', $id) }}
-                            {{ Form::hidden('action', 'year.update') }}
+                            {{ Form::open(['action' => 'MangaEditController@patchYear', 'method' => 'patch']) }}
+                            {{ Form::hidden('manga_id', $id) }}
                             <div class="row">
                                 <div class="col-xs-12 col-md-6">
                                     {{ Form::input('year', null, null, ['class' => 'form-control',
@@ -39,9 +38,8 @@
                                 </div>
                                 <br>
 
-                                {{ Form::open(['action' => 'MangaEditController@update']) }}
-                                {{ Form::hidden('id', $id) }}
-                                {{ Form::hidden('action', 'year.delete') }}
+                                {{ Form::open(['action' => 'MangaEditController@deleteYear', 'method' => 'delete']) }}
+                                {{ Form::hidden('manga_id', $id) }}
                                 {{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}
                                 {{ Form::close() }}
                             @endif
