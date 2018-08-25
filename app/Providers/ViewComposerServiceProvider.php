@@ -13,8 +13,8 @@ class ViewComposerServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        \View::composer('shared.notifications', \App\Http\ViewComposers\NotificationsComposer::class);
-        \View::composer('notifications.index', \App\Http\ViewComposers\NotificationsComposer::class);
+        view()->composer('shared.notifications', \App\Http\ViewComposers\NotificationsComposer::class);
+        view()->composer('notifications.index', \App\Http\ViewComposers\NotificationsComposer::class);
     }
 
     /**

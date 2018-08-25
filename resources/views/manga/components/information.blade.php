@@ -217,26 +217,28 @@
             <div class="col-xs-9 col-md-10">
                 <div class="row">
                     @php
-                        $isFavorited = ! empty($user->favorites->where('manga_id', $manga->id)->first());
-                        $isWatching = ! empty($user->watchReferences->where('manga_id', $manga->id)->first());
+                        $favorite = $user->favorites->where('manga_id', $manga->id)->first();
+                        $watchReference = $user->watchReferences->where('manga_id', $manga->id)->first();
+
+                        $isFavorited = ! empty($favorite);
+                        $isWatching = ! empty($watchReference);
                     @endphp
                     <div class="col-xs-6 col-sm-4 col-md-3">
-                        {{ Form::open(['action' => 'FavoriteController@update']) }}
-
-                        {{ Form::hidden('id', $manga->id) }}
                         @if ($isFavorited == false)
-                            {{ Form::hidden('action', 'favorite') }}
+                            {{ Form::open(['action' => 'FavoriteController@create']) }}
+                            {{ Form::hidden('manga_id', $manga->id) }}
                             <button class="btn btn-success" type="submit">
                                 <span class="glyphicon glyphicon-heart"></span>&nbsp;Favorite
                             </button>
+                            {{ Form::close() }}
                         @else
-                            {{ Form::hidden('action', 'unfavorite') }}
+                            {{ Form::open(['action' => 'FavoriteController@delete', 'method' => 'delete']) }}
+                            {{ Form::hidden('favorite_id', $favorite->id) }}
                             <button class="btn btn-danger" type="submit">
                                 <span class="glyphicon glyphicon-remove"></span>&nbsp;Unfavorite
                             </button>
+                            {{ Form::close() }}
                         @endif
-
-                        {{ Form::close() }}
                     </div>
 
                     <div class="col-xs-6 col-sm-4 col-md-3">

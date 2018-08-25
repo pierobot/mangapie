@@ -3,9 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Favorite;
-use App\Http\Requests\FavoriteRequest;
-use App\Library;
-use App\LibraryPrivilege;
+use App\Http\Requests\FavoriteAddRequest;
+use App\Http\Requests\FavoriteRemoveRequest;
 use App\Manga;
 use Illuminate\Http\Request;
 
@@ -28,33 +27,36 @@ class FavoriteController extends Controller
 
         $favoriteList->withPath(\Config::get('app.url'));
 
-        return view('favorites.index')->with('manga_list', $favoriteList)
-                                      ->with('header', 'Favorites: (' . $total . ')')
-                                      ->with('total', $total);
+        return view('favorites.index')
+            ->with('manga_list', $favoriteList)
+            ->with('header', 'Favorites: (' . $total . ')')
+            ->with('total', $total);
     }
 
-    public function update(FavoriteRequest $request)
+    public function create(FavoriteAddRequest $request)
     {
-        $id = intval(\Input::get('id'));
-        $user_id = \Auth::user()->getId();
-        $action = \Input::get('action');
+        $mangaId = intval($request->get('manga_id'));
 
-        if ($action == 'favorite') {
-            $favorite = Favorite::updateOrCreate([
-                'user_id' => $user_id,
-                'manga_id' => $id
-            ]);
+        $favorite = Favorite::updateOrCreate([
+            'user_id' => \Auth::id(),
+            'manga_id' => $mangaId
+        ]);
 
-            \Session::flash('success', 'You have favorited this manga.');
-        } else {
-            $favorite = Favorite::where('user_id', $user_id)
-                                ->where('manga_id', $id);
+        session()->flash('success', 'You have favorited this manga.');
 
-            $favorite->forceDelete();
+        return redirect()->back();
+    }
 
-            \Session::flash('success', 'You have unfavorited this manga.');
-        }
+    public function delete(FavoriteRemoveRequest $request)
+    {
+        $favorite = Favorite::find($request->get('favorite_id'));
+        if ($favorite->user->id !== \Auth::id())
+            return redirect()->back(403);
 
-        return \Redirect::action('MangaController@index', [$id]);
+        $favorite->forceDelete();
+
+        session()->flash('success', 'You have unfavorited this manga.');
+
+        return redirect()->back();
     }
 }

@@ -15,11 +15,6 @@ use App\WatchReference;
 
 class MangaController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-    }
-
     public function index(Manga $manga, $sort = 'ascending')
     {
         // these are all required because of the responsive layouts
@@ -33,7 +28,7 @@ class MangaController extends Controller
             'votes'
         ]);
 
-        $user = \Auth::user()->load(['favorites', 'readerHistory', 'watchReferences']);
+        $user = auth()->user()->load(['favorites', 'readerHistory', 'watchReferences']);
 
         return view('manga.index')
             ->with('user', $user)
@@ -54,7 +49,7 @@ class MangaController extends Controller
             'votes'
         ]);
 
-        $user = \Auth::user()->load(['favorites', 'readerHistory', 'watchReferences']);
+        $user = auth()->user()->load(['favorites', 'readerHistory', 'watchReferences']);
 
         return view('manga.files')
             ->with('user', $user)
@@ -75,7 +70,7 @@ class MangaController extends Controller
             'votes'
         ]);
 
-        $user = \Auth::user()->load(['favorites', 'readerHistory', 'watchReferences']);
+        $user = auth()->user()->load(['favorites', 'readerHistory', 'watchReferences']);
 
         return view('manga.comments')
             ->with('user', $user)

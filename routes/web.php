@@ -90,7 +90,8 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
 
     Route::prefix('favorites')->name('favorites')->group(function () {
         Route::get('/', 'FavoriteController@index');
-        Route::post('/', 'FavoriteController@update');
+        Route::post('/', 'FavoriteController@create');
+        Route::delete('/', 'FavoriteController@delete');
     });
 
     Route::prefix('genre')->name('genre')->group(function () {

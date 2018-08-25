@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class FavoriteRequest extends FormRequest
+class FavoriteAddRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,8 +24,7 @@ class FavoriteRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required|integer',
-            'action' => 'required|string|in:favorite,unfavorite'
+            'manga_id' => 'required|integer|exists:manga,id',
         ];
     }
 }
