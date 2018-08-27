@@ -15,6 +15,8 @@ use App\User;
 /**
  * @covers \App\Favorite
  * @covers \App\Http\Controllers\FavoriteController
+ * @covers \App\Http\Requests\FavoriteAddRequest
+ * @covers \App\Http\Requests\FavoriteRemoveRequest
  */
 class FavoriteTest extends TestCase
 {
@@ -37,15 +39,17 @@ class FavoriteTest extends TestCase
             'library_id' => $library->getId()
         ]);
 
-        $response = $this->actingAs($user)
-                         ->withSession(['foo' => 'bar'])
-                         ->followingRedirects()
-                         ->post(\URL::action('FavoriteController@update'), [
-                             'id' => $manga->getId(),
-                             'action' => 'favorite'
-                         ]);
+        $this->actingAs($user)
+            ->withSession(['foo' => 'bar'])
+            ->followingRedirects()
+            ->post(\URL::action('FavoriteController@create'), [
+                'manga_id' => $manga->getId()
+            ]);
 
-        $response->assertSeeText('You have favorited this manga.');
+        $this->assertDatabaseHas('favorites', [
+            'user_id' => $user->id,
+            'manga_id' => $manga->id
+        ]);
     }
 
     public function testUserUnfavorite()
@@ -56,15 +60,17 @@ class FavoriteTest extends TestCase
             'library_id' => $library->getId()
         ]);
 
-        $response = $this->actingAs($user)
-                         ->withSession(['foo' => 'bar'])
-                         ->followingRedirects()
-                         ->post(\URL::action('FavoriteController@update'), [
-                             'id' => $manga->getId(),
-                             'action' => 'unfavorite'
-                         ]);
+        $this->actingAs($user)
+            ->withSession(['foo' => 'bar'])
+            ->followingRedirects()
+            ->delete(\URL::action('FavoriteController@delete'), [
+                'favorite_id' => $manga->getId(),
+            ]);
 
-        $response->assertSeeText('You have unfavorited this manga.');
+        $this->assertDatabaseMissing('favorites', [
+            'user_id' => $user->id,
+            'manga_id' => $manga->id
+        ]);
     }
 
     public function testSeeFavoritedManga()
@@ -79,7 +85,6 @@ class FavoriteTest extends TestCase
         $response->assertViewIs('favorites.index');
         $response->assertSeeText('Favorites: (1)');
         $response->assertSeeText($favorite->manga->getName());
-
     }
 
     public function testDontSeeUnfavoritedManga()
