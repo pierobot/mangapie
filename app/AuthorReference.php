@@ -21,11 +21,11 @@ class AuthorReference extends Model
 
     public function author()
     {
-        return $this->belongsTo('App\Author');
+        return $this->belongsTo(Person::class);
     }
 
     public function manga()
     {
-        return $this->belongsTo('App\Manga');
+        return $this->belongsTo(Manga::class);
     }
 }

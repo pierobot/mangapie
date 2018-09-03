@@ -21,11 +21,11 @@ class ArtistReference extends Model
 
     public function artist()
     {
-        return $this->belongsTo('App\Artist');
+        return $this->belongsTo(Person::class);
     }
 
     public function manga()
     {
-        return $this->belongsTo('App\Manga');
+        return $this->belongsTo(Manga::class);
     }
 }
