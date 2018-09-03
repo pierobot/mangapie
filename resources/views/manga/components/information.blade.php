@@ -13,8 +13,8 @@
                                 $genre = $genreReference->genre;
                             @endphp
                             <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
-                                <a href="{{ \URL::action('GenreController@index', [$genre->getName()]) }}">
-                                    {{ $genre->getName() }}
+                                <a href="{{ \URL::action('GenreController@index', [$genre->name]) }}">
+                                    {{ $genre->name }}
                                 </a>
                             </div>
                         @endforeach
@@ -37,7 +37,7 @@
                     <div class="row">
                         @foreach ($manga->associatedNameReferences as $associatedNameReference)
                             <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
-                                {{ $associatedNameReference->associatedName->getName() }}
+                                {{ $associatedNameReference->associatedName->name }}
                             </div>
                         @endforeach
                     </div>
@@ -62,8 +62,8 @@
                                 $author = $authorReference->author;
                             @endphp
                             <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
-                                <a href="{{ \URL::action('AuthorController@index', [$author->getName()]) }}">
-                                    {{ $author->getName() }}
+                                <a href="{{ \URL::action('PersonController@index', [$author]) }}">
+                                    {{ $author->name }}
                                 </a>
                             </div>
                         @endforeach
@@ -89,8 +89,8 @@
                                 $artist = $artistReference->artist;
                             @endphp
                             <div class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
-                                <a href="{{ \URL::action('ArtistController@index', [$artist->getName()]) }}">
-                                    {{ $artist->getName() }}
+                                <a href="{{ \URL::action('PersonController@index', [$artist]) }}">
+                                    {{ $artist->name }}
                                 </a>
                             </div>
                         @endforeach

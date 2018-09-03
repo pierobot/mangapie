@@ -13,12 +13,11 @@ use App\Http\Requests\EditMangaDescriptionRequest;
 use App\Http\Requests\EditMangaTypeRequest;
 use App\Http\Requests\EditMangaYearRequest;
 
-use App\Artist;
 use App\AssociatedName;
-use App\Author;
 use App\Manga;
 use App\Genre;
 use App\Http\Requests\EditMangaGenresRequest;
+use App\Person;
 use App\Sources\MangaUpdates;
 
 class MangaEditController extends Controller
@@ -143,7 +142,7 @@ class MangaEditController extends Controller
             ->with('archives', $archives);
     }
 
-    public function patchAutofill(EditMangaAutofillRequest $request)
+    public function putAutofill(EditMangaAutofillRequest $request)
     {
         $manga = Manga::find($request->get('manga_id'));
 
@@ -159,7 +158,7 @@ class MangaEditController extends Controller
         return $response;
     }
 
-    public function updateGenres(EditMangaGenresRequest $request)
+    public function putGenres(EditMangaGenresRequest $request)
     {
         $allGenres = Genre::all();
         $deletedSuccessfully = false;
@@ -239,7 +238,7 @@ class MangaEditController extends Controller
         return $response;
     }
 
-    public function patchAssocName(EditMangaAssocNameAddRequest $request)
+    public function postAssocName(EditMangaAssocNameAddRequest $request)
     {
         $manga = Manga::find($request->get('manga_id'));
 
@@ -277,13 +276,13 @@ class MangaEditController extends Controller
         return $response;
     }
 
-    public function patchAuthor(EditMangaAuthorAddRequest $request)
+    public function postAuthor(EditMangaAuthorAddRequest $request)
     {
         $manga = Manga::find($request->get('manga_id'));
 
         $successful = $manga->authorReferences()
             ->firstOrCreate([
-                'author_id' => Author::firstOrCreate([
+                'author_id' => Person::firstOrCreate([
                     'name' => $request->get('name')
                 ])->id
             ]);
@@ -316,13 +315,13 @@ class MangaEditController extends Controller
         return $response;
     }
 
-    public function patchArtist(EditMangaArtistAddRequest $request)
+    public function postArtist(EditMangaArtistAddRequest $request)
     {
         $manga = Manga::find($request->get('manga_id'));
 
         $successful = $manga->artistReferences()
             ->firstOrCreate([
-                'artist_id' => Artist::firstOrCreate([
+                'artist_id' => Person::firstOrCreate([
                     'name' => $request->get('name')
                 ])->id
             ]);

@@ -27,14 +27,6 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::delete('/images', 'AdminController@deleteImages');
     });
 
-    Route::prefix('artist')->name('artist')->group(function () {
-        Route::get('/{artist}', 'ArtistController@index');
-    });
-
-    Route::prefix('author')->name('author')->group(function () {
-        Route::get('/{author}', 'AuthorController@index');
-    });
-
     Route::prefix('avatar')->name('avatar')->group(function () {
         Route::get('/{user}', 'AvatarController@index');
 
@@ -59,11 +51,11 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
     Route::prefix('edit')->middleware('maintainer')->name('edit')->group(function () {
         Route::get('/{manga}', 'MangaEditController@index');
 
-        Route::patch('/artist', 'MangaEditController@patchArtist');
-        Route::patch('/author', 'MangaEditController@patchAuthor');
-        Route::patch('/assocname', 'MangaEditController@patchAssocName');
-        Route::patch('/genres', 'MangaEditController@updateGenres');
-        Route::patch('/autofill', 'MangaEditController@patchAutofill');
+        Route::post('/artist', 'MangaEditController@postArtist');
+        Route::post('/author', 'MangaEditController@postAuthor');
+        Route::post('/assocname', 'MangaEditController@postAssocName');
+        Route::put('/genres', 'MangaEditController@putGenres');
+        Route::put('/autofill', 'MangaEditController@putAutofill');
         Route::patch('/description', 'MangaEditController@patchDescription');
         Route::patch('/type', 'MangaEditController@patchType');
         Route::patch('/year', 'MangaEditController@patchYear');
@@ -123,6 +115,10 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
     Route::prefix('notifications')->name('notifications')->group(function () {
         Route::get('/', 'NotificationController@index');
         Route::post('/dismiss', 'NotificationController@dismiss');
+    });
+
+    Route::prefix('person')->name('person')->group(function () {
+        Route::get('/{person}', 'PersonController@index');
     });
 
     Route::prefix('reader')->middleware('archive_views')->name('reader')->group(function () {

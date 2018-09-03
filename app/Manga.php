@@ -253,10 +253,10 @@ class Manga
      * Performs an advanced search based on the given data.
      * At least one of the parameters is required to not be null.
      *
-     * @param $genres An array of genre names.
-     * @param $author The name of an author.
-     * @param $artist The name of an artist.
-     * @param $keywords Keywords to match against.
+     * @param array $genres An array of genre names.
+     * @param string $author The name of an author.
+     * @param string $artist The name of an artist.
+     * @param string $keywords Keywords to match against.
      * @return \Illuminate\Support\Collection
      */
     public static function advancedSearch($genres, $author, $artist, $keywords)
@@ -341,26 +341,26 @@ class Manga
         return Manga::whereIn('library_id', $library_ids);
     }
 
-    private function getNumberTokens($name)
-    {
-        if (mb_ereg_search_init($name, "\\d+") === false)
-            return false;
-
-        $tokens = [];
-
-        if (mb_ereg_search() === false)
-            return false;
-
-        // get first token
-        $result = mb_ereg_search_getregs();
-        while ($result !== false) {
-            array_push($tokens, intval($result[0]));
-            // get next token
-            $result = mb_ereg_search_regs();
-        }
-
-        return empty($tokens) != true ? $tokens : false;
-    }
+//    private function getNumberTokens($name)
+//    {
+//        if (mb_ereg_search_init($name, "\\d+") === false)
+//            return false;
+//
+//        $tokens = [];
+//
+//        if (mb_ereg_search() === false)
+//            return false;
+//
+//        // get first token
+//        $result = mb_ereg_search_getregs();
+//        while ($result !== false) {
+//            array_push($tokens, intval($result[0]));
+//            // get next token
+//            $result = mb_ereg_search_regs();
+//        }
+//
+//        return empty($tokens) != true ? $tokens : false;
+//    }
 
     private function getMIME($image_name)
     {
@@ -555,7 +555,7 @@ class Manga
         if (empty($authorName) == true)
             return;
 
-        $author = Author::where('name', $authorName)->firstOrFail();
+        $author = Person::where('name', $authorName)->firstOrFail();
 
         AuthorReference::where('manga_id', $this->getId())
                        ->where('author_id', $author->getId())
@@ -567,7 +567,7 @@ class Manga
         if (empty($artistName) == true)
             return;
 
-        $artist = Artist::where('name', $artistName)->firstOrFail();
+        $artist = Person::where('name', $artistName)->firstOrFail();
 
         ArtistReference::where('manga_id', $this->getId())
                        ->where('artist_id', $artist->getId())
@@ -631,7 +631,7 @@ class Manga
         if (empty($authorName) == true)
             return;
 
-        $author = Author::firstOrCreate([
+        $author = Person::firstOrCreate([
             'name' => $authorName
         ]);
 
@@ -656,7 +656,7 @@ class Manga
         if (empty($artistName) == true)
             return;
 
-        $artist = Artist::firstOrCreate([
+        $artist = Person::firstOrCreate([
             'name' => $artistName
         ]);
 

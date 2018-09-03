@@ -8,12 +8,11 @@ use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-use App\Artist;
 use App\AssociatedName;
-use App\Author;
 use App\Genre;
 use App\Library;
 use App\Manga;
+use App\Person;
 use App\Sources\MangaUpdates;
 
 /**
@@ -58,11 +57,11 @@ class MangaUpdatesTest extends TestCase
             return $assocName->getName();
         }, $manga->getAssociatedNames()))->values();
 
-        $actualArtists = collect(array_map(function (Artist $artist) {
+        $actualArtists = collect(array_map(function (Person $artist) {
             return $artist->getName();
         }, $manga->getArtists()));
 
-        $actualAuthors = collect(array_map(function (Author $author) {
+        $actualAuthors = collect(array_map(function (Person $author) {
             return $author->getName();
         }, $manga->getAuthors()));
 
@@ -108,11 +107,11 @@ class MangaUpdatesTest extends TestCase
             return $assocName->getName();
         }, $manga->getAssociatedNames()))->values();
 
-        $actualArtists = collect(array_map(function (Artist $artist) {
+        $actualArtists = collect(array_map(function (Person $artist) {
             return $artist->getName();
         }, $manga->getArtists()));
 
-        $actualAuthors = collect(array_map(function (Author $author) {
+        $actualAuthors = collect(array_map(function (Person $author) {
             return $author->getName();
         }, $manga->getAuthors()));
 
