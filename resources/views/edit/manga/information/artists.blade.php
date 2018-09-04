@@ -14,7 +14,7 @@
                         <div class="col-xs-6">
                             <h4>New</h4>
                             <hr>
-                            {{ Form::open(['action' => 'MangaEditController@postArtist', 'method' => 'patch']) }}
+                            {{ Form::open(['action' => 'MangaEditController@postArtist', 'method' => 'post']) }}
                             {{ Form::hidden('manga_id', $id) }}
                             <div class="row">
                                 <div class="col-xs-12 col-md-6">

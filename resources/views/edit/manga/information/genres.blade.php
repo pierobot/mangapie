@@ -21,7 +21,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        {{ Form::open(['action' => 'MangaEditController@putGenres', 'method' => 'patch']) }}
+                        {{ Form::open(['action' => 'MangaEditController@putGenres', 'method' => 'put']) }}
                         {{ Form::hidden('manga_id', $manga->id) }}
                         <div class="col-xs-12">
                             @php
