@@ -17,6 +17,7 @@ use App\Sources\MangaUpdates;
 
 /**
  * @covers \App\Sources\MangaUpdates
+ * @covers \App\Sources\MangaUpdates\Series
  */
 class MangaUpdatesTest extends TestCase
 {
