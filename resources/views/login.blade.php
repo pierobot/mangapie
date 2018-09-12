@@ -5,41 +5,46 @@
 @endsection
 
 @section ('content')
-    <div class="row">
-        <div class="col-lg-6 col-lg-offset-3">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Login</h3>
+    <div class="row pt-2">
+        <div class="col-lg-6 mx-auto">
+            <div class="card bg-transparent">
+                <div class="card-header">
+                    <h4 class="card-title text-center">Login</h4>
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                     {{ Form::open([ 'action' => 'LoginController@login']) }}
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-6 col-sm-offset-3">
+                    <div class="form-row">
+                        <div class="col-12 col-md-6 mx-auto mb-3">
                             <div class="input-group">
-                                <span class="input-group-addon" id="addon-username">
-                                    <span class="glyphicon glyphicon-user"></span>
-                                </span>
-                                {{ Form::text('username', null, ['class' => 'form-control', 'aria-describedby' => 'addon-username']) }}
+                                <div class="input-group-prepend" id="prepend-username">
+                                    <span class="input-group-text fa fa-user"></span>
+                                </div>
+
+                                {{ Form::text('username', null, ['class' => 'form-control', 'aria-describedby' => 'prepend-username']) }}
                             </div>
                         </div>
                     </div>
-                    <br>
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-6 col-sm-offset-3">
+
+                    <div class="form-row">
+                        <div class="col-12 col-md-6 mx-auto mb-3">
                             <div class="input-group">
-                                <span class="input-group-addon" id="addon-password">
-                                    <span class="glyphicon glyphicon-asterisk"></span>
-                                </span>
-                                <input name="password" id="password" type="password" class="form-control" aria-describedby="addon-password">
+                                <div class="input-group-prepend" id="prepend-password">
+                                    <span class="input-group-text fa fa-asterisk"></span>
+                                </div>
+
+                                <input name="password" id="password" type="password" class="form-control" aria-describedby="prepend-password">
                             </div>
                         </div>
                     </div>
-                    <br>
-                    <div class="row center-block">
-                        <button type="submit" class="btn btn-default center-block">
-                            <span class="glyphicon glyphicon-log-in"></span>&nbsp; Login
-                        </button>
+
+                    <div class="form-row">
+                        <div class="col-12 text-center">
+                            <button class="btn bg-primary" type="submit">
+                                <span class="fa fa-sign-in"></span>&nbsp; Login
+                            </button>
+                        </div>
                     </div>
+
                     {{ Form::close() }}
 
                     @include ('shared.errors')

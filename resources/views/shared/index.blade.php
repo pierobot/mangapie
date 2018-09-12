@@ -1,30 +1,37 @@
 <div class="row">
-    @if (isset($header))
-        <h3 class="text-center">
-            <b>{{ $header }}</b>
-        </h3>
-    @endif
+    <div class="col-12">
+        @if (isset($header))
+            <h3 class="text-center">
+                <b>{{ $header }}</b>
+            </h3>
+        @endif
+    </div>
 </div>
 
-
-<div class="row">
+<div class="row justify-content-center">
     @if (isset($manga_list))
         @foreach ($manga_list as $manga)
-            <div class="col-lg-2 col-sm-4 col-xs-6 text-center thumbnail">
-                <div>
-                    <a href="{{ URL::action('MangaController@index', [$manga->getId()]) }}">
-                       {{ Html::image(URL::action('CoverController@smallDefault', [$manga->getId()])) }}
+            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+                <div class="card mt-1 mb-1">
+                    <a href="{{ URL::action('MangaController@index', [$manga]) }}">
+                        <img class="card-img-top" src="{{ URL::action('CoverController@smallDefault', [$manga]) }}">
                     </a>
+                    <div class="card-footer text-center pt-2 pb-0">
+                        <div class="card-title" title="{{ $manga->name }}">
+                            <a class="card-link" href="{{ URL::action('MangaController@index', [$manga]) }}">{{ $manga->name }}</a>
+                        </div>
+                    </div>
                 </div>
-                <h4 title="{{ $manga->getName() }}"><a href="{{ URL::action('MangaController@index', [$manga->getId()]) }}">{{ $manga->getName() }}</a></h4>
             </div>
         @endforeach
     @else
     @endif
 </div>
 
-<div class="text-center">
-    @if (isset($manga_list))
-        {{ $manga_list->render() }}
-    @endif
+<div class="row">
+    <div class="col-12">
+        @if (isset($manga_list))
+            {{ $manga_list->render('vendor.pagination.bootstrap-4') }}
+        @endif
+    </div>
 </div>

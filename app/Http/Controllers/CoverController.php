@@ -72,7 +72,7 @@ class CoverController extends Controller
         return $this->medium($manga, $archive, $page);
     }
 
-    public function update(CoverUpdateRequest $request)
+    public function put(CoverUpdateRequest $request)
     {
         $manga = Manga::find($request->get('manga_id'));
         $archive = Archive::find($request->get('archive_id'));

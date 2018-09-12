@@ -45,7 +45,7 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::get('/small/{manga}/{archive}/{page}', 'CoverController@small');
         Route::get('/medium/{manga}/{archive}/{page}', 'CoverController@medium');
 
-        Route::post('/update', 'CoverController@update')->middleware('maintainer');
+        Route::put('/', 'CoverController@put')->middleware('maintainer');
     });
 
     Route::prefix('edit')->middleware('maintainer')->name('edit')->group(function () {
@@ -108,13 +108,13 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
 
     Route::prefix('manga')->middleware('manga_views')->name('manga')->group(function () {
         Route::get('/{manga}/{sort?}', 'MangaController@index');
-        Route::get('/{manga}/files', 'MangaController@files');
+        Route::get('/{manga}/files/{sort?}', 'MangaController@files');
         Route::get('/{manga}/comments', 'MangaController@comments');
     });
 
     Route::prefix('notifications')->name('notifications')->group(function () {
         Route::get('/', 'NotificationController@index');
-        Route::post('/dismiss', 'NotificationController@dismiss');
+        Route::delete('/', 'NotificationController@delete');
     });
 
     Route::prefix('person')->name('person')->group(function () {

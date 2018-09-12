@@ -36,7 +36,7 @@ class MangaController extends Controller
             ->with('sort', $sort);
     }
 
-    public function files(Manga $manga)
+    public function files(Manga $manga, $sort = 'ascending')
     {
         // these are all required because of the responsive layouts
         $manga = $manga->load([
@@ -54,7 +54,7 @@ class MangaController extends Controller
         return view('manga.files')
             ->with('user', $user)
             ->with('manga', $manga)
-            ->with('sort', 'ascending');
+            ->with('sort', $sort);
     }
 
     public function comments(Manga $manga)

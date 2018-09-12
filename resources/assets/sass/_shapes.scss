@@ -1,0 +1,43 @@
+$triangle-sizes: (
+  xs: 8px,
+  sm: 16px
+);
+
+@mixin triangle-variant-base() {
+  width: 0;
+  height: 0;
+
+  border-style: solid;
+}
+
+@mixin triangle-variant-down($size) {
+  @include triangle-variant-base();
+
+  border-width: map_get($triangle-sizes, $size) map_get($triangle-sizes, $size) 0 map_get($triangle-sizes, $size);
+}
+
+@mixin triangle-border-color($color-top, $color-right, $color-bottom, $color-left) {
+  border-color: $color-top $color-right $color-bottom $color-left !important;
+}
+
+// TODO: Use voodoo magic to create rules for all directions, sizes, and colors
+
+.triangle-sm-down.triangle-primary {
+  @include triangle-variant-down(sm);
+  @include triangle-border-color($primary, transparent, transparent, transparent);
+}
+
+.triangle-sm-down.triangle-secondary {
+  @include triangle-variant-down(sm);
+  @include triangle-border-color($secondary, transparent, transparent, transparent);
+}
+
+.triangle-sm-down.triangle-light {
+  @include triangle-variant-down(sm);
+  @include triangle-border-color($light, transparent, transparent, transparent);
+}
+
+.triangle-sm-down.triangle-dark {
+  @include triangle-variant-down(sm);
+  @include triangle-border-color($dark, transparent, transparent, transparent);
+}

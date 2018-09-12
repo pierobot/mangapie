@@ -1,58 +1,72 @@
 @extends ('edit.manga.layout')
 
+@section ('side-top-menu')
+    @component ('edit.manga.components.side-top-menu', [
+        'manga' => $manga,
+        'active' => 'Cover',
+        'items' => [
+            ['title' => 'Mangaupdates', 'icon' => 'database', 'action' => 'MangaEditController@mangaupdates'],
+            ['title' => 'Name(s)', 'icon' => 'globe-americas', 'action' => 'MangaEditController@names'],
+            ['title' => 'Description', 'icon' => 'file-text', 'action' => 'MangaEditController@description'],
+            ['title' => 'Author(s)', 'icon' => 'pencil', 'action' => 'MangaEditController@authors'],
+            ['title' => 'Artist(s)', 'icon' => 'brush', 'action' => 'MangaEditController@artists'],
+            ['title' => 'Genre(s)', 'icon' => 'tags', 'action' => 'MangaEditController@genres'],
+            ['title' => 'Cover', 'icon' => 'file-image', 'action' => 'MangaEditController@covers'],
+            ['title' => 'Type', 'icon' => 'list', 'action' => 'MangaEditController@type'],
+            ['title' => 'Year', 'icon' => 'calendar', 'action' => 'MangaEditController@year']
+        ]
+    ])
+    @endcomponent
+@endsection
+
 @section ('tab-content')
-    <div class="tab-content">
-        <div class="tab-pane active">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <div class="panel-title">
-                        Covers
-                    </div>
-                </div>
-                <div class="panel-body">
-                    @if (empty($archives) === false)
-                        @foreach ($archives as $archive_index => $archive)
-                            <div class="panel-group">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        <h3 class="panel-title">
-                                            <a data-toggle="collapse" href="#{{ $archive_index }}">{{ $archive->getName() }}</a>
-                                        </h3>
-                                    </div>
-                                    <div id="{{ $archive_index }}" class="panel-collapse collapse">
-                                        <div class="panel-body">
-                                            <div class="row">
-                                                @for ($i = 1; $i <= 4; $i++)
-                                                    <div class="col-lg-2 col-sm-4 col-xs-6 set-cover thumbnail">
-                                                        {{ Form::open(['action' => 'CoverController@update'], [$id]) }}
+    <div class="card">
+        <div class="card-header">
+            Cover
+        </div>
+        <div class="card-body">
+            <div class="row">
+                @if (! empty($archives))
+                    @foreach ($archives as $archive)
+                        <div class="col-12 mb-2">
+                            <div class="card">
+                                <div class="card-header">
+                                    <a href="#dropdown-{{ $archive->id }}" data-toggle="collapse" data-target="#dropdown-{{ $archive->id }}">
+                                        <h5 class="m-0">{{ $archive->name }}</h5>
+                                    </a>
+                                </div>
+                                <div class="card-body collapse cover-collapse" id="dropdown-{{ $archive->id }}">
+                                    <div class="row">
+                                        {{-- 8 pages should be enough, right? :| --}}
+                                        @for ($i = 1; $i <= 8; $i++)
+                                            <div class="col-6 col-md-3 mb-2">
+                                                <div class="card text-center">
+                                                    <img class="card-img-top" src="{{ URL::action('CoverController@small', [$manga, $archive, $i]) }}">
 
-                                                        {{ Form::hidden('manga_id', $id) }}
-                                                        {{ Form::hidden('archive_id', $archive->getId()) }}
-                                                        {{ Form::hidden('page', $i) }}
+                                                    <div class="card-footer">
+                                                        {{ Form::open(['action' => 'CoverController@put', 'method' => 'put', 'class' => 'm-0']) }}
+                                                        {{ Form::hidden('manga_id', $manga->id) }}
+                                                        {{ Form::hidden('cover_archive_page', $i) }}
 
-                                                        <div>
-                                                            {{ Html::image(URL::action('CoverController@small', [
-                                                                $id,
-                                                                $archive->getId(),
-                                                                $i]), null, ['class' => 'center-block'])
-                                                            }}
-                                                        </div>
+                                                        <button class="btn btn-primary form-control" type="submit">
+                                                            <span class="fa fa-check"></span>
 
-                                                        <h4>
-                                                            {{ Form::submit('Set', ['class' => 'btn btn-success center-block']) }}
-                                                        </h4>
+                                                            <span class="d-none d-md-inline-block">
+                                                                &nbsp;Set
+                                                            </span>
+                                                        </button>
 
                                                         {{ Form::close() }}
                                                     </div>
-                                                @endfor
+                                                </div>
                                             </div>
-                                        </div>
+                                        @endfor
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
-                    @endif
-                </div>
+                        </div>
+                    @endforeach
+                @endif
             </div>
         </div>
     </div>

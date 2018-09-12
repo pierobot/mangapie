@@ -1,11 +1,7 @@
+{{--The ml-auto is important.--}}
+{{--If another button is to be placed before this one, then move the ml-auto to that one.--}}
 @auth
-    <li @if ($notificationCount > 0) class="wiggle" @endif>
-        <a href="{{ URL::action('NotificationController@index') }}">
-            <span class="glyphicon glyphicon-bell"></span>&nbsp;Notifications&nbsp;
-
-            @if ($notificationCount > 0)
-                <span class="badge" id="notification-count">{{ $notificationCount }}</span>
-            @endif
-        </a>
-    </li>
+    <a class="btn ml-auto @if (! empty($notificationCount)) btn-outline-warning @endif" type="button" href="{{ URL::action('NotificationController@index') }}" title="{{ $notificationCount }} notification(s)">
+        <span class="fa fa-bell"></span>
+    </a>
 @endauth

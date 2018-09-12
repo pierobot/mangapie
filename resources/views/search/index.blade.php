@@ -7,6 +7,7 @@
 @section ('custom_navbar_right')
 @endsection
 
+// TODO: FIX THE BELOW
 @section ('content')
     @include ('shared.errors')
 

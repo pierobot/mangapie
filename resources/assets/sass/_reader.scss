@@ -1,0 +1,21 @@
+.favorite-toggler[data-favorited="no"] {
+
+  &:hover {
+    @include button-variant($success, $success);
+  }
+}
+
+.favorite-toggler[data-favorited="yes"] {
+  & {
+    @include button-outline-variant($success);
+    @include border-radius()
+  }
+
+  &:hover {
+    & > span.fa-heart::before {
+      content: fa-content($fa-var-times);
+    }
+
+    @include button-outline-variant($danger);
+  }
+}

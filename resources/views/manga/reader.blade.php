@@ -4,176 +4,179 @@
     Reader &middot; {{ $archive_name }}
 @endsection
 
-@section ('custom_navbar_right')
-    <li class="clickable navbar-link"><a href="{{ URL::action('MangaController@index', [$id]) }}"><span class="glyphicon glyphicon-book white"></span> Information</a></li>
-@endsection
-
 @section ('content')
     @include ('shared.errors')
 
     @if ($page_count !== 0)
-        <div class="row text-center">
-            {{ Html::image(URL::action('ReaderController@image', [$id, $archive->getId(), $page]), 'image', ['class' => 'reader-image']) }}
-        </div>
-
-        <div class="row">
-            <div class="col-xs-12">
-                <table class="table table-va-middle">
-                    <tbody>
-                        <tr>
-                            <td class="col-xs-2 text-center">
-                                <div class="hidden-xs">
-                                    @if ($ltr)
-                                        @if ($has_prev_page)
-                                            <a href="{{ $prev_url }}">
-                                                <span class="glyphicon glyphicon-arrow-left glyphicon-size-4x"></span>
-                                            </a>
-                                        @endif
-                                    @else
-                                        @if ($has_next_page)
-                                            <a href="{{ $next_url }}">
-                                                <span class="glyphicon glyphicon-arrow-right glyphicon-size-4x"></span>
-                                            </a>
-                                        @endif
-                                    @endif
-                                </div>
-
-                                <div class="visible-xs">
-                                    @if ($ltr)
-                                        @if ($has_prev_page)
-                                            <a href="{{ $prev_url }}">
-                                                <span class="glyphicon glyphicon-arrow-left glyphicon-size-2x"></span>
-                                            </a>
-                                        @endif
-                                    @else
-                                        @if ($has_next_page)
-                                            <a href="{{ $next_url }}">
-                                                <span class="glyphicon glyphicon-arrow-right glyphicon-size-2x"></span>
-                                            </a>
-                                        @endif
-                                    @endif
-                                </div>
-                            </td>
-
-                            <td class="col-xs-8 text-center">
-                                <div class="hidden-xs">
-                                    <h2>
-                                        <b>Page {{ $page }}
-                                            <div class="dropdown btn-group">
-                                                <a role="button" href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <span class="glyphicon glyphicon-triangle-bottom"></span>
-                                                </a>
-                                                <ul class="dropdown-menu">
-                                                    @for ($i = 1; $i <= $page_count; $i++)
-                                                        <li>
-                                                            {{ Html::link(URL::action('ReaderController@index', [$id, $archive->getId(), $i]), $i) }}
-                                                        </li>
-                                                    @endfor
-                                                </ul>
-                                            </div>
-
-                                            of {{ $page_count }}
-                                        </b>
-                                    </h2>
-                                </div>
-
-                                <div class="visible-xs">
-                                    <h4>
-                                        <b>Page {{ $page }}
-                                            <div class="dropdown btn-group">
-                                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                    <span class="glyphicon glyphicon-triangle-bottom"></span>
-                                                </a>
-                                                <ul class="dropdown-menu">
-                                                    @for ($i = 1; $i <= $page_count; $i++)
-                                                        <li tabindex="-1">
-                                                            {{ Html::link(URL::action('ReaderController@index', [$id, $archive->getId(), $i]), $i) }}
-                                                        </li>
-                                                    @endfor
-                                                </ul>
-                                            </div>
-
-                                            of {{ $page_count }}
-                                        </b>
-                                    </h4>
-                                </div>
-                            </td>
-
-                            <td class="col-xs-2 text-center">
-                                <div class="hidden-xs">
-                                    @if ($ltr)
-                                        @if ($has_next_page)
-                                            <a href="{{ $next_url }}">
-                                                <span class="glyphicon glyphicon-arrow-right glyphicon-size-4x"></span>
-                                            </a>
-                                        @endif
-                                    @else
-                                        @if ($has_prev_page)
-                                            <a href="{{ $prev_url }}">
-                                                <span class="glyphicon glyphicon-arrow-left glyphicon-size-4x"></span>
-                                            </a>
-                                        @endif
-                                    @endif
-                                </div>
-
-                                <div class="visible-xs">
-                                    @if ($ltr)
-                                        @if ($has_next_page)
-                                            <a href="{{ $next_url }}">
-                                                <span class="glyphicon glyphicon-arrow-right glyphicon-size-2x"></span>
-                                            </a>
-                                        @endif
-                                    @else
-                                        @if ($has_prev_page)
-                                            <a href="{{ $prev_url }}">
-                                                <span class="glyphicon glyphicon-arrow-left glyphicon-size-2x"></span>
-                                            </a>
-                                        @endif
-                                    @endif
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="row text-center" style="padding-bottom: 60px;">
+            <div class="col-12">
+                <img class="reader-image w-100 h-100" src="{{ URL::action('ReaderController@image', [$id, $archive, $page]) }}">
             </div>
         </div>
+    @endif
 
-        @if ($preload !== false)
-        <div id="preload" style="display: none;">
-            @foreach ($preload as $index => $preload_url)
-                <img id="{{ $index }}" data-src="{{ $preload_url }}">
-            @endforeach
-        </div>
-        @endif
+    @if ($preload !== false)
+    <div id="preload" style="display: none;">
+        @foreach ($preload as $index => $preload_url)
+            <img id="{{ $index }}" data-src="{{ $preload_url }}">
+        @endforeach
+    </div>
+    @endif
 
-        <div class="hidden">
-            @if($ltr)
-                @if ($has_prev_page)
-                    <a href="{{ $prev_url }}" id="prev-image"><span class="glyphicon glyphicon-chevron-left white"></span> Previous</a>
-                @else
-                    <a href="#" id="prev-image"><span class="glyphicon glyphicon-chevron-left white"></span> Previous</a>
-                @endif
-
-                @if ($has_next_page)
-                    <a href="{{ $next_url }}" id="next-image"><span class="glyphicon glyphicon-chevron-right white"></span> Next</a>
-                @else
-                    <a href="#" id="next-image"><span class="glyphicon glyphicon-chevron-right white"></span> Next</a>
-                @endif
+    <div class="hidden">
+        @if($ltr)
+            @if ($has_prev_page)
+                <a href="{{ $prev_url }}" id="prev-image"></a>
             @else
-                @if ($has_next_page)
-                    <a href="{{ $next_url }}" id="next-image"><span class="glyphicon glyphicon-chevron-left white"></span> Next</a>
-                @else
-                    <a href="#" id="next-image"><span class="glyphicon glyphicon-chevron-left white"></span> Next</a>
-                @endif
+                <a href="#" id="prev-image"></a>
+            @endif
 
-                @if ($has_prev_page)
-                    <a href="{{ $prev_url }}" id="prev-image"><span class="glyphicon glyphicon-chevron-right white"></span> Previous</a>
-                @else
-                    <a href="#" id="prev-image"><span class="glyphicon glyphicon-chevron-right white"></span> Previous</a>
-                @endif
+            @if ($has_next_page)
+                <a href="{{ $next_url }}" id="next-image"></a>
+            @else
+                <a href="#" id="next-image"></a>
             @endif
+        @else
+            @if ($has_next_page)
+                <a href="{{ $next_url }}" id="next-image"></a>
+            @else
+                <a href="#" id="next-image"></a>
             @endif
+
+            @if ($has_prev_page)
+                <a href="{{ $prev_url }}" id="prev-image"></a>
+            @else
+                <a href="#" id="prev-image"></a>
+            @endif
+        @endif
+    </div>
+@endsection
+
+@section ('footer-contents')
+    <nav class="navbar navbar-dark bg-dark fixed-bottom">
+        <div class="container">
+
+            {{--<div class="collapse navbar-collapse" id="reader-navbar-settings-collapse-div">--}}
+                {{--<ul class="nav navbar-nav">--}}
+                    {{--<li class="nav-item">--}}
+                        {{--<div class="card bg-transparent border-0">--}}
+                            {{--<div class="card-body p-0 m-2">--}}
+                                {{--{{ Form::open(['action' => 'ReaderSettingsController@put', 'method' => 'put', 'class' => 'inline-form']) }}--}}
+
+                                {{--<div class="input-group">--}}
+                                    {{--<div class="input-group-prepend">--}}
+                                        {{--<label class="input-group-text" for="direction">Direction</label>--}}
+                                    {{--</div>--}}
+
+                                    {{--<select class="custom-select" id="direction">--}}
+                                        {{--<option value="ltr">Left-to-Right</option>--}}
+                                        {{--<option value="rtl">Right-to-Left</option>--}}
+                                    {{--</select>--}}
+
+                                {{--</div>--}}
+
+                                {{--{{ Form::close() }}--}}
+                            {{--</div>--}}
+                        {{--</div>--}}
+                    {{--</li>--}}
+                {{--</ul>--}}
+            {{--</div>--}}
+
+            <div class="collapse navbar-collapse" id="navigation-collapse">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item text-center">
+                        <a class="nav-link" href="{{ URL::action('MangaController@index', [$id]) }}">
+                            <h4>
+                                <span class="fa fa-book-open"></span>
+                                &nbsp;<strong>{{ $name }}</strong>
+                            </h4>
+                        </a>
+                    </li>
+                    <li class="nav-item text-center">
+                        <label class="text-muted">
+                            <span class="fa fa-file-archive"></span>
+                            &nbsp;<span class="text-muted">{{ $archive->name }}</span>
+                        </label>
+                    </li>
+
+                    <li class="nav-item">
+                        <div class="card text-center bg-transparent border-0">
+                            <div class="card-body">
+                                <div class="btn-group btn-group-lg">
+                                    @if ($ltr)
+                                        <a class="btn btn btn-secondary @if (! $has_prev_page) disabled @endif" href="{{ $has_prev_page ? $prev_url : "" }}">
+                                            <span class="fa fa-chevron-left"></span>
+                                        </a>
+                                    @else
+                                        <a class="btn btn btn-secondary @if (! $has_next_page) disabled @endif" href="{{ $has_next_page ? $next_url : "" }}">
+                                            <span class="fa fa-chevron-left"></span>
+                                        </a>
+                                    @endif
+
+                                    <div class="btn-group gtn-group-lg dropup">
+                                        <button class="btn btn-secondary" data-toggle="dropdown">
+                                            {{ $page }} of {{ $page_count }}&nbsp;
+                                            <span class="fa fa-chevron-up"></span>
+                                        </button>
+                                        <div class="dropdown-menu bg-secondary position-absolute">
+                                            @for ($i = 1; $i <= $page_count; $i++)
+                                                <a class="dropdown-item" href="{{ URL::action('ReaderController@index', [$id, $archive, $i]) }}">{{ $i }}</a>
+                                            @endfor
+                                        </div>
+                                    </div>
+
+                                    @if ($ltr)
+                                        <a class="btn btn btn-secondary @if (! $has_next_page) disabled @endif" href="{{ $has_next_page ? $next_url : "" }}">
+                                            <span class="fa fa-chevron-right"></span>
+                                        </a>
+                                    @else
+                                        <a class="btn btn btn-secondary @if (! $has_prev_page) disabled @endif" href="{{ $has_prev_page ? $prev_url : "" }}">
+                                            <span class="fa fa-chevron-right"></span>
+                                        </a>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            {{-- disabled for now --}}
+            <button disabled class="navbar-toggler ml-auto btn btn-secondary" type="button" data-toggle="collapse" data-target="#reader-navbar-settings-collapse-div" aria-expanded="false" title="Open settings">
+                <span class="fa fa-cog text-white-50"></span>
+            </button>
+            <div class="ml-1 mr-1"></div>
+
+            @php
+                $favorite = auth()->guard()->user()->favorites->where('manga_id', $id)->first();
+            @endphp
+            @if (empty($favorite))
+                {{ Form::open(['action' => 'FavoriteController@create', 'method' => 'post', 'class' => 'inline-form m-0']) }}
+                {{ Form::hidden('manga_id', $id) }}
+                <button class="navbar-toggler btn favorite-toggler" type="submit" title="Add to favorites" data-favorited="no">
+                    <span class="fa fa-heart"></span>
+                </button>
+                {{ Form::close() }}
+            @else
+                {{ Form::open(['action' => 'FavoriteController@delete', 'method' => 'delete', 'class' => 'inline-form m-0']) }}
+                {{ Form::hidden('favorite_id', $favorite->id) }}
+                <button class="navbar-toggler btn favorite-toggler" type="submit" title="Remove from favorites" data-favorited="yes">
+                    <span class="fa fa-heart"></span>
+                </button>
+                {{ Form::close() }}
+            @endif
+            <div class="ml-1 mr-1"></div>
+
+            <a class="navbar-toggler btn btn-secondary" type="button" href="{{ URL::action('MangaController@comments', [$id]) }}" title="Go to comments">
+                <span class="fa fa-comments"></span>
+            </a>
+            <div class="ml-1 mr-1"></div>
+
+            <button class="navbar-toggler btn btn-secondary mr-auto" type="button" data-toggle="collapse" data-target="#navigation-collapse" title="Navigation">
+                <span class="fa fa-arrows-alt-h"></span>
+            </button>
         </div>
+    </nav>
 @endsection
 
 @section ('scripts')
@@ -182,6 +185,15 @@
 
             // set up handler for key events
             $(document).on('keyup', function (e) {
+                // do not handle key events for typing in searchbar
+                $focused = $(':focus');
+                if ($focused.attr('id') === $("#autocomplete").attr('id'))
+                    return;
+
+                // do not handle events where ctrl, alt, or shift are pressed
+                if (e.ctrlKey || e.altKey || e.shiftKey)
+                    return;
+
                 if (e.keyCode === 37 || e.keyCode === 65) {
                     // left arrow or a
                     @if ($ltr == false)

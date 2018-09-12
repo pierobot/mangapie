@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class EditMangaAssocNameAddRequest extends FormRequest
+class ReaderSettingsRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,10 +13,7 @@ class EditMangaAssocNameAddRequest extends FormRequest
      */
     public function authorize()
     {
-        $authorized = \Auth::check();
-        $user = \Auth::user();
-
-        return $authorized && ($user->isAdmin() || $user->isMaintainer());
+        return auth()->check();
     }
 
     /**
@@ -27,8 +24,8 @@ class EditMangaAssocNameAddRequest extends FormRequest
     public function rules()
     {
         return [
-            'manga_id' => 'required|int|exists:manga,id',
-            'name' => 'required|string',
+            'manga_id' => 'required|exists:manga,id',
+            'direction' => 'string|size:3|in:ltr,rtl,vrt'
         ];
     }
 }
