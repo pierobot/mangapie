@@ -5,6 +5,10 @@
 @import "node_modules/@fortawesome/fontawesome-free/scss/solid";
 @import "node_modules/@fortawesome/fontawesome-free/scss/v4-shims";
 
+span.fa::before {
+  font-weight: 900;
+}
+
 // Variables
 @import "variables";
 

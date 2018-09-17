@@ -30,7 +30,7 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
     Route::prefix('avatar')->name('avatar')->group(function () {
         Route::get('/{user}', 'AvatarController@index');
 
-        Route::post('/', 'AvatarController@update');
+        Route::put('/', 'AvatarController@put');
     });
 
     Route::prefix('comments')->name('comments')->group(function () {
@@ -151,8 +151,9 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::get('/visuals', 'UserSettingsController@visuals');
         Route::get('/profile', 'UserSettingsController@profile');
 
-        Route::post('/', 'UserSettingsController@update');
-        Route::post('/profile', 'UserSettingsController@updateProfile');
+        Route::put('/about', 'UserSettingsController@putAbout');
+        Route::patch('/reader', 'UserSettingsController@patchReaderDirection');
+        Route::patch('/password', 'UserSettingsController@patchPassword');
     });
 
     Route::prefix('vote')->name('votes')->group(function() {

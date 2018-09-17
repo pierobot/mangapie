@@ -2,13 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserSettingsRequest;
-use App\Http\Requests\AvatarUpdateRequest;
-use App\Http\Requests\UserUpdateProfileRequest;
-use Illuminate\Http\Request;
-
-use App\Theme;
-use App\User;
+use App\Http\Requests\UserSettings\PatchPasswordRequest;
+use App\Http\Requests\UserSettings\PatchReaderDirectionRequest;
+use App\Http\Requests\UserSettings\PutAboutRequest;
 
 class UserSettingsController extends Controller
 {
@@ -40,52 +36,46 @@ class UserSettingsController extends Controller
         return view('settings.profile')->with('user', $user);
     }
 
-    public function updateProfile(UserUpdateProfileRequest $request)
+    public function putAbout(PutAboutRequest $request)
     {
-        $user = auth()->user();
-
-        $user->update([
+        $request->user()->update([
             'about' => $request->get('about')
         ]);
 
-        return view('settings.profile')->with('user', $user);
+        session()->flash('success', 'About successfully updated.');
+
+        return redirect()->back();
     }
 
-    public function update(UserSettingsRequest $request)
+    public function patchReaderDirection(PatchReaderDirectionRequest $request)
     {
-        $user = auth()->user();
-        $action = $request->get('action');
+        $request->user()->update([
+            'read_direction' => $request->get('direction')
+        ]);
 
-        if ($action == 'password.update') {
-            // make sure the old password matches the current one
-            if (\Hash::check($request->get('old-password'), $user->getPassword()) == false) {
-                return redirect()->action('UserSettingsController@index')->withErrors([
-                    'password' => 'Old password does not match.'
-                ]);
-            }
+        session()->flash('success', 'Reading direction successfully updated.');
 
-            $user->setPassword(\Hash::make($request->get('new-password')));
+        return redirect()->back();
+    }
 
-            $request->session()->flash('success', 'Successfully updated password.');
-        } else if ($action == 'reader.update') {
-            $user->setLtr($request->get('ltr'));
-            $user->save();
+    public function patchPassword(PatchPasswordRequest $request)
+    {
+        $userPassword = $request->user()->password;
+        $currentPassword = $request->get('current');
+        $newPassword = $request->get('new');
 
-            $request->session()->flash('success', 'Successfully updated reading direction.');
-
-        } elseif ($action == 'theme.update') {
-            $theme = $request->get('theme');
-            if (Theme::exists($theme) == false) {
-                return redirect()->action('UserSettingsController@index')->withErrors([
-                    'theme' => 'The selected theme is invalid.'
-                ]);
-            }
-
-            $user->setTheme($theme);
-
-            $request->session()->flash('success', 'Successfully updated theme.');
+        if (! \Hash::check($currentPassword, $userPassword)) {
+            return redirect()->back()->withErrors([
+                'password' => 'Current password given was incorrect.'
+            ]);
         }
 
-        return redirect()->action('UserSettingsController@index');
+        $request->user()->update([
+            'password' => \Hash::make($newPassword)
+        ]);
+
+        session()->flash('success', 'Successfully updated password.');
+
+        return redirect()->back();
     }
 }

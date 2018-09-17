@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\UserSettings;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UserUpdateProfileRequest extends FormRequest
+class PatchPasswordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class UserUpdateProfileRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::check();
+        return auth()->check();
     }
 
     /**
@@ -24,7 +24,9 @@ class UserUpdateProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'about' => 'required|string'
+            'current' => 'string',
+            'new' => 'string',
+            'verify' => 'same:new',
         ];
     }
 }
