@@ -90,13 +90,6 @@ textarea {
     display: block;
 }
 
-/*.thumbnail h4 {*/
-    /*!* Shorten long names with ellipses *!*/
-    /*white-space: nowrap;*/
-    /*overflow: hidden;*/
-    /*text-overflow: ellipsis;*/
-/*}*/
-
 li.list-group-item span.label {
     display: inline-block;
 }
@@ -107,13 +100,6 @@ li.list-group-item span.label {
     max-height: 350px;
     overflow: hidden;
     overflow-y: auto;
-}
-
-img.reader-image {
-    max-width: 100%;
-    max-height: 100%;
-    height: auto;
-    width: auto;
 }
 
 /* ------- notifications/index.blade.php ------- */

@@ -106,4 +106,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(\App\MangaView::class);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(\App\Comment::class);
+    }
 }

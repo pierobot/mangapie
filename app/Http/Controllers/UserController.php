@@ -15,12 +15,22 @@ class UserController extends Controller
 {
     public function index(User $user)
     {
-        return view('user.index')->with('user', $user);
+        $recentFavorites = $user->favorites->sortByDesc('updated_at')->take(4)->load('manga');
+        $recentReads = $user->readerHistory->sortByDesc('updated_at')->unique('manga_id')->take(4)->load('manga');
+
+        return view('user.activity')
+            ->with('user', $user)
+            ->with('recentFavorites', $recentFavorites)
+            ->with('recentReads', $recentReads);
     }
 
-    public function profile(User $user)
+    public function comments(User $user)
     {
-        return view('user.profile')->with('user', $user);
+        $comments = $user->comments->sortByDesc('created_at')->take(10)->load('manga');
+
+        return view('user.comments')
+            ->with('user', $user)
+            ->with('comments', $comments);
     }
 
     public function activity(User $user)

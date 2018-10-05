@@ -135,7 +135,7 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
 
     Route::prefix('user')->name('user')->group(function () {
         Route::get('/{user}', 'UserController@index');
-        Route::get('/{user}/profile', 'UserController@profile');
+        Route::get('/{user}/comments', 'UserController@comments');
         Route::get('/{user}/activity', 'UserController@activity');
     });
 
