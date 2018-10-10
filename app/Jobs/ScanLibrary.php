@@ -28,9 +28,10 @@ class ScanLibrary implements ShouldQueue
      */
     public function __construct(Library $library)
     {
-        $this->libraryId = $library->getId();
+        $this->libraryId = $library->id;
 
         $this->prepareStatus();
+        $this->setInput(['library_id' => $this->libraryId]);
     }
 
     /**

@@ -27,6 +27,28 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    /**
+     * @param array|mixed $columns
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public static function admin($columns = ['*'])
+    {
+        return (new static)->newQuery()->where('admin', true)->get(
+            is_array($columns) ? $columns : func_get_args()
+        );
+    }
+
+    /**
+     * @param array|mixed $columns
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public static function maintainer($columns = ['*'])
+    {
+        return (new static)->newQuery()->where('maintainer', true)->get(
+            is_array($columns) ? $columns : func_get_args()
+        );
+    }
+
     public function getId()
     {
         return $this->id;

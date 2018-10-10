@@ -19,32 +19,47 @@ class AdminController extends Controller
 {
     public function index()
     {
-        $info = null;
-
-        $admin_count = User::where('admin', '=', true)->get()->count();
-        $user_count = User::all()->count();
-        $warnings = \LogParser::get('warning');
-//      $errors_ = \LogParser::get('error'); // the underscore at the end is to avoid collisions with Laravel's $error variable
-
-        return view('admin.index')
-            ->with('info', $info)
-            ->with('admin_count', $admin_count)
-            ->with('user_count', $user_count)
-            ->with('warnings', $warnings);
+        return view('admin.index');
     }
 
     public function users()
     {
-        $users = User::all();
-
-        return view('admin.users')->with('users', $users);
+        return view('admin.users');
     }
 
     public function libraries()
     {
-        $libraries = Library::all();
+        return view('admin.libraries.index');
+    }
 
-        return view('admin.libraries')->with('libraries', $libraries);
+    public function logs()
+    {
+        return view('admin.logs.index');
+    }
+
+    public function logWarnings()
+    {
+        return view('admin.logs.warnings');
+    }
+
+    public function logErrors()
+    {
+        return view('admin.logs.errors');
+    }
+
+    public function createLibraries()
+    {
+        return view('admin.libraries.create');
+    }
+
+    public function modifyLibraries()
+    {
+        return view('admin.libraries.modify');
+    }
+
+    public function deleteLibraries()
+    {
+        return view('admin.libraries.delete');
     }
 
     public function patchImages(Request $request)

@@ -1,0 +1,42 @@
+td.library-path-wrap {
+  word-wrap: break-word;
+
+  @include media-breakpoint-down(lg) {
+    max-width: 10em;
+  }
+
+  @include media-breakpoint-up(lg) {
+    max-width: 25em;
+  }
+}
+
+.progress-bar.job-progress-bar {
+
+  @for $i from 0 through 100 {
+    &[data-job-progress="#{$i}"] {
+      width: 0% + $i;
+    }
+  }
+
+  &[data-job-ended="0"] {
+
+    &[data-job-status="executing"] {
+      @extend .bg-primary;
+    }
+
+    &[data-job-status="queued"] {
+      @extend .bg-warning;
+    }
+  }
+
+  &[data-job-ended="1"] {
+
+    &[data-job-status="failed"] {
+      @extend .bg-danger;
+    }
+
+    &[data-job-status="finished"] {
+      @extend .bg-success;
+    }
+  }
+}

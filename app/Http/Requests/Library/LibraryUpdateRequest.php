@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Library;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -13,7 +13,7 @@ class LibraryUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::user()->isAdmin();
+        return auth()->check() && auth()->user()->admin == true;
     }
 
     /**
@@ -24,8 +24,9 @@ class LibraryUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'ids'=> 'required|array',
-            'ids.*' => 'required|int|exists:libraries,id'
+            'library_id' => 'required|int|exists:libraries,id',
+            'action' => 'required|string|in:rename,refresh',
+            'name' => 'required_if:action,rename|string|nullable|unique:libraries,name'
         ];
     }
 }

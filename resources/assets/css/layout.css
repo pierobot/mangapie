@@ -66,11 +66,6 @@ textarea {
     text-overflow: ellipsis;
 }
 
-.col-6.col-sm-4.col-md-3.col-lg-2 > .card > img {
-    height: auto;
-    max-height: 250px;
-}
-
 /* ------- manga/index.blade.php ----- */
 
 .set-cover {

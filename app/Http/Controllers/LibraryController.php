@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LibraryStatusRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
-use App\Http\Requests\LibraryCreateRequest;
-use App\Http\Requests\LibraryDeleteRequest;
-use App\Http\Requests\LibraryUpdateRequest;
+use App\Http\Requests\Library\LibraryCreateRequest;
+use App\Http\Requests\Library\LibraryDeleteRequest;
+use App\Http\Requests\Library\LibraryStatusRequest;
+use App\Http\Requests\Library\LibraryUpdateRequest;
 
 use \App\Library;
-use \App\Manga;
 use Imtigger\LaravelJobStatus\JobStatus;
 
 class LibraryController extends Controller
@@ -23,7 +22,7 @@ class LibraryController extends Controller
 
         // ensure we have a valid path
         if (is_dir($path) == false) {
-            return \Redirect::action('AdminController@libraries')->withErrors([
+            return redirect()->back()->withErrors([
                 'library' => "'" . $path . "'" . ' does not exist'
             ]);
         }
@@ -35,41 +34,40 @@ class LibraryController extends Controller
         ]);
 
         if ($library == null) {
-            return \Redirect::action('AdminController@libraries')->withErrors([
+            return redirect()->back()->withErrors([
                 'library' => 'Unable to create library.'
             ]);
         }
 
-        \Session::flash('success', 'Library was successfully created.');
+        session()->flash('success', 'Library was successfully created.');
 
-        return \Redirect::action('AdminController@libraries');
+        return redirect()->back();
     }
 
     public function update(LibraryUpdateRequest $request)
     {
-        $libraries = Library::whereIn('id', \Request::get('ids'))->get();
+        $library = Library::find($request->get('library_id'));
 
-        $jobs = [];
-        foreach ($libraries as $library) {
+        $action = $request->get('action');
+        if ($action === 'rename') {
+            $library->update([
+                'name' => $request->get('name')
+            ]);
+
+            session()->flash('success', 'Library was successfully renamed.');
+        } else {
             $job = new \App\Jobs\ScanLibrary($library);
 
             $this->dispatch($job);
 
-            $jobs[] = [
-                'id' => $job->getJobStatusId(),
-                'name' => $library->getName(),
-            ];
+            session()->flash('success', 'The library is being refreshed.');
         }
 
-        return \Response::json([
-            'jobs' => $jobs
-        ]);
+        return redirect()->back();
     }
 
     public function status(LibraryStatusRequest $request)
     {
-        $jobsAreDone = true;
-        $jobsAreSuccessful = true;
         $jobIds = \Request::get('ids');
 
         $jobs = [];
@@ -87,36 +85,21 @@ class LibraryController extends Controller
                     'status' => $job->status,
                     'progress' => $job->progress_percentage,
                 ];
-
-                if ($job->is_failed)
-                    $jobsAreSuccessful = false;
-
-                if ($job->is_ended == false)
-                    $jobsAreDone = false;
             }
         }
 
-        if ($jobsAreDone) {
-            if ($jobsAreSuccessful) {
-                \Session::flash('success', 'The selected libraries have been updated successfully.');
-            }
-        }
-
-        return \Response::json([
+        return response()->json([
             'jobs' => $jobs
         ]);
     }
 
     public function delete(LibraryDeleteRequest $request)
     {
-        $libraries = Library::whereIn('id', \Request::get('ids'))->get();
+        $library = Library::find($request->get('library_id'));
+        $library->forceDelete();
 
-        foreach ($libraries as $library) {
-            $library->forceDelete();
-        }
+        session()->flash('success', 'Library was successfully deleted.');
 
-        \Session::flash('success', 'The selected libraries were successfully deleted.');
-
-        return \Response::json();
+        return redirect()->back();
     }
 }

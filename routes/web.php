@@ -22,6 +22,12 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::get('/', 'AdminController@index');
         Route::get('/users', 'AdminController@users');
         Route::get('/libraries', 'AdminController@libraries');
+        Route::get('/libraries/create', 'AdminController@createLibraries');
+        Route::get('/libraries/modify', 'AdminController@modifyLibraries');
+        Route::get('/libraries/delete', 'AdminController@deleteLibraries');
+        Route::get('/logs', 'AdminController@logs');
+        Route::get('/logs/warnings', 'AdminController@logWarnings');
+        Route::get('/logs/errors', 'AdminController@logErrors');
 
         Route::patch('/images', 'AdminController@patchImages');
         Route::delete('/images', 'AdminController@deleteImages');
@@ -100,10 +106,10 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
     });
 
     Route::prefix('library')->middleware('admin')->name('library')->group(function () {
-        Route::post('/create', 'LibraryController@create');
-        Route::post('/update', 'LibraryController@update');
-        Route::post('/status', 'LibraryController@status');
-        Route::post('/delete', 'LibraryController@delete');
+        Route::put('/', 'LibraryController@create');
+        Route::post('/', 'LibraryController@status');
+        Route::patch('/', 'LibraryController@update');
+        Route::delete('/', 'LibraryController@delete');
     });
 
     Route::prefix('manga')->middleware('manga_views')->name('manga')->group(function () {

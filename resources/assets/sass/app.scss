@@ -16,6 +16,7 @@ span.fa::before {
 @import "node_modules/bootstrap/scss/bootstrap";
 
 // Mangapie
+@import "admin.libraries";
 @import "manga.edit";
 @import "reader";
 @import "shapes";
