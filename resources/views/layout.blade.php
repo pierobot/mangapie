@@ -62,24 +62,30 @@
         @endadmin
 
         <div class="collapse navbar-collapse" id="menu-collapse">
-            <ul class="nav navbar-nav">
+            <ul class="nav navbar-nav text-right">
                 {{--<div class="d-block d-sm-none">--}}
                     {{--@include ('shared.searchbar')--}}
                 {{--</div>--}}
 
                 @auth
-                    <li class="dropdown text-right">
-                        <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="glyphicon glyphicon-user white"></span>&nbsp; {{ Auth::user()->getName() }} &nbsp;<span class="glyphicon glyphicon-chevron-down white"></span>
-                        </a>
-                        <ul class="dropdown-menu border-0">
-                            <li class="nav-item">
-                                <a class="dropdown-item text-right" href="{{ URL::action('UserController@index', [\Auth::user()->getId()]) }}">&nbsp;Profile</a>
-                                <a class="dropdown-item text-right" href="{{ URL::action('FavoriteController@index') }}"><span class="glyphicon glyphicon-heart"></span>&nbsp;Favorites</a>
-                                <a class="dropdown-item text-right" href="{{ URL::action('UserSettingsController@index') }}"><span class="glyphicon glyphicon-cog"></span>&nbsp;Settings</a>
-                                <a class="dropdown-item text-right" href="{{ URL::action('LoginController@logout') }}"><span class="glyphicon glyphicon-off"></span>&nbsp;Logout</a>
-                            </li>
-                        </ul>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ URL::action('UserController@index', [auth()->user()->id]) }}"><span class="fa fa-user"></span>&nbsp;Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ URL::action('FavoriteController@index') }}"><span class="fa fa-heart"></span>&nbsp;Favorites</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ URL::action('UserSettingsController@index') }}"><span class="fa fa-cog"></span>&nbsp;Settings</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <hr>
+                    </li>
+                    <li class="nav-item">
+                        Signed in as <strong>{{ auth()->user()->name }}</strong>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ URL::action('LoginController@logout') }}"><span class="fa fa-power-off"></span>&nbsp;Logout</a>
                     </li>
                 @endauth
             </ul>
