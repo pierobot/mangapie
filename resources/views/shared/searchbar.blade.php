@@ -7,7 +7,7 @@
         <div class="input-group">
             {{ Form::text('keywords', null, ['class' => 'form-control',
                                              'placeholder' => 'Quick search',
-                                             'id' => 'autocomplete',
+                                             'id' => $searchbarId,
                                              'autocomplete' => 'off']) }}
 
             <div class="input-group-append">

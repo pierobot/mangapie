@@ -18,8 +18,9 @@
     <div class="container">
         <a class="navbar-brand" href="{{ URL::action('HomeController@index') }}">Mangapie</a>
 
-        <div class="d-none d-md-block">
-            @include ('shared.searchbar')
+        <div class="d-none d-sm-block">
+            @component ('shared.searchbar', ['searchbarId' => 'searchbar'])
+            @endcomponent
         </div>
 
         @include ('shared.notifications')
@@ -63,9 +64,10 @@
 
         <div class="collapse navbar-collapse" id="menu-collapse">
             <ul class="nav navbar-nav text-right">
-                {{--<div class="d-block d-sm-none">--}}
-                    {{--@include ('shared.searchbar')--}}
-                {{--</div>--}}
+                <div class="d-block d-sm-none">
+                    @component ('shared.searchbar', ['searchbarId' => 'searchbar-small'])
+                    @endcomponent
+                </div>
 
                 @auth
                     <li class="nav-item">
