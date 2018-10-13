@@ -61,7 +61,7 @@
             {{ Form::open(['action' => 'LibraryController@create', 'method' => 'put']) }}
 
             <div class="form-row">
-                <div class="col-12 col-md-6">
+                <div class="col-12 col-lg-6">
                     <div class="form-group">
                         <div class="input-group">
                             <div class="input-group-prepend">
@@ -85,7 +85,7 @@
             </div>
 
             <div class="form-row">
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-lg-2">
                     <div class="form-group">
                         <button type="submit" class="form-control btn btn-primary">
                             <span class="fa fa-check"></span>

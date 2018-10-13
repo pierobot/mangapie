@@ -24,7 +24,22 @@ class AdminController extends Controller
 
     public function users()
     {
-        return view('admin.users');
+        return view('admin.users.index');
+    }
+
+    public function createUsers()
+    {
+        return view('admin.users.create');
+    }
+
+    public function editUsers()
+    {
+        return view('admin.users.edit');
+    }
+
+    public function deleteUsers()
+    {
+        return view('admin.users.delete');
     }
 
     public function libraries()

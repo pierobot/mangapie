@@ -7,13 +7,6 @@
     <title>@yield ('title')</title>
 
     <link href="{{ URL::to('public/assets/mangapie.css') }}" rel="stylesheet">
-    {{--@auth--}}
-        {{--<link href="{{ URL::to(\App\Theme::path(Auth::user()->getTheme())) }}" rel="stylesheet">--}}
-    {{--@else--}}
-
-        {{--<link href="{{ URL::to('/public/css/mangapie.css') }}" rel="stylesheet">--}}
-
-    {{--@endauth--}}
 
     @yield ('stylesheets')
 
@@ -45,15 +38,23 @@
 
         @admin
             <div class="collapse navbar-collapse" id="admin-collapse">
-                <ul class="nav navbar-nav">
+                <ul class="nav navbar-nav text-right">
                     <li class="nav-item">
-                        <a class="nav-link">
-                            <span class="fa fa-users">&nbsp;Users</span>
+                        <a class="nav-link" href="{{ URL::action('AdminController@index') }}">
+                            <span class="fa fa-dashboard"></span>
+                            &nbsp;Dashboard
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link">
-                            <span class="fa fa-list">&nbsp;Libraries</span>
+                        <a class="nav-link" href="{{ URL::action('AdminController@users') }}">
+                            <span class="fa fa-users"></span>
+                            &nbsp;Users
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ URL::action('AdminController@libraries') }}">
+                            <span class="fa fa-book"></span>
+                            &nbsp;Libraries
                         </a>
                     </li>
                 </ul>
@@ -62,38 +63,21 @@
 
         <div class="collapse navbar-collapse" id="menu-collapse">
             <ul class="nav navbar-nav">
-                <div class="d-block d-sm-none">
-                    @include ('shared.searchbar')
-                </div>
-
-                {{--@yield ('custom_navbar_right')--}}
+                {{--<div class="d-block d-sm-none">--}}
+                    {{--@include ('shared.searchbar')--}}
+                {{--</div>--}}
 
                 @auth
-                    @admin
-                    <li class="dropdown text-right">
-                        <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="glyphicon glyphicon-wrench"></span>&nbsp;Admin&nbsp;<span class="glyphicon glyphicon-chevron-down white"></span>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li class="nav-item"><a class="nav-link" href="{{ URL::action('AdminController@index') }}"><span class="glyphicon glyphicon-th-large"></span>&nbsp;Dashboard</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ URL::action('AdminController@users') }}"><span class="glyphicon glyphicon-user"></span>&nbsp;Users</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ URL::action('AdminController@libraries') }}"><span class="glyphicon glyphicon-book"></span>&nbsp;Libraries</a></li>
-                        </ul>
-                    </li>
-                    @endadmin
-
                     <li class="dropdown text-right">
                         <a href="#" class="nav-link dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span class="glyphicon glyphicon-user white"></span>&nbsp; {{ Auth::user()->getName() }} &nbsp;<span class="glyphicon glyphicon-chevron-down white"></span>
                         </a>
-                        <ul class="dropdown-menu bg-dark text-secondary">
-                            <li class="nav-item text-right">
-                                @auth
-                                    <a class="nav-link" href="{{ URL::action('UserController@index', [\Auth::user()->getId()]) }}">&nbsp;Profile</a>
-                                @endauth
-                                <a class="nav-link" href="{{ URL::action('FavoriteController@index') }}"><span class="glyphicon glyphicon-heart"></span>&nbsp;Favorites</a>
-                                <a class="nav-link" href="{{ URL::action('UserSettingsController@index') }}"><span class="glyphicon glyphicon-cog"></span>&nbsp;Settings</a>
-                                <a class="nav-link" href="{{ URL::action('LoginController@logout') }}"><span class="glyphicon glyphicon-off"></span>&nbsp;Logout</a>
+                        <ul class="dropdown-menu border-0">
+                            <li class="nav-item">
+                                <a class="dropdown-item text-right" href="{{ URL::action('UserController@index', [\Auth::user()->getId()]) }}">&nbsp;Profile</a>
+                                <a class="dropdown-item text-right" href="{{ URL::action('FavoriteController@index') }}"><span class="glyphicon glyphicon-heart"></span>&nbsp;Favorites</a>
+                                <a class="dropdown-item text-right" href="{{ URL::action('UserSettingsController@index') }}"><span class="glyphicon glyphicon-cog"></span>&nbsp;Settings</a>
+                                <a class="dropdown-item text-right" href="{{ URL::action('LoginController@logout') }}"><span class="glyphicon glyphicon-off"></span>&nbsp;Logout</a>
                             </li>
                         </ul>
                     </li>
@@ -103,14 +87,14 @@
     </div>
 </nav>
 
-<div class="container h-100">
+<div class="container">
     @yield ('content')
 </div>
 
 @yield ('footer-contents')
 
 @auth
-    {{--@include ('shared.autocomplete')--}}
+    @include ('shared.autocomplete')
     @yield ('scripts')
 @endauth
 

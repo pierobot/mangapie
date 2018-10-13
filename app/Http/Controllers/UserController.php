@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserCreateRequest;
-use App\Http\Requests\UserDeleteRequest;
-use App\Http\Requests\UserEditRequest;
+use App\Http\Requests\User\UserCreateRequest;
+use App\Http\Requests\User\UserDeleteRequest;
+use App\Http\Requests\User\UserEditRequest;
 use Illuminate\Http\Request;
 
 use App\User;
-use App\Library;
 use App\LibraryPrivilege;
 
 class UserController extends Controller
@@ -81,30 +80,28 @@ class UserController extends Controller
             $request->session()->flash('success', 'User was successfully created!');
         }
 
-        return redirect()->action('AdminController@users');
+        return redirect()->back();
     }
 
     public function edit(UserEditRequest $request)
     {
-        $user = User::where('name', $request->get('old-name'))->first();
-        if ($user != null) {
-            $user->setName($request->get('new-name'));
+        $user = User::where('name', $request->get('name'))->first();
+        $user->update([
+            'name' => $request->get('new-name')
+        ]);
 
-            $request->session()->flash('success', 'User was successfully edited!');
-        }
+        $request->session()->flash('success', 'User was successfully edited!');
 
-        return redirect()->action('AdminController@users');
+        return redirect()->back();
     }
 
     public function delete(UserDeleteRequest $request)
     {
         $user = User::where('name', $request->get('name'))->first();
-        if ($user != null) {
-            $user->forceDelete();
+        $user->forceDelete();
 
-            $request->session()->flash('success', 'User was successfully deleted!');
-        }
+        $request->session()->flash('success', 'User was successfully deleted!');
 
-        return redirect()->action('AdminController@users');
+        return redirect()->back();
     }
 }

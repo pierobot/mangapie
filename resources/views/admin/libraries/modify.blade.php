@@ -81,18 +81,18 @@
                                 <input class="form-control" type="text" placeholder="{{ $library->name }}" title="Enter new name" id="name" name="name">
 
                                 <div class="input-group-append">
-                                    <button class="btn btn-primary" id="action" name="action" value="rename">
+                                    <button class="btn btn-primary" id="action" name="action" value="rename" title="Rename">
                                         <span class="fa fa-check"></span>
 
-                                        <span class="d-none d-md-inline-flex">
+                                        <span class="d-none d-lg-inline-flex">
                                             &nbsp;Rename
                                         </span>
                                     </button>
 
-                                    <button class="btn btn-outline-primary" id="action" name="action" value="refresh">
+                                    <button class="btn btn-outline-primary" id="action" name="action" value="refresh" title="Refresh">
                                         <span class="fa fa-refresh"></span>
 
-                                        <span class="d-none d-md-inline-flex">
+                                        <span class="d-none d-lg-inline-flex">
                                             &nbsp;Refresh
                                         </span>
                                     </button>

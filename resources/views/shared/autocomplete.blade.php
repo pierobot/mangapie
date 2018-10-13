@@ -1,6 +1,6 @@
 <script type="text/javascript">
     $(function () {
-        baseUrl = '{{ \URL::to('/manga') }}';
+        let baseUrl = '{{ \URL::to('/manga') }}';
 
         $('#autocomplete').typeahead({
             minLength: 3,

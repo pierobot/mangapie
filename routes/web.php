@@ -21,6 +21,9 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
     Route::prefix('admin')->middleware('admin')->name('admin')->group(function () {
         Route::get('/', 'AdminController@index');
         Route::get('/users', 'AdminController@users');
+        Route::get('/users/create', 'AdminController@createUsers');
+        Route::get('/users/edit', 'AdminController@editUsers');
+        Route::get('/users/delete', 'AdminController@deleteUsers');
         Route::get('/libraries', 'AdminController@libraries');
         Route::get('/libraries/create', 'AdminController@createLibraries');
         Route::get('/libraries/modify', 'AdminController@modifyLibraries');
@@ -146,9 +149,9 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
     });
 
     Route::prefix('users')->middleware('admin')->name('users')->group(function () {
-        Route::post('/create', 'UserController@create');
-        Route::post('/edit', 'UserController@edit');
-        Route::post('/delete', 'UserController@delete');
+        Route::put('/', 'UserController@create');
+        Route::patch('/', 'UserController@edit');
+        Route::delete('/', 'UserController@delete');
     });
 
     Route::prefix('settings')->name('settings')->group(function () {

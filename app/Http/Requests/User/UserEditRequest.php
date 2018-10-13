@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\User;
 
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -13,7 +13,7 @@ class UserEditRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::user()->isAdmin();
+        return auth()->check() && auth()->user()->admin == true;
     }
 
     /**
@@ -24,8 +24,8 @@ class UserEditRequest extends FormRequest
     public function rules()
     {
         return [
-            'old-name' => 'required|string|exists:users',
-            'new-name' => 'required|string|unique:users'
+            'name' => 'required|string|exists:users',
+            'new-name' => 'required|string|unique:users,name'
         ];
     }
 }
