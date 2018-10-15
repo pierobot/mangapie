@@ -6,9 +6,14 @@
   }
 }
 
-
 .custom-control.custom-checkbox {
   & > .custom-control-input[data-active="no"]:checked ~ .custom-control-label {
+    &::before {
+      background-color: $primary;
+    }
+  }
+
+  & > .custom-control-input[data-active="yes"]:checked ~ .custom-control-label {
     &::before {
       background-color: $success;
     }
