@@ -63,9 +63,9 @@
                                 @for ($i = 100; $i > 0; $i--)
                                     <option value="{{ $i }}"
                                             @if (! empty($userVote) && ($userVote->rating === $i))
-                                                selected="selected"
+                                                selected
                                             @elseif ($i === 70)
-                                                selected="selected"
+                                                selected
                                             @endif
                                     >
                                         {{ $i }}

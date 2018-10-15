@@ -41,7 +41,11 @@
             <div class="d-flex d-sm-none flex-column">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="mb-0">{{ $manga->name }}</h5>
+                        <h5 class="mb-0">
+                            {{ $manga->name }}
+
+                            <a href="{{ \URL::action('MangaEditController@index', [$manga]) }}"><span class="fa fa-edit"></span></a>
+                        </h5>
                     </div>
 
                     <img class="card-img-bottom" src="{{ URL::action('CoverController@mediumDefault', [$manga]) }}">
@@ -51,7 +55,11 @@
             <div class="d-none d-sm-flex flex-column">
                 <div class="card">
                     <div class="card-header">
-                        <h4 class="mb-0">{{ $manga->name }}</h4>
+                        <h4 class="mb-0">
+                            {{ $manga->name }}
+
+                            <a href="{{ \URL::action('MangaEditController@index', [$manga]) }}"><span class="fa fa-edit"></span></a>
+                        </h4>
                     </div>
                     <div class="card-body">
                         <div class="row">
