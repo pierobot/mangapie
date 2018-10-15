@@ -1,6 +1,9 @@
-<div class="row mt-2">
+<div class="row">
     @if (! empty($manga->archives))
         @php
+            if (! isset($sort))
+                $sort = 'ascending';
+
             $archives = $sort === 'descending' ? $manga->archives->sortByDesc('name') : $manga->archives;
         @endphp
         @foreach ($archives as $archive)
@@ -51,72 +54,3 @@
         @endforeach
     @endif
 </div>
-{{--<table class="table table-hover table-va-middle" style="word-break: break-all; ">--}}
-    {{--<thead>--}}
-    {{--<tr>--}}
-        {{--<th class="col-6 col-sm-6 col-md-7">--}}
-            {{--<a href="{{ \URL::action('MangaController@index', [$manga, $sort == 'ascending' ? 'descending' : 'ascending']) }}">Filename&nbsp;--}}
-                {{--@if ($sort == 'ascending')--}}
-                    {{--<span class="fa fa-sort-desc"></span>--}}
-                {{--@else--}}
-                    {{--<span class="fa fa-sort-asc"></span>--}}
-                {{--@endif--}}
-            {{--</a>--}}
-        {{--</th>--}}
-        {{--<th class="col-2 col-sm-2 col-md-1">Status</th>--}}
-        {{--<th class="col-4 col-sm-2 col-md-2">Last Read</th>--}}
-        {{--<th class="col-sm-2 col-md-1 d-none d-sm-block">Size</th>--}}
-    {{--</tr>--}}
-    {{--</thead>--}}
-
-    {{--<tbody>--}}
-    {{--@if (empty($manga->archives) === false)--}}
-        {{--@foreach ($manga->archives as $archive)--}}
-            {{--@php--}}
-                {{--$isFavorited = $user->favorites->where('manga_id', $manga->id)->first() !== null;--}}
-                {{--$isWatching = $user->watchReferences->where('manga_id', $manga->id)->first() !== null;--}}
-                {{--$watchNotifications = $user->watchNotifications->where('manga_id', $manga->id);--}}
-                {{--$readerHistory = $user->readerHistory->where('manga_id', $manga->id);--}}
-
-                {{--$archiveHistory = $readerHistory->where('archive_name', $archive->getName())->first();--}}
-            {{--@endphp--}}
-
-            {{--<tr>--}}
-                {{--<td class="col-6 col-md-7">--}}
-                    {{--<a href="{{ URL::action('ReaderController@index', [$manga, $archive->getId(), $archiveHistory != null ? $archiveHistory->getPage() : 1]) }}">--}}
-                        {{--<div>--}}
-                            {{--{{ $archive->getName() }}--}}
-                        {{--</div>--}}
-                    {{--</a>--}}
-                {{--</td>--}}
-                {{--<td class="col-2 col-md-1">--}}
-                    {{--<div class="row">--}}
-                        {{--<div class="col span-label-ib">--}}
-                            {{--@if ($archiveHistory !== null)--}}
-                                {{--@if ($archiveHistory->getPage() < $archiveHistory->getPageCount())--}}
-                                    {{--<span class="badge badge-warning" title="pg. {{ $archiveHistory->getPage() }} of {{ $archiveHistory->getPageCount() }}">Incomplete</span>--}}
-                                {{--@else--}}
-                                    {{--<span class="badge label-success" title="pg. {{ $archiveHistory->getPage() }} of {{ $archiveHistory->getPageCount() }}">Complete</span>--}}
-                                {{--@endif--}}
-                            {{--@else--}}
-                                {{--<span class="badge badge-secondary">Unread</span>--}}
-                            {{--@endif--}}
-                        {{--</div>--}}
-                        {{--<div class="col span-label-ib">--}}
-                            {{--@if ($watchNotifications->where('archive_id', $archive->getId())->first() != null)--}}
-                                {{--<span class="badge badge-success">&nbsp;New!&nbsp;</span>--}}
-                            {{--@endif--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                {{--</td>--}}
-                {{--<td class="col-1 col-md-2">--}}
-                    {{--{{ $archiveHistory !== null ? $archiveHistory->getLastUpdated()->diffForHumans() : "Never" }}--}}
-                {{--</td>--}}
-                {{--<td class="col-1 col-md-1 d-none d-md-block">--}}
-                    {{--{{ $archive->getSize() }}--}}
-                {{--</td>--}}
-            {{--</tr>--}}
-        {{--@endforeach--}}
-    {{--@endif--}}
-    {{--</tbody>--}}
-{{--</table>--}}
