@@ -11,8 +11,7 @@
                 </ul>
             </div>
             <div class="card-body">
-                @component ('manga.components.information', ['manga' => $manga, 'user' => $user])
-                @endcomponent
+                @include ('manga.shared.information')
             </div>
         </div>
     </div>
@@ -26,8 +25,7 @@
                 </ul>
             </div>
             <div class="card-body">
-                @component ('manga.components.files', ['manga' => $manga, 'user' => $user])
-                @endcomponent
+                @include ('manga.shared.files')
             </div>
         </div>
     </div>

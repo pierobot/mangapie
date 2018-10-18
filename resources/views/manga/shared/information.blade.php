@@ -19,9 +19,13 @@
         @include ('manga.shared.information.artists')
     </div>
 
-    <div class="col-12 mv-3">
+    <div class="col-12 mb-3">
         @include ('manga.shared.information.ratings')
     </div>
+
+    {{--<div class="col-12 mb-3">--}}
+        {{--@include ('manga.shared.information.actions')--}}
+    {{--</div>--}}
 
     @admin
     <div class="col-12 mb-3">

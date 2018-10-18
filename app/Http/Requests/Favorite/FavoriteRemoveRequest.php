@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Favorite;
 
+use App\Favorite;
 use Illuminate\Foundation\Http\FormRequest;
 
-class VoteDeleteRequest extends FormRequest
+class FavoriteRemoveRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +14,7 @@ class VoteDeleteRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::check();
+        return auth()->check();
     }
 
     /**
@@ -24,7 +25,7 @@ class VoteDeleteRequest extends FormRequest
     public function rules()
     {
         return [
-            'vote_id' => 'required|int|exists:votes,id'
+            'favorite_id' => 'required|integer|exists:favorites,id',
         ];
     }
 }

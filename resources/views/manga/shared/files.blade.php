@@ -19,7 +19,7 @@
                 $resumeUrl = URL::action('ReaderController@index', [$manga, $archive, ! empty($archiveHistory) ? $archiveHistory->page : 1]);
             @endphp
 
-            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+            <div class="col-6 col-sm-4 col-md-3 col-xl-2">
                 <div class="card mt-1 mb-1 @if (! empty($colorType)) border-{{ $colorType }} @else @endif">
                     <a href="{{ $resumeUrl }}">
                         @php

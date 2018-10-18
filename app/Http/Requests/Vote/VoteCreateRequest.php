@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Vote;
 
-use App\Favorite;
 use Illuminate\Foundation\Http\FormRequest;
 
-class FavoriteRemoveRequest extends FormRequest
+class VoteCreateRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +24,8 @@ class FavoriteRemoveRequest extends FormRequest
     public function rules()
     {
         return [
-            'favorite_id' => 'required|integer|exists:favorites,id',
+            'manga_id' => 'required|int|exists:manga,id',
+            'rating' => 'required|int|between:1,100'
         ];
     }
 }

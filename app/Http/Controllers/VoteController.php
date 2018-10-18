@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\VoteChangeRequest;
-use App\Http\Requests\VoteCreateRequest;
-use App\Http\Requests\VoteDeleteRequest;
+use App\Http\Requests\Vote\VotePatchRequest;
+use App\Http\Requests\Vote\VoteCreateRequest;
+use App\Http\Requests\Vote\VoteDeleteRequest;
 
 class VoteController extends Controller
 {
@@ -22,7 +22,7 @@ class VoteController extends Controller
             back()->withErrors('There was an error creating your vote.');
     }
 
-    public function patch(VoteChangeRequest $request)
+    public function patch(VotePatchRequest $request)
     {
         $user = \Auth::user();
 

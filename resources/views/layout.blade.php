@@ -84,7 +84,7 @@
                         <hr>
                     </li>
                     <li class="nav-item">
-                        Signed in as <strong>{{ auth()->user()->name }}</strong>
+                        <span class="navbar-text">Signed in as <strong>{{ auth()->user()->name }}</strong></span>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ URL::action('LoginController@logout') }}"><span class="fa fa-power-off"></span>&nbsp;Logout</a>

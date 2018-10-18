@@ -11,7 +11,7 @@
 <div class="row justify-content-center">
     @if (isset($manga_list))
         @foreach ($manga_list as $manga)
-            <div class="col-6 col-sm-4 col-md-3 col-lg-2">
+            <div class="col-6 col-sm-4 col-md-3 col-xl-2">
                 <div class="card mt-1 mb-1">
                     <a href="{{ URL::action('MangaController@index', [$manga]) }}">
                         <img class="card-img-top" src="{{ URL::action('CoverController@smallDefault', [$manga]) }}">

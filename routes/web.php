@@ -172,6 +172,7 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
     });
 
     Route::prefix('watch')->name('watch')->group(function () {
-        Route::post('/update', 'WatchController@update');
+        Route::post('/', 'WatchController@create');
+        Route::delete('/', 'WatchController@delete');
     });
 });

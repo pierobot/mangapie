@@ -12,8 +12,7 @@
             </div>
 
             <div class="card-body">
-                @component ('manga.components.comments', ['manga' => $manga])
-                @endcomponent
+                @include ('manga.shared.comments')
             </div>
         </div>
     </div>
@@ -28,8 +27,7 @@
             </div>
 
             <div class="card-body">
-                @component ('manga.components.comments', ['manga' => $manga])
-                @endcomponent
+                @include ('manga.shared.comments')
             </div>
         </div>
     </div>

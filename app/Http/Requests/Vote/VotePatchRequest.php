@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Vote;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class WatchRequest extends FormRequest
+class VotePatchRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class WatchRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::check();
+        return auth()->check();
     }
 
     /**
@@ -24,8 +24,8 @@ class WatchRequest extends FormRequest
     public function rules()
     {
         return [
-            'id' => 'required|integer|exists:manga',
-            'action' => 'required|string|regex:/^(un)?watch$/'
+            'vote_id' => 'required|int|exists:votes,id',
+            'rating' => 'required|int|between:1,100'
         ];
     }
 }

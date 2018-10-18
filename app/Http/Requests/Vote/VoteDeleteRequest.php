@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Vote;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class VoteCreateRequest extends FormRequest
+class VoteDeleteRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class VoteCreateRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::check();
+        return auth()->check();
     }
 
     /**
@@ -24,8 +24,7 @@ class VoteCreateRequest extends FormRequest
     public function rules()
     {
         return [
-            'manga_id' => 'required|int|exists:manga,id',
-            'rating' => 'required|int|between:1,100'
+            'vote_id' => 'required|int|exists:votes,id'
         ];
     }
 }
