@@ -5,7 +5,8 @@
                 <img width="64" src="{{ URL::action('AvatarController@index', [$comment->user]) }}">
                 <div class="media-body ml-2">
                     <h5>{{ $comment->user->name }}</h5>
-                    <p>{!! e(nl2br($comment->getText())) !!}</p>
+                    <p class="mb-2">{!! e(nl2br($comment->getText())) !!}</p>
+                    <span class="text-muted">{{ $comment->created_at->diffForHumans() }}</span>
                 </div>
             </div>
         @endforeach
