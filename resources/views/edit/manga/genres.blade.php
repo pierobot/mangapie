@@ -24,38 +24,35 @@
             Genre(s)
         </div>
         <div class="card-body">
+            @php ($genres = \App\Genre::all())
+
+            {{ Form::open(['action' => 'MangaEditController@putGenres', 'method' => 'put']) }}
+            {{ Form::hidden('manga_id', $manga->id) }}
+
             <div class="row">
-                <div class="col-12">
-                    @php
-                        $genres = \App\Genre::all();
-                    @endphp
+                @foreach ($genres as $genre)
+                    @php ($active = ! empty($manga->genreReferences->where('genre_id', $genre->id)->count()))
 
-                    {{ Form::open(['action' => 'MangaEditController@putGenres', 'method' => 'put']) }}
-                    {{ Form::hidden('manga_id', $manga->id) }}
-                    <div class="form-group">
-                        <div class="form-row">
-                            @foreach ($genres as $genre)
-                                @php
-                                    $active = ! empty($manga->genreReferences->where('genre_id', $genre->id)->count());
-                                @endphp
-
-                                <div class="col-6 col-md-4 col-lg-3">
-                                    <div class="custom-control custom-checkbox">
-                                        <input class="custom-control-input" type="checkbox" id="{{ $genre->id }}" name="genres[]" value="{{ $genre->id }}" @if ($active) checked="checked" data-active="yes" @else data-active="no" @endif>
-                                        <label class="custom-control-label" for="{{ $genre->id }}">{{ $genre->name }}</label>
-                                    </div>
-                                </div>
-                            @endforeach
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="{{ $genre->id }}" name="genres[]" value="{{ $genre->id }}" @if ($active) checked="checked" data-active="yes" @else data-active="no" @endif>
+                            <label class="custom-control-label" for="{{ $genre->id }}">{{ $genre->name }}</label>
                         </div>
                     </div>
+                @endforeach
+            </div>
 
-                    <div class="col-12">
-                        {{ Form::submit('Update', ['class' => 'btn btn-primary form-control']) }}
-                    </div>
+            <div class="row mt-3 d-flex justify-content-center">
+                <div class="col-12 col-md-4">
+                    <button class="btn btn-primary form-control">
+                        <span class="fa fa-check"></span>
 
-                    {{ Form::close() }}
+                        &nbsp;Update
+                    </button>
                 </div>
             </div>
+
+            {{ Form::close() }}
         </div>
     </div>
 @endsection

@@ -21,89 +21,81 @@
     <b id="notification-count">Notifications ({{ $notificationCount }})</b>
 </h2>
 
-<div class="row">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-body p-0">
-                {{ Form::open(['action' => 'NotificationController@delete', 'method' => 'delete']) }}
-                <table class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th class="col-4 col-md-2 col-lg-1"></th>
-                            <th class="col-8 col-md-8 col-lg-8">Message</th>
-                            <th class="d-none d-md-table-cell col-md-2 col-lg-3">Date</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @foreach ($watchNotifications as $index => $notification)
-                        @php ($manga = $notification->getData())
-                        <tr>
-                            <th scope="row">
-                                <a href="{{ URL::action('MangaController@files', [$manga, 'descending']) }}">
-                                    <img class="img-fluid" src="{{ URL::action('CoverController@smallDefault', [empty($manga) ? 0 : $manga->getId()]) }}">
-                                </a>
-                            </th>
 
-                            <td>
-                                <div class="form-row">
-                                    <div class="col-12">
-                                        <div class="custom-control custom-checkbox">
-                                            <input class="custom-control-input" type="checkbox" id="ids[{{ $notification->getId() }}]" name="ids[{{ $notification->getId() }}]" value="{{ $notification->getId() }}">
-                                            <label class="custom-control-label" for="ids[{{ $notification->getId() }}]">
-                                                <span>
-                                                    <h5>{{ $manga->getName() }}</h5>
-                                                </span>
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <ul class="list-unstyled ml-4">
-                                    <li>
-                                        @if ($notification->getData() instanceof \App\Manga)
-                                            <a href="{{ URL::action('MangaController@files', [$manga, 'descending']) }}">
-                                                {{ $notification->getMessage() }}
-                                            </a>
-                                        @else
-                                            {{ $notification->getMessage() }}
-                                        @endif
-                                    </li>
-                                    <li>
-                                        <span class="d-table-cell d-md-none text-muted">
-                                            {{ $notification->getDateTime()->diffForHumans() }}
-                                        </span>
-                                    </li>
-                                </ul>
-                            </td>
+<div class="card">
+    <div class="card-body p-0">
+        {{ Form::open(['action' => 'NotificationController@delete', 'method' => 'delete']) }}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>Message</th>
+                    <th class="d-none d-md-table-cell">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+            @foreach ($watchNotifications as $index => $notification)
+                @php ($manga = $notification->getData())
+                <tr>
+                    <th scope="row">
+                        <a href="{{ URL::action('MangaController@files', [$manga, 'descending']) }}">
+                            <img class="rounded img-fluid" src="{{ URL::action('CoverController@smallDefault', [empty($manga) ? 0 : $manga->getId()]) }}">
+                        </a>
+                    </th>
 
-                            <td class="d-none d-md-table-cell">
-                                <span class="text-muted">
+                    <td>
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="ids[{{ $notification->getId() }}]" name="ids[{{ $notification->getId() }}]" value="{{ $notification->getId() }}">
+                            <label class="custom-control-label" for="ids[{{ $notification->getId() }}]">
+                                {{ $manga->getName() }}
+                            </label>
+                        </div>
+
+                        <ul class="list-unstyled ml-4">
+                            <li>
+                                @if ($notification->getData() instanceof \App\Manga)
+                                    <a href="{{ URL::action('MangaController@files', [$manga, 'descending']) }}">
+                                        {{ $notification->getMessage() }}
+                                    </a>
+                                @else
+                                    {{ $notification->getMessage() }}
+                                @endif
+                            </li>
+                            <li>
+                                <span class="d-inline-block d-md-none text-muted">
                                     {{ $notification->getDateTime()->diffForHumans() }}
                                 </span>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
+                            </li>
+                        </ul>
+                    </td>
 
-            <div class="card-footer">
-                <div class="input-group justify-content-center">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">
-                            Dismiss
+                    <td class="d-none d-md-table-cell">
+                        <span class="text-muted">
+                            {{ $notification->getDateTime()->diffForHumans() }}
                         </span>
-                    </div>
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary" id="action" name="action" value="dismiss.selected">Selected</button>
-                        <button type="submit" class="btn btn-danger" id="action" name="action" value="dismiss.all">All</button>
-                    </div>
-                </div>
-            </div>
+                    </td>
+                </tr>
+            @endforeach
+            </tbody>
+        </table>
+    </div>
 
-            {{ Form::close() }}
+    <div class="card-footer">
+        <div class="input-group justify-content-center">
+            <div class="input-group-prepend">
+                <span class="input-group-text">
+                    Dismiss
+                </span>
+            </div>
+            <div class="input-group-append">
+                <button type="submit" class="btn btn-primary" id="action" name="action" value="dismiss.selected">Selected</button>
+                <button type="submit" class="btn btn-danger" id="action" name="action" value="dismiss.all">All</button>
+            </div>
         </div>
     </div>
 
+    {{ Form::close() }}
 </div>
+
 
 @endsection

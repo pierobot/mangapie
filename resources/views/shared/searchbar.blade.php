@@ -1,4 +1,3 @@
-{{--TODO: FIX BELOW--}}
 @auth
     {{ Form::open(['action' => 'SearchController@basic', 'class' => 'form-inline mb-0']) }}
     {{ Form::hidden('type', 'basic') }}

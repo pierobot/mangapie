@@ -10,7 +10,7 @@
     @if ($page_count !== 0)
         <div class="row text-center" style="padding-bottom: 60px;">
             <div class="col-12">
-                <img class="reader-image w-100 h-100" src="{{ URL::action('ReaderController@image', [$id, $archive, $page]) }}">
+                <img id="reader-image" class="h-auto w-100" src="{{ URL::action('ReaderController@image', [$id, $archive, $page]) }}">
             </div>
         </div>
     @endif
@@ -216,9 +216,9 @@
                 $(this).attr('src', $(this).attr('data-src'));
             });
 
-            $('.reader-image').click(function (eventData) {
+            $('#reader-image').click(function (eventData) {
                 const x = eventData.offsetX;
-                const width = $('.reader-image').width();
+                const width = $('#reader-image').width();
 
                 if (x < (width / 2)) {
                     // left side click

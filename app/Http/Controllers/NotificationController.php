@@ -32,6 +32,6 @@ class NotificationController extends Controller
             }
         }
 
-        return \Redirect::action('NotificationController@index');
+        return redirect()->back();
     }
 }

@@ -5,7 +5,7 @@
 @extends ('user.layout')
 
 @section ('profile-content')
-    <div class="card mt-3">
+    <div class="card">
         <div class="card-header">
             <ul class="nav nav-pills card-header-pills">
                 <li class="nav-item">

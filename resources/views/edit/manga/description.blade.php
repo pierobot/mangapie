@@ -19,72 +19,44 @@
     @endcomponent
 @endsection
 
-{{-- TODO: Fix this arrrrrgh --}}
 @section ('tab-content')
     <div class="card">
         <div class="card-header">
             Description
         </div>
         <div class="card-body">
-            <div class="row">
+            <div class="row justify-content-center">
                 <div class="col-12">
                     {{ Form::open(['action' => 'MangaEditController@patchDescription', 'method' => 'patch']) }}
                     {{ Form::hidden('manga_id', $manga->id) }}
 
                     {{ Form::textarea('description', ! empty($manga->description) ? $manga->description : '', ['class' => 'form-control', 'placeholder' => 'Enter description...']) }}
-                    {{ Form::submit('Set', ['class' => 'btn btn-primary form-control mt-2']) }}
+                    <div class="form-row justify-content-center mt-3">
+                        <div class="col-12 col-md-4">
+                            <button class="btn btn-primary form-control">
+                                <span class="fa fa-check"></span>
+
+                                &nbsp;Set
+                            </button>
+                        </div>
+                    </div>
 
                     {{ Form::close() }}
                 </div>
 
-                <div class="col-12 mt-0">
+                <div class="col-12 col-md-4 mt-0">
                     @if (! empty($manga->description))
                         {{ Form::open(['action' => 'MangaEditController@deleteDescription', 'method' => 'delete']) }}
                         {{ Form::hidden('manga_id', $manga->id) }}
-                        {{ Form::submit('Delete', ['class' => 'btn btn-danger form-control']) }}
+                        <button class="btn btn-danger form-control">
+                            <span class="fa fa-times"></span>
+
+                            &nbsp;Delete
+                        </button>
                         {{ Form::close() }}
                     @endif
                 </div>
             </div>
         </div>
     </div>
-
-    {{--<div class="tab-content">--}}
-        {{--<div class="tab-pane active" id="Information-description">--}}
-            {{--<div class="panel panel-default">--}}
-                {{--<div class="panel-heading">--}}
-                    {{--<div class="panel-title">--}}
-                        {{--Description--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-                {{--<div class="panel-body">--}}
-                    {{--<div class="row">--}}
-                        {{--<div class="col-xs-12 col-md-6">--}}
-                            {{--<h4>New</h4>--}}
-                            {{--<hr>--}}
-                            {{--{{ Form::open(['action' => 'MangaEditController@patchDescription', 'method' => 'patch']) }}--}}
-                            {{--{{ Form::hidden('manga_id', $manga->id) }}--}}
-                            {{--{{ Form::textarea('description', null, ['class' => 'form-control',--}}
-                            {{--'placeholder' => 'Enter description...']) }}--}}
-                            {{--<br>--}}
-                            {{--{{ Form::submit('Save', ['class' => 'btn btn-success']) }}--}}
-                            {{--{{ Form::close() }}--}}
-                        {{--</div>--}}
-                        {{--<div class="col-xs-12 col-md-6">--}}
-                            {{--<h4>Current</h4>--}}
-                            {{--<hr>--}}
-                            {{--@if (isset($description))--}}
-                                {{--{{ $description }}--}}
-                                {{--{{ Form::open(['action' => 'MangaEditController@deleteDescription', 'method' => 'delete']) }}--}}
-                                {{--{{ Form::hidden('manga_id', $manga->id) }}--}}
-                                {{--<br>--}}
-                                {{--{{ Form::submit('Delete', ['class' => 'btn btn-danger']) }}--}}
-                                {{--{{ Form::close() }}--}}
-                            {{--@endif--}}
-                        {{--</div>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
-            {{--</div>--}}
-        {{--</div>--}}
-    {{--</div>--}}
 @endsection

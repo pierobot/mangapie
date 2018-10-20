@@ -4,7 +4,7 @@
     <div class="d-none d-md-flex">
         <div class="row w-100">
             <div class="col-md-4 col-lg-3">
-                <div class="card mt-3">
+                <div class="card">
                     <div class="card-body">
                         <img class="img-fluid" src="{{ URL::action('AvatarController@index', [$user]) }}">
 
@@ -36,7 +36,7 @@
     </div>
 
     <div class="d-flex d-md-none flex-wrap">
-        <div class="card mt-3 w-100">
+        <div class="card w-100">
             <div class="card-body">
                 <div class="media">
                     <img src="{{ URL::action('AvatarController@index', [$user]) }}" width="80">

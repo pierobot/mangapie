@@ -8,7 +8,7 @@
     @include ('shared.success')
     @include ('shared.errors')
 
-    <div class="row mt-3">
+    <div class="row">
         <div class="col-12">
             <div class="d-flex d-sm-none flex-column">
                 <div class="card">

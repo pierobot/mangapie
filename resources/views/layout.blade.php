@@ -71,6 +71,13 @@
 
                 @auth
                     <li class="nav-item">
+                        <span class="navbar-text">Signed in as <strong>{{ auth()->user()->name }}</strong></span>
+                    </li>
+                    <li class="nav-item">
+                        <hr class="m-1">
+                    </li>
+
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ URL::action('UserController@index', [auth()->user()->id]) }}"><span class="fa fa-user"></span>&nbsp;Profile</a>
                     </li>
                     <li class="nav-item">
@@ -81,12 +88,6 @@
                     </li>
 
                     <li class="nav-item">
-                        <hr>
-                    </li>
-                    <li class="nav-item">
-                        <span class="navbar-text">Signed in as <strong>{{ auth()->user()->name }}</strong></span>
-                    </li>
-                    <li class="nav-item">
                         <a class="nav-link" href="{{ URL::action('LoginController@logout') }}"><span class="fa fa-power-off"></span>&nbsp;Logout</a>
                     </li>
                 @endauth
@@ -95,7 +96,7 @@
     </div>
 </nav>
 
-<div class="container">
+<div class="container mt-3">
     @yield ('content')
 </div>
 
