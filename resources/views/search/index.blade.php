@@ -4,80 +4,94 @@
     Advanced Search &colon;&colon; Mangapie
 @endsection
 
-@section ('custom_navbar_right')
-@endsection
-
-{{--TODO: FIX THE BELOW--}}
 @section ('content')
     @include ('shared.errors')
 
-    <h3 class="text-center">
-        <b>Advanced Search</b>
-    </h3>
+    <h5 class="d-flex justify-content-center">
+        <strong>Advanced Search</strong>
+    </h5>
 
-    {{ Form::open(['action' => 'SearchController@advanced']) }}
-    {{ Form::hidden('type', 'advanced') }}
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="panel-title">
-                <span class="glyphicon glyphicon-tags"></span>&nbsp;&nbsp;Genres
-            </div>
-        </div>
-        <div class="panel-body">
-            <div class="form-group row">
+    <div class="card">
+        <div class="card-body">
+            {{ Form::open(['action' => 'SearchController@advanced']) }}
+            {{ Form::hidden('type', 'advanced') }}
+
+            <div class="row">
+                <div class="col-12">
+                    <h5>Genres</h5>
+                </div>
+
+                @php ($genres = \App\Genre::all())
                 @foreach ($genres as $genre)
-                    <div class="col-xs-6 col-sm-4 col-md-3 col-lg-2">
-                        <div class="checkbox checkbox-success">
-                            <input type="checkbox" name="genres[{{ $genre->getId() }}]" id="genres[{{ $genre->getId() }}]" value="{{ $genre->getName() }}" autocomplete="off" >
-                            <label for="genres[{{ $genre->getId() }}]" title="{{ $genre->getDescription() }}">
-                                {{ $genre->getName() }}
-                            </label>
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="custom-control custom-checkbox">
+                            <input class="custom-control-input" type="checkbox" id="{{ $genre->id }}" name="genres[]" value="{{ $genre->id }}">
+                            <label class="custom-control-label" for="{{ $genre->id }}">{{ $genre->name }}</label>
                         </div>
                     </div>
                 @endforeach
             </div>
-        </div>
-    </div>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="panel-title">
-                <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;People
-            </div>
-        </div>
-        <div class="panel-body">
-            <div class="form-group row">
-                <div class="col-xs-12 col-md-3">
-                    <label for="author">Author:</label>
-                    <input class="form-control" type="text" id="author" name="author" placeholder="...">
+            <div class="row mt-3">
+                <div class="col-12">
+                    <h5>People</h5>
                 </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-xs-12 col-md-3">
-                    <label for="artist">Artist:</label>
-                    <input class="form-control" type="text" id="artist" name="artist" placeholder="...">
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="panel-title">
-                <span class="glyphicon glyphicon-search"></span>&nbsp;&nbsp;Search
-            </div>
-        </div>
-        <div class="panel-body">
-            <div class="form-group row">
-                <div class="col-xs-12 col-md-3">
-                    <label for="keywords">Keywords:</label>
-                    <input class="form-control" type="text" id="keywords" name="keywords" placeholder="...">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        Author
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control" title="Name of author (Surname first)" name="author">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-12 col-lg-6">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        Artist
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control" title="Name of artist (Surname first)" name="artist">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="form-group row">
-                <div class="col-xs-12 col-md-3">
-                    {{ Form::submit('Search', ['class' => 'btn btn-default']) }}
+            <div class="row mt-3">
+                <div class="col-12">
+                    <h5>Search</h5>
+                </div>
+
+                <div class="col-12 col-lg-6">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                Name
+                            </span>
+                        </div>
+                        <input type="text" class="form-control" title="The name of the series" name="name">
+                    </div>
+                </div>
+
+                <div class="col-12">
+                    <div class="row mt-3">
+                        <div class="col-12 col-lg-6">
+                            <button class="btn btn-primary form-control">
+                                <span class="fa fa-search"></span>
+
+                                &nbsp;Search
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

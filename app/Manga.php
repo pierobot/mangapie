@@ -293,8 +293,8 @@ class Manga
             $keep = false;
 
             // if any of the genres match the ones in the request then we keep the manga
-            foreach ($manga->getGenres() as $genre) {
-                if (in_array($genre->getName(), $genres) == true) {
+            foreach ($manga->genreReferences as $genreReference) {
+                if (in_array($genreReference->genre->id, $genres) == true) {
                     $keep = true;
                     break;
                 }
@@ -312,8 +312,8 @@ class Manga
 
             if (empty($author) == false) {
                 // if any of the authors match the ones in the request then we keep the manga
-                foreach ($manga->getAuthors() as $author_) {
-                    if (IntlString::strcmp($author_->getName(), $author) == 0) {
+                foreach ($manga->authorReferences as $authorReference) {
+                    if (IntlString::strcmp($authorReference->name, $author) == 0) {
                         $keep = true;
                         break;
                     }
@@ -322,8 +322,8 @@ class Manga
 
             if (empty($artist) == false) {
                 // if any of the artists match the ones in the request then we keep the manga
-                foreach ($manga->getArtists() as $artist_) {
-                    if (IntlString::strcmp($artist_->getName(), $artist) == 0) {
+                foreach ($manga->artistReferences as $artistReference) {
+                    if (IntlString::strcmp($artistReference->name, $artist) == 0) {
                         $keep = true;
                         break;
                     }

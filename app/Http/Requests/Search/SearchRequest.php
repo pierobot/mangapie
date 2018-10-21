@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Search;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SearchAutoCompleteRequest extends FormRequest
+class SearchRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class SearchAutoCompleteRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::check();
+        return auth()->check();
     }
 
     /**
@@ -24,7 +24,7 @@ class SearchAutoCompleteRequest extends FormRequest
     public function rules()
     {
         return [
-            'query' => 'required|string'
+            'keywords' => 'present|nullable|string',
         ];
     }
 }
