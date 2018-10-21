@@ -56,8 +56,8 @@
                         <h4><b>Users</b></h4>
                     </div>
                     <div class="col-12">
-                        <label>Number of admins:</label> {{ \App\User::admin('id')->count() }} <br>
-                        <label>Number of maintainers:</label> {{ \App\User::maintainer('id')->count() }} <br>
+                        <label>Number of admins:</label> {{ \App\User::admins('id')->count() }} <br>
+                        <label>Number of maintainers:</label> {{ \App\User::maintainers('id')->count() }} <br>
                         <label>Number of users:</label> {{ \App\User::all('id')->count() }}
                     </div>
                     <div class="col-12">

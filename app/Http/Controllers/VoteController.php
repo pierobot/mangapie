@@ -10,7 +10,7 @@ class VoteController extends Controller
 {
     public function put(VoteCreateRequest $request)
     {
-        $user = \Auth::user();
+        $user = \Auth::user()->load('votes');
 
         $vote = $user->votes()->create([
             'manga_id' => $request->get('manga_id'),
@@ -18,8 +18,8 @@ class VoteController extends Controller
         ]);
 
         return ! empty($vote) ?
-            back()->with('success', 'Your vote was successfully created.') :
-            back()->withErrors('There was an error creating your vote.');
+            redirect()->back()->with('success', 'Your vote was successfully created.') :
+            redirect()->back()->withErrors(['There was an error creating your vote.']);
     }
 
     public function patch(VotePatchRequest $request)
@@ -32,8 +32,8 @@ class VoteController extends Controller
         ]);
 
         return ! empty($vote) ?
-            back()->with('success', 'Your vote was successfully updated.') :
-            back()->withErrors('There was an error updating your vote.');
+            redirect()->back()->with('success', 'Your vote was successfully updated.') :
+            redirect()->back()->withErrors(['There was an error updating your vote.']);
     }
 
     public function delete(VoteDeleteRequest $request)
@@ -42,6 +42,6 @@ class VoteController extends Controller
 
         $user->votes()->find($request->get('vote_id'))->forceDelete();
 
-        return back()->with('success', 'Your vote was successfully deleted.');
+        return redirect()->back()->with('success', 'Your vote was successfully deleted.');
     }
 }

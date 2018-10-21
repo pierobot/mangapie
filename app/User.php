@@ -31,7 +31,7 @@ class User extends Authenticatable
      * @param array|mixed $columns
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
-    public static function admin($columns = ['*'])
+    public static function admins($columns = ['*'])
     {
         return (new static)->newQuery()->where('admin', true)->get(
             is_array($columns) ? $columns : func_get_args()
@@ -42,7 +42,7 @@ class User extends Authenticatable
      * @param array|mixed $columns
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
-    public static function maintainer($columns = ['*'])
+    public static function maintainers($columns = ['*'])
     {
         return (new static)->newQuery()->where('maintainer', true)->get(
             is_array($columns) ? $columns : func_get_args()

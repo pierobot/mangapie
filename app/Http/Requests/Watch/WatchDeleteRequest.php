@@ -24,7 +24,7 @@ class WatchDeleteRequest extends FormRequest
     public function rules()
     {
         return [
-            'watch_reference_id' => 'required|integer|exists:watch_references'
+            'watch_reference_id' => 'required|integer|exists:watch_references,id'
         ];
     }
 }

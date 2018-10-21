@@ -20,6 +20,8 @@ use App\WatchReference;
  * @covers \App\WatchReference
  * @covers \App\WatchNotification
  *
+ * @covers \App\Http\Requests\Watch\WatchCreateRequest
+ * @covers \App\Http\Requests\Watch\WatchDeleteRequest
  * @covers \App\Http\ViewComposers\NotificationsComposer
  */
 class WatchNotificationTest extends TestCase
@@ -44,13 +46,17 @@ class WatchNotificationTest extends TestCase
         ]);
 
         $response = $this->actingAs($user)
-                         ->withSession(['foo' => 'bar'])
-                         ->followingRedirects()
-                         ->post(\URL::action('WatchController@update'), [
-                             'id' => $manga->getId(),
-                             'action' => 'watch'
-                         ]);
+            ->withSession(['foo' => 'bar'])
+            ->followingRedirects()
+            ->from(\URL::action('MangaController@index', [$manga]))
+            ->post(\URL::action('WatchController@create'), [
+                'manga_id' => $manga->id
+            ]);
 
+        $this->assertDatabaseHas('watch_references', [
+            'user_id' => $user->id,
+            'manga_id' => $manga->id,
+        ]);
         $response->assertSeeText('You are now watching this manga.');
     }
 
@@ -61,16 +67,23 @@ class WatchNotificationTest extends TestCase
         $manga = factory(Manga::class)->create([
             'library_id' => $library->getId()
         ]);
+        $watchReference = $user->watchReferences()->create([
+            'manga_id' => $manga->id
+        ]);
 
         $response = $this->actingAs($user)
-                         ->withSession(['foo' => 'bar'])
-                         ->followingRedirects()
-                         ->post(\URL::action('WatchController@update'), [
-                             'id' => $manga->getId(),
-                             'action' => 'unwatch'
-                         ]);
+            ->withSession(['foo' => 'bar'])
+            ->followingRedirects()
+            ->from(\URL::action('MangaController@index', [$manga]))
+            ->delete(\URL::action('WatchController@delete'), [
+                'watch_reference_id' => $watchReference->id
+            ]);
 
-        $response->assertSeeText('You are no longer watching this manga.');
+        $this->assertDatabaseMissing('watch_references', [
+            'user_id' => $user->id,
+            'manga_id' => $manga->id,
+        ]);
+        $response->assertSee('You are no longer watching this manga.');
     }
 
     public function testUserReceivesNotificationIfWatching()
@@ -79,18 +92,17 @@ class WatchNotificationTest extends TestCase
         $user = $watchReference->user;
         $manga = $watchReference->manga;
 
-        $archive = factory(Archive::class)->create([
-            'manga_id' => $manga->getId()
+        factory(Archive::class)->create([
+            'manga_id' => $manga->id
         ]);
 
         $response = $this->actingAs($user)
-                         ->withSession(['foo' => 'bar'])
-                         ->get(\URL::action('NotificationController@index'));
+            ->withSession(['foo' => 'bar'])
+            ->get(\URL::action('NotificationController@index'));
 
         $response->assertViewIs('notifications.index');
-        $response->assertSee("<span class=\"badge\" id=\"notification-count\">1</span>");
         $response->assertSeeText("Notifications (1)");
-        $response->assertSeeText($manga->getName());
+        $response->assertSeeText($manga->name);
     }
 
     public function testUserDoesNotReceiveNotificationIfUnwatched()
@@ -101,18 +113,17 @@ class WatchNotificationTest extends TestCase
 
         $watchReference->forceDelete();
 
-        $archive = factory(Archive::class)->create([
-            'manga_id' => $manga->getId()
+        factory(Archive::class)->create([
+            'manga_id' => $manga->id
         ]);
 
         $response = $this->actingAs($user)
-                         ->withSession(['foo' => 'bar'])
-                         ->get(\URL::action('NotificationController@index'));
+            ->withSession(['foo' => 'bar'])
+            ->get(\URL::action('NotificationController@index'));
 
         $response->assertViewIs('notifications.index');
-        $response->assertDontSee("<span class=\"badge\" id=\"notification-count\">1</span>");
         $response->assertSeeText("Notifications (0)");
-        $response->assertDontSeeText($manga->getName());
+        $response->assertDontSeeText($manga->name);
     }
 
     public function testDismissSelectedNotifications()
@@ -122,7 +133,7 @@ class WatchNotificationTest extends TestCase
         $manga = $watchReference->manga;
 
         factory(Archive::class, 5)->create([
-            'manga_id' => $manga->getId()
+            'manga_id' => $manga->id
         ]);
 
         // simulate checking the first 3 of 5 notifications
@@ -130,25 +141,25 @@ class WatchNotificationTest extends TestCase
 
         $ids = [];
         foreach ($notifications as $notification) {
-            array_push($ids, $notification->getId());
+            $ids[] = $notification->id;
         }
 
         $response = $this->actingAs($user)
-                         ->withSession(['foo' => 'bar'])
-                         ->followingRedirects()
-                         ->post(\URL::action('NotificationController@dismiss'), [
-                             'action' => 'dismiss.selected',
-                             'ids' => $ids
-                         ]);
+            ->withSession(['foo' => 'bar'])
+            ->followingRedirects()
+            ->from(\URL::action('NotificationController@index'))
+            ->delete(\URL::action('NotificationController@delete'), [
+                'ids' => $ids,
+                'action' => 'dismiss.selected'
+            ]);
 
         $response->assertViewIs('notifications.index');
 
         $this->assertDatabaseHas('watch_notifications', [
-            'user_id' => $user->getId(),
-            'manga_id' => $manga->getId(),
+            'user_id' => $user->id,
+            'manga_id' => $manga->id,
         ]);
 
-        $response->assertSee("<span class=\"badge\" id=\"notification-count\">2</span>");
         $response->assertSeeText("Notifications (2)");
     }
 
@@ -159,29 +170,30 @@ class WatchNotificationTest extends TestCase
         $manga = $watchReference->manga;
 
         factory(Archive::class, 5)->create([
-            'manga_id' => $manga->getId()
+            'manga_id' => $manga->id
         ]);
 
         $notifications = $user->watchNotifications;
 
         $ids = [];
         foreach ($notifications as $notification) {
-            array_push($ids, $notification->getId());
+            $ids[] = $notification->id;
         }
 
         $response = $this->actingAs($user)
-                         ->withSession(['foo' => 'bar'])
-                         ->followingRedirects()
-                         ->post(\URL::action('NotificationController@dismiss'), [
-                             'action' => 'dismiss.all',
-                             'ids' => $ids
-                         ]);
+            ->withSession(['foo' => 'bar'])
+            ->followingRedirects()
+            ->from(\URL::action('NotificationController@index'))
+            ->delete(\URL::action('NotificationController@delete'), [
+                'ids' => $ids,
+                'action' => 'dismiss.all'
+            ]);
 
         $response->assertViewIs('notifications.index');
 
         $this->assertDatabaseMissing('watch_notifications', [
-            'user_id' => $user->getId(),
-            'manga_id' => $manga->getId(),
+            'user_id' => $user->id,
+            'manga_id' => $manga->id,
         ]);
 
         $response->assertSeeText("Notifications (0)");

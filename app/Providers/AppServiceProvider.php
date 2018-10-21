@@ -21,11 +21,11 @@ class AppServiceProvider extends ServiceProvider
         \URL::forceScheme('https');
 
         \Blade::if('admin', function () {
-            return auth()->check() && auth()->user()->admin;
+            return auth()->check() && auth()->user()->admin == true;
         });
 
         \Blade::if('maintainer', function () {
-            return auth()->check() && auth()->user()->admin || auth()->user()->maintainer;
+            return auth()->check() && auth()->user()->admin == true || auth()->user()->maintainer == true;
         });
     }
 
