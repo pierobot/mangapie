@@ -12,7 +12,7 @@
                     <h4 class="card-title text-center mb-0">Login</h4>
                 </div>
                 <div class="card-body">
-                    {{ Form::open([ 'action' => 'LoginController@login']) }}
+                    {{ Form::open([ 'action' => 'Auth\LoginController@login']) }}
                     <div class="form-row justify-content-center">
                         <div class="col-12 col-xl-7 mb-3">
                             <div class="input-group">
@@ -22,7 +22,7 @@
                                     </span>
                                 </div>
 
-                                <input type="text" class="form-control" id="username" name="username" title="Username" placeholder="Username">
+                                <input type="text" class="form-control" id="name" name="name" title="Username" placeholder="Username">
                             </div>
                         </div>
                     </div>

@@ -88,7 +88,9 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ URL::action('LoginController@logout') }}"><span class="fa fa-power-off"></span>&nbsp;Logout</a>
+                        {{ Form::open(['action' => 'Auth\LoginController@logout']) }}
+                        <button class="nav-link form-control bg-transparent border-0 text-right" type="submit" style="cursor: pointer;"><span class="fa fa-sign-out"></span>&nbsp;Logout</button>
+                        {{ Form::close() }}
                     </li>
                 @endauth
             </ul>
