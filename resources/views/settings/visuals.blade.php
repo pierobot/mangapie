@@ -4,22 +4,22 @@
 
 @extends ('settings.layout')
 
-@section ('side-top-menu')
-    @component ('settings.components.side-top-menu', [
-        'active' => 'Visuals',
-        'items' => [
-            ['title' => 'Account', 'icon' => 'user', 'action' => 'UserSettingsController@account'],
-            ['title' => 'Visuals', 'icon' => 'user', 'action' => 'UserSettingsController@visuals'],
-            ['title' => 'Profile', 'icon' => 'user', 'action' => 'UserSettingsController@profile']
-        ]
-    ])
-    @endcomponent
-@endsection
-
 @section ('tab-content')
     <div class="card">
         <div class="card-header">
-            Visual Settings
+            <ul class="nav nav-pills card-header-pills">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ URL::action('UserSettingsController@account') }}">Account</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ URL::action('UserSettingsController@visuals') }}">Visuals</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ URL::action('UserSettingsController@profile') }}">Profile</a>
+                </li>
+            </ul>
         </div>
         <div class="card-body">
             <label>Default Reader Direction</label>
