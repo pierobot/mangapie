@@ -8,50 +8,42 @@
     Notifications&nbsp;&colon;&colon;&nbsp;Mangapie
 @endsection
 
-@section ('custom_navbar_right')
-@endsection
-
 @section ('content')
 
-<h3 class="d-flex d-md-none justify-content-center">
-    <b id="notification-count">Notifications ({{ $notificationCount }})</b>
-</h3>
-
-<h2 class="d-none d-md-flex justify-content-center">
-    <b id="notification-count">Notifications ({{ $notificationCount }})</b>
-</h2>
-
+<div class="d-flex justify-content-center">
+    <h4><strong id="notification-count">Notifications ({{ $notificationCount }})</strong></h4>
+</div>
 
 <div class="card">
-    <div class="card-body p-0">
+    <div class="card-body">
         {{ Form::open(['action' => 'NotificationController@delete', 'method' => 'delete']) }}
         <table class="table">
             <thead>
-                <tr>
-                    <th></th>
-                    <th>Message</th>
-                    <th class="d-none d-md-table-cell">Date</th>
+                <tr class="d-flex">
+                    <th class="col-4 col-md-2 col-xl-1"></th>
+                    <th class="col-8 col-md-6 col-xl-7">Message</th>
+                    <th class="d-none col-md-4 col-xl-4 d-md-flex">Date</th>
                 </tr>
             </thead>
             <tbody>
             @foreach ($watchNotifications as $index => $notification)
                 @php ($manga = $notification->getData())
-                <tr>
-                    <th scope="row">
+                <tr class="d-flex">
+                    <th scope="row" class="col-4 col-md-2 col-xl-1">
                         <a href="{{ URL::action('MangaController@files', [$manga, 'descending']) }}">
-                            <img class="rounded img-fluid" src="{{ URL::action('CoverController@smallDefault', [empty($manga) ? 0 : $manga->getId()]) }}">
+                            <img class="img-fluid rounded" src="{{ URL::action('CoverController@smallDefault', [empty($manga) ? 0 : $manga->getId()]) }}">
                         </a>
                     </th>
 
-                    <td>
+                    <td class="col-8 col-md-6 col-xl-7">
                         <div class="custom-control custom-checkbox">
                             <input class="custom-control-input" type="checkbox" id="ids[{{ $notification->getId() }}]" name="ids[{{ $notification->getId() }}]" value="{{ $notification->getId() }}">
-                            <label class="custom-control-label" for="ids[{{ $notification->getId() }}]">
+                            <label class="custom-control-label pt-1" for="ids[{{ $notification->getId() }}]">
                                 {{ $manga->getName() }}
                             </label>
                         </div>
 
-                        <ul class="list-unstyled ml-4">
+                        <ul class="list-unstyled ml-4 mt-2">
                             <li>
                                 @if ($notification->getData() instanceof \App\Manga)
                                     <a href="{{ URL::action('MangaController@files', [$manga, 'descending']) }}">
@@ -69,7 +61,7 @@
                         </ul>
                     </td>
 
-                    <td class="d-none d-md-table-cell">
+                    <td class="d-none col-md-4 col-xl-4 d-md-flex">
                         <span class="text-muted">
                             {{ $notification->getDateTime()->diffForHumans() }}
                         </span>
