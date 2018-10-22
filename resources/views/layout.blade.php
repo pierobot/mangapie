@@ -64,7 +64,7 @@
 
         <div class="collapse navbar-collapse" id="menu-collapse">
             <ul class="nav navbar-nav text-right">
-                <div class="d-block d-sm-none">
+                <div class="d-block d-sm-none mt-3">
                     @component ('shared.searchbar', ['searchbarId' => 'searchbar-small'])
                     @endcomponent
                 </div>

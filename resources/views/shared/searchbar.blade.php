@@ -2,7 +2,7 @@
     {{ Form::open(['action' => 'SearchController@basic', 'class' => 'form-inline mb-0']) }}
     {{ Form::hidden('type', 'basic') }}
 
-    <div class="form-group mb-0">
+    <div class="form-group mb-0 w-100">
         <div class="input-group">
             {{ Form::text('keywords', null, ['class' => 'form-control',
                                              'placeholder' => 'Quick search',
