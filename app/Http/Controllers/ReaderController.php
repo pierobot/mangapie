@@ -53,9 +53,6 @@ class ReaderController extends Controller
     {
         $id = $manga->getId();
         $name = $manga->getName();
-        // This controller/view implements a custom navbar
-        $custom_navbar = true;
-
         $path = $manga->getPath();
         $archiveName = $archive->getName();
         $archivePath = $path . '/' . $archiveName;
@@ -140,7 +137,6 @@ class ReaderController extends Controller
             ->with('name', $name)
             ->with('archive', $archive)
             ->with('archive_name', $archiveName)
-            ->with('custom_navbar', $custom_navbar)
             ->with('page', $page)
             ->with('page_count', $page_count)
             ->with('preload', $preload)
@@ -148,7 +144,7 @@ class ReaderController extends Controller
             ->with('has_prev_page', $has_prev_page)
             ->with('next_url', $next_url)
             ->with('prev_url', $prev_url)
-            ->with('ltr', \Auth::user()->getLtr());
+            ->with('readDirection', \Auth::user()->read_direction);
     }
 
     public function image(Manga $manga, Archive $archive, $page)

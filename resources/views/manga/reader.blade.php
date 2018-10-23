@@ -24,7 +24,7 @@
     @endif
 
     <div class="hidden">
-        @if($ltr)
+        @if ($readDirection === 'ltr')
             @if ($has_prev_page)
                 <a href="{{ $prev_url }}" id="prev-image"></a>
             @else
@@ -36,7 +36,7 @@
             @else
                 <a href="#" id="next-image"></a>
             @endif
-        @else
+        @elseif ($readDirection === 'rtl')
             @if ($has_next_page)
                 <a href="{{ $next_url }}" id="next-image"></a>
             @else
@@ -103,11 +103,11 @@
                         <div class="card text-center bg-transparent border-0">
                             <div class="card-body">
                                 <div class="btn-group btn-group-lg">
-                                    @if ($ltr)
+                                    @if ($readDirection === 'ltr')
                                         <a class="btn btn btn-secondary @if (! $has_prev_page) disabled @endif" href="{{ $has_prev_page ? $prev_url : "" }}">
                                             <span class="fa fa-chevron-left"></span>
                                         </a>
-                                    @else
+                                    @elseif ($readDirection === 'rtl')
                                         <a class="btn btn btn-secondary @if (! $has_next_page) disabled @endif" href="{{ $has_next_page ? $next_url : "" }}">
                                             <span class="fa fa-chevron-left"></span>
                                         </a>
@@ -125,11 +125,11 @@
                                         </div>
                                     </div>
 
-                                    @if ($ltr)
+                                    @if ($readDirection === 'ltr')
                                         <a class="btn btn btn-secondary @if (! $has_next_page) disabled @endif" href="{{ $has_next_page ? $next_url : "" }}">
                                             <span class="fa fa-chevron-right"></span>
                                         </a>
-                                    @else
+                                    @elseif ($readDirection === 'rtl')
                                         <a class="btn btn btn-secondary @if (! $has_prev_page) disabled @endif" href="{{ $has_prev_page ? $prev_url : "" }}">
                                             <span class="fa fa-chevron-right"></span>
                                         </a>
@@ -189,7 +189,8 @@
             $(document).on('keyup', function (e) {
                 // do not handle key events for typing in searchbar
                 $focused = $(':focus');
-                if ($focused.attr('id') === $("#autocomplete").attr('id'))
+                if ($focused.attr('id') === $("#searchbar").attr('id') ||
+                    $focused.attr('id') === $("#searchbar-small").attr('id'))
                     return;
 
                 // do not handle events where ctrl, alt, or shift are pressed
@@ -198,16 +199,16 @@
 
                 if (e.keyCode === 37 || e.keyCode === 65) {
                     // left arrow or a
-                    @if ($ltr == false)
+                    @if ($readDirection === 'rtl')
                         window.location = $('#next-image').attr('href');
-                    @else
+                    @elseif ($readDirection === 'ltr')
                         window.location = $('#prev-image').attr('href');
                     @endif
                 } else if (e.keyCode === 39 || e.keyCode === 68) {
                     // right arrow or d
-                    @if ($ltr == false)
+                    @if ($readDirection === 'rtl')
                         window.location = $('#prev-image').attr('href');
-                    @else
+                    @elseif ($readDirection === 'ltr')
                         window.location = $('#next-image').attr('href');
                     @endif
                 }
@@ -224,16 +225,16 @@
 
                 if (x < (width / 2)) {
                     // left side click
-                    @if ($ltr == false)
+                    @if ($readDirection === 'rtl')
                         window.location = $('#next-image').attr('href');
-                    @else
+                    @elseif ($readDirection === 'ltr')
                         window.location = $('#prev-image').attr('href');
                     @endif
                 } else {
                     // right side click
-                    @if ($ltr == false)
+                    @if ($readDirection === 'rtl')
                         window.location = $('#prev-image').attr('href');
-                    @else
+                    @elseif ($readDirection === 'ltr')
                         window.location = $('#next-image').attr('href');
                     @endif
                 }
