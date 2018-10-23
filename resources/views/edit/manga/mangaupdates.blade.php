@@ -45,7 +45,7 @@
                                     <button class="btn btn-primary form-control" type="submit">
                                         <span class="fa fa-check"></span>
 
-                                        <span class="d-none d-md-inline-block">
+                                        <span class="d-none d-lg-inline-flex">
                                             &nbsp;Update
                                         </span>
                                     </button>

@@ -40,7 +40,7 @@
                             <button class="btn btn-primary form-control" type="submit">
                                 <span class="fa fa-check"></span>
 
-                                <span class="d-none d-md-inline-block">
+                                <span class="d-none d-lg-inline-flex">
                                     &nbsp;Set
                                 </span>
                             </button>
@@ -63,7 +63,7 @@
                                 <button class="btn btn-danger form-control" type="submit">
                                     <span class="fa fa-times"></span>
 
-                                    <span class="d-none d-md-inline-block">
+                                    <span class="d-none d-lg-inline-flex">
                                         &nbsp;Remove
                                     </span>
                                 </button>
