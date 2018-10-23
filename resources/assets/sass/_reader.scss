@@ -7,7 +7,7 @@
 
 .favorite-toggler[data-favorited="yes"] {
   & {
-    @include button-outline-variant($success);
+    @include button-variant($success, $success);
     @include border-radius()
   }
 
@@ -16,6 +16,6 @@
       content: fa-content($fa-var-times);
     }
 
-    @include button-outline-variant($danger);
+    @include button-variant($danger, $danger);
   }
 }

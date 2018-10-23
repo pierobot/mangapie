@@ -1,9 +1,9 @@
 // Fonts
-@import "node_modules/@fortawesome/fontawesome-free/scss/brands";
-@import "node_modules/@fortawesome/fontawesome-free/scss/fontawesome";
-@import "node_modules/@fortawesome/fontawesome-free/scss/regular";
-@import "node_modules/@fortawesome/fontawesome-free/scss/solid";
-@import "node_modules/@fortawesome/fontawesome-free/scss/v4-shims";
+@import "~@fortawesome/fontawesome-free/scss/brands";
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+@import "~@fortawesome/fontawesome-free/scss/v4-shims";
 
 span.fa::before {
   font-weight: 900;
@@ -12,8 +12,11 @@ span.fa::before {
 // Variables
 @import "variables";
 
+//$input-group-addon-bg: $gray-200;
+//$input-group-addon-border-color: $gray-200;
+
 // Bootstrap
-@import "node_modules/bootstrap/scss/bootstrap";
+@import "~bootstrap/scss/bootstrap";
 
 // Mangapie
 @import "admin.libraries";

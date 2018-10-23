@@ -30,3 +30,21 @@
     }
   }
 }
+
+.btn.btn-success {
+  &[data-subscribed="yes"]:hover {
+    @include button-variant($danger, $danger);
+  }
+
+  &[data-subscribed="yes"]:not(:hover) {
+    @include button-variant($success, $success);
+  }
+
+  &[data-favorited="yes"]:hover {
+    @include button-variant($danger, $danger);
+  }
+
+  &[data-favorited="yes"]:not(:hover) {
+    @include button-variant($success, $success);
+  }
+}

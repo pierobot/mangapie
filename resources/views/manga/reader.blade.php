@@ -167,8 +167,10 @@
             @endif
             <div class="ml-1 mr-1"></div>
 
-            <a class="navbar-toggler btn btn-secondary" type="button" href="{{ URL::action('MangaController@comments', [$id]) }}" title="Go to comments">
-                <span class="fa fa-comments"></span>
+            <a href="{{ URL::action('MangaController@comments', [$id]) }}" title="Go to comments">
+                <button class="navbar-toggler btn btn-secondary">
+                    <span class="fa fa-comments"></span>
+                </button>
             </a>
             <div class="ml-1 mr-1"></div>
 
