@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CoverUpdateRequest;
-use App\Listeners\DirectoryEventSubscriber;
-use Illuminate\Http\Request;
+use App\Http\Requests\Edit\Cover\CoverUpdateRequest;
 
 use App\Archive;
 use App\Manga;

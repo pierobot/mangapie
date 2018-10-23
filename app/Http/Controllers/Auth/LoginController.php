@@ -30,7 +30,7 @@ class LoginController extends Controller
     protected $redirectTo = '/home';
 
     /**
-     * Get the number of minutes to throttle for.
+     * The number of minutes to throttle for.
      *
      * @return int
      */

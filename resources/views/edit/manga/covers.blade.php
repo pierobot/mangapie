@@ -46,7 +46,8 @@
                                                     <div class="card-footer">
                                                         {{ Form::open(['action' => 'CoverController@put', 'method' => 'put', 'class' => 'm-0']) }}
                                                         {{ Form::hidden('manga_id', $manga->id) }}
-                                                        {{ Form::hidden('cover_archive_page', $i) }}
+                                                        {{ Form::hidden('archive_id', $archive->id) }}
+                                                        {{ Form::hidden('page', $i) }}
 
                                                         <button class="btn btn-primary form-control" type="submit">
                                                             <span class="fa fa-check"></span>
