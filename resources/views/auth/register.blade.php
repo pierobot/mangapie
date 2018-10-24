@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section ('title')
-    Login
+    Register
 @endsection
 
 @section ('content')
@@ -9,20 +9,34 @@
         <div class="col-12 col-lg-8">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title text-center mb-0">Login</h4>
+                    <h4 class="card-title text-center mb-0">Create an account</h4>
                 </div>
                 <div class="card-body">
-                    {{ Form::open([ 'action' => 'Auth\LoginController@login']) }}
+                    {{ Form::open([ 'action' => 'Auth\RegisterController@register']) }}
                     <div class="form-row justify-content-center">
                         <div class="col-12 col-xl-7 mb-3">
                             <div class="input-group">
-                                <div class="input-group-prepend" id="prepend-username">
+                                <div class="input-group-prepend">
                                     <span class="input-group-text">
                                         <span class="fa fa-user"></span>
                                     </span>
                                 </div>
 
                                 <input type="text" class="form-control" id="name" name="name" title="Username" placeholder="Username">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row justify-content-center">
+                        <div class="col-12 col-xl-7 mb-3">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <span class="fa fa-envelope"></span>
+                                    </span>
+                                </div>
+
+                                <input type="email" class="form-control" id="email" name="email" title="Email" placeholder="Email">
                             </div>
                         </div>
                     </div>
@@ -42,23 +56,28 @@
                     </div>
 
                     <div class="form-row justify-content-center">
+                        <div class="col-12 col-xl-7 mb-3">
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">
+                                        <span class="fa fa-lock"></span>
+                                    </span>
+                                </div>
+
+                                <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" title="Password confirmation" placeholder="Password (again)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-row justify-content-center">
                         <div class="col-12 col-xl-7">
                             <button class="btn btn-primary form-control" type="submit">
-                                <span class="fa fa-sign-in"></span>&nbsp; Login
+                                <span class="fa fa-check"></span>&nbsp; Register
                             </button>
                         </div>
                     </div>
 
                     {{ Form::close() }}
-
-                    <div class="row text-center">
-                        <div class="col-12">
-                            <a href="{{ URL::action('Auth\ForgotPasswordController@showLinkRequestForm') }}">I forgot my password</a>
-                        </div>
-                        <div class="col-12">
-                            <a href="{{ URL::action('Auth\RegisterController@showRegistrationForm') }}">Create an account</a>
-                        </div>
-                    </div>
 
                     @include ('shared.errors')
                 </div>
