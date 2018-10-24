@@ -28,7 +28,7 @@
     @endif
 </div>
 
-<div class="row">
+<div class="row mt-3">
     <div class="col-12">
         @if (isset($manga_list))
             {{ $manga_list->render('vendor.pagination.bootstrap-4') }}

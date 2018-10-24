@@ -98,7 +98,7 @@
     </div>
 </nav>
 
-<div class="container mt-3">
+<div class="container mt-3 mb-3">
     @yield ('content')
 </div>
 
