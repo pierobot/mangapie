@@ -1,5 +1,3 @@
-@php ($currentNavPill = 'account')
-
 @section ('title')
     Account Settings :: Mangapie
 @endsection
@@ -7,40 +5,69 @@
 @extends ('settings.layout')
 
 @section ('tab-content')
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="panel-title">
-                <span class="glyphicon glyphicon-pencil"></span>&nbsp;Personal
-            </div>
+    <div class="card">
+        <div class="card-header">
+            <ul class="nav nav-pills card-header-pills">
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ URL::action('UserSettingsController@account') }}">Account</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ URL::action('UserSettingsController@visuals') }}">Visuals</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ URL::action('UserSettingsController@profile') }}">Profile</a>
+                </li>
+            </ul>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
+            {{ Form::open(['action' => 'UserSettingsController@patchPassword', 'method' => 'patch']) }}
 
-            {{ Form::open(['action' => 'UserSettingsController@update']) }}
+            <div class="row">
+                <div class="col-12 col-md-6">
+                    <label>Change Password</label>
 
-            <div class="form-group row">
-                <div class="col-xs-12 col-md-3">
-                    {{ Form::hidden('action', 'password.update') }}
-                    {{ Form::label('old password:', null, ['for' => 'old-password']) }}
-                    <input name="old-password" id="old-password" type="password" class="form-control"
-                           placeholder="Enter old password here...">
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Current</span>
+                            </div>
 
-                    {{ Form::label('new password:', null, ['for' => 'new-password']) }}
-                    <input name="new-password" id="new-password" type="password" class="form-control"
-                           placeholder="Enter new password here...">
+                            <input class="form-control" type="password" name="current" title="Your current password" placeholder="Your current password">
+                        </div>
+                    </div>
 
-                    {{ Form::label('confirm password:', null, ['for' => 'confirm-password']) }}
-                    <input name="confirm-password" id="confirm-password" type="password"
-                           class="form-control" placeholder="Confirm new password here...">
-                </div>
-            </div>
-            <div class="form-group row">
-                <div class="col-xs-12 col-md-3">
-                    {{ Form::submit('Save', ['class' => 'btn btn-warning']) }}
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">New</span>
+                            </div>
+
+                            <input class="form-control" type="password" name="new" title="The new password" placeholder="The new password">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Verify</span>
+                            </div>
+
+                            <input class="form-control" type="password" name="verify" title="Verify your new password" placeholder="Verify your new password">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <button class="btn btn-primary form-control" type="submit">
+                            <span class="fa fa-check"></span>
+                            &nbsp;Set
+                        </button>
+                    </div>
                 </div>
             </div>
 
             {{ Form::close() }}
-
         </div>
     </div>
 @endsection

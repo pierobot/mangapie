@@ -2,16 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\AssociatedName;
-use App\Http\Requests\SearchAdvancedRequest;
-use App\Http\Requests\SearchAutoCompleteRequest;
-use App\Http\Requests\SearchRequest;
-use Illuminate\Http\Request;
+use App\Http\Requests\Search\SearchAdvancedRequest;
+use App\Http\Requests\Search\SearchAutoCompleteRequest;
+use App\Http\Requests\Search\SearchRequest;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-use \App\Genre;
 use \App\Manga;
-use \App\Library;
 use \App\LibraryPrivilege;
 
 class SearchController extends Controller
@@ -35,9 +31,7 @@ class SearchController extends Controller
             }
         }
 
-        $genres = Genre::all();
-
-        return view('search.index')->with('genres', $genres);
+        return view('search.index');
     }
 
     private function doBasicSearch($keywords)
@@ -46,13 +40,12 @@ class SearchController extends Controller
         if ($keywords == null)
             return \Redirect::action('SearchController@index');
 
-        $user = \Auth::user();
         $libraryIds = LibraryPrivilege::getIds();
 
         $results = Manga::search($keywords)
                         ->filter(function ($manga) use ($libraryIds) {
                             foreach ($libraryIds as $libraryId) {
-                                if ($manga->getLibraryId() == $libraryId)
+                                if ($manga->library->id == $libraryId)
                                     return true;
                             }
 
@@ -77,8 +70,6 @@ class SearchController extends Controller
     {
         $results = Manga::advancedSearch($genres, $author, $artist, $keywords)->sortBy('name');
         $total = $results->count();
-
-        $libraryIds = LibraryPrivilege::getIds();
 
         $current_page = \Input::get('page', 1);
         $manga_list = new LengthAwarePaginator($results->forPage($current_page, 18), $total, 18);
@@ -139,8 +130,8 @@ class SearchController extends Controller
         $array = [];
         foreach ($results as $manga) {
             array_push($array, [
-                'id' => $manga->getId(),
-                'name' => $manga->getName()
+                'id' => $manga->id,
+                'name' => $manga->name
             ]);
         }
 

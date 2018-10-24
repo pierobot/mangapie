@@ -4,54 +4,58 @@
     Information &middot; {{ $manga->name }}
 @endsection
 
-@section ('custom_navbar_right')
-@endsection
-
 @section ('content')
-    <h3 class="visible-xs text-center">
-        <b>Information &middot; {{ $manga->name  }}</b>
-
-        @maintainer
-        <div class="row">
-            <a href="{{ \URL::action('MangaEditController@index', [$manga]) }}">
-                <b>Edit</b>
-            </a>
-        </div>
-        @endmaintainer
-    </h3>
-
-    <h2 class="hidden-xs text-center">
-        <b>Information &middot; {{ $manga->name  }}</b>
-
-        @maintainer
-        <div class="row">
-            <a href="{{ \URL::action('MangaEditController@index', [$manga]) }}">
-                <b>Edit</b>
-            </a>
-        </div>
-        @endmaintainer
-    </h2>
-
     @include ('shared.success')
     @include ('shared.errors')
 
     <div class="row">
-        <div class="col-xs-12 col-sm-4">
-            {{ Html::image(URL::action('CoverController@mediumDefault', [$manga]), '', ['class' => 'information-img center-block']) }}
-        </div>
+        <div class="col-12">
+            <div class="d-flex d-sm-none flex-column">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0">
+                            {{ $manga->name }}
+                        </h5>
+                    </div>
 
-        <div class="hidden-xs col-sm-8">
-            @component ('manga.components.information', [
-                'user' => $user,
-                'manga' => $manga
-            ])
-            @endcomponent
+                    <img class="card-img" src="{{ URL::action('CoverController@mediumDefault', [$manga]) }}">
+
+                    <div class="d-flex justify-content-center mt-3 mb-3">
+                        @include ('manga.shared.actions')
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-none d-sm-flex flex-column">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="mb-0">
+                            {{ $manga->name }}
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <img class="img-fluid" src="{{ URL::action('CoverController@mediumDefault', [$manga]) }}">
+
+                                <div class="d-flex justify-content-center mt-3 mb-3">
+                                    @include ('manga.shared.actions')
+                                </div>
+                            </div>
+
+                            <div class="col-sm-8">
+                                @include ('manga.shared.information')
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <br>
-    <div class="row">
-        <div class="col-xs-12">
-            @yield ('navtabs-content')
+
+    <div class="row mt-3">
+        <div class="col-12">
+            @yield ('lower-card')
         </div>
     </div>
 @endsection

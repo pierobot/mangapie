@@ -1,11 +1,25 @@
-
 // Fonts
+@import "~@fortawesome/fontawesome-free/scss/brands";
+@import "~@fortawesome/fontawesome-free/scss/fontawesome";
+@import "~@fortawesome/fontawesome-free/scss/regular";
+@import "~@fortawesome/fontawesome-free/scss/solid";
+@import "~@fortawesome/fontawesome-free/scss/v4-shims";
+
+span.fa::before {
+  font-weight: 900;
+}
 
 // Variables
 @import "variables";
 
-// Bootstrap
-@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+//$input-group-addon-bg: $gray-200;
+//$input-group-addon-border-color: $gray-200;
 
-// flatlogic/awesome-bootstrap-checkbox
-@import "node_modules/awesome-bootstrap-checkbox/awesome-bootstrap-checkbox.scss";
+// Bootstrap
+@import "~bootstrap/scss/bootstrap";
+
+// Mangapie
+@import "admin.libraries";
+@import "manga.edit";
+@import "reader";
+@import "shapes";

@@ -1,160 +1,45 @@
-$font-family-icon: 'Glyphicons Halflings';
-$check-icon: "\e013";
+$fa-font-path: "fonts/";
 
-//.checkbox label:after {
-//  padding-left: 4px;
-//  font-size: 9px;
-//}
+// Lazy dark theme.
 
-// Used to center the checkbox and checkmark
-// Note: This will break if the label's text wraps across several lines
-// I don't plan on having that, so this is fine for now.
-.radio, .checkbox {
+$white:    #fff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
 
-  label {
+$dark: #343641;
+$primary: #50b8d2;
 
-    &::before, &::after { top: 50%; }
-    &::before { margin-top: -9px; }
-    &::after { margin-top: 3px; }
-  }
-}
+$body-bg: #3d3f4c;
+$body-color: $gray-500;//#a1a7b3;
 
-// Body
-$body-bg: #343434;
+$border-color: lighten($dark, 10%);
 
-// Borders
-$laravel-border-color: darken($body-bg, 10%);
-$list-group-border: $laravel-border-color;
-$navbar-default-border: $laravel-border-color;
-$panel-default-border: $laravel-border-color;
-$panel-inner-border: $laravel-border-color;
+$card-bg: $body-bg;
+$card-cap-bg: lighten($dark, 8%);
 
-// Brands
-$brand-primary: #3097D1;
-$brand-info: #8eb4cb;
-$brand-success: #2ab27b;
-$brand-warning: #cbb956;
-$brand-danger: #bf5329;
+$input-bg: $dark;
+$input-color: $gray-500;
+$input-group-addon-color: $gray-900;
+$input-border-color: $border-color;
 
-// Typography
-$icon-font-path: "~bootstrap-sass/assets/fonts/bootstrap/";
-$font-family-sans-serif: sans-serif;
-$font-size-base: 14px;
-$line-height-base: 1.6;
-$text-color: #9ea6aa;
-$hr-border: $laravel-border-color;
+$input-group-addon-bg: $gray-400;
+$input-group-addon-border-color: $gray-400;
 
-// Links
-$link-color: #e8bf6a;
-$link-hover-color: lighten($link-color, 25%);
+$list-group-bg: $dark;
 
-// Navbar
-$navbar-default-color: darken($link-color, 40%);
-$navbar-default-brand-color: $navbar-default-color;
-$navbar-default-bg: $link-color;
-$navbar-default-border: $navbar-default-color;
+$table-border-color: $border-color;
 
-$navbar-default-toggle-hover-bg: darken($navbar-default-bg, 10%);
-$navbar-default-toggle-icon-bar-bg: $navbar-default-color;
-$navbar-default-toggle-border-color: $navbar-default-color;
-
-.glyphicon.glyphicon-menu-hamburger {
-  color: $navbar-default-color;
-}
-
-// Navbar links
-$navbar-default-link-color: $navbar-default-color;
-$navbar-default-link-hover-color: $navbar-default-brand-color;
-$navbar-default-link-hover-bg: $navbar-default-toggle-hover-bg;
-$navbar-default-link-active-color: $navbar-default-color;
-$navbar-default-link-active-bg: $navbar-default-toggle-hover-bg;
-$navbar-default-link-disabled-color: darken(grey, 10%);
-
-// Dropdown Menus
-$dropdown-bg: $navbar-default-bg;
-$dropdown-link-color: $navbar-default-link-active-color;
-$dropdown-link-active-bg: $navbar-default-link-active-bg;
-$dropdown-link-active-color: $navbar-default-link-active-color;
-$dropdown-link-hover-color: $navbar-default-color;
-$dropdown-link-hover-bg: $navbar-default-toggle-hover-bg;
-$dropdown-divider-bg: $navbar-default-color;
-
-// Nav-pills
-$nav-pills-active-link-hover-bg: darken($body-bg, 05%);
-
-// Panels
-$panel-bg: $body-bg;
-$panel-default-heading-bg: darken($body-bg, 05%);
-$panel-default-text: $navbar-default-bg;
-$panel-footer-bg: $panel-bg;
-
-// Input groups
-// TODO
-$input-color-placeholder: darken($text-color, 75%);
-
-// Table
-$table-border-color: $laravel-border-color;
-$table-bg-hover: darken($body-bg, 05%);
-$table-bg-accent: lighten($body-bg, 05%);
-
-// Navs
-$nav-link-hover-bg: $table-bg-hover;
-
-// Navtab
-$nav-tabs-border-color: $laravel-border-color;
-
-$nav-tabs-active-link-hover-bg: $table-bg-accent;
-$nav-tabs-active-link-hover-color: $link-color;
-$nav-tabs-active-link-hover-border-color: $laravel-border-color;
-
-$nav-tabs-link-hover-border-color: $panel-default-border;
-
-// Lists
-$list-group-bg: $body-bg;
-$list-group-border: $laravel-border-color;
-
-// Buttons
-$btn-default-color: $navbar-default-color;
-$btn-default-bg: $navbar-default-bg;
-$btn-default-border: $laravel-border-color;
-
-$btn-primary-border: $laravel-border-color;
-$btn-success-border: $laravel-border-color;
-$btn-warning-border: $laravel-border-color;
-$btn-info-border: $laravel-border-color;
-$btn-danger-border: $laravel-border-color;
-
-// Inputs
-$input-border: lighten($text-color, 40%);
-$input-border-focus: lighten($brand-primary, 25%);
-$input-color-placeholder: lighten($text-color, 30%);
-
-// Pagination
-$pagination-color: $navbar-default-color;
-$pagination-bg: $navbar-default-bg;
-$pagination-border: $navbar-default-border;
-
-$pagination-active-color: $navbar-default-color;
-$pagination-active-bg: $navbar-default-link-active-bg;
-$pagination-active-border: $pagination-active-color;
-
-$pagination-hover-color: $navbar-default-color;
-$pagination-hover-bg: $navbar-default-toggle-hover-bg;
-$pagination-hover-border: $navbar-default-color;
-
-$pagination-disabled-color: $navbar-default-color;
-$pagination-disabled-bg: grayscale($pagination-bg);
-$pagination-disabled-border: $pagination-border;
-
-//// Labels
-//$label-color: $navbar-default-color;
-//$label-default-bg: $link-color;
-
-// Badge
-$badge-color: $navbar-default-bg;
-$badge-bg: $navbar-default-brand-color;
-
-// Modal
-$modal-content-bg: $body-bg;
-$modal-header-border-color: $laravel-border-color;
-
+$pagination-bg: lighten($dark, 8%);
+$pagination-border-color: $dark;
+$pagination-active-bg: $primary;
+$pagination-active-border-color: $dark;
+$pagination-disabled-border-color: $dark;
+$pagination-disabled-bg: $gray-400;
+$pagination-hover-border-color: $dark;

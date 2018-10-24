@@ -1,5 +1,3 @@
-@php ($currentNavPill = 'visuals')
-
 @section ('title')
     Visual Settings :: Mangapie
 @endsection
@@ -7,76 +5,63 @@
 @extends ('settings.layout')
 
 @section ('tab-content')
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <div class="panel-title">
-                <span class="glyphicon glyphicon-book"></span>&nbsp;Reader
-            </div>
+    <div class="card">
+        <div class="card-header">
+            <ul class="nav nav-pills card-header-pills">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ URL::action('UserSettingsController@account') }}">Account</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="{{ URL::action('UserSettingsController@visuals') }}">Visuals</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ URL::action('UserSettingsController@profile') }}">Profile</a>
+                </li>
+            </ul>
         </div>
-        <div class="panel-body">
-            <label>Direction:</label>
-            {{ Form::open(['action' => 'UserSettingsController@update']) }}
-            {{ Form::hidden('action', 'reader.update') }}
+        <div class="card-body">
+            <label>Default Reader Direction</label>
+            {{ Form::open(['action' => 'UserSettingsController@patchReaderDirection', 'method' => 'patch']) }}
+            {{ Form::hidden('user_id', \Auth::user()->id) }}
 
             <div class="form-group">
-                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                    <label class="btn btn-default {{ \Auth::user()->getLtr() ? "active" : "" }}">
-                        <span class="glyphicon glyphicon-arrow-right"></span>
-                        <input type="radio" name="ltr" id="ltr-true" value="1" autocomplete="off" {{ \Auth::user()->getLtr() ? 'checked' : '' }}> Left to Right
-                        <span class="glyphicon glyphicon-arrow-right"></span>
-                    </label>
-                    <label class="btn btn-default {{ \Auth::user()->getLtr() ? "" : "active" }}">
-                        <span class="glyphicon glyphicon-arrow-left"></span>
-                        <input type="radio" name="ltr" id="ltr-false" value="0" autocomplete="off" {{ \Auth::user()->getLtr() ? '' : 'checked' }}> Right to Left
-                        <span class="glyphicon glyphicon-arrow-left"></span>
-                    </label>
+                <div class="form-row">
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="ltr" name="direction" value="ltr" @if ($user->read_direction === 'ltr') checked @endif autocomplete="off"/>
+                            <label class="custom-control-label @if ($user->read_direction === 'ltr') active @endif" for="ltr">Left to Right</label>
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="rtl" name="direction" value="rtl" @if ($user->read_direction === 'rtl') checked @endif autocomplete="off"/>
+                            <label class="custom-control-label @if ($user->read_direction === 'rtl') active @endif" for="rtl">Right to Left</label>
+                        </div>
+                    </div>
+
+                    <div class="col-6 col-md-4 col-lg-3">
+                        <div class="custom-control custom-radio">
+                            <input class="custom-control-input" type="radio" id="vrt" name="direction" value="vrt" @if($user->read_direction === 'vrt') checked @endif autocomplete="off"/>
+                            <label class="custom-control-label @if ($user->read_direction === 'ltr') active @endif" for="vrt">Vertical</label>
+                        </div>
+                    </div>
                 </div>
             </div>
-
             <div class="form-group">
-                {{ Form::submit('Save', ['class' => 'btn btn-success']) }}
+                <div class="form-row">
+                    <div class="col-12 col-md-2">
+                        <button class="btn btn-primary form-control" type="submit">
+                            <span class="fa fa-check"></span>
+                            &nbsp;Set
+                        </button>
+                    </div>
+                </div>
             </div>
 
             {{ Form::close() }}
         </div>
     </div>
-
-    {{--<div class="panel panel-default">--}}
-        {{--<div class="panel-heading">--}}
-            {{--<div class="panel-title">--}}
-                {{--<span class="glyphicon glyphicon-pencil"></span>&nbsp;Themes--}}
-            {{--</div>--}}
-        {{--</div>--}}
-        {{--<div class="panel-body">--}}
-            {{--{{ Form::open(['action' => 'UserSettingsController@update']) }}--}}
-            {{--{{ Form::hidden('action', 'theme.update') }}--}}
-
-            {{--<div class="form-group row">--}}
-                {{--<div class="col-xs-12 col-md-3">--}}
-                    {{--{{ Form::label('theme:', null, ['for' => 'theme']) }}--}}
-
-                    {{--<select name="theme" class="form-control">--}}
-                        {{--<option disabled="disabled" selected="selected">{{ $current_theme }}</option>--}}
-                        {{--@foreach ($theme_collections as $collection_name => $theme)--}}
-                            {{--<optgroup label="{{ $collection_name }}">--}}
-                                {{--@foreach ($theme as $theme_name => $theme_path)--}}
-                                    {{--<option value="{{ $collection_name . '/' . $theme_name }}">{{ $theme_name }}</option>--}}
-                                {{--@endforeach--}}
-                            {{--</optgroup>--}}
-                        {{--@endforeach--}}
-                    {{--</select>--}}
-                {{--</div>--}}
-            {{--</div>--}}
-
-            {{--<div class="form-group row">--}}
-                {{--<div class="col-xs-6">--}}
-
-                    {{--{{ Form::submit('Save', ['class' => 'btn btn-success']) }}--}}
-                {{--</div>--}}
-            {{--</div>--}}
-
-
-            {{--{{ Form::close() }}--}}
-        {{--</div>--}}
-    {{--</div>--}}
 @endsection

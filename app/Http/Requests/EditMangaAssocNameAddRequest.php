@@ -28,7 +28,7 @@ class EditMangaAssocNameAddRequest extends FormRequest
     {
         return [
             'manga_id' => 'required|int|exists:manga,id',
-            'name' => 'string',
+            'name' => 'required|string',
         ];
     }
 }

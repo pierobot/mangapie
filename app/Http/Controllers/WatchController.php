@@ -2,30 +2,31 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use App\Http\Requests\WatchRequest;
+use App\Http\Requests\Watch\WatchCreateRequest;
+use App\Http\Requests\Watch\WatchDeleteRequest;
+use App\WatchReference;
 
 class WatchController extends Controller
 {
-    public function update(WatchRequest $request)
+    public function create(WatchCreateRequest $request)
     {
-        $id = \Request::get('id');
-        $action = \Request::get('action');
-        $user = \Auth::user();
+        $user = $request->user();
 
-        if ($action == 'watch') {
-            $user->watchReferences()->create([
-                'manga_id' => $id,
-            ]);
+        $user->watchReferences()->create([
+            'manga_id' => $request->get('manga_id'),
+        ]);
 
-            \Session::flash('success', 'You are now watching this manga.');
-        } else {
-            $user->watchReferences()->where('manga_id', $id)->forceDelete();
+        session()->flash('success', 'You are now watching this manga.');
 
-            \Session::flash('success', 'You are no longer watching this manga.');
-        }
+        return redirect()->back();
+    }
 
-        return \Redirect::action('MangaController@index', [$id]);
+    public function delete(WatchDeleteRequest $request)
+    {
+        WatchReference::find($request->get('watch_reference_id'))->forceDelete();
+
+        session()->flash('success', 'You are no longer watching this manga.');
+
+        return redirect()->back();
     }
 }

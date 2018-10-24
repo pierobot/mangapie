@@ -4,8 +4,6 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use Illuminate\Routing\UrlGenerator;
-
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -23,11 +21,11 @@ class AppServiceProvider extends ServiceProvider
         \URL::forceScheme('https');
 
         \Blade::if('admin', function () {
-            return \Auth::check() && \Auth::user()->isAdmin();
+            return auth()->check() && auth()->user()->admin == true;
         });
 
         \Blade::if('maintainer', function () {
-            return \Auth::check() && \Auth::user()->isAdmin() || \Auth::user()->isMaintainer();
+            return auth()->check() && auth()->user()->admin == true || auth()->user()->maintainer == true;
         });
     }
 

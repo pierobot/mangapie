@@ -3,7 +3,7 @@
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
-        <span class="glyphicon glyphicon-info-sign"></span>&nbsp; {{ \Session::get('warnings.message') }}
+        <span class="fa fa-info"></span>&nbsp; {{ \Session::get('warnings.message') }}
         <ul>
             @foreach (\Session::get('warnings.data') as $warning)
                 <li><b>{{ $warning }}</b></li>

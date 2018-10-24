@@ -10,12 +10,12 @@ class User extends Authenticatable
     use Notifiable;
 
     /**
-     * The attributes that are mass assignable.
+     * The attributes that are guarded.
      *
      * @var array
      */
-    protected $fillable = [
-        'name', 'email', 'password', 'admin', 'maintainer', 'theme', 'ltr', 'about', 'last_seen'
+    protected $guarded = [
+        'id', 'created_at', 'admin', 'maintainer'
     ];
 
     /**
@@ -27,6 +27,28 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    /**
+     * @param array|mixed $columns
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public static function admins($columns = ['*'])
+    {
+        return (new static)->newQuery()->where('admin', true)->get(
+            is_array($columns) ? $columns : func_get_args()
+        );
+    }
+
+    /**
+     * @param array|mixed $columns
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
+    public static function maintainers($columns = ['*'])
+    {
+        return (new static)->newQuery()->where('maintainer', true)->get(
+            is_array($columns) ? $columns : func_get_args()
+        );
+    }
+
     public function getId()
     {
         return $this->id;
@@ -35,12 +57,6 @@ class User extends Authenticatable
     public function getName()
     {
         return $this->name;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-        $this->save();
     }
 
     public function getEmail()
@@ -56,38 +72,6 @@ class User extends Authenticatable
     public function isMaintainer()
     {
         return $this->maintainer;
-    }
-
-    public function getPassword()
-    {
-        return $this->password;
-    }
-
-    public function setPassword($password)
-    {
-        $this->password = $password;
-        $this->save();
-    }
-
-    public function getTheme()
-    {
-        return $this->theme;
-    }
-
-    public function setTheme($theme)
-    {
-        $this->theme = $theme;
-        $this->save();
-    }
-
-    public function getLtr()
-    {
-        return $this->ltr;
-    }
-
-    public function setLtr($ltr)
-    {
-        $this->ltr = $ltr;
     }
 
     public function getLastSeen()
@@ -143,5 +127,10 @@ class User extends Authenticatable
     public function mangaViews()
     {
         return $this->hasMany(\App\MangaView::class);
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(\App\Comment::class);
     }
 }

@@ -28,9 +28,10 @@ class ScanLibrary implements ShouldQueue
      */
     public function __construct(Library $library)
     {
-        $this->libraryId = $library->getId();
+        $this->libraryId = $library->id;
 
         $this->prepareStatus();
+        $this->setInput(['library_id' => $this->libraryId]);
     }
 
     /**
@@ -68,16 +69,16 @@ class ScanLibrary implements ShouldQueue
             $newArchives = collect($archives)->reject(function ($archive) use ($allArchives) {
                 return $allArchives->where('name', $archive['name'])->first() != null;
             });
-//
-//            // filter out the ones that still exist
-//            $removedArchives = $allArchives->reject(function ($archive) use ($names) {
-//                return in_array($archive->getName(), $names);
-//            });
-//
-//            if ($removedArchives->count() > 0) {
-//                \Event::fire(new \App\Events\Archive\RemovedArchives($removedArchives));
-//            }
-//
+
+            // filter out the ones that still exist
+            $removedArchives = $allArchives->reject(function ($archive) use ($names) {
+                return in_array($archive['name'], $names);
+            });
+
+            if ($removedArchives->count() > 0) {
+                \Event::fire(new \App\Events\Archive\RemovedArchives($removedArchives));
+            }
+
             if ($newArchives->count() > 0) {
                 \Event::fire(new \App\Events\Archive\NewArchives($newArchives));
             }

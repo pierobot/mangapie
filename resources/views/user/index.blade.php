@@ -1,1 +1,1 @@
-@include ('user.profile')
+@include ('user.activity')

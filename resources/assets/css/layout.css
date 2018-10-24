@@ -5,9 +5,14 @@
 @media(min-width:992px){}
 @media(min-width:1200px){}
 
-.navbar {
-    margin-bottom: 0;
-}
+/*.triangle-up {*/
+  /*width: 0;*/
+  /*height: 0;*/
+  /*border-style: solid;*/
+
+  /*border-width: 0 16px 16px 16px;*/
+  /*border-color: transparent transparent #007bff transparent;*/
+/*}*/
 
 .va-middle {
     vertical-align: middle !important;
@@ -53,64 +58,12 @@ textarea {
     pointer-events: none;
 }
 
-span.glyphicon.glyphicon-size-1x {
-    font-size: 1em;
-}
-
-span.glyphicon.glyphicon-size-2x {
-    font-size: 2em;
-}
-
-span.glyphicon.glyphicon-size-3x {
-    font-size: 3em;
-}
-
-span.glyphicon.glyphicon-size-4x {
-    font-size: 4em;
-}
-
-@keyframes wiggle {
-    0% { transform: rotate(0deg); }
-    80% { transform: rotate(0deg); }
-    85% { transform: rotate(5deg); }
-    95% { transform: rotate(-5deg); }
-    100% { transform: rotate(0deg); }
-}
-
-li.wiggle {
-    -webkit-animation-name: wiggle;
-    -moz-animation-name: wiggle;
-    -o-animation-name: wiggle;
-    animation-name: wiggle;
-
-    -webkit-animation-duration: 2s;
-    -moz-animation-duration: 2s;
-    -o-animation-duration: 2s;
-    animation-duration: 2s;
-}
-
 /* ------- home/index.blade.php ------- */
 
-.thumbnail {
-    margin-bottom: 0;
-    border: none;
-}
-
-.thumbnail h4,p {
+.card .card-title {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-}
-
-.thumbnail a > img {
-    max-height: 250px;
-    width: auto;
-    height: auto;
-    display: block;
-}
-
-div.thumbnail > div {
-    height: 250px;
 }
 
 /* ------- manga/index.blade.php ----- */
@@ -132,13 +85,6 @@ div.thumbnail > div {
     display: block;
 }
 
-.thumbnail h4 {
-    /* Shorten long names with ellipses */
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 li.list-group-item span.label {
     display: inline-block;
 }
@@ -149,13 +95,6 @@ li.list-group-item span.label {
     max-height: 350px;
     overflow: hidden;
     overflow-y: auto;
-}
-
-img.reader-image {
-    max-width: 100%;
-    max-height: 100%;
-    height: auto;
-    width: auto;
 }
 
 /* ------- notifications/index.blade.php ------- */

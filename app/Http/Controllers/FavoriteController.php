@@ -3,10 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Favorite;
-use App\Http\Requests\FavoriteAddRequest;
-use App\Http\Requests\FavoriteRemoveRequest;
+use App\Http\Requests\Favorite\FavoriteAddRequest;
+use App\Http\Requests\Favorite\FavoriteRemoveRequest;
 use App\Manga;
-use Illuminate\Http\Request;
 
 class FavoriteController extends Controller
 {

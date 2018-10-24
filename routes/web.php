@@ -11,17 +11,40 @@
 |
 */
 
-Route::get('/login', ['as' => 'login', 'uses' => 'LoginController@index']);
-Route::post('/login', ['as' => 'login', 'uses' => 'LoginController@login']);
+// TODO: Implement registration and password reset.
+// Uncomment this and remove the others once I implement the registration and password reset
+//Route::auth();
+
+// Authentication Routes...
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+Route::post('login', 'Auth\LoginController@login');
+Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+
+//// Registration Routes...
+//Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
+//Route::post('register', 'Auth\RegisterController@register');
+
+//// Password Reset Routes...
+//Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+//Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+//Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+//Route::post('password/reset', 'Auth\ResetPasswordController@reset');
 
 Route::middleware(['auth', 'last_seen'])->group(function () {
-
-    Route::get('/logout', ['as' => 'logout', 'uses' => 'LoginController@logout']);
 
     Route::prefix('admin')->middleware('admin')->name('admin')->group(function () {
         Route::get('/', 'AdminController@index');
         Route::get('/users', 'AdminController@users');
+        Route::get('/users/create', 'AdminController@createUsers');
+        Route::get('/users/edit', 'AdminController@editUsers');
+        Route::get('/users/delete', 'AdminController@deleteUsers');
         Route::get('/libraries', 'AdminController@libraries');
+        Route::get('/libraries/create', 'AdminController@createLibraries');
+        Route::get('/libraries/modify', 'AdminController@modifyLibraries');
+        Route::get('/libraries/delete', 'AdminController@deleteLibraries');
+        Route::get('/logs', 'AdminController@logs');
+        Route::get('/logs/warnings', 'AdminController@logWarnings');
+        Route::get('/logs/errors', 'AdminController@logErrors');
 
         Route::patch('/images', 'AdminController@patchImages');
         Route::delete('/images', 'AdminController@deleteImages');
@@ -30,7 +53,7 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
     Route::prefix('avatar')->name('avatar')->group(function () {
         Route::get('/{user}', 'AvatarController@index');
 
-        Route::post('/', 'AvatarController@update');
+        Route::put('/', 'AvatarController@put');
     });
 
     Route::prefix('comments')->name('comments')->group(function () {
@@ -45,7 +68,7 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::get('/small/{manga}/{archive}/{page}', 'CoverController@small');
         Route::get('/medium/{manga}/{archive}/{page}', 'CoverController@medium');
 
-        Route::post('/update', 'CoverController@update')->middleware('maintainer');
+        Route::put('/', 'CoverController@put')->middleware('maintainer');
     });
 
     Route::prefix('edit')->middleware('maintainer')->name('edit')->group(function () {
@@ -100,21 +123,21 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
     });
 
     Route::prefix('library')->middleware('admin')->name('library')->group(function () {
-        Route::post('/create', 'LibraryController@create');
-        Route::post('/update', 'LibraryController@update');
-        Route::post('/status', 'LibraryController@status');
-        Route::post('/delete', 'LibraryController@delete');
+        Route::put('/', 'LibraryController@create');
+        Route::post('/', 'LibraryController@status');
+        Route::patch('/', 'LibraryController@update');
+        Route::delete('/', 'LibraryController@delete');
     });
 
     Route::prefix('manga')->middleware('manga_views')->name('manga')->group(function () {
         Route::get('/{manga}/{sort?}', 'MangaController@index');
-        Route::get('/{manga}/files', 'MangaController@files');
+        Route::get('/{manga}/files/{sort?}', 'MangaController@files');
         Route::get('/{manga}/comments', 'MangaController@comments');
     });
 
     Route::prefix('notifications')->name('notifications')->group(function () {
         Route::get('/', 'NotificationController@index');
-        Route::post('/dismiss', 'NotificationController@dismiss');
+        Route::delete('/', 'NotificationController@delete');
     });
 
     Route::prefix('person')->name('person')->group(function () {
@@ -135,14 +158,14 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
 
     Route::prefix('user')->name('user')->group(function () {
         Route::get('/{user}', 'UserController@index');
-        Route::get('/{user}/profile', 'UserController@profile');
+        Route::get('/{user}/comments', 'UserController@comments');
         Route::get('/{user}/activity', 'UserController@activity');
     });
 
     Route::prefix('users')->middleware('admin')->name('users')->group(function () {
-        Route::post('/create', 'UserController@create');
-        Route::post('/edit', 'UserController@edit');
-        Route::post('/delete', 'UserController@delete');
+        Route::put('/', 'UserController@create');
+        Route::patch('/', 'UserController@edit');
+        Route::delete('/', 'UserController@delete');
     });
 
     Route::prefix('settings')->name('settings')->group(function () {
@@ -151,8 +174,9 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::get('/visuals', 'UserSettingsController@visuals');
         Route::get('/profile', 'UserSettingsController@profile');
 
-        Route::post('/', 'UserSettingsController@update');
-        Route::post('/profile', 'UserSettingsController@updateProfile');
+        Route::put('/about', 'UserSettingsController@putAbout');
+        Route::patch('/reader', 'UserSettingsController@patchReaderDirection');
+        Route::patch('/password', 'UserSettingsController@patchPassword');
     });
 
     Route::prefix('vote')->name('votes')->group(function() {
@@ -162,6 +186,7 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
     });
 
     Route::prefix('watch')->name('watch')->group(function () {
-        Route::post('/update', 'WatchController@update');
+        Route::post('/', 'WatchController@create');
+        Route::delete('/', 'WatchController@delete');
     });
 });

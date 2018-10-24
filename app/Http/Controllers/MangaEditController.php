@@ -24,61 +24,30 @@ class MangaEditController extends Controller
 {
     public function index(Manga $manga)
     {
-        $id = $manga->getId();
-        $name = $manga->getName();
-        $mu_id = $manga->getMangaUpdatesId();
-
-        return view('edit.manga.index')
-            ->with('id', $id)
-            ->with('mu_id', $mu_id)
-            ->with('name', $name);
+        return view('edit.manga.index')->with('manga', $manga);
     }
 
     public function mangaupdates(Manga $manga)
     {
-        $id = $manga->getId();
-        $name = $manga->getName();
-
-        return view('edit.manga.mangaupdates')
-            ->with('id', $id)
-            ->with('name', $name);
-
+        return view('edit.manga.mangaupdates')->with('manga', $manga);
     }
 
     public function description(Manga $manga)
     {
-        $id = $manga->getId();
-        $name = $manga->getName();
-        $description = $manga->getDescription();
-
-        return view('edit.manga.information.description')
-            ->with('id', $id)
-            ->with('name', $name)
-            ->with('description', $description);
+        return view('edit.manga.description')->with('manga', $manga);
     }
 
     public function type(Manga $manga)
     {
-        $id = $manga->getId();
-        $name = $manga->getName();
-        $type = $manga->getType();
-
-        return view('edit.manga.information.type')
-            ->with('id', $id)
-            ->with('name', $name)
-            ->with('type', $type);
+        return view('edit.manga.type')->with('manga', $manga);
     }
 
     public function names(Manga $manga)
     {
         $manga = $manga->load('associatedNameReferences.associatedName');
 
-        $id = $manga->getId();
-        $name = $manga->getName();
-
-        return view('edit.manga.information.names')
-            ->with('id', $id)
-            ->with('name', $name)
+        return view('edit.manga.names')
+            ->with('manga', $manga)
             ->with('assocNameReferences', $manga->associatedNameReferences);
     }
 
@@ -86,22 +55,15 @@ class MangaEditController extends Controller
     {
         $manga = $manga->load('genreReferences.genre');
 
-        return view('edit.manga.information.genres')
-            ->with('id', $manga->id)
-            ->with('name', $manga->name)
-            ->with('manga', $manga);
+        return view('edit.manga.genres')->with('manga', $manga);
     }
 
     public function authors(Manga $manga)
     {
         $manga = $manga->load('authorReferences.author');
 
-        $id = $manga->getId();
-        $name = $manga->getName();
-
-        return view('edit.manga.information.authors')
-            ->with('id', $id)
-            ->with('name', $name)
+        return view('edit.manga.authors')
+            ->with('manga', $manga)
             ->with('authorReferences', $manga->authorReferences);
     }
 
@@ -109,36 +71,22 @@ class MangaEditController extends Controller
     {
         $manga = $manga->load('artistReferences.artist');
 
-        $id = $manga->getId();
-        $name = $manga->getName();
-
-        return view('edit.manga.information.artists')
-            ->with('id', $id)
-            ->with('name', $name)
+        return view('edit.manga.artists')
+            ->with('manga', $manga)
             ->with('artistReferences', $manga->artistReferences);
     }
 
     public function year(Manga $manga)
     {
-        $id = $manga->getId();
-        $name = $manga->getName();
-        $year = $manga->getYear();
-
-        return view('edit.manga.information.year')
-            ->with('id', $id)
-            ->with('name', $name)
-            ->with('year', $year);
+        return view('edit.manga.year')->with('manga', $manga);
     }
 
     public function covers(Manga $manga)
     {
-        $id = $manga->getId();
-        $name = $manga->getName();
         $archives = $manga->getArchives();
 
         return view('edit.manga.covers')
-            ->with('id', $id)
-            ->with('name', $name)
+            ->with('manga', $manga)
             ->with('archives', $archives);
     }
 
@@ -170,6 +118,7 @@ class MangaEditController extends Controller
 
         // all the genre ids not in the manga's genre references are those that should be removed
         $toDelete = $manga->genreReferences()->whereNotIn('genre_id', $newGenres);
+
         if ($toDelete->count() > 0) {
             $deletedSuccessfully = $toDelete->forceDelete();
 

@@ -14,7 +14,7 @@ class NotificationController extends Controller
         return view('notifications.index');
     }
 
-    public function dismiss(NotificationRequest $request)
+    public function delete(NotificationRequest $request)
     {
         $action = \Request::get('action');
         $watchNotificationIds= \Request::get('ids');
@@ -32,6 +32,6 @@ class NotificationController extends Controller
             }
         }
 
-        return \Redirect::action('NotificationController@index');
+        return redirect()->back();
     }
 }

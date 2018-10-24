@@ -18,7 +18,7 @@ use App\Vote;
  * @covers \App\Rating
  * @covers \App\Http\Controllers\VoteController
  * @covers \App\Http\Requests\VoteCreateRequest
- * @covers \App\Http\Requests\VoteChangeRequest
+ * @covers \App\Http\Requests\VotePatchRequest
  * @covers \App\Http\Requests\VoteDeleteRequest
  */
 class VoteTest extends TestCase
@@ -55,7 +55,6 @@ class VoteTest extends TestCase
         ]);
 
         $response->assertSuccessful();
-        $response->assertSee('You\'ve voted!');
         $response->assertSee('Your vote was successfully created.');
     }
 
@@ -95,7 +94,6 @@ class VoteTest extends TestCase
         ]);
 
         $response->assertSuccessful();
-        $response->assertSee('You\'ve voted!');
         $response->assertSee('Your vote was successfully updated.');
     }
 
@@ -121,7 +119,6 @@ class VoteTest extends TestCase
         ]);
 
         $response->assertSuccessful();
-        $response->assertDontSee('You\'ve voted!');
         $response->assertSee('Your vote was successfully deleted.');
     }
 }

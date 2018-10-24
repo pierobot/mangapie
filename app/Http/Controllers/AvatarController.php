@@ -14,7 +14,7 @@ class AvatarController extends Controller
         return Avatar::exists($user) ? Avatar::response($user) : Avatar::defaultResponse();
     }
 
-    public function update(AvatarUpdateRequest $request)
+    public function put(AvatarUpdateRequest $request)
     {
         $storeResult = Avatar::save($request->file('avatar'), \Auth::user());
 

@@ -1,29 +1,21 @@
 @auth
+    {{ Form::open(['action' => 'SearchController@basic', 'class' => 'form-inline mb-0']) }}
+    {{ Form::hidden('type', 'basic') }}
 
-{{ Form::open(['action' => 'SearchController@basic', 'class' => 'navbar-form navbar-left']) }}
-{{ Form::hidden('type', 'basic') }}
+    <div class="form-group mb-0 w-100">
+        <div class="input-group">
+            {{ Form::text('keywords', null, ['class' => 'form-control',
+                                             'placeholder' => 'Quick search',
+                                             'id' => $searchbarId,
+                                             'autocomplete' => 'off']) }}
 
-<div class="form-group">
-    <div class="input-group">
-        {{ Form::text('keywords', null, ['class' => 'form-control',
-                                         'placeholder' => 'Quick search',
-                                         'id' => 'autocomplete',
-                                         'autocomplete' => 'off']) }}
-
-        <div class="input-group-btn">
-            <button type="submit" class="btn btn-primary">
-                <!--
-                    Without any text before the span, the button does not match the size of the input above.
-                    Adding the class form-control fixes that but results in a square button.
-
-                    Seems like just having any text resolves this so I'm using the zero-width space. *shrug*
-                -->
-                &#8203;<span class="glyphicon glyphicon-search"></span>
-            </button>
+            <div class="input-group-append">
+                <button class="btn btn-primary form-control" type="submit">
+                    <span class="fa fa-search"></span>
+                </button>
+            </div>
         </div>
     </div>
-</div>
 
-{{ Form::close() }}
-
+    {{ Form::close() }}
 @endauth
