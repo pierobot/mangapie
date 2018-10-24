@@ -31,7 +31,7 @@
                     <div class="form-row justify-content-center">
                         <div class="col-12 col-xl-7">
                             <button class="btn btn-primary form-control" type="submit">
-                                <span class="fa fa-check"></span>&nbsp; Send reset link
+                                <span class="fa fa-send"></span>&nbsp; Send reset link
                             </button>
                         </div>
                     </div>

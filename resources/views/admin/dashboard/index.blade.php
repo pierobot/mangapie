@@ -1,0 +1,1 @@
+@include ('admin.dashboard.statistics')

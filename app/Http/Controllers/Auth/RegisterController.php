@@ -62,6 +62,9 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        if (! \Cache::get('app.registration.enabled', false))
+            return null;
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],

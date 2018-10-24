@@ -131,12 +131,12 @@ return [
      |
      | These variables define the behavior for image extraction.
      |
-     | By default, the cleanup job is run once daily if enabled.
+     | The cleanup job is run once daily if enabled.
      | You can force running the clean job through the admin dashboard.
      */
     'image' => [
         'extract' => env('APP_IMAGE_EXTRACT', false),
-        'clean' => env('APP_IMAGE_CLEAN', true),
+        'clean' => env('APP_IMAGE_CLEAN', false),
     ],
 
     /*
@@ -165,7 +165,7 @@ return [
      | App\Heat::heat($temperature);
      */
     'heat' => [
-        'enabled' => env('APP_HEAT_ENABLED', true),
+        'enabled' => env('APP_HEAT_ENABLED', false),
 
         'default' => env('APP_HEAT_DEFAULT', 100.0),
         'cooldown' => env('APP_HEAT_COOLDOWN_RATE', 0.01),

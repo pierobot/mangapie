@@ -17,6 +17,8 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
 
     Route::prefix('admin')->middleware('admin')->name('admin')->group(function () {
         Route::get('/', 'AdminController@index');
+        Route::get('/dashboard/statistics', 'AdminController@statistics');
+        Route::get('/dashboard/config', 'AdminController@config');
         Route::get('/users', 'AdminController@users');
         Route::get('/users/create', 'AdminController@createUsers');
         Route::get('/users/edit', 'AdminController@editUsers');
@@ -31,6 +33,8 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
 
         Route::patch('/images', 'AdminController@patchImages');
         Route::delete('/images', 'AdminController@deleteImages');
+
+        Route::patch('/config/registration', 'AdminController@patchRegistration');
     });
 
     Route::prefix('avatar')->name('avatar')->group(function () {
