@@ -9,11 +9,11 @@
         <div class="card-header">
             <ul class="nav nav-pills card-header-pills">
                 <li class="nav-item">
-                    <a class="nav-link active" href="#">Statistics</a>
+                    <a class="nav-link" href="{{ URL::action('AdminController@config') }}">Config</a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ URL::action('AdminController@config') }}">Config</a>
+                    <a class="nav-link active" href="#">Statistics</a>
                 </li>
             </ul>
         </div>

@@ -1,1 +1,1 @@
-@include ('admin.dashboard.statistics')
+@include ('admin.dashboard.config')

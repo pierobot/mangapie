@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Admin\PutDefaultLibrariesRequest;
 use App\Http\Requests\Admin\PatchRegistrationRequest;
 
 use App\Image;
 
+use App\Library;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -132,5 +134,23 @@ class AdminController extends Controller
         }
 
         return redirect()->back()->with('success', 'Registration has been updated.');
+    }
+
+    public function putDefaultLibraries(PutDefaultLibrariesRequest $request)
+    {
+        $libraryIds = $request->has('library_ids') ? $request->get('library_ids') : [];
+        $defaultLibraries = [];
+
+        \Cache::forget('app.registration.libraries');
+
+        foreach ($libraryIds as $id) {
+            $defaultLibraries[$id] = $id;
+        }
+
+        \Cache::rememberForever('app.registration.libraries', function () use ($defaultLibraries) {
+            return $defaultLibraries;
+        });
+
+        return redirect()->back()->with('success', 'Default libraries have been updated.');
     }
 }

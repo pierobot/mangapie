@@ -35,6 +35,7 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::delete('/images', 'AdminController@deleteImages');
 
         Route::patch('/config/registration', 'AdminController@patchRegistration');
+        Route::put('/config/libraries', 'AdminController@putDefaultLibraries');
     });
 
     Route::prefix('avatar')->name('avatar')->group(function () {

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Library;
+use App\LibraryPrivilege;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -62,13 +64,29 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        // return an invalid object if registration is disabled; this will basically result in a back()
         if (! \Cache::get('app.registration.enabled', false))
             return null;
 
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => \Hash::make($data['password']),
         ]);
+
+        // assign library permissions
+        $defaultLibraries = \Cache::get('app.registration.libraries', []);
+        if (! empty($defaultLibraries)) {
+            foreach ($defaultLibraries as $libraryId) {
+                $library = Library::findOrFail($libraryId);
+
+                LibraryPrivilege::create([
+                   'user_id' => $user->id,
+                   'library_id' => $library->id
+                ]);
+            }
+        }
+
+        return $user;
     }
 }
