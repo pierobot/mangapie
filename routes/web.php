@@ -11,29 +11,14 @@
 |
 */
 
-// TODO: Implement registration and password reset.
-// Uncomment this and remove the others once I implement the registration and password reset
-//Route::auth();
-
-// Authentication Routes...
-Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
-Route::post('login', 'Auth\LoginController@login');
-Route::post('logout', 'Auth\LoginController@logout')->name('logout');
-
-//// Registration Routes...
-//Route::get('register', 'Auth\RegisterController@showRegistrationForm')->name('register');
-//Route::post('register', 'Auth\RegisterController@register');
-
-//// Password Reset Routes...
-//Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
-//Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
-//Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
-//Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+Route::auth();
 
 Route::middleware(['auth', 'last_seen'])->group(function () {
 
     Route::prefix('admin')->middleware('admin')->name('admin')->group(function () {
         Route::get('/', 'AdminController@index');
+        Route::get('/dashboard/statistics', 'AdminController@statistics');
+        Route::get('/dashboard/config', 'AdminController@config');
         Route::get('/users', 'AdminController@users');
         Route::get('/users/create', 'AdminController@createUsers');
         Route::get('/users/edit', 'AdminController@editUsers');
@@ -48,6 +33,9 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
 
         Route::patch('/images', 'AdminController@patchImages');
         Route::delete('/images', 'AdminController@deleteImages');
+
+        Route::patch('/config/registration', 'AdminController@patchRegistration');
+        Route::put('/config/libraries', 'AdminController@putDefaultLibraries');
     });
 
     Route::prefix('avatar')->name('avatar')->group(function () {

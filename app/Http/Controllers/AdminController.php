@@ -2,24 +2,34 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UserCreateRequest;
-use App\Http\Requests\UserDeleteRequest;
-use App\Http\Requests\UserEditRequest;
-use App\Image;
-use App\LogParser;
-use Illuminate\Http\Request;
+use App\Http\Requests\Admin\PutDefaultLibrariesRequest;
+use App\Http\Requests\Admin\PatchRegistrationRequest;
 
-use App\Avatar;
-use App\Cover;
+use App\Image;
+
 use App\Library;
-use App\LibraryPrivilege;
-use App\User;
+use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
     public function index()
     {
         return view('admin.index');
+    }
+
+    public function dashboard()
+    {
+        return view('admin.dashboard.index');
+    }
+
+    public function statistics()
+    {
+        return view('admin.dashboard.statistics');
+    }
+
+    public function config()
+    {
+        return view('admin.dashboard.config');
     }
 
     public function users()
@@ -111,5 +121,36 @@ class AdminController extends Controller
         session()->flash('success', 'Successfully wiped the images disk.');
 
         return $response;
+    }
+
+    public function patchRegistration(PatchRegistrationRequest $request)
+    {
+        if ($request->has('enabled')) {
+            \Cache::rememberForever('app.registration.enabled', function () use ($request) {
+                return true;
+            });
+        } else {
+            \Cache::forget('app.registration.enabled');
+        }
+
+        return redirect()->back()->with('success', 'Registration has been updated.');
+    }
+
+    public function putDefaultLibraries(PutDefaultLibrariesRequest $request)
+    {
+        $libraryIds = $request->has('library_ids') ? $request->get('library_ids') : [];
+        $defaultLibraries = [];
+
+        \Cache::forget('app.registration.libraries');
+
+        foreach ($libraryIds as $id) {
+            $defaultLibraries[$id] = $id;
+        }
+
+        \Cache::rememberForever('app.registration.libraries', function () use ($defaultLibraries) {
+            return $defaultLibraries;
+        });
+
+        return redirect()->back()->with('success', 'Default libraries have been updated.');
     }
 }
