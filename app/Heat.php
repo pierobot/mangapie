@@ -29,7 +29,7 @@ final class HeatData
     public function __construct(Model $model)
     {
         $this->modelId = $model->id;
-        $this->temperature = \Config::get('app.heat.default');
+        $this->temperature = \Cache::tags(['config', 'heat'])->get('default', 100.0);
         $this->lastUpdated = Carbon::now();
     }
 
@@ -115,7 +115,6 @@ final class Heat
     /**
      * Heat constructor.
      *
-     * @param User $user
      * @param Model $model
      *
      * @throws \InvalidArgumentException
@@ -139,9 +138,9 @@ final class Heat
     private static function initialize()
     {
         if (empty(self::$defaultTemperature) || empty(self::$heatRate) || empty(self::$cooldownRate)) {
-            self::$defaultTemperature = \Config::get('app.heat.default');
-            self::$heatRate = \Config::get('app.heat.heat');
-            self::$cooldownRate = \Config::get('app.heat.cooldown');
+            self::$defaultTemperature = \Cache::tags(['config', 'heat'])->get('default', 100.0);
+            self::$heatRate = \Cache::tags(['config', 'heat'])->get('heat', 3.0);
+            self::$cooldownRate = \Cache::tags(['config', 'heat'])->get('cooldown', 0.01);
         }
     }
 
@@ -251,7 +250,7 @@ final class Heat
     {
         $key = HeatData::keyFor($manga->id);
 
-        return \Cache::tags('manga_heat')->get($key);
+        return \Cache::tags(['heat', 'manga'])->get($key);
     }
 
     /**
@@ -264,7 +263,7 @@ final class Heat
     {
         $key = HeatData::keyFor($archive->id);
 
-        return \Cache::tags('archive_heat')->get($key);
+        return \Cache::tags(['heat', 'archive'])->get($key);
     }
 
     /**
@@ -275,7 +274,7 @@ final class Heat
      */
     private static function setMangaHeatData(HeatData $heatData)
     {
-        \Cache::tags('manga_heat')->forever($heatData->key(), $heatData);
+        \Cache::tags(['heat', 'manga'])->forever($heatData->key(), $heatData);
     }
 
     /**
@@ -286,7 +285,7 @@ final class Heat
      */
     private static function setArchiveHeatData(HeatData $heatData)
     {
-        \Cache::tags('archive_heat')->forever($heatData->key(), $heatData);
+        \Cache::tags(['heat', 'archive'])->forever($heatData->key(), $heatData);
     }
 
     /**

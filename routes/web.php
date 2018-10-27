@@ -36,6 +36,12 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
 
         Route::patch('/config/registration', 'AdminController@patchRegistration');
         Route::put('/config/libraries', 'AdminController@putDefaultLibraries');
+        Route::patch('/config/heat', 'AdminController@patchHeat');
+        Route::post('/config/heat', 'AdminController@postHeat');
+
+        Route::patch('/config/views', 'AdminController@patchViews');
+        Route::patch('/config/views/time', 'AdminController@patchViewsTime');
+        Route::put('/config/views/time', 'AdminController@putViewsTime');
     });
 
     Route::prefix('avatar')->name('avatar')->group(function () {

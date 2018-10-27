@@ -44,8 +44,8 @@ class IncrementArchiveViews implements ShouldQueue
      */
     public function handle()
     {
-        $timeEnabled = \Config::get('app.views.time.enabled');
-        $timeThreshold = CarbonInterval::fromString(\Config::get('app.views.time.threshold'));
+        $timeEnabled = \Cache::tags(['config', 'views', 'time'])->get('enabled', true);
+        $timeThreshold = CarbonInterval::fromString(\Cache::tags(['config', 'views', 'time'])->get('threshold', '3h'));
 
         $views = $this->user->archiveViews();
         $shouldIncrement = true;

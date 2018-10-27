@@ -65,7 +65,7 @@ class RegisterController extends Controller
     protected function create(array $data)
     {
         // return an invalid object if registration is disabled; this will basically result in a back()
-        if (! \Cache::get('app.registration.enabled', false))
+        if (! \Cache::tags(['config', 'registration'])->get('enabled', false))
             return null;
 
         $user = User::create([
@@ -75,7 +75,7 @@ class RegisterController extends Controller
         ]);
 
         // assign library permissions
-        $defaultLibraries = \Cache::get('app.registration.libraries', []);
+        $defaultLibraries = \Cache::tags(['config', 'registration'])->get('libraries', []);
         if (! empty($defaultLibraries)) {
             foreach ($defaultLibraries as $libraryId) {
                 $library = Library::findOrFail($libraryId);

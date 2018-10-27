@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use InvalidArgumentException;
+
+use Carbon\CarbonInterval;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -26,6 +29,14 @@ class AppServiceProvider extends ServiceProvider
 
         \Blade::if('maintainer', function () {
             return auth()->check() && auth()->user()->admin == true || auth()->user()->maintainer == true;
+        });
+
+        \Validator::extend('dateinterval', function ($attribute, $value, $parameters, $validator) {
+            try {
+                return CarbonInterval::fromString($value) != '';
+            } catch (InvalidArgumentException $e) {
+                return false;
+            }
         });
     }
 

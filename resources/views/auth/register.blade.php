@@ -12,7 +12,7 @@
                     <h4 class="card-title text-center mb-0">Create an account</h4>
                 </div>
                 <div class="card-body">
-                    @if (\Cache::get('app.registration.enabled', false) == true)
+                    @if (\Cache::tags(['config', 'registration'])->get('enabled', false) == true)
                         {{ Form::open([ 'action' => 'Auth\RegisterController@register']) }}
                         <div class="form-row justify-content-center">
                             <div class="col-12 col-xl-7 mb-3">

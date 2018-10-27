@@ -18,13 +18,13 @@ class RecordArchiveViews
     public function handle($request, Closure $next)
     {
         if (auth()->check()) {
-            $user = auth()->guard()->user();
+            $user = auth()->user();
             $archive = $request->route('archive');
 
-            if (\Config::get('app.views.enabled') === true)
+            if (\Cache::tags(['config', 'views'])->get('enabled', true) == true)
                 \Queue::push(new IncrementArchiveViews($user, $archive));
 
-            if (\Config::get('app.heat.enabled') === true)
+            if (\Cache::tags(['config', 'heat'])->get('enabled', false) == true)
                 \Queue::push(new IncreaseArchiveHeat($user, $archive));
         }
 

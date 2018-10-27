@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Admin\PatchHeatRequest;
+use App\Http\Requests\Admin\PatchViewsRequest;
+use App\Http\Requests\Admin\PatchViewsTimeRequest;
+use App\Http\Requests\Admin\PostHeatRequest;
 use App\Http\Requests\Admin\PutDefaultLibrariesRequest;
 use App\Http\Requests\Admin\PatchRegistrationRequest;
 
+use App\Http\Requests\Admin\PutViewsTimeRequest;
 use App\Image;
 
 use App\Library;
@@ -126,14 +131,14 @@ class AdminController extends Controller
     public function patchRegistration(PatchRegistrationRequest $request)
     {
         if ($request->has('enabled')) {
-            \Cache::rememberForever('app.registration.enabled', function () use ($request) {
-                return true;
-            });
-        } else {
-            \Cache::forget('app.registration.enabled');
-        }
+            \Cache::tags(['config', 'registration'])->forever('enabled', true);
 
-        return redirect()->back()->with('success', 'Registration has been updated.');
+            return redirect()->back()->with('success', 'Registration is now enabled.');
+        } else {
+            \Cache::tags(['config', 'registration'])->forget('enabled');
+
+            return redirect()->back()->with('success', 'Registration is now disabled');
+        }
     }
 
     public function putDefaultLibraries(PutDefaultLibrariesRequest $request)
@@ -141,16 +146,93 @@ class AdminController extends Controller
         $libraryIds = $request->has('library_ids') ? $request->get('library_ids') : [];
         $defaultLibraries = [];
 
-        \Cache::forget('app.registration.libraries');
+        \Cache::tags(['config', 'registration'])->forget('libraries');
 
         foreach ($libraryIds as $id) {
             $defaultLibraries[$id] = $id;
         }
 
-        \Cache::rememberForever('app.registration.libraries', function () use ($defaultLibraries) {
-            return $defaultLibraries;
-        });
+        \Cache::tags(['config', 'registration'])->forever('libraries', $defaultLibraries);
 
         return redirect()->back()->with('success', 'Default libraries have been updated.');
+    }
+
+    public function patchHeat(PatchHeatRequest $request)
+    {
+        if ($request->has('enabled')) {
+            \Cache::tags(['config', 'heat'])->forever('enabled', true);
+
+            return redirect()->back()->with('success', 'Heat is now enabled.');
+        } else {
+            \Cache::tags(['config', 'heat'])->forget('enabled');
+
+            return redirect()->back()->with('success', 'Heat is now disabled.');
+        }
+    }
+
+    public function postHeat(PostHeatRequest $request)
+    {
+        if ($request->get('action') === 'reset') {
+            \Cache::tags(['config', 'heat'])->forget('default');
+            \Cache::tags(['config', 'heat'])->forget('threshold');
+            \Cache::tags(['config', 'heat'])->forget('heat');
+            \Cache::tags(['config', 'heat'])->forget('cooldown');
+
+            \Cache::tags(['config', 'heat'])->forever('default', 100);
+            \Cache::tags(['config', 'heat'])->forever('threshold', 50);
+            \Cache::tags(['config', 'heat'])->forever('heat', 3.0);
+            \Cache::tags(['config', 'heat'])->forever('cooldown', 0.01);
+        } else {
+            \Cache::tags(['config', 'heat'])->forget('default');
+            \Cache::tags(['config', 'heat'])->forget('threshold');
+            \Cache::tags(['config', 'heat'])->forget('heat');
+            \Cache::tags(['config', 'heat'])->forget('cooldown');
+
+            \Cache::tags(['config', 'heat'])->forever('default', $request->get('heat_default'));
+            \Cache::tags(['config', 'heat'])->forever('threshold', $request->get('heat_threshold'));
+            \Cache::tags(['config', 'heat'])->forever('heat', $request->get('heat_heat'));
+            \Cache::tags(['config', 'heat'])->forever('cooldown', $request->get('heat_cooldown'));
+        }
+
+        return redirect()->back()->with('success', 'The heat values have been updated.');
+    }
+
+    public function patchViews(PatchViewsRequest $request)
+    {
+        if ($request->has('enabled')) {
+            \Cache::tags(['config', 'views'])->forever('enabled', true);
+
+            return redirect()->back()->with('success', 'The view counter is now enabled.');
+        } else {
+            \Cache::tags(['config', 'views'])->forever('enabled', false);
+
+            return redirect()->back()->with('success', 'The view counter is now disabled.');
+        }
+    }
+
+    public function patchViewsTime(PatchViewsTimeRequest $request)
+    {
+        if ($request->has('enabled')) {
+            \Cache::tags(['config', 'views', 'time'])->forever('enabled', true);
+
+            return redirect()->back()->with('success', 'The views counter based on time is now enabled.');
+        } else {
+            \Cache::tags(['config', 'views', 'time'])->forever('enabled', false);
+
+            return redirect()->back()->with('success', 'The view counter based on time is now disabled.');
+        }
+    }
+
+    public function putViewsTime(PutViewsTimeRequest $request)
+    {
+        if ($request->get('action') === 'reset') {
+            \Cache::tags(['config', 'views', 'time'])->forget('threshold');
+            \Cache::tags(['config', 'views', 'time'])->forever('threshold', '3h');
+        } else {
+            \Cache::tags(['config', 'views', 'time'])->forget('threshold');
+            \Cache::tags(['config', 'views', 'time'])->forever('threshold', $request->get('threshold'));
+        }
+
+        return redirect()->back()->with('success', 'The view time threshold has been updated.');
     }
 }
