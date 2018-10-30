@@ -75,10 +75,10 @@
                     <div class="input-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text">
-                                Name
+                                Keywords
                             </span>
                         </div>
-                        <input type="text" class="form-control" title="The name of the series" name="name">
+                        <input type="text" class="form-control" title="The keywords to search for" name="keywords">
                     </div>
                 </div>
 

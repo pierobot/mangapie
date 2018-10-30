@@ -313,7 +313,7 @@ class Manga
             if (empty($author) == false) {
                 // if any of the authors match the ones in the request then we keep the manga
                 foreach ($manga->authorReferences as $authorReference) {
-                    if (IntlString::strcmp($authorReference->name, $author) == 0) {
+                    if (IntlString::strcmp($authorReference->author->name, $author) == 0) {
                         $keep = true;
                         break;
                     }
@@ -323,7 +323,7 @@ class Manga
             if (empty($artist) == false) {
                 // if any of the artists match the ones in the request then we keep the manga
                 foreach ($manga->artistReferences as $artistReference) {
-                    if (IntlString::strcmp($artistReference->name, $artist) == 0) {
+                    if (IntlString::strcmp($artistReference->artist->name, $artist) == 0) {
                         $keep = true;
                         break;
                     }

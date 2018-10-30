@@ -24,7 +24,6 @@ class SearchAdvancedRequest extends FormRequest
     public function rules()
     {
         return [
-            'type' => 'required|in:advanced',
             'genres' => 'array|nullable|required_without_all:artist,author,keywords',
             'genres.*' => 'integer|exists:genres,id',
             'artist' => 'nullable|required_without_all:genres,author,keywords|string',
