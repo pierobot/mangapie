@@ -26,14 +26,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-//        $schedule->command('mangapie:scan')
-//                 ->everyFiveMinutes();
+        if (\Cache::tags(['config', 'heat'])->get('enabled', false) === true) {
+            $cronExpression = \Cache::tags(['config', 'heat'])->get('cron', '@hourly');
+            $schedule->job(new \App\Jobs\DecreaseHeats())->cron($cronExpression);
+        }
 
-        if (\Cache::tags(['config', 'heat'])->get('enabled') === true)
-            $schedule->job(new \App\Jobs\DecreaseHeats())->hourly();
-
-        if (\Config::get('app.image.clean') === true)
-            $schedule->job(new \App\Jobs\CleanupImageDisk())->daily();
+        if (\Cache::tags(['config', 'image', 'scheduler'])->get('enabled', false) === true) {
+            $cronExpression = \Cache::tags(['config', 'image', 'scheduler'])->get('cron', '@daily');
+            $schedule->job(new \App\Jobs\CleanupImageDisk())->cron($cronExpression);
+        }
     }
 
     /**

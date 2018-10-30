@@ -92,6 +92,118 @@
 
             <div class="row">
                 <div class="col-12">
+                    <h4><strong>Image</strong></h4>
+
+                    <div class="row">
+                        <div class="col-12 col-lg-6">
+                            <h5>Extraction</h5>
+
+                            {{ Form::open(['action' => 'AdminController@patchImageExtraction', 'method' => 'patch']) }}
+
+                            <div class="input-group">
+                                <div class="input-group-prepend">
+                                    <div class="input-group-text">
+                                        <div class="custom-control custom-checkbox">
+                                            @php ($extractEnabled = \Cache::tags(['config', 'image', 'extract'])->get('enabled', false))
+                                            <input class="custom-control-input" type="checkbox" title="Enable image extraction" id="extract" name="enabled" value="1" @if ($extractEnabled) checked="checked" @endif>
+                                            <label class="custom-control-label" for="extract">Enable</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="input-group-append">
+                                    <button class="btn btn-primary" type="submit">
+                                        <span class="fa fa-check"></span>
+
+                                        <span class="d-none d-lg-inline-flex">
+                                            &nbsp;Set
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            {{ Form::close() }}
+
+                        </div>
+
+                        <div class="col-12 col-lg-6">
+                            <h5>Scheduler</h5>
+
+                            {{ Form::open(['action' => 'AdminController@patchScheduler', 'method' => 'patch']) }}
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <div class="input-group-text">
+                                            <div class="custom-control custom-checkbox">
+                                                @php ($imageSchedulerEnabled = \Cache::tags(['config', 'image', 'scheduler'])->get('enabled', false))
+                                                <input class="custom-control-input" type="checkbox" title="Enable image scheduler" id="scheduler" name="enabled" value="1" @if ($imageSchedulerEnabled) checked="checked" @endif>
+                                                <label class="custom-control-label" for="scheduler">Enable</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="submit">
+                                            <span class="fa fa-check"></span>
+
+                                            <span class="d-none d-lg-inline-flex">
+                                                &nbsp;Set
+                                            </span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{ Form::close() }}
+
+                            {{ Form::open(['action' => 'AdminController@putScheduler', 'method' => 'put']) }}
+
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            Cron
+                                        </span>
+                                    </div>
+
+                                    @php ($cronExpression = \Cache::tags(['config', 'image', 'scheduler'])->get('cron', '@daily'))
+                                    <input class="form-control" type="text" title="Cron expression" id="image-cron" name="cron" @if (! empty($cronExpression)) value="{{ $cronExpression }}" @endif>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-group">
+                                        <button class="btn btn-primary form-control" type="submit" name="action" value="reset">
+                                            <span class="fa fa-exclamation-circle"></span>
+
+                                            &nbsp;Reset
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 col-lg-6">
+                                    <div class="form-group">
+                                        <button class="btn btn-primary form-control" type="submit" name="action" value="set">
+                                            <span class="fa fa-check"></span>
+
+                                            &nbsp;Set
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{ Form::close() }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="row">
+                <div class="col-12">
                     <h4><strong>Views</strong></h4>
 
                     <div class="row">

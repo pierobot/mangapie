@@ -38,6 +38,10 @@ class AppServiceProvider extends ServiceProvider
                 return false;
             }
         });
+
+        \Validator::extend('cron', function ($attribute, $value, $parameters, $validator) {
+            return \Cron\CronExpression::isValidExpression($value);
+        });
     }
 
     /**

@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Admin\PatchHeatRequest;
+use App\Http\Requests\Admin\PatchImageExtractionRequest;
+use App\Http\Requests\Admin\PatchSchedulerRequest;
 use App\Http\Requests\Admin\PatchViewsRequest;
 use App\Http\Requests\Admin\PatchViewsTimeRequest;
 use App\Http\Requests\Admin\PostHeatRequest;
 use App\Http\Requests\Admin\PutDefaultLibrariesRequest;
 use App\Http\Requests\Admin\PatchRegistrationRequest;
 
+use App\Http\Requests\Admin\PutSchedulerRequest;
 use App\Http\Requests\Admin\PutViewsTimeRequest;
 use App\Image;
 
@@ -172,22 +175,17 @@ class AdminController extends Controller
 
     public function postHeat(PostHeatRequest $request)
     {
-        if ($request->get('action') === 'reset') {
-            \Cache::tags(['config', 'heat'])->forget('default');
-            \Cache::tags(['config', 'heat'])->forget('threshold');
-            \Cache::tags(['config', 'heat'])->forget('heat');
-            \Cache::tags(['config', 'heat'])->forget('cooldown');
+        \Cache::tags(['config', 'heat'])->forget('default');
+        \Cache::tags(['config', 'heat'])->forget('threshold');
+        \Cache::tags(['config', 'heat'])->forget('heat');
+        \Cache::tags(['config', 'heat'])->forget('cooldown');
 
+        if ($request->get('action') === 'reset') {
             \Cache::tags(['config', 'heat'])->forever('default', 100);
             \Cache::tags(['config', 'heat'])->forever('threshold', 50);
             \Cache::tags(['config', 'heat'])->forever('heat', 3.0);
             \Cache::tags(['config', 'heat'])->forever('cooldown', 0.01);
         } else {
-            \Cache::tags(['config', 'heat'])->forget('default');
-            \Cache::tags(['config', 'heat'])->forget('threshold');
-            \Cache::tags(['config', 'heat'])->forget('heat');
-            \Cache::tags(['config', 'heat'])->forget('cooldown');
-
             \Cache::tags(['config', 'heat'])->forever('default', $request->get('heat_default'));
             \Cache::tags(['config', 'heat'])->forever('threshold', $request->get('heat_threshold'));
             \Cache::tags(['config', 'heat'])->forever('heat', $request->get('heat_heat'));
@@ -225,14 +223,52 @@ class AdminController extends Controller
 
     public function putViewsTime(PutViewsTimeRequest $request)
     {
+        \Cache::tags(['config', 'views', 'time'])->forget('threshold');
         if ($request->get('action') === 'reset') {
-            \Cache::tags(['config', 'views', 'time'])->forget('threshold');
             \Cache::tags(['config', 'views', 'time'])->forever('threshold', '3h');
         } else {
-            \Cache::tags(['config', 'views', 'time'])->forget('threshold');
             \Cache::tags(['config', 'views', 'time'])->forever('threshold', $request->get('threshold'));
         }
 
         return redirect()->back()->with('success', 'The view time threshold has been updated.');
+    }
+
+    public function patchImageExtraction(PatchImageExtractionRequest $request)
+    {
+        if ($request->has('enabled')) {
+            \Cache::tags(['config', 'image', 'extract'])->forever('enabled', true);
+
+            return redirect()->back()->with('success', 'Image extraction is now enabled.');
+        } else {
+            \Cache::tags(['config', 'image', 'extract'])->forget('enabled');
+
+            return redirect()->back()->with('success', 'Image extraction is now disabled.');
+        }
+    }
+
+    public function patchScheduler(PatchSchedulerRequest $request)
+    {
+        if ($request->has('enabled')) {
+            \Cache::tags(['config', 'image', 'scheduler'])->forever('enabled', true);
+
+            return redirect()->back()->with('success', 'The image cleanup scheduler is now enabled.');
+        } else {
+            \Cache::tags(['config', 'image', 'scheduler'])->forget('enabled');
+
+            return redirect()->back()->with('success', 'The image cleanup scheduler is now disabled.');
+        }
+    }
+
+    public function putScheduler(PutSchedulerRequest $request)
+    {
+        \Cache::tags(['config', 'image', 'scheduler'])->forget('cron');
+
+        if ($request->get('action') === 'reset') {
+            \Cache::tags(['config', 'image', 'scheduler'])->forever('cron', '@daily');
+        } else {
+            \Cache::tags(['config', 'image', 'scheduler'])->forever('cron', $request->get('cron'));
+        }
+
+        return redirect()->back()->with('success', 'The cron value has been updated.');
     }
 }

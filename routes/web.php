@@ -42,6 +42,10 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::patch('/config/views', 'AdminController@patchViews');
         Route::patch('/config/views/time', 'AdminController@patchViewsTime');
         Route::put('/config/views/time', 'AdminController@putViewsTime');
+
+        Route::patch('/config/image', 'AdminController@patchImageExtraction');
+        Route::patch('/config/image/scheduler', 'AdminController@patchScheduler');
+        Route::put('/config/image/scheduler', 'AdminController@putScheduler');
     });
 
     Route::prefix('avatar')->name('avatar')->group(function () {

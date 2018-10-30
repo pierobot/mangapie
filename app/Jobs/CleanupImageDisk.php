@@ -29,7 +29,7 @@ class CleanupImageDisk implements ShouldQueue
      */
     public function __construct()
     {
-        $this->threshold = \Config::get('app.heat.threshold');
+        $this->threshold = \Cache::tags(['config', 'heat'])->get('threshold', 50);
     }
 
     /**

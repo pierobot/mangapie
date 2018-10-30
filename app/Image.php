@@ -18,7 +18,7 @@ class Image
      *  @param string $contents The image buffer contents.
      *  @param int $width The desired width.
      *  @param int $height The desired height.
-     *  @return \Intervention\Image\Image or FALSE
+     *  @return \Intervention\Image\Image|FALSE
      *
      */
     public static function make($contents, $width, $height)
@@ -89,7 +89,7 @@ class Image
      */
     public static function extract(Manga $manga, Archive $archive, int $page)
     {
-        if (\Config::get('app.image.extract') === true) {
+        if (\Cache::tags(['config', 'image'])->get('extract', false) === true) {
             if (! empty($manga) && ! empty($archive) && $page > 0) {
                 $path = self::storagePath($manga, $archive);
 
@@ -160,6 +160,9 @@ class Image
      * Creates a response for an image.
      * This function is called if extraction is disabled or fails.
      *
+     * @param Manga $manga
+     * @param Archive $archive
+     * @param int $page
      * @return \Illuminate\Http\Response
      */
     public static function defaultResponse(Manga $manga, Archive $archive, int $page)
