@@ -8,7 +8,7 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row justify-content-center">
     @if (isset($manga_list))
         @foreach ($manga_list as $manga)
             <div class="col-6 col-sm-4 col-md-3 col-xl-2">
