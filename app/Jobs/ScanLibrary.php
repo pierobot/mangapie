@@ -44,7 +44,15 @@ class ScanLibrary implements ShouldQueue
         $library = Library::findOrFail($this->libraryId)->load([ 'manga', 'manga.archives' ]);
         $paths = \File::directories($library->getPath());
 
-        $this->setProgressMax(count($paths));
+        $this->setProgressMax(count($paths) + $library->manga->count());
+
+        // scan and remove nonexistent manga
+        foreach ($library->manga as $manga) {
+            if (! \File::exists($manga->path))
+                $manga->forceDelete();
+
+            $this->incrementProgress();
+        }
 
         // scan and add new directories
         foreach ($paths as $path) {
