@@ -19,35 +19,60 @@
                 $resumeUrl = URL::action('ReaderController@index', [$manga, $archive, ! empty($archiveHistory) ? $archiveHistory->page : 1]);
             @endphp
 
-            <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                <div class="card mt-1 mb-1 @if (! empty($colorType)) border-{{ $colorType }} @else @endif">
-                    <a href="{{ $resumeUrl }}">
-                        @php
-                            $isNew = $readerHistory->where('archive_id', $archive->getId())->first() != null;
-                        @endphp
+            {{-- TODO: Add something to indicate an archive is new --}}
 
-                        @if ($isNew)
-                            {{-- Add something to indicate an archive is new --}}
-                        @endif
+            <div class="col-6 col-sm-4 col-md-3 col-xl-2">
+                <div class="card mb-3 @if (! empty($colorType)) border-{{ $colorType }} @else @endif">
+                    <a href="{{ $resumeUrl }}">
                         <img class="card-img-top" src="{{ URL::action('CoverController@small', [$manga, $archive, 1]) }}">
                     </a>
-                    <div class="card-body text-center pt-2 pb-0">
-                        <div class="card-title" title="{{ $manga->name }}">
-                            <a class="card-link" title="{{ $archive->name }}" href="{{ $resumeUrl }}">{{ $archive->name }}</a>
-                        </div>
-                    </div>
-                    <div class="card-footer @if ($hasCompleted) bg-success @elseif ($hasRead) bg-warning @else @endif">
-                        <div class="row">
-                            <div class="col-12">
-                                @if ($hasRead && $hasCompleted)
-                                    <span class="fa fa-book"></span>
-                                @else
-                                    <span class="fa @if ($hasRead) fa-book-open @else fa-book @endif"></span>
-                                @endif
 
-                                <small class="@if ($hasCompleted || $hasRead) text-dark @else text-muted @endif">{{ $archive->getSize() }}</small>
+                    @php
+                        $volCh = App\Scanner::getVolumesAndChapters($archive->name);
+                        // If there is no volume or chapter in the name, or if the parsing failed
+                        // then just use the archive name :shrug:
+                        if (empty($volCh) || empty($volCh[0]))
+                            $nameVolCh = $archive->name;
+                        else
+                            $nameVolCh = $volCh[0][0];
+                    @endphp
+
+                    <div class="card-body" style="position: relative; top: -4em; height: 4em; margin-bottom: -4em; box-shadow: inset 0em -3em 8em #000000;">
+                        <a href="{{ $resumeUrl }}">
+                            <h5 class="text-center">
+                                <strong title="{{ $archive->name }}"
+                                        @if (! empty($archiveHistory))
+                                            @if ($archiveHistory->page == $archiveHistory->page_count)
+                                                class="text-success text-primary"
+                                            @else
+                                                class="text-warning text-primary"
+                                            @endif
+                                        @endif
+                                >
+                                    {{ $nameVolCh }}
+                                </strong>
+                            </h5>
+                        </a>
+                    </div>
+
+                    @if (! empty($archiveHistory))
+                        <div class="progress" style="height: 0.5em;">
+                            <div class="progress-bar @if ($hasCompleted) bg-success @else bg-warning @endif"
+                                 @if (! $hasCompleted)
+                                    style="width: {{ ($archiveHistory->page / $archiveHistory->page_count) * 100 }}%;"
+                                 @else
+                                    style="width: 100%;"
+                                 @endif
+                            >
                             </div>
                         </div>
+                    @endif
+
+                    <div class="card-footer">
+                        <small><strong>Added: </strong>{{ $archive->created_at->diffForHumans() }}</small><br>
+                        @if (! empty($archiveHistory))
+                            <small><strong>Read: </strong>{{ $archiveHistory->updated_at->diffForHumans() }}</small>
+                        @endif
                     </div>
                 </div>
             </div>
