@@ -6,7 +6,7 @@ use \Symfony\Component\Finder\Finder;
 
 class Scanner
 {
-    public static function removeExtension($str)
+    public static function removeExtension(string $str)
     {
         // extension garbage
         $pattern = "/\.\w+$/";
@@ -14,21 +14,21 @@ class Scanner
         return preg_replace($pattern, "", $str);
     }
 
-    public static function removeParenthesis($str)
+    public static function removeParenthesis(string $str)
     {
         $pattern = "/[ _\-\.]*(\(.+\)|\[.+\])[ _\-\.]*/U";
 
         return preg_replace($pattern, "", $str);
     }
 
-    public static function removeVolume($str)
+    public static function removeVolume(string $str)
     {
         $pattern = "/[ \.\_\-]*(v|vol(ume)?)[ \.\_\-]*\d+([ \.\_\-]\d+)?/i";
 
         return preg_replace($pattern, "", $str);
     }
 
-    public static function replaceUnderscoreMultipleSpace($str)
+    public static function replaceUnderscoreMultipleSpace(string $str)
     {
         /*
             do not replace periods as there are titles with them.
@@ -53,7 +53,7 @@ class Scanner
      * @param $name The name to clean.
      * @return string
      */
-    public static function clean($name)
+    public static function clean(string $name)
     {
         $result = self::removeExtension($name);
         $result = self::removeParenthesis($result);
@@ -63,7 +63,7 @@ class Scanner
         return $result;
     }
 
-    public static function getArchives($manga_id, $path, $sort = 'ascending')
+    public static function getArchives(int $manga_id, string $path, string $sort = 'ascending')
     {
         try {
             // get all the files in the path and filter by archives
@@ -98,5 +98,21 @@ class Scanner
     public static function scan(Library $library)
     {
         Jobs\ScanLibrary::dispatch($library);
+    }
+
+    /**
+     * Matches and returns a multi-dimensional array that holds the volume and/or chapter strings in a string.
+     * For example, "Soredemo Machi wa Mawatteiru - c122-130 (v16) (end) [CR].zip" will
+     * return => [["c122-130","c","","","c","","-130",],["v16","v","v",],]
+     *
+     * @param string $str
+     * @return array|bool
+     */
+    public static function getVolumesAndChapters(string $str)
+    {
+        $pattern = "/((v|vol(ume)?)|(c|ch(apter)?))[ \.\_\-]*\d+([ \.\_\-]\d+)?/i";
+        $matches = [];
+
+        return preg_match_all($pattern, $str, $matches, PREG_SET_ORDER) !== false ? $matches : false;
     }
 }
