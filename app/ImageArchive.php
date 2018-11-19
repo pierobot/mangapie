@@ -46,9 +46,10 @@ class ImageArchive
     public static function open($file_path)
     {
         $extension = ImageArchive::getExtension($file_path);
-        if ($extension == 'zip' || $extension == 'cbz')
+
+        if (preg_match("/zip|cbz/i", $extension))
             return new ImageArchiveZip($file_path);
-        elseif ($extension == 'rar' || $extension == 'cbr')
+        elseif (preg_match("/rar|cbr/i", $extension))
             return new ImageArchiveRar($file_path);
         else
             return false;

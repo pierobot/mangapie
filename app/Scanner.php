@@ -50,7 +50,7 @@ class Scanner
      * Removes typical extra information from a name.
      * For example, "Three_Word_Title   [2003]__v01-38--(Digital)-(person-Group)" will become "Three Word Title".
      *
-     * @param $name The name to clean.
+     * @param string $name The name to clean.
      * @return string
      */
     public static function clean(string $name)
@@ -68,10 +68,10 @@ class Scanner
         try {
             // get all the files in the path and filter by archives
             $files = Finder::create()->in($path)
-                ->name('*.zip')
-                ->name('*.cbz')
-                ->name('*.rar')
-                ->name('*.cbr');
+                ->name('/\.zip$/i')
+                ->name('/\.cbz$/i')
+                ->name('/\.rar$/i')
+                ->name('/\.cbr$/i');
         } catch (\InvalidArgumentException $e) {
             return false;
         }
