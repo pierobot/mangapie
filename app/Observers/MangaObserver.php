@@ -15,10 +15,10 @@ class MangaObserver
         try {
             // get all the files in the path and filter by archives
             $files = Finder::create()->in($path)
-                ->name('*.zip')
-                ->name('*.cbz')
-                ->name('*.rar')
-                ->name('*.cbr');
+                ->name('/\.zip$/i')
+                ->name('/\.cbz$/i')
+                ->name('/\.rar$/i')
+                ->name('/\.cbr$/i');
         } catch (\InvalidArgumentException $e) {
             return false;
         }

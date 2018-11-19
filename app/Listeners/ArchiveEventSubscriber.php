@@ -51,7 +51,7 @@ class ArchiveEventSubscriber
 
         if ($manga !== null) {
             $relativeName = self::relativePath($event->path, $manga->getPath());
-            $isArchive = preg_match('/\.(zip|rar|cb(z|r))$/m', $relativeName);
+            $isArchive = preg_match('/\.(zip|rar|cb(z|r))$/mi', $relativeName);
 
             if ($isArchive !== false) {
                 $archive = Archive::updateOrCreate([
@@ -72,7 +72,7 @@ class ArchiveEventSubscriber
 
         if ($manga !== null) {
             $relativeName = self::relativePath($event->path, $manga->getPath());
-            $isArchive = preg_match('/\.(zip|rar|cb(z|r))$/m', $relativeName);
+            $isArchive = preg_match('/\.(zip|rar|cb(z|r))$/mi', $relativeName);
 
             if ($isArchive) {
                 $archive = Archive::where('name', $relativeName)->first();

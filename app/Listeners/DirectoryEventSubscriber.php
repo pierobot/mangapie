@@ -94,10 +94,10 @@ class DirectoryEventSubscriber
 
             $archives = Finder::create()->in($rootPath . DIRECTORY_SEPARATOR . $name)
                 ->followLinks()
-                ->name('*.zip')
-                ->name('*.cbz')
-                ->name('*.rar')
-                ->name('*.cbr');
+                ->name('/\.zip$/i')
+                ->name('/\.cbz$/i')
+                ->name('/\.rar$/i')
+                ->name('/\.cbr$/i');
 
             $archives->sort(function ($left, $right) {
                 return strnatcasecmp($left->getRelativePathName(), $right->getRelativePathName());
