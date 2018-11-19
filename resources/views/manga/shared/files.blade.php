@@ -39,7 +39,7 @@
 
                     <div class="card-body" style="position: relative; top: -4em; height: 4em; margin-bottom: -4em; box-shadow: inset 0em -3em 8em #000000;">
                         <a href="{{ $resumeUrl }}">
-                            <h5 class="text-center">
+                            <h5 class="text-center truncate-ellipsis">
                                 <strong title="{{ $archive->name }}"
                                         @if (! empty($archiveHistory))
                                             @if ($archiveHistory->page == $archiveHistory->page_count)
