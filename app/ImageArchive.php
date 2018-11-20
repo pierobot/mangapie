@@ -6,35 +6,44 @@ use App\Interfaces\ImageArchiveInterface;
 
 class ImageArchive
 {
-    public static function getExtension($name)
+    /**
+     * Gets the extension from a file name.
+     *
+     * @param string $name
+     * @return string|false
+     */
+    public static function getExtension(string $name)
     {
         $extension = [];
 
-        $result = preg_match('/\.(\w+)$/m', $name, $extension);
+        $result = preg_match('/\.(\w+)$/', $name, $extension);
 
-        return $result != 0 ? $extension[1] : false;
+        return $result && ! empty($extension) ? $extension[1] : false;
     }
 
-    public static function isJunk($name)
+    /**
+     * Indicates whether an image should be considered useless based on its name.
+     *
+     * @param string $name
+     * @return bool
+     */
+    public static function isJunk(string $name)
     {
-        return preg_match('/^(__MACOSX|\.DS_STORE)/m', $name) == true;
+        return preg_match('/^(__MACOSX|\.DS_STORE)/', $name) != false;
     }
 
-    public static function isImage($name)
+    /**
+     * Indicates whether a file is an image or not based on its name.
+     *
+     * @param $name
+     * @return bool
+     */
+    public static function isImage(string $name)
     {
         // there are some images in junk folders that we don't care about
-        if (ImageArchive::isJunk($name) != true) {
-            $image_extensions = [
-                'jpg',
-                'jpeg',
-                'png',
-                'gif' // really rare but I've come across this.
-            ];
-
-            return in_array(self::getExtension($name), $image_extensions);
-        }
-
-        return false;
+        return ! ImageArchive::isJunk($name) ?
+            preg_match('/jpe?g|png|gif/i', self::getExtension($name)) :
+            false;
     }
 
     /**
@@ -47,9 +56,9 @@ class ImageArchive
     {
         $extension = ImageArchive::getExtension($file_path);
 
-        if (preg_match("/zip|cbz/i", $extension))
+        if (preg_match('/zip|cbz/i', $extension))
             return new ImageArchiveZip($file_path);
-        elseif (preg_match("/rar|cbr/i", $extension))
+        elseif (preg_match('/rar|cbr/i', $extension))
             return new ImageArchiveRar($file_path);
         else
             return false;
