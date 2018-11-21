@@ -66,33 +66,6 @@ class LibraryController extends Controller
         return redirect()->back();
     }
 
-    public function status(LibraryStatusRequest $request)
-    {
-        $jobIds = \Request::get('ids');
-
-        $jobs = [];
-        foreach ($jobIds as $jobId) {
-            $job = JobStatus::find($jobId);
-
-            if ($job !== null) {
-                if ($job->progress_now == 0 && $job->is_ended) {
-                    $job->progress_now = 1;
-                    $job->progress_max = 1;
-                }
-
-                $jobs[] = [
-                    'id' => $jobId,
-                    'status' => $job->status,
-                    'progress' => $job->progress_percentage,
-                ];
-            }
-        }
-
-        return response()->json([
-            'jobs' => $jobs
-        ]);
-    }
-
     public function delete(LibraryDeleteRequest $request)
     {
         $library = Library::find($request->get('library_id'));

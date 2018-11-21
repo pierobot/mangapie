@@ -120,9 +120,12 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::get('/{manga}/{archive}/{page}', 'ReaderController@image');
     });
 
+    Route::prefix('job')->name('jobs')->group(function () {
+        Route::get('/{jobStatus}', 'JobStatusController@status');
+    });
+
     Route::prefix('library')->middleware('admin')->name('library')->group(function () {
         Route::put('/', 'LibraryController@create');
-        Route::post('/', 'LibraryController@status');
         Route::patch('/', 'LibraryController@update');
         Route::delete('/', 'LibraryController@delete');
     });

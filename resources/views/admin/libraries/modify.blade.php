@@ -140,40 +140,46 @@
 @section ('scripts')
     <script type="text/javascript">
         $(function () {
-            function updateProgressBars() {
-                let progressBars = $("div.progress-bar");
-                let jobIds = [];
+            let progressBars = $("div.progress-bar");
+            let jobIds = [];
 
-                progressBars.each(function (index, pb) {
-                    if ($(pb).attr("data-job-ended") === "0") {
-                        jobIds.push(parseInt($(pb).attr("data-job-id")));
+            progressBars.each(function (index, pb) {
+                if ($(pb).attr("data-job-ended") === "0") {
+                    jobIds.push($(pb).attr("data-job-id"));
+                }
+            });
+
+            $(jobIds).each(function (i, jobId) {
+                let eventSource = new EventSource("{{ config('app.url') }}job/" + jobId);
+                eventSource["jobId"] = jobId;
+
+                eventSource.onmessage = function (event) {
+                    const job = JSON.parse(event.data);
+                    const id = job["id"];
+                    const status = job["status"];
+                    const ended = job["ended"];
+                    const finished = job["finished"];
+                    const progress = job["progress"];
+
+                    let progressBar = progressBars.filter((index, pb) => $(pb).attr("data-job-id") === `${id}`);
+
+                    if (ended === true) {
+                        eventSource.close();
                     }
-                });
 
-                if (! jobIds.length)
-                    return;
+                    progressBar.attr("data-job-progress", progress)
+                               .attr("data-job-status", status)
+                               .attr("data-job-ended", (status === "finished" || status === "failed") ? 1 : 0);
+                };
 
-                axios.post("{{ URL::action('LibraryController@status') }}", { ids: jobIds })
-                    .then(function (response) {
-                        let jobs = response.data["jobs"];
+                eventSource.onerror = function (event) {
+                    eventSource.close();
 
-                        $(jobs).each(function (index, jobData) {
-                            let progressBar = progressBars.filter((index, pb) => $(pb).attr("data-job-id") === jobData["id"].toString());
-
-                            progressBar.attr("data-job-progress", jobData["progress"])
-                                       .attr("data-job-status", jobData["status"])
-                                       .attr("data-job-ended", (jobData["status"] === "finished" || jobData["status"] === "failed") ? 1 : 0);
-                        })
-                    })
-                    .catch(function () {
-                        alert('An error was encountered. Please check your browser\'s console for more information.');
-                    })
-                    .then(function () {
-                        updateProgressBars();
-                    });
-            }
-
-            updateProgressBars();
+                    let progressBar = progressBars.filter((index, pb) => $(pb).attr("data-job-id") === `${eventSource["jobId"]}`);
+                    progressBar.attr("data-job-status", "failed")
+                               .attr("data-job-ended", 1);
+                };
+            });
         });
     </script>
 @endsection
