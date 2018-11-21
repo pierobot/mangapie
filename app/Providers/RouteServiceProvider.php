@@ -10,6 +10,7 @@ use App\Archive;
 use App\Genre;
 use App\Manga;
 use App\User;
+use Imtigger\LaravelJobStatus\JobStatus;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -42,6 +43,7 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('user', User::class);
         Route::model('manga', Manga::class);
         Route::model('person', Person::class);
+        Route::model('jobStatus', JobStatus::class);
 
         parent::boot();
     }
