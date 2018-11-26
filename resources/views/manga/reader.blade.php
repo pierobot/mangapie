@@ -1,7 +1,7 @@
 @extends ('layout')
 
 @section ('title')
-    Reader &middot; {{ $archive_name }}
+    Reader &middot; {{ $archive->name }}
 @endsection
 
 @section ('content')
@@ -12,10 +12,34 @@
         For a better viewing experience, enable javascript or permit session storage to mangapie.<br>
     </div>
 
-    @if ($page_count !== 0)
+    @php
+        $readDirection = auth()->user()->read_direction;
+
+        $previousArchive = $archive->getPreviousArchive();
+        $nextArchive = $archive->getNextArchive();
+
+        $nextUrl = false;
+        $previousUrl = false;
+
+        if ($page <= $pageCount) {
+            $nextUrl = $page == $pageCount ?
+                URL::action('ReaderController@index', [$manga->id, $nextArchive, 1]) :
+                URL::action('ReaderController@index', [$manga->id, $archive, $page + 1]);
+        }
+
+        if ($page >= 1) {
+            $previousUrl = $page == 1 ?
+                URL::action('ReaderController@index', [$manga->id, $previousArchive, $previousArchive->getPageCount()]) :
+                URL::action('ReaderController@index', [$manga->id, $archive, $page - 1]);
+        }
+
+        $preload = $archive->getPreloadUrls($page);
+    @endphp
+
+    @if ($pageCount !== 0)
         <div class="row text-center" style="padding-bottom: 60px;">
             <div class="col-12">
-                <img id="reader-image" class="h-auto w-100" src="{{ URL::action('ReaderController@image', [$id, $archive, $page]) }}">
+                <img id="reader-image" class="h-auto w-100" src="{{ URL::action('ReaderController@image', [$manga->id, $archive, $page]) }}">
             </div>
         </div>
     @endif
@@ -27,34 +51,6 @@
                 @endforeach
         </div>
     @endif
-
-    <div class="hidden">
-        @if ($readDirection === 'ltr')
-            @if ($has_prev_page)
-                <a href="{{ $prev_url }}" id="prev-image"></a>
-            @else
-                <a href="#" id="prev-image"></a>
-            @endif
-
-            @if ($has_next_page)
-                <a href="{{ $next_url }}" id="next-image"></a>
-            @else
-                <a href="#" id="next-image"></a>
-            @endif
-        @elseif ($readDirection === 'rtl')
-            @if ($has_next_page)
-                <a href="{{ $next_url }}" id="next-image"></a>
-            @else
-                <a href="#" id="next-image"></a>
-            @endif
-
-            @if ($has_prev_page)
-                <a href="{{ $prev_url }}" id="prev-image"></a>
-            @else
-                <a href="#" id="prev-image"></a>
-            @endif
-        @endif
-    </div>
 @endsection
 
 @section ('footer-contents')
@@ -90,10 +86,10 @@
             <div class="collapse navbar-collapse" id="navigation-collapse">
                 <ul class="nav navbar-nav">
                     <li class="nav-item text-center">
-                        <a class="nav-link" href="{{ URL::action('MangaController@index', [$id]) }}">
+                        <a class="nav-link" href="{{ URL::action('MangaController@index', [$manga->id]) }}">
                             <h4>
                                 <span class="fa fa-book-open"></span>
-                                &nbsp;<strong>{{ $name }}</strong>
+                                &nbsp;<strong>{{ $archive->name }}</strong>
                             </h4>
                         </a>
                     </li>
@@ -109,33 +105,33 @@
                             <div class="card-body">
                                 <div class="btn-group btn-group-lg">
                                     @if ($readDirection === 'ltr')
-                                        <a class="btn btn btn-secondary @if (! $has_prev_page) disabled @endif" href="{{ $has_prev_page ? $prev_url : "" }}" id="a-left">
+                                        <a class="btn btn btn-secondary @if (! $previousUrl) disabled @endif" href="{{ $previousUrl ? $previousUrl : "" }}" id="a-left">
                                             <span class="fa fa-chevron-left"></span>
                                         </a>
                                     @elseif ($readDirection === 'rtl')
-                                        <a class="btn btn btn-secondary @if (! $has_next_page) disabled @endif" href="{{ $has_next_page ? $next_url : "" }}" id="a-left">
+                                        <a class="btn btn btn-secondary @if (! $nextUrl) disabled @endif" href="{{ $nextUrl ? $nextUrl : "" }}" id="a-left">
                                             <span class="fa fa-chevron-left"></span>
                                         </a>
                                     @endif
 
                                     <div class="btn-group gtn-group-lg dropup" id="dropdown-page">
                                         <button class="btn btn-secondary" data-toggle="dropdown">
-                                            <span id="span-page-text">{{ $page }} of {{ $page_count }}&nbsp;</span>
+                                            <span id="span-page-text">{{ $page }} of {{ $pageCount }}&nbsp;</span>
                                             <span class="fa fa-chevron-up"></span>
                                         </button>
                                         <div class="dropdown-menu bg-secondary position-absolute">
-                                            @for ($i = 1; $i <= $page_count; $i++)
-                                                <a class="dropdown-item" href="{{ URL::action('ReaderController@index', [$id, $archive, $i]) }}">{{ $i }}</a>
+                                            @for ($i = 1; $i <= $pageCount; $i++)
+                                                <a class="dropdown-item" href="{{ URL::action('ReaderController@index', [$manga->id, $archive, $i]) }}">{{ $i }}</a>
                                             @endfor
                                         </div>
                                     </div>
 
                                     @if ($readDirection === 'ltr')
-                                        <a class="btn btn btn-secondary @if (! $has_next_page) disabled @endif" href="{{ $has_next_page ? $next_url : "" }}" id="a-right">
+                                        <a class="btn btn btn-secondary @if (! $nextUrl) disabled @endif" href="{{ $nextUrl ? $nextUrl : "" }}" id="a-right">
                                             <span class="fa fa-chevron-right"></span>
                                         </a>
                                     @elseif ($readDirection === 'rtl')
-                                        <a class="btn btn btn-secondary @if (! $has_prev_page) disabled @endif" href="{{ $has_prev_page ? $prev_url : "" }}" id="a-right">
+                                        <a class="btn btn btn-secondary @if (! $previousUrl) disabled @endif" href="{{ $previousUrl ? $previousUrl : "" }}" id="a-right">
                                             <span class="fa fa-chevron-right"></span>
                                         </a>
                                     @endif
@@ -153,11 +149,11 @@
             <div class="ml-1 mr-1"></div>
 
             @php
-                $favorite = auth()->guard()->user()->favorites->where('manga_id', $id)->first();
+                $favorite = auth()->guard()->user()->favorites->where('manga_id', $manga->id)->first();
             @endphp
             @if (empty($favorite))
                 {{ Form::open(['action' => 'FavoriteController@create', 'method' => 'post', 'class' => 'inline-form m-0']) }}
-                {{ Form::hidden('manga_id', $id) }}
+                {{ Form::hidden('manga_id', $manga->id) }}
                 <button class="navbar-toggler btn favorite-toggler" type="submit" title="Add to favorites" data-favorited="no">
                     <span class="fa fa-heart"></span>
                 </button>
@@ -172,7 +168,7 @@
             @endif
             <div class="ml-1 mr-1"></div>
 
-            <a href="{{ URL::action('MangaController@comments', [$id]) }}" title="Go to comments">
+            <a href="{{ URL::action('MangaController@comments', [$manga->id]) }}" title="Go to comments">
                 <button class="navbar-toggler btn btn-secondary">
                     <span class="fa fa-comments"></span>
                 </button>
@@ -191,7 +187,7 @@
         const g_mangaId = Number("{{ $manga->id }}");
         const g_archiveId = Number("{{ $archive->id }}");
         const g_page = Number("{{ $page }}");
-        const g_pageCount = Number("{{ $page_count }}");
+        const g_pageCount = Number("{{ $pageCount }}");
 
         {{--
             TODO: Allow images from remote disks
