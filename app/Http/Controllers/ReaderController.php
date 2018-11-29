@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\UpdateReaderHistory;
-
 use App\Archive;
 use App\Manga;
 use App\Image;

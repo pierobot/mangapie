@@ -16,21 +16,37 @@
         $readDirection = auth()->user()->read_direction;
 
         $previousArchive = $archive->getPreviousArchive();
+        $previousArchivePageCount = ! empty($previousArchive) ? $previousArchive->getPageCount() : false;
         $nextArchive = $archive->getNextArchive();
+
+        $previousArchiveUrl = ! empty($previousArchive) ?
+            URL::action('ReaderController@index', [$manga, $previousArchive, $previousArchivePageCount]) :
+            '';
+        $nextArchiveUrl = ! empty($nextArchive) ?
+            URL::action('ReaderController@index', [$manga, $nextArchive, 1]) :
+            '';
 
         $nextUrl = false;
         $previousUrl = false;
 
         if ($page <= $pageCount) {
-            $nextUrl = $page == $pageCount ?
-                URL::action('ReaderController@index', [$manga->id, $nextArchive, 1]) :
-                URL::action('ReaderController@index', [$manga->id, $archive, $page + 1]);
+            if ($page === $pageCount) {
+                $nextUrl = ! empty($nextArchive) ?
+                    URL::action('ReaderController@index', [$manga, $nextArchive, 1]) :
+                    false;
+            } else {
+                $nextUrl = URL::action('ReaderController@index', [$manga, $archive, $page + 1]);
+            }
         }
 
         if ($page >= 1) {
-            $previousUrl = $page == 1 ?
-                URL::action('ReaderController@index', [$manga->id, $previousArchive, $previousArchive->getPageCount()]) :
-                URL::action('ReaderController@index', [$manga->id, $archive, $page - 1]);
+            if ($page === 1) {
+                $previousUrl = ! empty($previousArchive) ?
+                    URL::action('ReaderController@index', [$manga, $previousArchive, $previousArchivePageCount]) :
+                    false;
+            } else {
+                $previousUrl = URL::action('ReaderController@index', [$manga, $archive, $page - 1]);
+            }
         }
 
         $preload = $archive->getPreloadUrls($page);
@@ -39,7 +55,7 @@
     @if ($pageCount !== 0)
         <div class="row text-center" style="padding-bottom: 60px;">
             <div class="col-12">
-                <img id="reader-image" class="h-auto w-100" src="{{ URL::action('ReaderController@image', [$manga->id, $archive, $page]) }}">
+                <img id="reader-image" class="h-auto w-100" src="{{ URL::action('ReaderController@image', [$manga, $archive, $page]) }}">
             </div>
         </div>
     @endif
@@ -121,7 +137,7 @@
                                         </button>
                                         <div class="dropdown-menu bg-secondary position-absolute">
                                             @for ($i = 1; $i <= $pageCount; $i++)
-                                                <a class="dropdown-item" href="{{ URL::action('ReaderController@index', [$manga->id, $archive, $i]) }}">{{ $i }}</a>
+                                                <a class="dropdown-item" href="{{ URL::action('ReaderController@index', [$manga, $archive, $i]) }}">{{ $i }}</a>
                                             @endfor
                                         </div>
                                     </div>
@@ -188,6 +204,8 @@
         const g_archiveId = Number("{{ $archive->id }}");
         const g_page = Number("{{ $page }}");
         const g_pageCount = Number("{{ $pageCount }}");
+        const g_previousArchiveUrl = @if (! empty($previousArchiveUrl)) "{{ $previousArchiveUrl }}" @else {{ 'undefined' }} @endif ;
+        const g_nextArchiveUrl = @if (! empty($nextArchiveUrl)) "{{ $nextArchiveUrl }}" @else {{ 'undefined' }} @endif ;
 
         {{--
             TODO: Allow images from remote disks
@@ -232,8 +250,6 @@
 
             if (nextPage > g_pageCount) {
                 throw "Invalid page number.";
-            } else if (nextPage === g_pageCount)  {
-                // TODO: Handle preload for next archive
             }
 
             const imageUrl = g_baseImageUrl + `${nextPage}`;
@@ -261,7 +277,12 @@
 
             // if this is the first page then we have to go the previous archive, if any.
             if (page === 1) {
-                // TODO: do what the above comment says
+                if (g_previousArchiveUrl !== undefined) {
+                    window.location = g_previousArchiveUrl;
+                } else {
+                    alert("There is no page or archive before this one.");
+                }
+
                 return;
             }
 
@@ -296,7 +317,12 @@
 
             // if this is the last page then we have to go to the next archive, if any.
             if (page === pageCount) {
-                // TODO: do waht the above comment says
+                if (g_nextArchiveUrl !== undefined) {
+                    window.location = g_nextArchiveUrl;
+                } else {
+                    alert("There is no page or archive after this one.");
+                }
+
                 return;
             }
 
