@@ -105,7 +105,7 @@
                         <a class="nav-link" href="{{ URL::action('MangaController@index', [$manga->id]) }}">
                             <h4>
                                 <span class="fa fa-book-open"></span>
-                                &nbsp;<strong>{{ $archive->name }}</strong>
+                                &nbsp;<strong>{{ $manga->name }}</strong>
                             </h4>
                         </a>
                     </li>
@@ -165,7 +165,7 @@
             <div class="ml-1 mr-1"></div>
 
             @php
-                $favorite = auth()->guard()->user()->favorites->where('manga_id', $manga->id)->first();
+                $favorite = auth()->user()->favorites->where('manga_id', $manga->id)->first();
             @endphp
             @if (empty($favorite))
                 {{ Form::open(['action' => 'FavoriteController@create', 'method' => 'post', 'class' => 'inline-form m-0']) }}
@@ -202,6 +202,7 @@
     <script type="text/javascript">
         const g_mangaId = Number("{{ $manga->id }}");
         const g_archiveId = Number("{{ $archive->id }}");
+        const g_archiveName = "{{ $archive->name }}";
         const g_page = Number("{{ $page }}");
         const g_pageCount = Number("{{ $pageCount }}");
         const g_previousArchiveUrl = @if (! empty($previousArchiveUrl)) "{{ $previousArchiveUrl }}" @else {{ 'undefined' }} @endif ;
@@ -245,11 +246,12 @@
                 throw "Invalid parameter; expected number.";
 
             let preload = $("#preload");
+            const firstPage = Number(preload.children().first().attr("id"));
             const lastPage = Number(preload.children().last().attr("id"));
             const nextPage = lastPage + 1;
 
-            if (nextPage > g_pageCount) {
-                throw "Invalid page number.";
+            if (page < firstPage || nextPage > g_pageCount) {
+                return;
             }
 
             const imageUrl = g_baseImageUrl + `${nextPage}`;
@@ -299,10 +301,9 @@
             $("#reader-image").attr("src", g_baseImageUrl + page);
             $("html, body").animate({scrollTop: '0px'}, 150);
 
-            // update the page and links in the navigation
-            $("#span-page-text").text(`${page} of ${g_pageCount}`);
+            updateNavigationControls("{{ $readDirection }}", page);
 
-            // TODO: Post to unimplemented route to update last read page
+            updateLastReadPage(g_mangaId, g_archiveId, page);
         }
 
         /**
@@ -338,12 +339,87 @@
             $("#reader-image").attr("src", g_baseImageUrl + page);
             $("html, body").animate({scrollTop: '0px'}, 150);
 
+            updateNavigationControls("{{ $readDirection }}", page);
+
             preloadBuildNext(g_mangaId, g_archiveId, page);
 
-            // update the page and links in the navigation
+            updateLastReadPage(g_mangaId, g_archiveId, page);
+        }
+
+        /**
+         * Updates the navigation controls.
+         *
+         * @param direction
+         * @param page
+         */
+        function updateNavigationControls(direction, page) {
             $("#span-page-text").text(`${page} of ${g_pageCount}`);
 
-            // TODO: Post to unimplemented route to update last read page
+            let aLeft = $("#a-left");
+            let aRight = $("#a-right");
+            let aLinksToPreviousArchive = page === 1 && g_previousArchiveUrl !== undefined;
+            let aLinksToNextArchive = page === g_pageCount && g_nextArchiveUrl !== undefined;
+
+            if (aLinksToPreviousArchive) {
+                if (direction === 'ltr') {
+                    aLeft.attr("href", g_previousArchiveUrl);
+                } else if (direction === 'rtl') {
+                    aRight.attr("href", g_previousArchiveUrl);
+                }
+            } else if (g_previousArchiveUrl !== undefined) {
+                if (direction === 'ltr') {
+                    aLeft.attr("href", g_baseReaderUrl + `${page - 1}`);
+                } else if (direction === 'rtl') {
+                    aRight.attr("href", g_baseReaderUrl + `${page - 1}`);
+                }
+            }
+
+            if (aLinksToNextArchive) {
+                if (direction === 'ltr') {
+                    aRight.attr("href", g_nextArchiveUrl);
+                } else if (direction === 'rtl') {
+                    aLeft.attr("href", g_nextArchiveUrl);
+                }
+            } else if (g_nextArchiveUrl !== undefined) {
+                if (direction === 'ltr') {
+                    aRight.attr("href", g_baseReaderUrl + `${page + 1}`);
+                } else if (direction === 'rtl') {
+                    aLeft.attr("href", g_baseReaderUrl + `${page + 1}`);
+                }
+            }
+
+            let aLeftShouldBeDisabled = false;
+            let aRightShouldBeDisabled = false;
+
+            if (direction === 'ltr') {
+                aLeftShouldBeDisabled = page === 1 && g_previousArchiveUrl === undefined;
+                aRightShouldBeDisabled = page === g_pageCount && g_nextArchiveUrl === undefined;
+            } else if (direction === 'rtl') {
+                aRightShouldBeDisabled = page === 1 && g_previousArchiveUrl === undefined;
+                aLeftShouldBeDisabled = page === g_pageCount && g_nextArchiveUrl === undefined;
+            }
+
+            if (aLeftShouldBeDisabled) {
+                aLeft.addClass("disabled");
+            } else if (aLeft.hasClass("disabled")) {
+                aLeft.removeClass("disabled");
+            }
+
+            if (aRightShouldBeDisabled) {
+                aRight.addClass("disabled");
+            } else if (aRight.hasClass("disabled")) {
+                aRight.removeClass("disabled");
+            }
+        }
+
+        function updateLastReadPage(mangaId, archiveId, page) {
+            axios.put("{{ config('app.url') }}reader/history", {
+                manga_id: mangaId,
+                archive_id: archiveId,
+                page: page
+            }).catch(error => {
+                alert("Unable to update last read page.");
+            });
         }
 
         $(function () {
@@ -360,6 +436,8 @@
             if (storageResult !== false) {
                 $("#nojs-nostorage").hide();
             }
+
+            updateLastReadPage(g_mangaId, g_archiveId, g_page);
 
             $(window).on("popstate", function (event) {
                 if (event.originalEvent.state) {
