@@ -17,9 +17,9 @@ class RecordArchiveViews
      */
     public function handle($request, Closure $next)
     {
-        if (auth()->check()) {
+        $archive = $request->route('archive');
+        if (auth()->check() && ! empty($archive)) {
             $user = auth()->user();
-            $archive = $request->route('archive');
 
             if (\Cache::tags(['config', 'views'])->get('enabled', true) == true)
                 \Queue::push(new IncrementArchiveViews($user, $archive));

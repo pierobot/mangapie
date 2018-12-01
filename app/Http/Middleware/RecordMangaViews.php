@@ -17,9 +17,10 @@ class RecordMangaViews
      */
     public function handle($request, Closure $next)
     {
-        if (auth()->check()) {
+        $manga = $request->route('manga');
+
+        if (auth()->check() && ! empty($manga)) {
             $user = auth()->user();
-            $manga = $request->route('manga');
 
             if (\Cache::tags(['config', 'views'])->get('enabled', true) == true) {
                 \Queue::push(new IncrementMangaViews($user, $manga));
