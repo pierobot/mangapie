@@ -48,4 +48,4 @@ window.axios.defaults.headers.common = {
 //     key: 'your-pusher-key'
 // });
 
-window.mpReader = require('./reader');
+window.mangapie = require('./mangapie');

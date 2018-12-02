@@ -202,7 +202,6 @@
     <script type="text/javascript">
         const g_mangaId = Number("{{ $manga->id }}");
         const g_archiveId = Number("{{ $archive->id }}");
-        const g_archiveName = "{{ $archive->name }}";
         const g_page = Number("{{ $page }}");
         const g_pageCount = Number("{{ $pageCount }}");
         const g_previousArchiveUrl = @if (! empty($previousArchiveUrl)) "{{ $previousArchiveUrl }}" @else {{ 'undefined' }} @endif ;
@@ -217,6 +216,8 @@
         const g_baseReaderUrl = `{{ config('app.url') }}reader/${g_mangaId}/${g_archiveId}/`;
 
         const g_readerKey = `reader-${g_mangaId}-${g_archiveId}`;
+
+        let g_readDirection = "{{ $readDirection }}";
 
         /**
          * Alters the DOM so that all the available images are preloaded.
@@ -273,7 +274,7 @@
          * @return void
          */
         function navigatePrevious() {
-            let readerData = window.mpReader.storageFind(`${g_mangaId}`, `${g_archiveId}`);
+            let readerData = mangapie.sessionStorage.find(g_readerKey);
             let page = readerData['page'];
             const pageCount = readerData['page_count'];
 
@@ -291,17 +292,16 @@
             // commit to the session storage and decrement the page
             readerData['page'] = --page;
 
-            window.mpReader.storagePut(`${g_mangaId}`, `${g_archiveId}`, readerData);
+            mangapie.sessionStorage.put(g_readerKey, readerData);
 
-            // update the history stack
-            history.pushState(g_readerKey, '');
-            history.replaceState(g_readerKey, '', g_baseReaderUrl + page);
+            // update the history stack and update the current URL
+            mangapie.history.pushReplace(g_readerKey, g_baseReaderUrl + page);
 
             // update the current image
             $("#reader-image").attr("src", g_baseImageUrl + page);
             $("html, body").animate({scrollTop: '0px'}, 150);
 
-            updateNavigationControls("{{ $readDirection }}", page);
+            updateNavigationControls(g_readDirection, page);
 
             updateLastReadPage(g_mangaId, g_archiveId, page);
         }
@@ -312,7 +312,7 @@
          * @return void
          */
         function navigateNext() {
-            let readerData = window.mpReader.storageFind(`${g_mangaId}`, `${g_archiveId}`);
+            let readerData = mangapie.sessionStorage.find(g_readerKey);
             let page = readerData['page'];
             const pageCount = readerData['page_count'];
 
@@ -329,17 +329,16 @@
 
             // commit to the session storage and increment the page
             readerData['page'] = ++page;
-            window.mpReader.storagePut(`${g_mangaId}`, `${g_archiveId}`, readerData);
+            mangapie.sessionStorage.put(g_readerKey, readerData);
 
-            // update the history stack
-            history.pushState(g_readerKey, '');
-            history.replaceState(g_readerKey, '', g_baseReaderUrl + page);
+            // update the history stack and update the current URL
+            mangapie.history.pushReplace(g_readerKey, g_baseReaderUrl + page);
 
             // update the current image
             $("#reader-image").attr("src", g_baseImageUrl + page);
             $("html, body").animate({scrollTop: '0px'}, 150);
 
-            updateNavigationControls("{{ $readDirection }}", page);
+            updateNavigationControls(g_readDirection, page);
 
             preloadBuildNext(g_mangaId, g_archiveId, page);
 
@@ -427,7 +426,7 @@
             preloadAll();
 
             // initialize the reader session storage
-            const storageResult = window.mpReader.storagePut(`${g_mangaId}`, `${g_archiveId}`, {
+            const storageResult = mangapie.sessionStorage.put(g_readerKey, {
                 page: g_page,
                 page_count: g_pageCount
             });
@@ -441,7 +440,7 @@
 
             $(window).on("popstate", function (event) {
                 if (event.originalEvent.state) {
-                    const data = window.mpReader.storageFind(`${g_mangaId}`, `${g_archiveId}`);
+                    const data = mangapie.sessionStorage.find(g_readerKey);
 
                     navigatePrevious();
                 }
@@ -450,21 +449,21 @@
             $("#a-left").on("click", function (e) {
                 e.preventDefault();
 
-                @if ($readDirection === 'rtl')
-                    navigateNext();
-                @elseif ($readDirection === 'ltr')
+                if (g_readDirection === "ltr") {
                     navigatePrevious();
-                @endif
+                } else if (g_readDirection === "rtl") {
+                    navigateNext();
+                }
             });
 
             $("#a-right").on("click", function (e) {
                 e.preventDefault();
 
-                @if ($readDirection === 'rtl')
-                    navigatePrevious();
-                @elseif ($readDirection === 'ltr')
+                if (g_readDirection === "ltr") {
                     navigateNext();
-                @endif
+                } else if (g_readDirection === "rtl") {
+                    navigatePrevious();
+                }
             });
 
             // set up handler for key events
@@ -481,18 +480,18 @@
 
                 if (e.keyCode === 37 || e.keyCode === 65) {
                     // left arrow or a
-                    @if ($readDirection === 'rtl')
-                        navigateNext();
-                    @elseif ($readDirection === 'ltr')
+                    if (g_readDirection === "ltr") {
                         navigatePrevious();
-                    @endif
+                    } else if (g_readDirection === "rtl") {
+                        navigateNext();
+                    }
                 } else if (e.keyCode === 39 || e.keyCode === 68) {
                     // right arrow or d
-                    @if ($readDirection === 'rtl')
-                        navigatePrevious();
-                    @elseif ($readDirection === 'ltr')
+                    if (g_readDirection === "ltr") {
                         navigateNext();
-                    @endif
+                    } else if (g_readDirection === "rtl") {
+                        navigatePrevious();
+                    }
                 }
             });
 
@@ -502,18 +501,18 @@
 
                 if (x < (width / 2)) {
                     // left side click
-                    @if ($readDirection === 'rtl')
-                        navigateNext();
-                    @elseif ($readDirection === 'ltr')
+                    if (g_readDirection === "ltr") {
                         navigatePrevious();
-                    @endif
+                    } else if (g_readDirection === "rtl") {
+                        navigateNext();
+                    }
                 } else {
                     // right side click
-                    @if ($readDirection === 'rtl')
-                        navigatePrevious();
-                    @elseif ($readDirection === 'ltr')
+                    if (g_readDirection === "ltr") {
                         navigateNext();
-                    @endif
+                    } else if (g_readDirection === "rtl") {
+                        navigatePrevious();
+                    }
                 }
             });
         });
