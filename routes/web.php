@@ -147,6 +147,8 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
 
     Route::prefix('reader')->middleware('archive_views')->name('reader')->group(function () {
         Route::get('/{manga}/{archive}/{page}', 'ReaderController@index');
+
+        Route::put('/history', 'ReaderController@putReaderHistory');
     });
 
     Route::prefix('search')->name('search')->group(function () {

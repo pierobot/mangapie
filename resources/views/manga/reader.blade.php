@@ -1,55 +1,72 @@
 @extends ('layout')
 
 @section ('title')
-    Reader &middot; {{ $archive_name }}
+    Reader &middot; {{ $archive->name }}
 @endsection
 
 @section ('content')
     @include ('shared.errors')
 
-    @if ($page_count !== 0)
+    <div class="alert alert-warning" id="nojs-nostorage">
+        It appears you either have javascript disabled or are denying mangapie access to the session storage.
+        For a better viewing experience, enable javascript or permit session storage to mangapie.<br>
+    </div>
+
+    @php
+        $readDirection = auth()->user()->read_direction;
+
+        $previousArchive = $archive->getPreviousArchive();
+        $previousArchivePageCount = ! empty($previousArchive) ? $previousArchive->getPageCount() : false;
+        $nextArchive = $archive->getNextArchive();
+
+        $previousArchiveUrl = ! empty($previousArchive) ?
+            URL::action('ReaderController@index', [$manga, $previousArchive, $previousArchivePageCount]) :
+            '';
+        $nextArchiveUrl = ! empty($nextArchive) ?
+            URL::action('ReaderController@index', [$manga, $nextArchive, 1]) :
+            '';
+
+        $nextUrl = false;
+        $previousUrl = false;
+
+        if ($page <= $pageCount) {
+            if ($page === $pageCount) {
+                $nextUrl = ! empty($nextArchive) ?
+                    URL::action('ReaderController@index', [$manga, $nextArchive, 1]) :
+                    false;
+            } else {
+                $nextUrl = URL::action('ReaderController@index', [$manga, $archive, $page + 1]);
+            }
+        }
+
+        if ($page >= 1) {
+            if ($page === 1) {
+                $previousUrl = ! empty($previousArchive) ?
+                    URL::action('ReaderController@index', [$manga, $previousArchive, $previousArchivePageCount]) :
+                    false;
+            } else {
+                $previousUrl = URL::action('ReaderController@index', [$manga, $archive, $page - 1]);
+            }
+        }
+
+        $preload = $archive->getPreloadUrls($page);
+    @endphp
+
+    @if ($pageCount !== 0)
         <div class="row text-center" style="padding-bottom: 60px;">
             <div class="col-12">
-                <img id="reader-image" class="h-auto w-100" src="{{ URL::action('ReaderController@image', [$id, $archive, $page]) }}">
+                <img id="reader-image" class="h-auto w-100" src="{{ URL::action('ReaderController@image', [$manga, $archive, $page]) }}">
             </div>
         </div>
     @endif
 
     @if ($preload !== false)
-    <div id="preload" style="display: none;">
-        @foreach ($preload as $index => $preload_url)
-            <img id="{{ $index }}" data-src="{{ $preload_url }}">
-        @endforeach
-    </div>
+        <div id="preload" style="display: none;">
+            @foreach ($preload as $index => $preload_url)
+                <img id="{{ $page + 1 + $index }}" data-src="{{ $preload_url }}">
+                @endforeach
+        </div>
     @endif
-
-    <div class="hidden">
-        @if ($readDirection === 'ltr')
-            @if ($has_prev_page)
-                <a href="{{ $prev_url }}" id="prev-image"></a>
-            @else
-                <a href="#" id="prev-image"></a>
-            @endif
-
-            @if ($has_next_page)
-                <a href="{{ $next_url }}" id="next-image"></a>
-            @else
-                <a href="#" id="next-image"></a>
-            @endif
-        @elseif ($readDirection === 'rtl')
-            @if ($has_next_page)
-                <a href="{{ $next_url }}" id="next-image"></a>
-            @else
-                <a href="#" id="next-image"></a>
-            @endif
-
-            @if ($has_prev_page)
-                <a href="{{ $prev_url }}" id="prev-image"></a>
-            @else
-                <a href="#" id="prev-image"></a>
-            @endif
-        @endif
-    </div>
 @endsection
 
 @section ('footer-contents')
@@ -85,17 +102,17 @@
             <div class="collapse navbar-collapse" id="navigation-collapse">
                 <ul class="nav navbar-nav">
                     <li class="nav-item text-center">
-                        <a class="nav-link" href="{{ URL::action('MangaController@index', [$id]) }}">
+                        <a class="nav-link" href="{{ URL::action('MangaController@index', [$manga->id]) }}">
                             <h4>
                                 <span class="fa fa-book-open"></span>
-                                &nbsp;<strong>{{ $name }}</strong>
+                                &nbsp;<strong>{{ $manga->name }}</strong>
                             </h4>
                         </a>
                     </li>
                     <li class="nav-item text-center">
                         <label class="text-muted">
                             <span class="fa fa-file-archive"></span>
-                            &nbsp;<span class="text-muted">{{ $archive->name }}</span>
+                            &nbsp;<span class="text-muted" id="span-archive-name">{{ $archive->name }}</span>
                         </label>
                     </li>
 
@@ -104,33 +121,33 @@
                             <div class="card-body">
                                 <div class="btn-group btn-group-lg">
                                     @if ($readDirection === 'ltr')
-                                        <a class="btn btn btn-secondary @if (! $has_prev_page) disabled @endif" href="{{ $has_prev_page ? $prev_url : "" }}">
+                                        <a class="btn btn btn-secondary @if (! $previousUrl) disabled @endif" href="{{ $previousUrl ? $previousUrl : "" }}" id="a-left">
                                             <span class="fa fa-chevron-left"></span>
                                         </a>
                                     @elseif ($readDirection === 'rtl')
-                                        <a class="btn btn btn-secondary @if (! $has_next_page) disabled @endif" href="{{ $has_next_page ? $next_url : "" }}">
+                                        <a class="btn btn btn-secondary @if (! $nextUrl) disabled @endif" href="{{ $nextUrl ? $nextUrl : "" }}" id="a-left">
                                             <span class="fa fa-chevron-left"></span>
                                         </a>
                                     @endif
 
-                                    <div class="btn-group gtn-group-lg dropup">
+                                    <div class="btn-group gtn-group-lg dropup" id="dropdown-page">
                                         <button class="btn btn-secondary" data-toggle="dropdown">
-                                            {{ $page }} of {{ $page_count }}&nbsp;
+                                            <span id="span-page-text">{{ $page }} of {{ $pageCount }}&nbsp;</span>
                                             <span class="fa fa-chevron-up"></span>
                                         </button>
                                         <div class="dropdown-menu bg-secondary position-absolute">
-                                            @for ($i = 1; $i <= $page_count; $i++)
-                                                <a class="dropdown-item" href="{{ URL::action('ReaderController@index', [$id, $archive, $i]) }}">{{ $i }}</a>
+                                            @for ($i = 1; $i <= $pageCount; $i++)
+                                                <a class="dropdown-item" href="{{ URL::action('ReaderController@index', [$manga, $archive, $i]) }}">{{ $i }}</a>
                                             @endfor
                                         </div>
                                     </div>
 
                                     @if ($readDirection === 'ltr')
-                                        <a class="btn btn btn-secondary @if (! $has_next_page) disabled @endif" href="{{ $has_next_page ? $next_url : "" }}">
+                                        <a class="btn btn btn-secondary @if (! $nextUrl) disabled @endif" href="{{ $nextUrl ? $nextUrl : "" }}" id="a-right">
                                             <span class="fa fa-chevron-right"></span>
                                         </a>
                                     @elseif ($readDirection === 'rtl')
-                                        <a class="btn btn btn-secondary @if (! $has_prev_page) disabled @endif" href="{{ $has_prev_page ? $prev_url : "" }}">
+                                        <a class="btn btn btn-secondary @if (! $previousUrl) disabled @endif" href="{{ $previousUrl ? $previousUrl : "" }}" id="a-right">
                                             <span class="fa fa-chevron-right"></span>
                                         </a>
                                     @endif
@@ -148,11 +165,11 @@
             <div class="ml-1 mr-1"></div>
 
             @php
-                $favorite = auth()->guard()->user()->favorites->where('manga_id', $id)->first();
+                $favorite = auth()->user()->favorites->where('manga_id', $manga->id)->first();
             @endphp
             @if (empty($favorite))
                 {{ Form::open(['action' => 'FavoriteController@create', 'method' => 'post', 'class' => 'inline-form m-0']) }}
-                {{ Form::hidden('manga_id', $id) }}
+                {{ Form::hidden('manga_id', $manga->id) }}
                 <button class="navbar-toggler btn favorite-toggler" type="submit" title="Add to favorites" data-favorited="no">
                     <span class="fa fa-heart"></span>
                 </button>
@@ -167,7 +184,7 @@
             @endif
             <div class="ml-1 mr-1"></div>
 
-            <a href="{{ URL::action('MangaController@comments', [$id]) }}" title="Go to comments">
+            <a href="{{ URL::action('MangaController@comments', [$manga->id]) }}" title="Go to comments">
                 <button class="navbar-toggler btn btn-secondary">
                     <span class="fa fa-comments"></span>
                 </button>
@@ -183,7 +200,271 @@
 
 @section ('scripts')
     <script type="text/javascript">
+        const g_mangaId = Number("{{ $manga->id }}");
+        const g_archiveId = Number("{{ $archive->id }}");
+        const g_page = Number("{{ $page }}");
+        const g_pageCount = Number("{{ $pageCount }}");
+        const g_previousArchiveUrl = @if (! empty($previousArchiveUrl)) "{{ $previousArchiveUrl }}" @else {{ 'undefined' }} @endif ;
+        const g_nextArchiveUrl = @if (! empty($nextArchiveUrl)) "{{ $nextArchiveUrl }}" @else {{ 'undefined' }} @endif ;
+
+        {{--
+            TODO: Allow images from remote disks
+
+            Just use the app url in the config for now.
+         --}}
+        const g_baseImageUrl = `{{ config('app.url') }}image/${g_mangaId}/${g_archiveId}/`;
+        const g_baseReaderUrl = `{{ config('app.url') }}reader/${g_mangaId}/${g_archiveId}/`;
+
+        const g_readerKey = `reader-${g_mangaId}-${g_archiveId}`;
+
+        let g_readDirection = "{{ $readDirection }}";
+
+        /**
+         * Alters the DOM so that all the available images are preloaded.
+         *
+         * @return void
+         */
+        function preloadAll() {
+            $('#preload > img').each(function () {
+                $(this).attr('src', $(this).attr('data-src'));
+            });
+        }
+
+        function preloadBuildPrevious(mangaId, archiveId, page) {
+            // TODO: implement
+        }
+
+        /**
+         * Constructs and appends an img child element to #preload.
+         * This function will also remove the first preload element.
+         *
+         * @param mangaId
+         * @param archiveId
+         * @param page
+         */
+        function preloadBuildNext(mangaId, archiveId, page) {
+            if (typeof mangaId !== "number" || typeof archiveId !== "number" || typeof page !== "number")
+                throw "Invalid parameter; expected number.";
+
+            let preload = $("#preload");
+            const firstPage = Number(preload.children().first().attr("id"));
+            const lastPage = Number(preload.children().last().attr("id"));
+            const nextPage = lastPage + 1;
+
+            if (page < firstPage || nextPage > g_pageCount) {
+                return;
+            }
+
+            const imageUrl = g_baseImageUrl + `${nextPage}`;
+
+            // create the new image and prepend
+            let img = $("<img />").attr({
+                "id": nextPage,
+                "src": imageUrl,
+                "data-src": imageUrl
+            });
+
+            preload.append(img);
+            preload.children().first().remove();
+        }
+
+        /**
+         * Performs navigation to the previous page.
+         *
+         * @return void
+         */
+        function navigatePrevious() {
+            let readerData = mangapie.sessionStorage.find(g_readerKey);
+            let page = readerData['page'];
+            const pageCount = readerData['page_count'];
+
+            // if this is the first page then we have to go the previous archive, if any.
+            if (page === 1) {
+                if (g_previousArchiveUrl !== undefined) {
+                    window.location = g_previousArchiveUrl;
+                } else {
+                    alert("There is no page or archive before this one.");
+                }
+
+                return;
+            }
+
+            // commit to the session storage and decrement the page
+            readerData['page'] = --page;
+
+            mangapie.sessionStorage.put(g_readerKey, readerData);
+
+            // update the history stack and update the current URL
+            mangapie.history.pushReplace(g_readerKey, g_baseReaderUrl + page);
+
+            // update the current image
+            $("#reader-image").attr("src", g_baseImageUrl + page);
+            $("html, body").animate({scrollTop: '0px'}, 150);
+
+            updateNavigationControls(g_readDirection, page);
+
+            updateLastReadPage(g_mangaId, g_archiveId, page);
+        }
+
+        /**
+         * Performs navigation to the next page.
+         *
+         * @return void
+         */
+        function navigateNext() {
+            let readerData = mangapie.sessionStorage.find(g_readerKey);
+            let page = readerData['page'];
+            const pageCount = readerData['page_count'];
+
+            // if this is the last page then we have to go to the next archive, if any.
+            if (page === pageCount) {
+                if (g_nextArchiveUrl !== undefined) {
+                    window.location = g_nextArchiveUrl;
+                } else {
+                    alert("There is no page or archive after this one.");
+                }
+
+                return;
+            }
+
+            // commit to the session storage and increment the page
+            readerData['page'] = ++page;
+            mangapie.sessionStorage.put(g_readerKey, readerData);
+
+            // update the history stack and update the current URL
+            mangapie.history.pushReplace(g_readerKey, g_baseReaderUrl + page);
+
+            // update the current image
+            $("#reader-image").attr("src", g_baseImageUrl + page);
+            $("html, body").animate({scrollTop: '0px'}, 150);
+
+            updateNavigationControls(g_readDirection, page);
+
+            preloadBuildNext(g_mangaId, g_archiveId, page);
+
+            updateLastReadPage(g_mangaId, g_archiveId, page);
+        }
+
+        /**
+         * Updates the navigation controls.
+         *
+         * @param direction
+         * @param page
+         */
+        function updateNavigationControls(direction, page) {
+            $("#span-page-text").text(`${page} of ${g_pageCount}`);
+
+            let aLeft = $("#a-left");
+            let aRight = $("#a-right");
+            let aLinksToPreviousArchive = page === 1 && g_previousArchiveUrl !== undefined;
+            let aLinksToNextArchive = page === g_pageCount && g_nextArchiveUrl !== undefined;
+
+            if (aLinksToPreviousArchive) {
+                if (direction === 'ltr') {
+                    aLeft.attr("href", g_previousArchiveUrl);
+                } else if (direction === 'rtl') {
+                    aRight.attr("href", g_previousArchiveUrl);
+                }
+            } else if (g_previousArchiveUrl !== undefined) {
+                if (direction === 'ltr') {
+                    aLeft.attr("href", g_baseReaderUrl + `${page - 1}`);
+                } else if (direction === 'rtl') {
+                    aRight.attr("href", g_baseReaderUrl + `${page - 1}`);
+                }
+            }
+
+            if (aLinksToNextArchive) {
+                if (direction === 'ltr') {
+                    aRight.attr("href", g_nextArchiveUrl);
+                } else if (direction === 'rtl') {
+                    aLeft.attr("href", g_nextArchiveUrl);
+                }
+            } else if (g_nextArchiveUrl !== undefined) {
+                if (direction === 'ltr') {
+                    aRight.attr("href", g_baseReaderUrl + `${page + 1}`);
+                } else if (direction === 'rtl') {
+                    aLeft.attr("href", g_baseReaderUrl + `${page + 1}`);
+                }
+            }
+
+            let aLeftShouldBeDisabled = false;
+            let aRightShouldBeDisabled = false;
+
+            if (direction === 'ltr') {
+                aLeftShouldBeDisabled = page === 1 && g_previousArchiveUrl === undefined;
+                aRightShouldBeDisabled = page === g_pageCount && g_nextArchiveUrl === undefined;
+            } else if (direction === 'rtl') {
+                aRightShouldBeDisabled = page === 1 && g_previousArchiveUrl === undefined;
+                aLeftShouldBeDisabled = page === g_pageCount && g_nextArchiveUrl === undefined;
+            }
+
+            if (aLeftShouldBeDisabled) {
+                aLeft.addClass("disabled");
+            } else if (aLeft.hasClass("disabled")) {
+                aLeft.removeClass("disabled");
+            }
+
+            if (aRightShouldBeDisabled) {
+                aRight.addClass("disabled");
+            } else if (aRight.hasClass("disabled")) {
+                aRight.removeClass("disabled");
+            }
+        }
+
+        function updateLastReadPage(mangaId, archiveId, page) {
+            axios.put("{{ config('app.url') }}reader/history", {
+                manga_id: mangaId,
+                archive_id: archiveId,
+                page: page
+            }).catch(error => {
+                alert("Unable to update last read page.");
+            });
+        }
+
         $(function () {
+
+            preloadAll();
+
+            // initialize the reader session storage
+            const storageResult = mangapie.sessionStorage.put(g_readerKey, {
+                page: g_page,
+                page_count: g_pageCount
+            });
+
+            // hide the warning if javascript is enabled and we have access to session storage
+            if (storageResult !== false) {
+                $("#nojs-nostorage").hide();
+            }
+
+            updateLastReadPage(g_mangaId, g_archiveId, g_page);
+
+            $(window).on("popstate", function (event) {
+                if (event.originalEvent.state) {
+                    const data = mangapie.sessionStorage.find(g_readerKey);
+
+                    navigatePrevious();
+                }
+            });
+
+            $("#a-left").on("click", function (e) {
+                e.preventDefault();
+
+                if (g_readDirection === "ltr") {
+                    navigatePrevious();
+                } else if (g_readDirection === "rtl") {
+                    navigateNext();
+                }
+            });
+
+            $("#a-right").on("click", function (e) {
+                e.preventDefault();
+
+                if (g_readDirection === "ltr") {
+                    navigateNext();
+                } else if (g_readDirection === "rtl") {
+                    navigatePrevious();
+                }
+            });
 
             // set up handler for key events
             $(document).on('keyup', function (e) {
@@ -199,24 +480,19 @@
 
                 if (e.keyCode === 37 || e.keyCode === 65) {
                     // left arrow or a
-                    @if ($readDirection === 'rtl')
-                        window.location = $('#next-image').attr('href');
-                    @elseif ($readDirection === 'ltr')
-                        window.location = $('#prev-image').attr('href');
-                    @endif
+                    if (g_readDirection === "ltr") {
+                        navigatePrevious();
+                    } else if (g_readDirection === "rtl") {
+                        navigateNext();
+                    }
                 } else if (e.keyCode === 39 || e.keyCode === 68) {
                     // right arrow or d
-                    @if ($readDirection === 'rtl')
-                        window.location = $('#prev-image').attr('href');
-                    @elseif ($readDirection === 'ltr')
-                        window.location = $('#next-image').attr('href');
-                    @endif
+                    if (g_readDirection === "ltr") {
+                        navigateNext();
+                    } else if (g_readDirection === "rtl") {
+                        navigatePrevious();
+                    }
                 }
-            });
-
-            // go through each img in #preload and load it
-            $('#preload > img').each(function () {
-                $(this).attr('src', $(this).attr('data-src'));
             });
 
             $('#reader-image').click(function (eventData) {
@@ -225,18 +501,18 @@
 
                 if (x < (width / 2)) {
                     // left side click
-                    @if ($readDirection === 'rtl')
-                        window.location = $('#next-image').attr('href');
-                    @elseif ($readDirection === 'ltr')
-                        window.location = $('#prev-image').attr('href');
-                    @endif
+                    if (g_readDirection === "ltr") {
+                        navigatePrevious();
+                    } else if (g_readDirection === "rtl") {
+                        navigateNext();
+                    }
                 } else {
                     // right side click
-                    @if ($readDirection === 'rtl')
-                        window.location = $('#prev-image').attr('href');
-                    @elseif ($readDirection === 'ltr')
-                        window.location = $('#next-image').attr('href');
-                    @endif
+                    if (g_readDirection === "ltr") {
+                        navigateNext();
+                    } else if (g_readDirection === "rtl") {
+                        navigatePrevious();
+                    }
                 }
             });
         });

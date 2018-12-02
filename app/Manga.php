@@ -480,44 +480,6 @@ class Manga
         return $archives;
     }
 
-    /**
-     *  Gets the adjacent archive in relation to $name.
-     *
-     *  @param string $name The name of the current archive.
-     *  @param bool $next Boolean value that indicates to get the next or previous archive.
-     *  @return mixed On success, an object containing the name, size, and modified
-     *                date of the archive; on failure, FALSE.
-     */
-    public function getAdjacentArchive($name, $next = true)
-    {
-        if (empty($name))
-            return false;
-
-        $archives = $this->getArchives();
-        if (empty($archives))
-            return false;
-
-        // find the index of $name in $archives
-        for ($i = 0, $max = count($archives) - 1; $i < $max; $i++) {
-            // if the names match then we can get the next archive
-            if ($archives[$i]->getName() == $name) {
-                if ($next === false) {
-                    // previous archive wanted
-                    // check if we were given the first archive
-                    if ($i == 0)
-                        break;
-
-                    return $archives[$i - 1];
-                } else {
-                    // next archive wanted
-                    return $archives[$i + 1];
-                }
-            }
-        }
-
-        return false;
-    }
-
     public function setMangaUpdatesId($id)
     {
         $this->mu_id = $id;
