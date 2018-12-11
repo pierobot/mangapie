@@ -37,10 +37,8 @@ class ReaderController extends Controller
 
     public function putReaderHistory(PutReaderHistoryRequest $request)
     {
-        // TODO: Remove the lines below and the archive_name attribute in favor of archive_id, which will require a migration
-        // I have no clue why I used archive_name. No clue. Well I'm not even at v0.1 so w/e atpRtsd
-        $manga = Manga::findOrFail($request->get('manga_id'));
-        $archive = Archive::findOrFail($request->get('archive_id'));
+        $manga = Manga::findOrFail($request->get('manga_id'))->load('archives');
+        $archive = $manga->archives->find($request->get('archive_id'));
 
         $imgArchive = ImageArchive::open($manga->path . DIRECTORY_SEPARATOR . $archive->name);
         if ($imgArchive === false)
@@ -54,13 +52,13 @@ class ReaderController extends Controller
 
         ReaderHistory::updateOrCreate([
             'user_id' => $request->user()->id,
-            'manga_id' => $request->get('manga_id'),
-            'archive_name' => $archive->name,
+            'manga_id' => $manga->id,
+            'archive_id' => $archive->id,
             'page_count' => $pageCount,
         ], [
             'user_id' => $request->user()->id,
-            'manga_id' => $request->get('manga_id'),
-            'archive_name' => $archive->name,
+            'manga_id' => $manga->id,
+            'archive_id' => $archive->id,
             'page' => $request->get('page'),
             'page_count' => $pageCount,
         ]);

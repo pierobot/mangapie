@@ -6,7 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class ReaderHistory extends Model
 {
-    protected $fillable = ['user_id', 'manga_id', 'archive_name', 'page', 'page_count'];
+    protected $guarded = [
+        'id',
+        'created_at',
+        'updated_at'
+    ];
 
     public function getId()
     {

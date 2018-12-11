@@ -9,7 +9,7 @@
         @foreach ($archives as $archive)
             @php
                 $readerHistory = $user->readerHistory->where('manga_id', $manga->id);
-                $archiveHistory = $readerHistory->where('archive_name', $archive->name)->first();
+                $archiveHistory = $readerHistory->where('archive_id', $archive->id)->first();
                 $hasRead = ! empty($archiveHistory);
                 $hasCompleted = $hasRead ? $archiveHistory->page === $archiveHistory->page_count : false;
 
@@ -56,7 +56,7 @@
                     </div>
 
                     @if (! empty($archiveHistory))
-                        <div class="progress" style="height: 0.5em;">
+                        <div class="progress" style="height: 0.5em;" title="Page {{ $archiveHistory->page }}">
                             <div class="progress-bar @if ($hasCompleted) bg-success @else bg-warning @endif"
                                  @if (! $hasCompleted)
                                     style="width: {{ ($archiveHistory->page / $archiveHistory->page_count) * 100 }}%;"
