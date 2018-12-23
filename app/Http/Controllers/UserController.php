@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\User\PutStatusRequest;
 use App\Http\Requests\User\UserCreateRequest;
 use App\Http\Requests\User\UserDeleteRequest;
 use App\Http\Requests\User\UserEditRequest;
@@ -103,5 +104,53 @@ class UserController extends Controller
         $request->session()->flash('success', 'User was successfully deleted!');
 
         return redirect()->back();
+    }
+
+    public function putStatus(PutStatusRequest $request)
+    {
+        $user = $request->user()->load(['completed', 'dropped', 'onhold', 'planned', 'reading']);
+        $mangaId = $request->get('manga_id');
+        $status = $request->get('status');
+
+        try {
+            \DB::transaction(function () use ($status, $user, $mangaId) {
+
+                // a series can only belong in one of these tables
+                $old = $user->completed->where('manga_id', $mangaId)->first();
+                $old = empty($old) ? $user->dropped->where('manga_id', $mangaId)->first() : $old;
+                $old = empty($old) ? $user->onHold->where('manga_id', $mangaId)->first() : $old;
+                $old = empty($old) ? $user->planned->where('manga_id', $mangaId)->first() : $old;
+                $old = empty($old) ? $user->reading->where('manga_id', $mangaId)->first() : $old;
+
+                if (! empty($old))
+                    $old->forceDelete();
+
+                if ($status === 'completed') {
+                    $user->completed()->updateOrCreate([
+                        'manga_id' => $mangaId
+                    ]);
+                } elseif ($status === 'dropped') {
+                    $user->dropped()->updateOrCreate([
+                        'manga_id' => $mangaId
+                    ]);
+                } elseif ($status === 'on_hold') {
+                    $user->onHold()->updateOrCreate([
+                        'manga_id' => $mangaId
+                    ]);
+                } elseif ($status === 'planned') {
+                    $user->planned()->updateOrCreate([
+                        'manga_id' => $mangaId
+                    ]);
+                } elseif ($status === 'reading') {
+                    $user->reading()->updateOrCreate([
+                        'manga_id' => $mangaId
+                    ]);
+                }
+            });
+
+            return redirect()->back();
+        } catch (\Throwable $exception) {
+            return redirect()->back()->withErrors('Unable to update series status. Try again later.');
+        }
     }
 }

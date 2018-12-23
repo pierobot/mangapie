@@ -12,9 +12,6 @@ span.fa::before {
 // Variables
 @import "variables";
 
-//$input-group-addon-bg: $gray-200;
-//$input-group-addon-border-color: $gray-200;
-
 // Bootstrap
 @import "~bootstrap/scss/bootstrap";
 
@@ -23,3 +20,6 @@ span.fa::before {
 @import "manga.edit";
 @import "reader";
 @import "shapes";
+
+// jquery-bar-rating
+@import "jquery-bar-rating/fontawesome-stars";

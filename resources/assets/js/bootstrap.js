@@ -11,6 +11,8 @@ window.$ = window.jQuery = require('jquery');
 
 require('popper.js');
 require('bootstrap');
+require('bootstrap-3-typeahead');
+require('jquery-bar-rating');
 
 /**
  * Vue is a modern JavaScript library for building interactive web interfaces

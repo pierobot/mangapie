@@ -1,0 +1,43 @@
+.br-theme-fontawesome-stars-o .br-widget {
+  height: 28px;
+  white-space: nowrap;
+}
+.br-theme-fontawesome-stars-o .br-widget a {
+  font: normal normal normal 13px/1 'Font Awesome 5 Free';
+  font-weight: 500;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  text-decoration: none;
+  color: #FFB600;
+  margin-right: 4px;
+}
+.br-theme-fontawesome-stars-o .br-widget a:after {
+  font-family: "Font Awesome 5 Free";
+  font-weight: 900;
+  content: '\f005';
+  color: #d2d2d2;
+}
+.br-theme-fontawesome-stars-o .br-widget a.br-active:after {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  content: '\f005';
+  color: #FFB600;
+}
+.br-theme-fontawesome-stars-o .br-widget a.br-selected:after {
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+  content: '\f005';
+  color: #FFB600;
+}
+.br-theme-fontawesome-stars-o .br-widget .br-current-rating {
+  display: none;
+}
+.br-theme-fontawesome-stars-o .br-readonly a {
+  cursor: default;
+}
+
+.br-theme-fontawesome-stars-o .br-widget a.br-fractional:after {
+  font-weight:900;
+  content: '\f089';
+  color: #FFB600;
+}

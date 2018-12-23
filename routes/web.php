@@ -163,6 +163,8 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::get('/{user}', 'UserController@index');
         Route::get('/{user}/comments', 'UserController@comments');
         Route::get('/{user}/activity', 'UserController@activity');
+
+        Route::put('/status', 'UserController@putStatus');
     });
 
     Route::prefix('users')->middleware('admin')->name('users')->group(function () {
@@ -184,7 +186,6 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
 
     Route::prefix('vote')->name('votes')->group(function() {
         Route::put('/', 'VoteController@put');
-        Route::patch('/', 'VoteController@patch');
         Route::delete('/', 'VoteController@delete');
     });
 

@@ -11,5 +11,15 @@ class PluralizationServiceProvider extends ServiceProvider {
     {
         Inflector::rules('plural', ['uninflected' => ['manga']]);
         Inflector::rules('plural', ['uninflected' => ['^(.*)information']]);
+
+        Inflector::rules('plural', [
+            'uninflected' => [
+                'completed',
+                'dropped',
+                'on_?hold',
+                'planned',
+                'reading'
+            ]
+        ]);
     }
 }
