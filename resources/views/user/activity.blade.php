@@ -33,7 +33,7 @@
                                         <h5>{{ $favorite->manga->name }}</h5>
                                     </a>
 
-                                    <span class="text-muted">{{ $favorite->created_at->diffForHumans() }}</span>
+                                    <span class="text-muted">{{ $favorite->updated_at->diffForHumans() }}</span>
                                 </div>
                             </div>
                         </div>
@@ -60,7 +60,7 @@
                                         <h5>{{ $read->manga->name }}</h5>
                                     </a>
 
-                                    <span class="text-muted">{{ $read->created_at->diffForHumans() }}</span>
+                                    <span class="text-muted">{{ $read->updated_at->diffForHumans() }}</span>
                                 </div>
                             </div>
                         </div>

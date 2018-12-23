@@ -36,7 +36,7 @@
     </div>
 
     <div class="d-flex d-md-none flex-wrap">
-        <div class="card w-100">
+        <div class="card w-100 mb-3">
             <div class="card-body">
                 <div class="media">
                     <img src="{{ URL::action('AvatarController@index', [$user]) }}" width="80">
