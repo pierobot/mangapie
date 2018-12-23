@@ -43,27 +43,28 @@ class SearchController extends Controller
         $libraryIds = LibraryPrivilege::getIds();
 
         $results = Manga::search($keywords)
-                        ->filter(function ($manga) use ($libraryIds) {
-                            foreach ($libraryIds as $libraryId) {
-                                if ($manga->library->id == $libraryId)
-                                    return true;
-                            }
+            ->filter(function ($manga) use ($libraryIds) {
+                foreach ($libraryIds as $libraryId) {
+                    if ($manga->library->id == $libraryId)
+                        return true;
+                }
 
-                            return false;
-                        })
-                        ->sortBy('name');
+                return false;
+            })
+            ->sortBy('name');
 
         $currentPage = \Input::get('page', 1);
-        $manga_list = new LengthAwarePaginator($results->forPage($currentPage, 18), $results->count(), 18);
-        $manga_list->withPath(\Request::getBaseUrl())
-                   ->appends([
-                       'type' => 'basic',
-                       'keywords' => $keywords
-                   ]);
+        $mangaList = new LengthAwarePaginator($results->forPage($currentPage, 18), $results->count(), 18);
+        $mangaList->onEachSide(1)
+            ->withPath(\Request::getBaseUrl())
+            ->appends([
+                'type' => 'basic',
+                'keywords' => $keywords
+            ]);
 
         return view('home.index')
-            ->with('header', 'Search Results (' . $manga_list->total() . ')')
-            ->with('manga_list', $manga_list);
+            ->with('header', 'Search Results (' . $mangaList->total() . ')')
+            ->with('manga_list', $mangaList);
     }
 
     private function doAdvancedSearch($genres, $author, $artist, $keywords)
@@ -72,20 +73,21 @@ class SearchController extends Controller
         $total = $results->count();
 
         $current_page = \Input::get('page', 1);
-        $manga_list = new LengthAwarePaginator($results->forPage($current_page, 18), $total, 18);
+        $mangaList = new LengthAwarePaginator($results->forPage($current_page, 18), $total, 18);
 
-        $manga_list = $manga_list->withPath(\Request::getBaseUrl())
-                                 ->appends([
-                                     'type' => 'advanced',
-                                     'keywords' => $keywords,
-                                     'genres' => $genres,
-                                     'author' => $author,
-                                     'artist' => $artist
-                                 ]);
+        $mangaList = $mangaList->onEachSide(1)
+            ->withPath(\Request::getBaseUrl())
+            ->appends([
+                'type' => 'advanced',
+                'keywords' => $keywords,
+                'genres' => $genres,
+                'author' => $author,
+                'artist' => $artist
+            ]);
 
         return view('home.advancedsearch')
             ->with('header', 'Search Results (' . $total . ')')
-            ->with('manga_list', $manga_list);
+            ->with('manga_list', $mangaList);
     }
 
     public function basic(SearchRequest $request)

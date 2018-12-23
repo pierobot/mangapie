@@ -24,7 +24,7 @@ class FavoriteController extends Controller
                              ->orderBy('name', 'asc')
                              ->paginate(18);
 
-        $favoriteList->withPath(\Config::get('app.url'));
+        $favoriteList->onEachSide(1)->withPath(\Config::get('app.url'));
 
         return view('favorites.index')
             ->with('manga_list', $favoriteList)

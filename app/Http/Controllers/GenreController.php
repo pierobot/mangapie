@@ -19,13 +19,13 @@ class GenreController extends Controller
         $libraryIds = LibraryPrivilege::getIds();
 
         $references = GenreReference::where('genre_id', $genre->getId())
-                                    ->get()
-                                    ->load('manga')
-                                    ->filter(function ($reference) use ($libraryIds) {
-                                        foreach ($libraryIds as $libraryId) {
-                                            return $reference->manga->getLibraryId() == $libraryId;
-                                        }
-                                    });
+            ->get()
+            ->load('manga')
+            ->filter(function ($reference) use ($libraryIds) {
+                foreach ($libraryIds as $libraryId) {
+                    return $reference->manga->getLibraryId() == $libraryId;
+                }
+            });
 
         $results = [];
         foreach ($references as $reference) {
@@ -35,12 +35,12 @@ class GenreController extends Controller
 
         $results = collect($results)->sortBy('name');
 
-        $manga_list = new LengthAwarePaginator($results->forPage($page, 18), $results->count(), 18);
-        $manga_list->withPath(\Request::getBaseUrl());
+        $mangaList = new LengthAwarePaginator($results->forPage($page, 18), $results->count(), 18);
+        $mangaList->onEachSide(1)->withPath(\Request::getBaseUrl());
 
         return view('home.genre')
             ->with('header', 'Genre: ' . $genre->getName() . ' (' . $results->count() . ')')
             ->with('genre', $genre)
-            ->with('manga_list', $manga_list);
+            ->with('manga_list', $mangaList);
     }
 }

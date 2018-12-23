@@ -27,13 +27,14 @@ class HomeController extends Controller
             $user->privileges->each(function (LibraryPrivilege $privilege) use (&$libraryIds) {
                 $libraryIds[] = $privilege->getLibraryId();
             });
-            
+
             $mangaList = Manga::whereIn('library_id', $libraryIds)
                               ->orderBy('name', 'asc')
                               ->paginate(18);
         }
 
-        $mangaList->withPath(\Config::get('app.url'));
+        $mangaList->onEachSide(1)
+                  ->withPath(\Config::get('app.url'));
 
         return view('home.index')->with('manga_list', $mangaList);
     }
