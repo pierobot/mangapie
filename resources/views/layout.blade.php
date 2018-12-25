@@ -84,7 +84,7 @@
                         <a class="nav-link" href="{{ URL::action('FavoriteController@index') }}"><span class="fa fa-heart"></span>&nbsp;Favorites</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ URL::action('UserController@statistics', [auth()->user()]) }}"><span class="fa fa-list-alt"></span>&nbsp;My lists</a>
+                        <a class="nav-link" href="{{ URL::action('UserController@statistics', [auth()->user()]) }}"><span class="fa fa-list-alt"></span>&nbsp;Lists</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ URL::action('UserSettingsController@index') }}"><span class="fa fa-cog"></span>&nbsp;Settings</a>

@@ -1,5 +1,9 @@
 @extends ('lists.layout')
 
+@section ('title')
+    {{ $user->name }}'s Planned &colon;&colon; Mangapie
+@endsection
+
 @section ('list-content')
     @component ('lists.nav-pills', ['active' => 'planned', 'user' => $user])
     @endcomponent
