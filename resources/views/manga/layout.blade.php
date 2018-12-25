@@ -18,7 +18,7 @@
     <div class="row">
         <div class="col-12">
             <div class="d-flex d-sm-none">
-                <div class="card">
+                <div class="card w-100">
                     <div class="card-header">
                         <h5 class="mb-0">
                             {{ $manga->name }}

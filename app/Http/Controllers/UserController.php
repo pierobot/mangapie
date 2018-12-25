@@ -56,6 +56,64 @@ class UserController extends Controller
         ]);
     }
 
+    public function statistics(User $user = null)
+    {
+        if (empty ($user))
+            $user = request()->user();
+
+        return view('lists.statistics')->with('user', $user);
+    }
+
+    public function completed(User $user = null)
+    {
+        if (empty ($user))
+            $user = request()->user();
+
+        $user = $user->load('completed');
+
+        return view('lists.completed')->with('user', $user);
+    }
+
+    public function dropped(User $user = null)
+    {
+        if (empty ($user))
+            $user = request()->user();
+
+        $user = $user->load('dropped');
+
+        return view('lists.dropped')->with('user', $user);
+    }
+
+    public function onHold(User $user = null)
+    {
+        if (empty ($user))
+            $user = request()->user();
+
+        $user = $user->load('onhold');
+
+        return view('lists.onhold')->with('user', $user);
+    }
+
+    public function reading(User $user = null)
+    {
+        if (empty ($user))
+            $user = request()->user();
+
+        $user = $user->load('reading');
+
+        return view('lists.reading')->with('user', $user);
+    }
+
+    public function planned(User $user = null)
+    {
+        if (empty ($user))
+            $user = request()->user();
+
+        $user = $user->load('planned');
+
+        return view('lists.planned')->with('user', $user);
+    }
+
     public function create(UserCreateRequest $request)
     {
         // create the user
