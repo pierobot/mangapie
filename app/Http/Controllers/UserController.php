@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\User\PutStatusRequest;
 use App\Http\Requests\User\UserCreateRequest;
 use App\Http\Requests\User\UserDeleteRequest;
 use App\Http\Requests\User\UserEditRequest;
@@ -55,6 +56,64 @@ class UserController extends Controller
         ]);
     }
 
+    public function statistics(User $user = null)
+    {
+        if (empty ($user))
+            $user = request()->user();
+
+        return view('lists.statistics')->with('user', $user);
+    }
+
+    public function completed(User $user = null)
+    {
+        if (empty ($user))
+            $user = request()->user();
+
+        $user = $user->load('completed');
+
+        return view('lists.completed')->with('user', $user);
+    }
+
+    public function dropped(User $user = null)
+    {
+        if (empty ($user))
+            $user = request()->user();
+
+        $user = $user->load('dropped');
+
+        return view('lists.dropped')->with('user', $user);
+    }
+
+    public function onHold(User $user = null)
+    {
+        if (empty ($user))
+            $user = request()->user();
+
+        $user = $user->load('onhold');
+
+        return view('lists.onhold')->with('user', $user);
+    }
+
+    public function reading(User $user = null)
+    {
+        if (empty ($user))
+            $user = request()->user();
+
+        $user = $user->load('reading');
+
+        return view('lists.reading')->with('user', $user);
+    }
+
+    public function planned(User $user = null)
+    {
+        if (empty ($user))
+            $user = request()->user();
+
+        $user = $user->load('planned');
+
+        return view('lists.planned')->with('user', $user);
+    }
+
     public function create(UserCreateRequest $request)
     {
         // create the user
@@ -103,5 +162,53 @@ class UserController extends Controller
         $request->session()->flash('success', 'User was successfully deleted!');
 
         return redirect()->back();
+    }
+
+    public function putStatus(PutStatusRequest $request)
+    {
+        $user = $request->user()->load(['completed', 'dropped', 'onhold', 'planned', 'reading']);
+        $mangaId = $request->get('manga_id');
+        $status = $request->get('status');
+
+        try {
+            \DB::transaction(function () use ($status, $user, $mangaId) {
+
+                // a series can only belong in one of these tables
+                $old = $user->completed->where('manga_id', $mangaId)->first();
+                $old = empty($old) ? $user->dropped->where('manga_id', $mangaId)->first() : $old;
+                $old = empty($old) ? $user->onHold->where('manga_id', $mangaId)->first() : $old;
+                $old = empty($old) ? $user->planned->where('manga_id', $mangaId)->first() : $old;
+                $old = empty($old) ? $user->reading->where('manga_id', $mangaId)->first() : $old;
+
+                if (! empty($old))
+                    $old->forceDelete();
+
+                if ($status === 'completed') {
+                    $user->completed()->updateOrCreate([
+                        'manga_id' => $mangaId
+                    ]);
+                } elseif ($status === 'dropped') {
+                    $user->dropped()->updateOrCreate([
+                        'manga_id' => $mangaId
+                    ]);
+                } elseif ($status === 'on_hold') {
+                    $user->onHold()->updateOrCreate([
+                        'manga_id' => $mangaId
+                    ]);
+                } elseif ($status === 'planned') {
+                    $user->planned()->updateOrCreate([
+                        'manga_id' => $mangaId
+                    ]);
+                } elseif ($status === 'reading') {
+                    $user->reading()->updateOrCreate([
+                        'manga_id' => $mangaId
+                    ]);
+                }
+            });
+
+            return redirect()->back();
+        } catch (\Throwable $exception) {
+            return redirect()->back()->withErrors('Unable to update series status. Try again later.');
+        }
     }
 }

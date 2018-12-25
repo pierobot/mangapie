@@ -8,10 +8,17 @@
     @include ('shared.success')
     @include ('shared.errors')
 
+    @php
+        $completed = ! empty($user->completed->where('manga_id', $manga->id)->first());
+        $dropped = ! empty($user->dropped->where('manga_id', $manga->id)->first());
+        $onHold = ! empty($user->onHold->where('manga_id', $manga->id)->first());
+        $reading = ! empty($user->reading->where('manga_id', $manga->id)->first());
+    @endphp
+
     <div class="row">
         <div class="col-12">
-            <div class="d-flex d-sm-none flex-column">
-                <div class="card">
+            <div class="d-flex d-sm-none">
+                <div class="card w-100">
                     <div class="card-header">
                         <h5 class="mb-0">
                             {{ $manga->name }}
@@ -19,14 +26,10 @@
                     </div>
 
                     <img class="card-img" src="{{ URL::action('CoverController@mediumDefault', [$manga]) }}">
-
-                    <div class="d-flex justify-content-center mt-3 mb-3">
-                        @include ('manga.shared.actions')
-                    </div>
                 </div>
             </div>
 
-            <div class="d-none d-sm-flex flex-column">
+            <div class="d-none d-sm-flex">
                 <div class="card">
                     <div class="card-header">
                         <h4 class="mb-0">
@@ -37,10 +40,6 @@
                         <div class="row">
                             <div class="col-sm-4">
                                 <img class="img-fluid" src="{{ URL::action('CoverController@mediumDefault', [$manga]) }}">
-
-                                <div class="d-flex justify-content-center mt-3 mb-3">
-                                    @include ('manga.shared.actions')
-                                </div>
                             </div>
 
                             <div class="col-sm-8">

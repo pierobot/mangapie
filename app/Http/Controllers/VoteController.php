@@ -12,24 +12,13 @@ class VoteController extends Controller
     {
         $user = $request->user();
 
-        $user->votes()->create([
-            'manga_id' => $request->get('manga_id'),
+        $user->votes()->updateOrCreate([
+            'manga_id' => $request->get('manga_id')
+        ], [
             'rating' => $request->get('rating')
         ]);
 
-        return redirect()->back()->with('success', 'Your vote was successfully created.');
-    }
-
-    public function patch(VotePatchRequest $request)
-    {
-        $user = $request->user();
-
-        $user->votes()->update([
-            'id' => $request->get('vote_id'),
-            'rating' => $request->get('rating')
-        ]);
-
-        return redirect()->back()->with('success', 'Your vote was successfully updated.');
+        return response()->make();
     }
 
     public function delete(VoteDeleteRequest $request)

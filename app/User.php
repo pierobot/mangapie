@@ -91,32 +91,32 @@ class User extends Authenticatable
 
     public function favorites()
     {
-        return $this->hasMany(\App\Favorite::class, 'user_id', 'id');
+        return $this->hasMany(\App\Favorite::class);
     }
 
     public function privileges()
     {
-        return $this->hasMany(\App\LibraryPrivilege::class, 'user_id', 'id');
+        return $this->hasMany(\App\LibraryPrivilege::class);
     }
 
     public function watchReferences()
     {
-        return $this->hasMany(\App\WatchReference::class, 'user_id', 'id');
+        return $this->hasMany(\App\WatchReference::class);
     }
 
     public function watchNotifications()
     {
-        return $this->hasMany(\App\WatchNotification::class, 'user_id', 'id');
+        return $this->hasMany(\App\WatchNotification::class);
     }
 
     public function readerHistory()
     {
-        return $this->hasMany(\App\ReaderHistory::class, 'user_id', 'id');
+        return $this->hasMany(\App\ReaderHistory::class);
     }
 
     public function votes()
     {
-        return $this->hasMany(\App\Vote::class, 'user_id', 'id');
+        return $this->hasMany(\App\Vote::class);
     }
 
     public function archiveViews()
@@ -132,5 +132,45 @@ class User extends Authenticatable
     public function comments()
     {
         return $this->hasMany(\App\Comment::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function completed()
+    {
+        return $this->hasMany(\App\Completed::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function dropped()
+    {
+        return $this->hasMany(\App\Dropped::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function onHold()
+    {
+        return $this->hasMany(\App\OnHold::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function planned()
+    {
+        return $this->hasMany(\App\Planned::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function reading()
+    {
+        return $this->hasMany(\App\Reading::class);
     }
 }

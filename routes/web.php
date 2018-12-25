@@ -130,6 +130,15 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::delete('/', 'LibraryController@delete');
     });
 
+    Route::prefix('lists')->name('lists')->group(function () {
+        Route::get('/{user?}', 'UserController@statistics');
+        Route::get('/completed/{user?}', 'UserController@completed');
+        Route::get('/dropped/{user?}', 'UserController@dropped');
+        Route::get('/onhold/{user?}', 'UserController@onHold');
+        Route::get('/reading/{user?}', 'UserController@reading');
+        Route::get('/planned/{user?}', 'UserController@planned');
+    });
+
     Route::prefix('manga')->middleware('manga_views')->name('manga')->group(function () {
         Route::get('/{manga}/{sort?}', 'MangaController@index');
         Route::get('/{manga}/files/{sort?}', 'MangaController@files');
@@ -163,6 +172,8 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
         Route::get('/{user}', 'UserController@index');
         Route::get('/{user}/comments', 'UserController@comments');
         Route::get('/{user}/activity', 'UserController@activity');
+
+        Route::put('/status', 'UserController@putStatus');
     });
 
     Route::prefix('users')->middleware('admin')->name('users')->group(function () {
@@ -184,7 +195,6 @@ Route::middleware(['auth', 'last_seen'])->group(function () {
 
     Route::prefix('vote')->name('votes')->group(function() {
         Route::put('/', 'VoteController@put');
-        Route::patch('/', 'VoteController@patch');
         Route::delete('/', 'VoteController@delete');
     });
 
