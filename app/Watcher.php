@@ -212,7 +212,7 @@ final class Watcher
     protected function root($descriptor)
     {
         for ($tmp = $descriptor;
-             $tmp !== null && $tmp->hasParent();
+             ! empty($tmp) && $tmp->hasParent();
              $tmp = $this->descriptor($tmp->getParent())) {
             ;
         }

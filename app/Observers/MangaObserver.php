@@ -46,26 +46,40 @@ class MangaObserver
         if (\Config::get('app.env') !== 'testing')
             MangaUpdates::autofill($manga);
 
-        $path = $manga->getPath();
+        $path = $manga->path;
         $archives = self::getArchives($path);
         if (empty($archives))
             return;
 
         foreach ($archives as $archive) {
-            /**
-             * If the file is not writable then we can ignore it because we will
-             * either receive a watch event for it or it will be manually added with a library scan.
-             */
-            if (\File::isWritable($path) === false)
+            $archivePath = $path . DIRECTORY_SEPARATOR . $archive['name'];
+            $handle = fopen($archivePath, 'r+b');
+            if (! $handle)
                 continue;
 
-            Archive::updateOrCreate([
-                'manga_id' => $manga->getId(),
-                'name' => $archive['name'],
-                'size' => $archive['size']
-            ]);
+            /**
+             * Attempt to acquire an exclusive lock on the file.
+             *
+             * If the archive is incomplete because it's currently being written to,
+             * then we should not be able to acquire an exclusive lock.
+             *
+             * If the operation would block or returns false, then that means
+             * it's probably safe to assume it's incomplete - so ignore it.
+             * When it becomes complete, we will get the IN_CLOSE_WRITE event.
+             */
+            $wouldBlock = false;
+            $locked = flock($handle, LOCK_EX | LOCK_NB, $wouldBlock);
+            if ($locked && ! $wouldBlock) {
+                flock($handle, LOCK_UN);
 
-            // there is no need to fire a new archive event because no one will be 'watching'
+                Archive::updateOrCreate([
+                    'manga_id' => $manga->id,
+                    'name' => $archive['name'],
+                    'size' => $archive['size']
+                ]);
+            }
+
+            fclose($handle);
         }
     }
 }

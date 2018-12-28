@@ -172,11 +172,23 @@ class WatchTest extends TestCase
         ],
     ];
 
+    private $names6 = [
+        [
+            'name' => 'A Bride\'s Story',
+            'archives' => [
+                'A Bride\'s Story v01 (2011) (Digital) (danke-Empire).cbz',
+                'A Bride\'s Story v02 (2011) (Digital) (danke-Empire).cbz',
+                'A Bride\'s Story v03 (2012) (Digital) (danke-Empire).cbz',
+            ]
+        ]
+    ];
+
     protected static $root1;
     protected static $root2;
     protected static $root3;
     protected static $root4;
     protected static $root5;
+    protected static $root6;
 
     public static function setUpBeforeClass()
     {
@@ -185,6 +197,7 @@ class WatchTest extends TestCase
         self::$root3 = getcwd() . DIRECTORY_SEPARATOR . "tests/Data/Libraries/manga3";
         self::$root4 = getcwd() . DIRECTORY_SEPARATOR . "tests/Data/Libraries/manga4";
         self::$root5 = getcwd() . DIRECTORY_SEPARATOR . "tests/Data/Libraries/manga5";
+        self::$root6 = getcwd() . DIRECTORY_SEPARATOR . 'tests/Data/Libraries/manga6';
     }
 
     public function setUp()
@@ -224,6 +237,11 @@ class WatchTest extends TestCase
         Library::create([
             'name' => 'manga5',
             'path' => self::$root5 . DIRECTORY_SEPARATOR . 'dest'
+        ]);
+
+        Library::create([
+            'name' => 'manga6',
+            'path' => self::$root6
         ]);
     }
 
@@ -595,5 +613,58 @@ class WatchTest extends TestCase
 
         shell_exec("rm -rf tests/Data/Libraries/manga5/src/[!.gitignore]*");
         shell_exec("rm -rf tests/Data/Libraries/manga5/dest/[!.gitignore]*");
+    }
+
+    public function testIncompleteArchives()
+    {
+        $root = self::$root6;
+
+        $watch = new Watcher();
+        $watch->track($root);
+
+        foreach ($this->names6 as $item) {
+            $name = $item["name"];
+            $path = $root . DIRECTORY_SEPARATOR . $name;
+
+            if (file_exists($path))
+                continue;
+
+            mkdir($path);
+            $watch->go(true);
+
+            foreach ($item['archives'] as $archive) {
+                $archivePath = $path . DIRECTORY_SEPARATOR . $archive;
+                $file = fopen($archivePath, 'w+b');
+                $locked = flock($file, LOCK_EX);
+                if (! $file || ! $locked) {
+                    throw new \RuntimeException('Unable to create or lock test file.');
+                }
+
+                $watch->go(true);
+
+                $this->assertDatabaseMissing('archives', [
+                    'name' => $archive,
+                    'size' => 3
+                ]);
+
+                fwrite($file, 'asd');
+
+                flock($file, LOCK_UN);
+                fclose($file);
+
+                $watch->go(true);
+
+                $this->assertDatabaseHas('archives', [
+                    'name' => $archive,
+                    'size' => 3
+                ]);
+
+                unlink($archivePath);
+                $watch->go(true);
+            }
+
+            rmdir($path);
+            $watch->go(true);
+        }
     }
 }
