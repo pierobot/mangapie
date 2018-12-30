@@ -4,13 +4,67 @@
     Reader &middot; {{ $archive->name }}
 @endsection
 
+@section ('header-contents')
+    <div class="navbar navbar-dark bg-dark sticky-top">
+        {{--This navbar and the main one do not have the same height, and I do not want to set a max-height.--}}
+        {{--As a result, the quick search controls become slightly visible below this navbar.--}}
+        {{--Adding a top margin somewhat solves this.--}}
+        {{--TODO: There should be a better solution to this, right?--}}
+        <div class="container mt-1">
+            <div class="d-flex d-md-none flex-column w-66">
+                <a class="text-truncate" href="{{ action('MangaController@index', [$manga]) }}">{{ $manga->name }}</a>
+                <small class="text-muted text-truncate">{{ $archive->name }}</small>
+            </div>
+            <div class="d-none d-md-flex flex-column w-75">
+                <a class="text-truncate" href="{{ action('MangaController@index', [$manga]) }}">{{ $manga->name }}</a>
+                <small class="text-muted text-truncate">{{ $archive->name }}</small>
+            </div>
+
+            <button class="btn btn-secondary navbar-toggler ml-auto mr-2" data-toggle="collapse" data-target="#navigation-collapse" title="Open reader settings">
+                <span class="fa fa-cog"></span>
+            </button>
+
+            <button class="btn btn-secondary navbar-toggler" onclick="toggleMainNavbar();">
+                <span class="fa fa-toggle-down" id="navbar-toggler"></span>
+            </button>
+
+            <div class="collapse navbar-collapse mt-2" id="navigation-collapse">
+                <ul class="nav navbar-nav text-right">
+                    <li class="nav-item">
+                        <strong>Reading direction</strong>
+                    </li>
+                    <li class="nav-item">
+                        <div class="form-inline d-inline-flex">
+                            <div class="form-row">
+                                <div class="col-4">
+                                    <div class="custom-control custom-radio">
+                                        <input class="custom-control-input" type="radio" id="direction-rtl" name="direction" value="rtl">
+                                        <label class="custom-control-label" for="direction-rtl">Left</label>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="custom-control custom-radio">
+                                        <input class="custom-control-input" type="radio" id="direction-ltr" name="direction" value="ltr">
+                                        <label class="custom-control-label" for="direction-ltr">Right</label>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="custom-control custom-radio">
+                                        <input class="custom-control-input" type="radio" id="direction-vrt" name="direction" value="vrt">
+                                        <label class="custom-control-label" for="direction-vrt">Vertical</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+@endsection
+
 @section ('content')
     @include ('shared.errors')
-
-    <div class="alert alert-warning" id="nojs-nostorage">
-        It appears you either have javascript disabled or are denying mangapie access to the session storage.
-        For a better viewing experience, enable javascript or permit session storage to mangapie.<br>
-    </div>
 
     @php
         $readDirection = auth()->user()->read_direction;
@@ -53,9 +107,43 @@
     @endphp
 
     @if ($pageCount !== 0)
-        <div class="row text-center" style="padding-bottom: 60px;">
-            <div class="col-12">
-                <img id="reader-image" class="h-auto w-100" src="{{ URL::action('ReaderController@image', [$manga, $archive, $page]) }}">
+        <div class="reader-image-container pt-3">
+            <img id="reader-image" class="w-100 h-auto" src="{{ URL::action('ReaderController@image', [$manga, $archive, $page]) }}">
+        </div>
+
+        <div class="row justify-content-between mt-2">
+            <div class="col text-left mt-auto pr-0">
+                @if ($readDirection === 'ltr')
+                    <a @if (empty($previousArchiveUrl)) class="btn btn-secondary disabled" @else class="btn btn-secondary" href="{{ ! empty($previousArchiveUrl) ? $previousArchiveUrl : '#' }}" @endif id="a-left">
+                        <span class="fa fa-fast-backward"></span>
+                    </a>
+                @else
+                    <a @if (empty($nextArchiveUrl)) class="btn btn-secondary disabled" @else class="btn btn-secondary" href="{{ ! empty($nextArchiveUrl) ? $nextArchiveUrl : '#' }}" @endif id="a-left">
+                        <span class="fa fa-fast-backward"></span>
+                    </a>
+                @endif
+            </div>
+
+            <div class="col-8 col-md-9">
+                <input id="page-slider" class="w-auto" type="text"
+                       data-min="1"
+                       data-max="{{ $pageCount }}"
+                       data-step="1"
+                       data-from="{{ $page }}"
+                       data-skin="round"
+                       data-type="single">
+            </div>
+
+            <div class="col text-right mt-auto pl-0">
+                @if ($readDirection === 'ltr')
+                    <a @if (empty($nextArchiveUrl)) class="btn btn-secondary disabled" @else class="btn btn-secondary" href="{{ ! empty($nextArchiveUrl) ? $nextArchiveUrl : '#' }}" @endif id="a-right">
+                        <span class="fa fa-fast-forward"></span>
+                    </a>
+                @else
+                    <a @if (empty($previousArchiveUrl)) class="btn btn-secondary disabled" @else class="btn btn-secondary" href="{{ ! empty($previousArchiveUrl) ? $previousArchiveUrl : '#' }}" @endif id="a-right">
+                        <span class="fa fa-fast-forward"></span>
+                    </a>
+                @endif
             </div>
         </div>
     @endif
@@ -64,138 +152,9 @@
         <div id="preload" style="display: none;">
             @foreach ($preload as $index => $preload_url)
                 <img id="{{ $page + 1 + $index }}" data-src="{{ $preload_url }}">
-                @endforeach
+            @endforeach
         </div>
     @endif
-@endsection
-
-@section ('footer-contents')
-    <nav class="navbar navbar-dark bg-dark fixed-bottom">
-        <div class="container">
-
-            {{--<div class="collapse navbar-collapse" id="reader-navbar-settings-collapse-div">--}}
-                {{--<ul class="nav navbar-nav">--}}
-                    {{--<li class="nav-item">--}}
-                        {{--<div class="card bg-transparent border-0">--}}
-                            {{--<div class="card-body p-0 m-2">--}}
-                                {{--{{ Form::open(['action' => 'ReaderSettingsController@put', 'method' => 'put', 'class' => 'inline-form']) }}--}}
-
-                                {{--<div class="input-group">--}}
-                                    {{--<div class="input-group-prepend">--}}
-                                        {{--<label class="input-group-text" for="direction">Direction</label>--}}
-                                    {{--</div>--}}
-
-                                    {{--<select class="custom-select" id="direction">--}}
-                                        {{--<option value="ltr">Left-to-Right</option>--}}
-                                        {{--<option value="rtl">Right-to-Left</option>--}}
-                                    {{--</select>--}}
-
-                                {{--</div>--}}
-
-                                {{--{{ Form::close() }}--}}
-                            {{--</div>--}}
-                        {{--</div>--}}
-                    {{--</li>--}}
-                {{--</ul>--}}
-            {{--</div>--}}
-
-            <div class="collapse navbar-collapse" id="navigation-collapse">
-                <ul class="nav navbar-nav">
-                    <li class="nav-item text-center">
-                        <a class="nav-link" href="{{ URL::action('MangaController@index', [$manga->id]) }}">
-                            <h4>
-                                <span class="fa fa-book-open"></span>
-                                &nbsp;<strong>{{ $manga->name }}</strong>
-                            </h4>
-                        </a>
-                    </li>
-                    <li class="nav-item text-center">
-                        <label class="text-muted">
-                            <span class="fa fa-file-archive"></span>
-                            &nbsp;<span class="text-muted" id="span-archive-name">{{ $archive->name }}</span>
-                        </label>
-                    </li>
-
-                    <li class="nav-item">
-                        <div class="card text-center bg-transparent border-0">
-                            <div class="card-body">
-                                <div class="btn-group btn-group-lg">
-                                    @if ($readDirection === 'ltr')
-                                        <a class="btn btn btn-secondary @if (! $previousUrl) disabled @endif" href="{{ $previousUrl ? $previousUrl : "" }}" id="a-left">
-                                            <span class="fa fa-chevron-left"></span>
-                                        </a>
-                                    @elseif ($readDirection === 'rtl')
-                                        <a class="btn btn btn-secondary @if (! $nextUrl) disabled @endif" href="{{ $nextUrl ? $nextUrl : "" }}" id="a-left">
-                                            <span class="fa fa-chevron-left"></span>
-                                        </a>
-                                    @endif
-
-                                    <div class="btn-group gtn-group-lg dropup" id="dropdown-page">
-                                        <button class="btn btn-secondary" data-toggle="dropdown">
-                                            <span id="span-page-text">{{ $page }} of {{ $pageCount }}&nbsp;</span>
-                                            <span class="fa fa-chevron-up"></span>
-                                        </button>
-                                        <div class="dropdown-menu bg-secondary position-absolute">
-                                            @for ($i = 1; $i <= $pageCount; $i++)
-                                                <a class="dropdown-item" href="{{ URL::action('ReaderController@index', [$manga, $archive, $i]) }}">{{ $i }}</a>
-                                            @endfor
-                                        </div>
-                                    </div>
-
-                                    @if ($readDirection === 'ltr')
-                                        <a class="btn btn btn-secondary @if (! $nextUrl) disabled @endif" href="{{ $nextUrl ? $nextUrl : "" }}" id="a-right">
-                                            <span class="fa fa-chevron-right"></span>
-                                        </a>
-                                    @elseif ($readDirection === 'rtl')
-                                        <a class="btn btn btn-secondary @if (! $previousUrl) disabled @endif" href="{{ $previousUrl ? $previousUrl : "" }}" id="a-right">
-                                            <span class="fa fa-chevron-right"></span>
-                                        </a>
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-
-            {{-- disabled for now --}}
-            <button disabled class="navbar-toggler ml-auto btn btn-secondary" type="button" data-toggle="collapse" data-target="#reader-navbar-settings-collapse-div" aria-expanded="false" title="Open settings">
-                <span class="fa fa-cog text-white-50"></span>
-            </button>
-            <div class="ml-1 mr-1"></div>
-
-            @php
-                $favorite = auth()->user()->favorites->where('manga_id', $manga->id)->first();
-            @endphp
-            @if (empty($favorite))
-                {{ Form::open(['action' => 'FavoriteController@create', 'method' => 'post', 'class' => 'inline-form m-0']) }}
-                {{ Form::hidden('manga_id', $manga->id) }}
-                <button class="navbar-toggler btn favorite-toggler" type="submit" title="Add to favorites" data-favorited="no">
-                    <span class="fa fa-heart"></span>
-                </button>
-                {{ Form::close() }}
-            @else
-                {{ Form::open(['action' => 'FavoriteController@delete', 'method' => 'delete', 'class' => 'inline-form m-0']) }}
-                {{ Form::hidden('favorite_id', $favorite->id) }}
-                <button class="navbar-toggler btn favorite-toggler" type="submit" title="Remove from favorites" data-favorited="yes">
-                    <span class="fa fa-heart"></span>
-                </button>
-                {{ Form::close() }}
-            @endif
-            <div class="ml-1 mr-1"></div>
-
-            <a href="{{ URL::action('MangaController@comments', [$manga->id]) }}" title="Go to comments">
-                <button class="navbar-toggler btn btn-secondary">
-                    <span class="fa fa-comments"></span>
-                </button>
-            </a>
-            <div class="ml-1 mr-1"></div>
-
-            <button class="navbar-toggler btn btn-secondary mr-auto" type="button" data-toggle="collapse" data-target="#navigation-collapse" title="Navigation">
-                <span class="fa fa-arrows-alt-h"></span>
-            </button>
-        </div>
-    </nav>
 @endsection
 
 @section ('scripts')
@@ -216,8 +175,11 @@
         const g_baseReaderUrl = `{{ config('app.url') }}reader/${g_mangaId}/${g_archiveId}/`;
 
         const g_readerKey = `reader-${g_mangaId}-${g_archiveId}`;
+        const g_directionKey = `direction-${g_mangaId}-${g_archiveId}`;
 
         let g_readDirection = "{{ $readDirection }}";
+
+        let g_slider = undefined;
 
         /**
          * Alters the DOM so that all the available images are preloaded.
@@ -352,63 +314,9 @@
          * @param page
          */
         function updateNavigationControls(direction, page) {
-            $("#span-page-text").text(`${page} of ${g_pageCount}`);
-
-            let aLeft = $("#a-left");
-            let aRight = $("#a-right");
-            let aLinksToPreviousArchive = page === 1 && g_previousArchiveUrl !== undefined;
-            let aLinksToNextArchive = page === g_pageCount && g_nextArchiveUrl !== undefined;
-
-            if (aLinksToPreviousArchive) {
-                if (direction === 'ltr') {
-                    aLeft.attr("href", g_previousArchiveUrl);
-                } else if (direction === 'rtl') {
-                    aRight.attr("href", g_previousArchiveUrl);
-                }
-            } else if (g_previousArchiveUrl !== undefined) {
-                if (direction === 'ltr') {
-                    aLeft.attr("href", g_baseReaderUrl + `${page - 1}`);
-                } else if (direction === 'rtl') {
-                    aRight.attr("href", g_baseReaderUrl + `${page - 1}`);
-                }
-            }
-
-            if (aLinksToNextArchive) {
-                if (direction === 'ltr') {
-                    aRight.attr("href", g_nextArchiveUrl);
-                } else if (direction === 'rtl') {
-                    aLeft.attr("href", g_nextArchiveUrl);
-                }
-            } else if (g_nextArchiveUrl !== undefined) {
-                if (direction === 'ltr') {
-                    aRight.attr("href", g_baseReaderUrl + `${page + 1}`);
-                } else if (direction === 'rtl') {
-                    aLeft.attr("href", g_baseReaderUrl + `${page + 1}`);
-                }
-            }
-
-            let aLeftShouldBeDisabled = false;
-            let aRightShouldBeDisabled = false;
-
-            if (direction === 'ltr') {
-                aLeftShouldBeDisabled = page === 1 && g_previousArchiveUrl === undefined;
-                aRightShouldBeDisabled = page === g_pageCount && g_nextArchiveUrl === undefined;
-            } else if (direction === 'rtl') {
-                aRightShouldBeDisabled = page === 1 && g_previousArchiveUrl === undefined;
-                aLeftShouldBeDisabled = page === g_pageCount && g_nextArchiveUrl === undefined;
-            }
-
-            if (aLeftShouldBeDisabled) {
-                aLeft.addClass("disabled");
-            } else if (aLeft.hasClass("disabled")) {
-                aLeft.removeClass("disabled");
-            }
-
-            if (aRightShouldBeDisabled) {
-                aRight.addClass("disabled");
-            } else if (aRight.hasClass("disabled")) {
-                aRight.removeClass("disabled");
-            }
+            g_slider.update({
+                from: page
+            });
         }
 
         function updateLastReadPage(mangaId, archiveId, page) {
@@ -421,20 +329,29 @@
             });
         }
 
-        $(function () {
+        function toggleMainNavbar() {
+            $(".navbar:first").toggleClass("d-none");
+            $("#navbar-toggler").toggleClass("fa-toggle-down fa-toggle-up");
+        }
 
+        $(function () {
             preloadAll();
+
+            // initialize the page slider
+            let slider = $("#page-slider");
+            slider.ionRangeSlider({
+                onFinish: function (slider) {
+                    window.location = g_baseReaderUrl + slider.from;
+                }
+            });
+
+            g_slider = slider.data("ionRangeSlider");
 
             // initialize the reader session storage
             const storageResult = mangapie.sessionStorage.put(g_readerKey, {
                 page: g_page,
                 page_count: g_pageCount
             });
-
-            // hide the warning if javascript is enabled and we have access to session storage
-            if (storageResult !== false) {
-                $("#nojs-nostorage").hide();
-            }
 
             updateLastReadPage(g_mangaId, g_archiveId, g_page);
 
@@ -515,6 +432,33 @@
                     }
                 }
             });
+
+            // function adjustDirection(direction) {
+            //     if (direction === "vrt") {
+            //         $(".reader-image-container").attr("data-direction", "vrt");
+            //     }
+            // }
+            //
+            // $("#direction-ltr").click(function () {
+            //     g_readDirection = "ltr";
+            //     mangapie.sessionStorage.put(g_directionKey, g_readDirection);
+            //
+            //     adjustDirection(g_readDirection);
+            // });
+            //
+            // $("#direction-rtl").click(function () {
+            //     g_readDirection = "rtl";
+            //     mangapie.sessionStorage.put(g_directionKey, g_readDirection);
+            //
+            //     adjustDirection(g_readDirection);
+            // });
+            //
+            // $("#direction-vrt").click(function () {
+            //     g_readDirection = "vrt";
+            //     mangapie.sessionStorage.put(g_directionKey, g_readDirection);
+            //
+            //     adjustDirection(g_readDirection);
+            // });
         });
     </script>
 @endsection

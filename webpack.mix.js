@@ -20,4 +20,11 @@ mix.setResourceRoot('/public/');
 
 mix.sass('resources/assets/sass/app.scss', 'assets/mangapie.css')
     .js('resources/assets/js/app.js', 'assets/mangapie.js')
-    .styles([ 'public/assets/mangapie.css', 'resources/assets/css/*.css' ], 'public/assets/mangapie.css');
+    .styles(
+        [
+            'public/assets/mangapie.css',
+            'resources/assets/css/*.css',
+            'node_modules/ion-rangeslider/css/ion.rangeSlider.css'
+        ],
+        'public/assets/mangapie.css'
+    );

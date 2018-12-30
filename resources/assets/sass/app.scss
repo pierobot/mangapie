@@ -1,5 +1,5 @@
 // Fonts
-@import "~@fortawesome/fontawesome-free/scss/brands";
+//@import "~@fortawesome/fontawesome-free/scss/brands";
 @import "~@fortawesome/fontawesome-free/scss/fontawesome";
 @import "~@fortawesome/fontawesome-free/scss/regular";
 @import "~@fortawesome/fontawesome-free/scss/solid";
@@ -9,11 +9,25 @@ span.fa::before {
   font-weight: 900;
 }
 
+.w-33 {
+  width: 33% !important;
+}
+
+.w-66 {
+  width: 66% !important;
+}
+
 // Variables
 @import "variables";
 
 // Bootstrap
 @import "~bootstrap/scss/bootstrap";
+
+.irs-min, .irs-max { color: $secondary !important; }
+.irs-single { background-color: $primary !important; }
+.irs-single:before { border-top-color: $primary !important; }
+.irs-bar { background-color: $primary !important; }
+.irs-handle { border-color: $primary !important; }
 
 // Mangapie
 @import "admin.libraries";

@@ -14,7 +14,7 @@
 </head>
 <body>
 
-<nav class="navbar navbar-dark bg-dark sticky-top @if (! empty($page_count)) reader @endif">
+<nav class="navbar navbar-dark bg-dark sticky-top @if (isset($archive, $page, $pageCount)) d-none @endif">
     <div class="container">
         <a class="navbar-brand" href="{{ URL::action('HomeController@index') }}">Mangapie</a>
 
@@ -101,7 +101,10 @@
     </div>
 </nav>
 
-<div class="container mt-3 mb-3">
+@yield ('header-contents')
+
+{{-- Do not use a top margin in the reader to have the two navbars appear stitched together. --}}
+<div class="container @if (isset($archive, $page, $pageCount)) mt-0 @else mt-3 @endif mb-3">
     @yield ('content')
 </div>
 
