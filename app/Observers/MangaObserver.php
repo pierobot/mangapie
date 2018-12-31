@@ -53,7 +53,7 @@ class MangaObserver
 
         foreach ($archives as $archive) {
             $archivePath = $path . DIRECTORY_SEPARATOR . $archive['name'];
-            $handle = fopen($archivePath, 'r+b');
+            $handle = fopen($archivePath, 'rb');
             if (! $handle)
                 continue;
 
