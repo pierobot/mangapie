@@ -1,4 +1,11 @@
-<h5>Associated Name(s)</h5>
+<h5>
+    Associated Name(s)
+    @if ($user->admin || $user->maintainer)
+        <a href="{{ action('MangaEditController@names', [$manga]) }}">
+            <span class="fa fa-edit"></span>
+        </a>
+    @endif
+</h5>
 
 @if (! empty($manga->associatedNameReferences))
     <div class="row">

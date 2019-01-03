@@ -1,4 +1,11 @@
-<h5>Author(s)</h5>
+<h5>
+    Author(s)
+    @if ($user->admin || $user->maintainer)
+        <a href="{{ action('MangaEditController@authors', [$manga]) }}">
+            <span class="fa fa-edit"></span>
+        </a>
+    @endif
+</h5>
 
 @if (! empty($manga->authorReferences))
     <div class="row">

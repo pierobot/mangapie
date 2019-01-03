@@ -25,7 +25,12 @@
                         </h5>
                     </div>
 
-                    <img class="card-img" src="{{ URL::action('CoverController@mediumDefault', [$manga]) }}">
+                    @if ($user->admin || $user->maintainer)
+                        <a href="{{ action('MangaEditController@covers', [$manga]) }}" style="position: relative; left: 50%;">
+                            <span class="fa fa-edit"></span>
+                        </a>
+                    @endif
+                    <img class="card-img-bottom" src="{{ URL::action('CoverController@mediumDefault', [$manga]) }}">
                 </div>
             </div>
 
@@ -38,11 +43,21 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            <div class="col-sm-4">
+                            <div class="col-12 text-center">
                                 <img class="img-fluid" src="{{ URL::action('CoverController@mediumDefault', [$manga]) }}">
                             </div>
-
-                            <div class="col-sm-8">
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12 text-center">
+                                @if ($user->admin || $user->maintainer)
+                                    <a href="{{ action('MangaEditController@covers', [$manga]) }}">
+                                        <span class="fa fa-edit fa-2x"></span>
+                                    </a>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
                                 @include ('manga.shared.information')
                             </div>
                         </div>

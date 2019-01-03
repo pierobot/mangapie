@@ -12,12 +12,12 @@
     @if (isset($manga_list))
         @foreach ($manga_list as $manga)
             <div class="col-6 col-sm-4 col-md-3 col-xl-2">
-                <div class="card mt-1 mb-1">
+                <div class="card mt-2 mb-2">
                     <a href="{{ URL::action('MangaController@index', [$manga]) }}">
                         <img class="card-img-top" src="{{ URL::action('CoverController@smallDefault', [$manga]) }}">
                     </a>
                     <div class="card-footer text-center pt-2 pb-0">
-                        <div class="card-title" title="{{ $manga->name }}">
+                        <div class="card-title text-truncate" title="{{ $manga->name }}">
                             <a class="card-link" href="{{ URL::action('MangaController@index', [$manga]) }}">{{ $manga->name }}</a>
                         </div>
                     </div>

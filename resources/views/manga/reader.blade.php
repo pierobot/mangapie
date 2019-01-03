@@ -20,7 +20,7 @@
                 <small class="text-muted text-truncate">{{ $archive->name }}</small>
             </div>
 
-            <button class="btn btn-secondary navbar-toggler ml-auto mr-2" data-toggle="collapse" data-target="#navigation-collapse" title="Open reader settings">
+            <button class="btn btn-secondary navbar-toggler ml-auto mr-2 disabled" disabled data-toggle="collapse" data-target="#navigation-collapse" title="Open reader settings">
                 <span class="fa fa-cog"></span>
             </button>
 
@@ -125,7 +125,7 @@
             </div>
 
             <div class="col-8 col-md-9">
-                <input id="page-slider" class="w-auto" type="text"
+                <input id="page-slider" type="text"
                        data-min="1"
                        data-max="{{ $pageCount }}"
                        data-step="1"

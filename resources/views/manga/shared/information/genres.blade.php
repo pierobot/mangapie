@@ -1,4 +1,11 @@
-<h5>Genres</h5>
+<h5>
+    Genres
+    @if ($user->admin || $user->maintainer)
+        <a href="{{ action('MangaEditController@genres', [$manga]) }}">
+            <span class="fa fa-edit"></span>
+        </a>
+    @endif
+</h5>
 
 @if (! empty($manga->genreReferences))
     <div class="row">

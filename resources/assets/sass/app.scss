@@ -17,20 +17,42 @@ span.fa::before {
   width: 66% !important;
 }
 
+textarea {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.dropdown-menu > .dropdown-header {
+  font-size: inherit;
+}
+
+.dropdown-menu > .dropdown-header > li.disabled {
+  cursor: text;
+}
+
+.dropdown-menu > .dropdown-header > li.disabled > a {
+  pointer-events: none;
+}
+
 // Variables
 @import "variables";
 
 // Bootstrap
 @import "~bootstrap/scss/bootstrap";
 
-.irs-min, .irs-max { color: $secondary !important; }
-.irs-single { background-color: $primary !important; }
-.irs-single:before { border-top-color: $primary !important; }
-.irs-bar { background-color: $primary !important; }
-.irs-handle { border-color: $primary !important; }
+// make container behave as container-fluid for xs and sm
+.container {
+  @include media-breakpoint-down(sm) {
+    max-width: 100%;
+  }
+}
+
+// ion.rangeSlider
+@import "ion-rangeslider/slider";
 
 // Mangapie
 @import "admin.libraries";
+@import "manga";
 @import "manga.edit";
 @import "reader";
 @import "shapes";

@@ -37,7 +37,7 @@
                             $nameVolCh = $volCh[0][0];
                     @endphp
 
-                    <div class="card-body" style="position: relative; top: -4em; height: 4em; margin-bottom: -4em; box-shadow: inset 0em -3em 8em #000000;">
+                    <div class="card-body card-overlay-bottom">
                         <a href="{{ $resumeUrl }}">
                             <h5 class="text-center truncate-ellipsis">
                                 <strong title="{{ $archive->name }}"
