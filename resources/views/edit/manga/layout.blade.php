@@ -22,7 +22,7 @@
         <div class="col-12 col-md-3">
             @yield('side-top-menu')
         </div>
-        <div class="col-12 col-md-9">
+        <div class="col-12 col-md-9 mt-3">
             @yield('tab-content')
         </div>
     </div>

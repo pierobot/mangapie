@@ -1,22 +1,35 @@
 @extends ('edit.manga.layout')
 
 @section ('side-top-menu')
-    @component ('edit.manga.components.side-top-menu', [
-        'manga' => $manga,
-        'active' => 'Cover',
-        'items' => [
-            ['title' => 'Mangaupdates', 'icon' => 'database', 'action' => 'MangaEditController@mangaupdates'],
-            ['title' => 'Name(s)', 'icon' => 'globe-americas', 'action' => 'MangaEditController@names'],
-            ['title' => 'Description', 'icon' => 'file-text', 'action' => 'MangaEditController@description'],
-            ['title' => 'Author(s)', 'icon' => 'pencil', 'action' => 'MangaEditController@authors'],
-            ['title' => 'Artist(s)', 'icon' => 'brush', 'action' => 'MangaEditController@artists'],
-            ['title' => 'Genre(s)', 'icon' => 'tags', 'action' => 'MangaEditController@genres'],
-            ['title' => 'Cover', 'icon' => 'file-image', 'action' => 'MangaEditController@covers'],
-            ['title' => 'Type', 'icon' => 'list', 'action' => 'MangaEditController@type'],
-            ['title' => 'Year', 'icon' => 'calendar', 'action' => 'MangaEditController@year']
-        ]
-    ])
-    @endcomponent
+    <ul class="nav nav-pills d-md-flex flex-md-column">
+        <li class="nav-item">
+            <a class="nav-link" href="{{ action('MangaEditController@mangaupdates', [$manga]) }}">Mangaupdates</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ action('MangaEditController@names', [$manga]) }}">Names</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ action('MangaEditController@description', [$manga]) }}">Description</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ action('MangaEditController@authors', [$manga]) }}">Authors</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ action('MangaEditController@artists', [$manga]) }}">Artists</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ action('MangaEditController@genres', [$manga]) }}">Genres</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="{{ action('MangaEditController@covers', [$manga]) }}">Covers</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ action('MangaEditController@type', [$manga]) }}">Type</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ action('MangaEditController@year', [$manga]) }}">Year</a>
+        </li>
+    </ul>
 @endsection
 
 @section ('tab-content')
