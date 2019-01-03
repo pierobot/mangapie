@@ -114,11 +114,11 @@
         <div class="row justify-content-between mt-2">
             <div class="col text-left mt-auto pr-0">
                 @if ($readDirection === 'ltr')
-                    <a @if (empty($previousArchiveUrl)) class="btn btn-secondary disabled" @else class="btn btn-secondary" href="{{ ! empty($previousArchiveUrl) ? $previousArchiveUrl : '#' }}" @endif id="a-left">
+                    <a @if (empty($previousArchiveUrl)) class="btn btn-secondary disabled" @else class="btn btn-primary" href="{{ ! empty($previousArchiveUrl) ? $previousArchiveUrl : '#' }}" @endif id="a-left">
                         <span class="fa fa-fast-backward"></span>
                     </a>
                 @else
-                    <a @if (empty($nextArchiveUrl)) class="btn btn-secondary disabled" @else class="btn btn-secondary" href="{{ ! empty($nextArchiveUrl) ? $nextArchiveUrl : '#' }}" @endif id="a-left">
+                    <a @if (empty($nextArchiveUrl)) class="btn btn-secondary disabled" @else class="btn btn-primary" href="{{ ! empty($nextArchiveUrl) ? $nextArchiveUrl : '#' }}" @endif id="a-left">
                         <span class="fa fa-fast-backward"></span>
                     </a>
                 @endif
@@ -136,11 +136,11 @@
 
             <div class="col text-right mt-auto pl-0">
                 @if ($readDirection === 'ltr')
-                    <a @if (empty($nextArchiveUrl)) class="btn btn-secondary disabled" @else class="btn btn-secondary" href="{{ ! empty($nextArchiveUrl) ? $nextArchiveUrl : '#' }}" @endif id="a-right">
+                    <a @if (empty($nextArchiveUrl)) class="btn btn-secondary disabled" @else class="btn btn-primary" href="{{ ! empty($nextArchiveUrl) ? $nextArchiveUrl : '#' }}" @endif id="a-right">
                         <span class="fa fa-fast-forward"></span>
                     </a>
                 @else
-                    <a @if (empty($previousArchiveUrl)) class="btn btn-secondary disabled" @else class="btn btn-secondary" href="{{ ! empty($previousArchiveUrl) ? $previousArchiveUrl : '#' }}" @endif id="a-right">
+                    <a @if (empty($previousArchiveUrl)) class="btn btn-secondary disabled" @else class="btn btn-primary" href="{{ ! empty($previousArchiveUrl) ? $previousArchiveUrl : '#' }}" @endif id="a-right">
                         <span class="fa fa-fast-forward"></span>
                     </a>
                 @endif
