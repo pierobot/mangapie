@@ -17,7 +17,7 @@
                     <div class="card-body">
                         <div class="media">
                             <a href="{{ URL::action('MangaController@index', [$manga]) }}">
-                                <img height="100" class="rounded mr-3" src="{{ URL::action('CoverController@smallDefault', [$manga]) }}">
+                                <img width="90" class="rounded mr-3" src="{{ URL::action('CoverController@smallDefault', [$manga]) }}">
                             </a>
 
                             <div class="media-body">

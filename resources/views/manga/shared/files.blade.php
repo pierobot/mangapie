@@ -39,14 +39,16 @@
 
                     <div class="card-body card-overlay-bottom">
                         <a href="{{ $resumeUrl }}">
-                            <h5 class="text-center truncate-ellipsis">
+                            <h5 class="text-center text-truncate">
                                 <strong title="{{ $archive->name }}"
                                         @if (! empty($archiveHistory))
                                             @if ($archiveHistory->page == $archiveHistory->page_count)
-                                                class="text-success text-primary"
+                                                class="text-success"
                                             @else
-                                                class="text-warning text-primary"
+                                                class="text-warning"
                                             @endif
+                                        @else
+                                            class="text-primary"
                                         @endif
                                 >
                                     {{ $nameVolCh }}
