@@ -4,6 +4,7 @@
     $dropped = ! empty($user->dropped->where('manga_id', $manga->id)->first());
     $onHold = ! empty($user->onHold->where('manga_id', $manga->id)->first());
     $reading = ! empty($user->reading->where('manga_id', $manga->id)->first());
+    $planned = ! empty($user->planned->where('manga_id', $manga->id)->first());
 @endphp
 
 <h5>Actions</h5>
@@ -71,11 +72,12 @@
             </div>
 
             <select class="form-control" name="status" title="Choose a status">
-                <option @if (! $completed && ! $dropped && ! $onHold && ! $reading) @endif>Choose...</option>
+                <option @if (! $completed && ! $dropped && ! $onHold && ! $reading && ! $planned) @endif>Choose...</option>
                 <option value="completed" @if ($completed) class="text-primary" selected @endif>Completed</option>
                 <option value="dropped" @if ($dropped) class="text-primary" selected @endif>Dropped</option>
                 <option value="on_hold" @if ($onHold) class="text-primary" selected @endif>On Hold</option>
                 <option value="reading" @if ($reading) class="text-primary" selected @endif>Reading</option>
+                <option value="planned" @if ($planned) class="text-primary" selected @endif>Planned</option>
             </select>
 
             <div class="input-group-append" title="Set status for the series">
