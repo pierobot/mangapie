@@ -110,25 +110,22 @@ class Series
 
     private static function description(Crawler $crawler)
     {
-        return trim($crawler->filter('div.sMember > div.sCat + div.sContent')
+        return trim($crawler->filter('div.col-6.p-2.text > div.sCat + div.sContent')
             ->eq(0)
             ->text());
     }
 
     private static function type(Crawler $crawler)
     {
-        return trim($crawler->filter('div.sMember > div.sCat + div.sContent')
+        return trim($crawler->filter('div.col-6.p-2.text > div.sCat + div.sContent')
             ->eq(1)
             ->text());
     }
 
     private static function associated_names(Crawler $crawler)
     {
-        $currentElement = $crawler->filter('div.sContainer')
-            ->eq(0)
-            ->filter('div.sMember > div.sCat + div.sContent')
-            ->eq(3)
-            ->getNode(0)
+        $currentElement = $crawler->filter('div.col-6.p-2.text > div.sCat + div.sContent')
+            ->getNode(3)
             ->firstChild;
 
         $assocNames = [];
@@ -144,9 +141,7 @@ class Series
 
     private static function genres(Crawler $crawler)
     {
-        $genreLinks = $crawler->filter('div.sContainer')
-            ->eq(1)
-            ->filter('div.sMember > div.sCat + div.sContent')
+        $genreLinks = $crawler->filter('div.col-6.p-2.text + div.col-6.p-2.text > div.sCat + div.sContent')
             ->eq(1)
             ->filter('a > u');
 
@@ -160,9 +155,7 @@ class Series
 
     private static function authors(Crawler $crawler)
     {
-        $authorLinks = $crawler->filter('div.sContainer')
-            ->eq(1)
-            ->filter('div.sMember > div.sCat + div.sContent')
+        $authorLinks = $crawler->filter('div.col-6.p-2.text + div.col-6.p-2.text > div.sCat + div.sContent')
             ->eq(5)
             ->filter('a > u');
 
@@ -176,9 +169,7 @@ class Series
 
     private static function artists(Crawler $crawler)
     {
-        $artistLinks = $crawler->filter('div.sContainer')
-            ->eq(1)
-            ->filter('div.sMember > div.sCat + div.sContent')
+        $artistLinks = $crawler->filter('div.col-6.p-2.text + div.col-6.p-2.text > div.sCat + div.sContent')
             ->eq(6)
             ->filter('a > u');
 
@@ -192,14 +183,12 @@ class Series
 
     private static function year(Crawler $crawler)
     {
-        $year = $crawler->filter('div.sContainer')
-            ->eq(1)
-            ->filter('div.sMember > div.sCat + div.sContent')
+        $year = $crawler->filter('div.col-6.p-2.text + div.col-6.p-2.text > div.sCat + div.sContent')
             ->eq(7)
             ->getNode(0)
             ->textContent;
 
-        return intval($year);
+        return intval(trim($year));
     }
 
     private static function collectInformation($mu_id, $contents)
@@ -227,3 +216,4 @@ class Series
         return self::collectInformation($mu_id, $contents);
     }
 }
+
