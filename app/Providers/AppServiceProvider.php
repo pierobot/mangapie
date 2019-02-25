@@ -16,10 +16,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if ($this->app->environment() !== 'production') {
-            $this->app->register(\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class);
-        }
-
         \URL::forceRootUrl(config('app.url'));
         \URL::forceScheme('https');
 
