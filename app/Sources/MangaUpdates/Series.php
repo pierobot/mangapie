@@ -110,9 +110,25 @@ class Series
 
     private static function description(Crawler $crawler)
     {
-        return trim($crawler->filter('div.col-6.p-2.text > div.sCat + div.sContent')
-            ->eq(0)
-            ->text());
+        $crawler = $crawler->filter('div.col-6.p-2.text > div.sCat + div.sContent')
+            ->eq(0);
+
+        /*
+         * There are two types of descriptions, that I've encountered, in MangaUpdates.
+         * The first is simple text element inside div.sContent.
+         * The second is where a "less" and "more" elements are present to hide/show long descriptions.
+         */
+
+        if ($crawler->children()->count()) {
+            // the description we want has always been the last child
+            $description = $crawler->children()->last()->text();
+        } else {
+            $description = $crawler->text();
+        }
+
+        // trim the start and end of the string and remove the "Less..." and
+        // whatever other garbage is after the new line character
+        return preg_replace('/\\n[\w\s.]+/', '', trim($description));
     }
 
     private static function type(Crawler $crawler)
