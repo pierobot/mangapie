@@ -126,9 +126,8 @@ class Series
             $description = $crawler->text();
         }
 
-        // trim the start and end of the string and remove the "Less..." and
-        // whatever other garbage is after the new line character
-        return preg_replace('/\\n[\w\s.]+/', '', trim($description));
+        // trim the start and end of the string and remove the "Less..."
+        return preg_replace('/\sLess\.\.\.$/', '', trim($description));
     }
 
     private static function type(Crawler $crawler)
