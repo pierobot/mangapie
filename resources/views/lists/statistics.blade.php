@@ -23,7 +23,7 @@
                     <div class="row">
                         <div class="col-8">
                             <div class="progress">
-                                <div class="progress-bar bg-success" style="width: {{ ($user->completed->count() / $listTotal) * 100 }}%;">
+                                <div class="progress-bar bg-success" @if ($listTotal) style="width: {{ ($user->completed->count() / $listTotal) * 100 }}%;" @endif>
                                 </div>
                             </div>
                         </div>
@@ -44,7 +44,7 @@
                     <div class="row">
                         <div class="col-8">
                             <div class="progress">
-                                <div class="progress-bar bg-danger" style="width: {{ ($user->dropped->count() / $listTotal) * 100 }}%;">
+                                <div class="progress-bar bg-danger" @if ($listTotal) style="width: {{ ($user->dropped->count() / $listTotal) * 100 }}%;" @endif>
                                 </div>
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                     <div class="row">
                         <div class="col-8">
                             <div class="progress">
-                                <div class="progress-bar bg-primary" style="width: {{ ($user->reading->count() / $listTotal) * 100 }}%;">
+                                <div class="progress-bar bg-primary" @if ($listTotal) style="width: {{ ($user->reading->count() / $listTotal) * 100 }}%;" @endif>
                                 </div>
                             </div>
                         </div>
@@ -86,7 +86,7 @@
                     <div class="row">
                         <div class="col-8">
                             <div class="progress">
-                                <div class="progress-bar bg-warning" style="width: {{ ($user->onhold->count() / $listTotal) * 100 }}%;">
+                                <div class="progress-bar bg-warning" @if ($listTotal) style="width: {{ ($user->onhold->count() / $listTotal) * 100 }}%;" @endif>
                                 </div>
                             </div>
                         </div>
@@ -107,7 +107,7 @@
                     <div class="row">
                         <div class="col-8">
                             <div class="progress">
-                                <div class="progress-bar bg-secondary" style="width: {{ ($user->planned->count() / $listTotal) * 100 }}%;">
+                                <div class="progress-bar bg-secondary" @if ($listTotal) style="width: {{ ($user->planned->count() / $listTotal) * 100 }}%;" @endif>
                                 </div>
                             </div>
                         </div>
