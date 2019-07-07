@@ -12,7 +12,7 @@
 @endphp
 
 <div class="row">
-    <div class="col-6 col-lg-4">
+    <div class="col-6 col-lg-6">
         <label>Overall ({{ $voteCount }})</label>
         <select class="rating overall-rating">
             <option hidden="" value="0">0</option>
@@ -24,7 +24,7 @@
         </select>
     </div>
 
-    <div class="col-6 col-lg-4">
+    <div class="col-6 col-lg-6">
         <label>Yours</label>
 
         @if (isset($userVote) && ! empty($userVote))

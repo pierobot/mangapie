@@ -15,57 +15,95 @@
         $reading = ! empty($user->reading->where('manga_id', $manga->id)->first());
     @endphp
 
-    <div class="row">
-        <div class="col-12">
-            <div class="d-flex d-sm-none">
-                <div class="card w-100">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            {{ $manga->name }}
-                        </h5>
-                    </div>
+    <div class="d-flex d-sm-none flex-column">
+        <div class="row">
+            <div class="col-12 text-center">
+                <h3 class="mb-3">
+                    <strong>{{ $manga->name }}</strong>
+                </h3>
 
-                    @if ($user->admin || $user->maintainer)
-                        <a href="{{ action('MangaEditController@covers', [$manga]) }}" style="position: relative; left: 50%;">
-                            <span class="fa fa-edit"></span>
-                        </a>
-                    @endif
-                    <img class="card-img-bottom" src="{{ URL::action('CoverController@mediumDefault', [$manga]) }}">
-                </div>
+                {{--@if ($user->admin || $user->maintainer)--}}
+                {{--<a href="{{ action('MangaEditController@covers', [$manga]) }}" style="position: relative; left: 50%;">--}}
+                {{--<span class="fa fa-edit"></span>--}}
+                {{--</a>--}}
+                {{--@endif--}}
             </div>
+        </div>
 
-            <div class="d-none d-sm-flex">
-                <div class="card">
-                    <div class="card-header">
-                        <h4 class="mb-0">
-                            {{ $manga->name }}
-                        </h4>
+        <div class="row">
+            <div class="col-12 text-center">
+                <img class="img-fluid" src="{{ URL::action('CoverController@mediumDefault', [$manga]) }}">
+            </div>
+        </div>
+    </div>
+
+    <div class="d-none d-sm-flex flex-sm-column">
+        <div class="row">
+            <div class="col-12">
+                <h1 class="mb-3">
+                    <strong>{{ $manga->name }}</strong>
+                </h1>
+
+                <div class="row">
+                    <div class="col-4">
+                        <img class="img-fluid" src="{{ URL::action('CoverController@mediumDefault', [$manga]) }}">
                     </div>
-                    <div class="card-body">
+
+                    <div class="col-8">
                         <div class="row">
-                            <div class="col-12 text-center">
-                                <img class="img-fluid" src="{{ URL::action('CoverController@mediumDefault', [$manga]) }}">
+                            <div class="col-12 mb-3">
+                                @include ('manga.shared.information.genres')
                             </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-12 text-center">
-                                @if ($user->admin || $user->maintainer)
-                                    <a href="{{ action('MangaEditController@covers', [$manga]) }}">
-                                        <span class="fa fa-edit fa-2x"></span>
-                                    </a>
-                                @endif
+
+                            <div class="col-12 mb-3">
+                                @include ('manga.shared.information.associated_names')
                             </div>
-                        </div>
-                        <div class="row mt-2">
-                            <div class="col-12">
-                                @include ('manga.shared.information')
+
+                            <div class="col-12 mb-3">
+                                @include ('manga.shared.information.authors')
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                @include ('manga.shared.information.artists')
                             </div>
                         </div>
                     </div>
+
+                    {{--<div class="col-9">--}}
+                    {{--@if ($user->admin || $user->maintainer)--}}
+                    {{--<a href="{{ action('MangaEditController@covers', [$manga]) }}">--}}
+                    {{--<span class="fa fa-edit fa-2x"></span>--}}
+                    {{--</a>--}}
+                    {{--@endif--}}
+                    {{--</div>--}}
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-4">
+                        @include ('manga.shared.information.ratings')
+                    </div>
+
+                    <div class="col-8">
+                        @include ('manga.shared.information.actions')
+                    </div>
+
+                    @admin
+                    <div class="col-12 mb-3">
+                        @include ('manga.shared.information.path')
+                    </div>
+                    @endadmin
+
+
+                    <div class="col-12 mb-3">
+                        @include ('manga.shared.information.description')
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
+
+    <hr>
 
     <div class="row mt-3">
         <div class="col-12">

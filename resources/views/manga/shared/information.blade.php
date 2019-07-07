@@ -1,9 +1,5 @@
 <div class="row">
     <div class="col-12 mb-3">
-        @include ('manga.shared.information.description')
-    </div>
-
-    <div class="col-12 mb-3">
         @include ('manga.shared.information.genres')
     </div>
 
@@ -32,4 +28,10 @@
         @include ('manga.shared.information.path')
     </div>
     @endadmin
+</div>
+
+<div class="row">
+    <div class="col-12 mb-3">
+        @include ('manga.shared.information.description')
+    </div>
 </div>
