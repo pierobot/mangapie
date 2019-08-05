@@ -1,6 +1,7 @@
 @extends ('manga.layout')
 
 @section ('lower-card')
+
     <div class="d-flex flex-column d-sm-none">
         <div class="row">
             <div class="col-12">

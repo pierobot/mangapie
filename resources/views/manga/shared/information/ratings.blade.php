@@ -69,7 +69,7 @@
                     onSelect: function (value, text, event) {
                         let confirmed = confirm(`You are about to cast a vote with a rating of ${value} star(s).\nIs this ok?`);
                         if (confirmed) {
-                            axios.put('{{ config('app.url') }}vote', { _method: "PUT", manga_id: "{{ $manga->id }}", rating: value })
+                            axios.put('{{ URL::to('/vote') }}', { _method: "PUT", manga_id: "{{ $manga->id }}", rating: value })
                                 .catch(function () {
                                     alert('Unable to cast vote.');
                                 });

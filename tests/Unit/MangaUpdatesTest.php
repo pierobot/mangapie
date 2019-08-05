@@ -36,7 +36,7 @@ class MangaUpdatesTest extends TestCase
 
     /**
      * @testWith [118, "Yu Yu Hakusho", "Manga", "", ["Отчёт о буйстве духов", "幽游白书", "幽遊白書", "คนเก่งฟ้าประทาน", "Hành Trình U Linh Giới", "Yū Yū Hakush", "Yuu Yuu Hakusho", "YuYu Hakusho"], ["TOGASHI Yoshihiro"], ["TOGASHI Yoshihiro"], ["Action","Adventure","Comedy","Drama","Shounen","Supernatural"], 1990]
-     * 
+     *
      * Yes, I know "Yū Yū Hakush" is missing the o.
      * If this ever fails in the future, it's probably because they finally fixed it.
      */

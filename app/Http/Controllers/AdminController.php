@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\PatchSchedulerRequest;
 use App\Http\Requests\Admin\PatchViewsRequest;
 use App\Http\Requests\Admin\PatchViewsTimeRequest;
 use App\Http\Requests\Admin\PostHeatRequest;
+use App\Http\Requests\Admin\PostSearchUsersRequest;
 use App\Http\Requests\Admin\PutDefaultLibrariesRequest;
 use App\Http\Requests\Admin\PatchRegistrationRequest;
 
@@ -25,75 +26,40 @@ class AdminController extends Controller
         return view('admin.index');
     }
 
-    public function dashboard()
-    {
-        return view('admin.dashboard.index');
-    }
-
     public function statistics()
     {
-        return view('admin.dashboard.statistics');
+        return view('admin.statistics');
     }
 
     public function config()
     {
-        return view('admin.dashboard.config');
-    }
-
-    public function users()
-    {
-        return view('admin.users.index');
-    }
-
-    public function createUsers()
-    {
-        return view('admin.users.create');
-    }
-
-    public function editUsers()
-    {
-        return view('admin.users.edit');
-    }
-
-    public function deleteUsers()
-    {
-        return view('admin.users.delete');
+        return view('admin.config');
     }
 
     public function libraries()
     {
-        return view('admin.libraries.index');
+        return view('admin.libraries');
     }
 
-    public function logs()
+    public function users()
     {
-        return view('admin.logs.index');
+        $users = \App\User::orderBy('name', 'asc')->paginate(18);
+
+        $users->onEachSide(1)->withPath(\URL::to('admin/users'));
+
+        return view('admin.users')->with('users', $users);
     }
 
-    public function logWarnings()
+    public function searchUsers(PostSearchUsersRequest $request)
     {
-        return view('admin.logs.warnings');
+        // good enough for now - not going to be used extensively
+        $users = \App\User::where('name', $request->get('name'))
+            ->orWhere('name', 'like', '%' . $request->get('name') . '%')
+            ->get();
+
+        return view('admin.users')->with('users', $users);
     }
 
-    public function logErrors()
-    {
-        return view('admin.logs.errors');
-    }
-
-    public function createLibraries()
-    {
-        return view('admin.libraries.create');
-    }
-
-    public function modifyLibraries()
-    {
-        return view('admin.libraries.modify');
-    }
-
-    public function deleteLibraries()
-    {
-        return view('admin.libraries.delete');
-    }
 
     public function patchImages(Request $request)
     {

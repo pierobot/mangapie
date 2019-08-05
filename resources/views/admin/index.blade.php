@@ -1,1 +1,1 @@
-@include ('admin.dashboard.index')
+@include ('admin.statistics')

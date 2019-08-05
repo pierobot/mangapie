@@ -1,8 +1,9 @@
-<html>
-<head lang="en">
-    <meta charset="UTF-8">
+<html lang="en">
+<head>
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="theme-color" content="#343a40"> {{-- bg-dark --}}
 
     <title>@yield ('title')</title>
 
@@ -26,10 +27,11 @@
         @include ('shared.notifications')
 
         @admin
-            <div class="ml-1 mr-1"></div>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#admin-collapse" aria-expanded="false">
-                <span class="fa fa-wrench"></span>
-            </button>
+            <a class="ml-1" href="{{ URL::action('AdminController@index') }}" title="Admin">
+                <button class="navbar-toggler btn btn-outline-secondary" type="button">
+                    <span class="fa fa-wrench"></span>
+                </button>
+            </a>
         @endadmin
 
         <div class="ml-1 mr-1"></div>

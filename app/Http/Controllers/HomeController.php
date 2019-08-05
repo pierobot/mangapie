@@ -33,6 +33,7 @@ class HomeController extends Controller
                               ->paginate(18);
         }
 
+        $mangaList->load('authorReferences.author', 'favorites', 'votes');
         $mangaList->onEachSide(1)
                   ->withPath(\Config::get('app.url'));
 

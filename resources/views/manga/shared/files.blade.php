@@ -37,7 +37,7 @@
                             $nameVolCh = $volCh[0][0];
                     @endphp
 
-                    <div class="card-footer">
+                    <div class="card-footer bg-dark">
 
                             <a href="{{ $resumeUrl }}">
                                 <h5 class="text-truncate">

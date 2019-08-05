@@ -13,39 +13,33 @@
 
 Route::auth();
 
-Route::middleware(['auth', 'last_seen'])->group(function () {
+Route::middleware(['auth'])->group(function () {
 
     Route::prefix('admin')->middleware('admin')->name('admin')->group(function () {
         Route::get('/', 'AdminController@index');
-        Route::get('/dashboard/statistics', 'AdminController@statistics');
-        Route::get('/dashboard/config', 'AdminController@config');
-        Route::get('/users', 'AdminController@users');
-        Route::get('/users/create', 'AdminController@createUsers');
-        Route::get('/users/edit', 'AdminController@editUsers');
-        Route::get('/users/delete', 'AdminController@deleteUsers');
-        Route::get('/libraries', 'AdminController@libraries');
-        Route::get('/libraries/create', 'AdminController@createLibraries');
-        Route::get('/libraries/modify', 'AdminController@modifyLibraries');
-        Route::get('/libraries/delete', 'AdminController@deleteLibraries');
-        Route::get('/logs', 'AdminController@logs');
-        Route::get('/logs/warnings', 'AdminController@logWarnings');
-        Route::get('/logs/errors', 'AdminController@logErrors');
-
-        Route::patch('/images', 'AdminController@patchImages');
-        Route::delete('/images', 'AdminController@deleteImages');
 
         Route::patch('/config/registration', 'AdminController@patchRegistration');
         Route::put('/config/libraries', 'AdminController@putDefaultLibraries');
         Route::patch('/config/heat', 'AdminController@patchHeat');
         Route::post('/config/heat', 'AdminController@postHeat');
 
+        Route::get('/config', 'AdminController@config');
+        Route::patch('/config/image', 'AdminController@patchImageExtraction');
+        Route::patch('/config/image/scheduler', 'AdminController@patchScheduler');
+        Route::put('/config/image/scheduler', 'AdminController@putScheduler');
+
         Route::patch('/config/views', 'AdminController@patchViews');
         Route::patch('/config/views/time', 'AdminController@patchViewsTime');
         Route::put('/config/views/time', 'AdminController@putViewsTime');
 
-        Route::patch('/config/image', 'AdminController@patchImageExtraction');
-        Route::patch('/config/image/scheduler', 'AdminController@patchScheduler');
-        Route::put('/config/image/scheduler', 'AdminController@putScheduler');
+        Route::patch('/images', 'AdminController@patchImages');
+        Route::delete('/images', 'AdminController@deleteImages');
+
+        Route::get('/libraries', 'AdminController@libraries');
+        Route::get('/statistics', 'AdminController@statistics');
+
+        Route::get('/users', 'AdminController@users');
+        Route::post('/users/search', 'AdminController@searchUsers');
     });
 
     Route::prefix('avatar')->name('avatar')->group(function () {
