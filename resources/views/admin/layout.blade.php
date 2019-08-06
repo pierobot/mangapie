@@ -1,10 +1,12 @@
 @extends ('layout')
 
 @section ('content')
-    @include ('shared.success')
-    @include ('shared.warnings')
-    @include ('shared.errors')
+    <div class="container mt-3">
+        @include ('shared.success')
+        @include ('shared.warnings')
+        @include ('shared.errors')
 
-    @yield ('top-menu')
-    @yield ('card-content')
+        @yield ('top-menu')
+        @yield ('card-content')
+    </div>
 @endsection

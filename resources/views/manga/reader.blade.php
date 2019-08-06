@@ -4,113 +4,66 @@
     Reader &middot; {{ $archive->name }}
 @endsection
 
-@section ('header-contents')
-    <div class="navbar navbar-dark bg-dark sticky-top">
-        {{--This navbar and the main one do not have the same height, and I do not want to set a max-height.--}}
-        {{--As a result, the quick search controls become slightly visible below this navbar.--}}
-        {{--Adding a top margin somewhat solves this.--}}
-        {{--TODO: There should be a better solution to this, right?--}}
-        <div class="container mt-1">
-            <div class="d-flex d-md-none flex-column w-66">
-                <a class="text-truncate" href="{{ action('MangaController@index', [$manga]) }}">{{ $manga->name }}</a>
-                <small class="text-muted text-truncate">{{ $archive->name }}</small>
-            </div>
-            <div class="d-none d-md-flex flex-column w-75">
-                <a class="text-truncate" href="{{ action('MangaController@index', [$manga]) }}">{{ $manga->name }}</a>
-                <small class="text-muted text-truncate">{{ $archive->name }}</small>
-            </div>
-
-            <button class="btn btn-secondary navbar-toggler ml-auto mr-2 disabled" disabled data-toggle="collapse" data-target="#navigation-collapse" title="Open reader settings">
-                <span class="fa fa-cog"></span>
-            </button>
-
-            <button class="btn btn-secondary navbar-toggler" onclick="toggleMainNavbar();">
-                <span class="fa fa-toggle-down" id="navbar-toggler"></span>
-            </button>
-
-            <div class="collapse navbar-collapse mt-2" id="navigation-collapse">
-                <ul class="nav navbar-nav text-right">
-                    <li class="nav-item">
-                        <strong>Reading direction</strong>
-                    </li>
-                    <li class="nav-item">
-                        <div class="form-inline d-inline-flex">
-                            <div class="form-row">
-                                <div class="col-4">
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="direction-rtl" name="direction" value="rtl">
-                                        <label class="custom-control-label" for="direction-rtl">Left</label>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="direction-ltr" name="direction" value="ltr">
-                                        <label class="custom-control-label" for="direction-ltr">Right</label>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="custom-control custom-radio">
-                                        <input class="custom-control-input" type="radio" id="direction-vrt" name="direction" value="vrt">
-                                        <label class="custom-control-label" for="direction-vrt">Vertical</label>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-@endsection
-
 @section ('content')
     @include ('shared.errors')
 
-    @php
-        $readDirection = auth()->user()->read_direction;
+    <div class="container-fluid ml-0 mr-0 pl-0 pr-0">
+        @php
+            $readDirection = auth()->user()->read_direction;
 
-        $previousArchive = $archive->getPreviousArchive();
-        $previousArchivePageCount = ! empty($previousArchive) ? $previousArchive->getPageCount() : false;
-        $nextArchive = $archive->getNextArchive();
+            $previousArchive = $archive->getPreviousArchive();
+            $previousArchivePageCount = ! empty($previousArchive) ? $previousArchive->getPageCount() : false;
+            $nextArchive = $archive->getNextArchive();
 
-        $previousArchiveUrl = ! empty($previousArchive) ?
-            URL::action('ReaderController@index', [$manga, $previousArchive, $previousArchivePageCount]) :
-            '';
-        $nextArchiveUrl = ! empty($nextArchive) ?
-            URL::action('ReaderController@index', [$manga, $nextArchive, 1]) :
-            '';
+            $previousArchiveUrl = ! empty($previousArchive) ?
+                URL::action('ReaderController@index', [$manga, $previousArchive, $previousArchivePageCount]) :
+                '';
+            $nextArchiveUrl = ! empty($nextArchive) ?
+                URL::action('ReaderController@index', [$manga, $nextArchive, 1]) :
+                '';
 
-        $nextUrl = false;
-        $previousUrl = false;
+            $nextUrl = false;
+            $previousUrl = false;
 
-        if ($page <= $pageCount) {
-            if ($page === $pageCount) {
-                $nextUrl = ! empty($nextArchive) ?
-                    URL::action('ReaderController@index', [$manga, $nextArchive, 1]) :
-                    false;
-            } else {
-                $nextUrl = URL::action('ReaderController@index', [$manga, $archive, $page + 1]);
+            if ($page <= $pageCount) {
+                if ($page === $pageCount) {
+                    $nextUrl = ! empty($nextArchive) ?
+                        URL::action('ReaderController@index', [$manga, $nextArchive, 1]) :
+                        false;
+                } else {
+                    $nextUrl = URL::action('ReaderController@index', [$manga, $archive, $page + 1]);
+                }
             }
-        }
 
-        if ($page >= 1) {
-            if ($page === 1) {
-                $previousUrl = ! empty($previousArchive) ?
-                    URL::action('ReaderController@index', [$manga, $previousArchive, $previousArchivePageCount]) :
-                    false;
-            } else {
-                $previousUrl = URL::action('ReaderController@index', [$manga, $archive, $page - 1]);
+            if ($page >= 1) {
+                if ($page === 1) {
+                    $previousUrl = ! empty($previousArchive) ?
+                        URL::action('ReaderController@index', [$manga, $previousArchive, $previousArchivePageCount]) :
+                        false;
+                } else {
+                    $previousUrl = URL::action('ReaderController@index', [$manga, $archive, $page - 1]);
+                }
             }
-        }
 
-        $preload = $archive->getPreloadUrls($page);
-    @endphp
+            $preload = $archive->getPreloadUrls($page);
+        @endphp
 
-    @if ($pageCount !== 0)
-        <div class="reader-image-container pt-3">
-            <img id="reader-image" class="w-100 h-auto" src="{{ URL::action('ReaderController@image', [$manga, $archive, $page]) }}">
-        </div>
+        @if ($pageCount !== 0)
+            <div class="reader-image-container">
+                <img id="reader-image" class="mw-100 h-auto d-block mx-auto" src="{{ URL::action('ReaderController@image', [$manga, $archive, $page]) }}">
+            </div>
+        @endif
 
+        @if ($preload !== false)
+            <div id="preload" style="display: none;">
+                @foreach ($preload as $index => $preload_url)
+                    <img id="{{ $page + 1 + $index }}" data-src="{{ $preload_url }}">
+                @endforeach
+            </div>
+        @endif
+    </div>
+
+    <div class="container-fluid">
         <div class="row justify-content-between mt-2">
             <div class="col text-left mt-auto pr-0">
                 @if ($readDirection === 'ltr')
@@ -146,15 +99,30 @@
                 @endif
             </div>
         </div>
-    @endif
 
-    @if ($preload !== false)
-        <div id="preload" style="display: none;">
-            @foreach ($preload as $index => $preload_url)
-                <img id="{{ $page + 1 + $index }}" data-src="{{ $preload_url }}">
-            @endforeach
+
+        <div class="row mt-3 mb-3">
+            <div class="col-12 text-center">
+                @php
+                    $volCh = App\Scanner::getVolumesAndChapters($archive->name);
+                    // If there is no volume or chapter in the name, or if the parsing failed
+                    // then just use the archive name :shrug:
+                    if (empty($volCh) || empty($volCh[0]))
+                        $nameVolCh = $archive->name;
+                    else
+                        $nameVolCh = $volCh[0][0];
+                @endphp
+
+                <h4><a href="{{ URL::action('MangaController@index', [$manga]) }}">{{ $manga->name }}</a> &mdash; {{ $nameVolCh }}</h4>
+            </div>
+
+            @admin
+            <div class="col-12 text-center">
+                <small>{{ $archive->name }}</small>
+            </div>
+            @endadmin
         </div>
-    @endif
+    </div>
 @endsection
 
 @section ('scripts')
@@ -171,8 +139,8 @@
 
             Just use the app url in the config for now.
          --}}
-        const g_baseImageUrl = `{{ config('app.url') }}image/${g_mangaId}/${g_archiveId}/`;
-        const g_baseReaderUrl = `{{ config('app.url') }}reader/${g_mangaId}/${g_archiveId}/`;
+        const g_baseImageUrl = `{{ URL::to('/image') }}/${g_mangaId}/${g_archiveId}/`;
+        const g_baseReaderUrl = `{{ URL::to('/reader') }}/${g_mangaId}/${g_archiveId}/`;
 
         const g_readerKey = `reader-${g_mangaId}-${g_archiveId}`;
         const g_directionKey = `direction-${g_mangaId}-${g_archiveId}`;
@@ -320,7 +288,7 @@
         }
 
         function updateLastReadPage(mangaId, archiveId, page) {
-            axios.put("{{ config('app.url') }}reader/history", {
+            axios.put("{{ URL::to('reader/history') }}", {
                 manga_id: mangaId,
                 archive_id: archiveId,
                 page: page
@@ -431,6 +399,17 @@
                         navigatePrevious();
                     }
                 }
+            });
+
+            let container = $('.container');
+            container.attr('original-max-width', container.css('max-width'));
+
+            $('#fit-image-screen').click(function (eventData) {
+                container.css('max-width', '100%');
+            });
+
+            $('#fit-image-container').click(function (eventData) {
+                container.css('max-width', container.attr('original-max-width'));
             });
 
             // function adjustDirection(direction) {

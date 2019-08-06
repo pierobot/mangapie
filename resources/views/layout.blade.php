@@ -105,10 +105,7 @@
 
 @yield ('header-contents')
 
-{{-- Do not use a top margin in the reader to have the two navbars appear stitched together. --}}
-<div class="container @if (isset($archive, $page, $pageCount)) mt-0 @else mt-3 @endif mb-3">
-    @yield ('content')
-</div>
+@yield ('content')
 
 @yield ('footer-contents')
 

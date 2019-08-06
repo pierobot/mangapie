@@ -8,7 +8,9 @@
 @endsection
 
 @section ('content')
-    @include ('shared.success')
-    @include ('shared.errors')
-    @include ('shared.index')
+    <div class="container mt-3">
+        @include ('shared.success')
+        @include ('shared.errors')
+        @include ('shared.index')
+    </div>
 @endsection
