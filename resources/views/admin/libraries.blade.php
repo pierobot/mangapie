@@ -127,7 +127,7 @@
             });
 
             $(jobIds).each(function (i, jobId) {
-                let eventSource = new EventSource("{{ URL::to('/job') }}" + jobId);
+                let eventSource = new EventSource("{{ URL::to('/job') }}/" + jobId);
                 eventSource["jobId"] = jobId;
 
                 eventSource.onmessage = function (event) {
