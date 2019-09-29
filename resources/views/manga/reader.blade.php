@@ -225,7 +225,8 @@
             mangapie.sessionStorage.put(g_readerKey, readerData);
 
             // update the history stack and update the current URL
-            mangapie.history.pushReplace(g_readerKey, g_baseReaderUrl + page);
+            // mangapie.history.pushReplace(g_readerKey, g_baseReaderUrl + page);
+            mangapie.history.replace(g_readerKey, g_baseReaderUrl + page);
 
             // update the current image
             $("#reader-image").attr("src", g_baseImageUrl + page);
@@ -262,7 +263,8 @@
             mangapie.sessionStorage.put(g_readerKey, readerData);
 
             // update the history stack and update the current URL
-            mangapie.history.pushReplace(g_readerKey, g_baseReaderUrl + page);
+            // mangapie.history.pushReplace(g_readerKey, g_baseReaderUrl + page);
+            mangapie.history.replace(g_readerKey, g_baseReaderUrl + page);
 
             // update the current image
             $("#reader-image").attr("src", g_baseImageUrl + page);
@@ -323,13 +325,13 @@
 
             updateLastReadPage(g_mangaId, g_archiveId, g_page);
 
-            $(window).on("popstate", function (event) {
-                if (event.originalEvent.state) {
-                    const data = mangapie.sessionStorage.find(g_readerKey);
-
-                    navigatePrevious();
-                }
-            });
+            // $(window).on("popstate", function (event) {
+            //     if (event.originalEvent.state) {
+            //         const data = mangapie.sessionStorage.find(g_readerKey);
+            //
+            //         navigatePrevious();
+            //     }
+            // });
 
             $("#a-left").on("click", function (e) {
                 e.preventDefault();

@@ -11,6 +11,10 @@ module.exports = {
         pushReplace: function (key, url) {
             history.pushState(key, '');
             history.replaceState(key, '', url);
+        },
+
+        replace: function (key, url) {
+            history.replaceState(key, '', url);
         }
     },
 
