@@ -22,9 +22,7 @@ class GenreController extends Controller
             ->get()
             ->load('manga')
             ->filter(function ($reference) use ($libraryIds) {
-                foreach ($libraryIds as $libraryId) {
-                    return $reference->manga->getLibraryId() == $libraryId;
-                }
+                return in_array($reference->manga->library->id, $libraryIds);
             });
 
         $results = [];

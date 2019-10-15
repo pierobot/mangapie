@@ -17,9 +17,7 @@ class PersonController extends Controller
         $libraryIds = LibraryPrivilege::getIds();
 
         $results = $person->manga()->filter(function (Manga $manga) use ($libraryIds) {
-            foreach ($libraryIds as $libraryId) {
-                return $manga->getLibraryId() == $libraryId;
-            }
+            return in_array($manga->library->id, $libraryIds);
         });
 
         $manga_list = new LengthAwarePaginator($results->forPage($page, 18), $results->count(), 18);

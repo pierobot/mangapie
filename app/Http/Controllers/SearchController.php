@@ -44,12 +44,7 @@ class SearchController extends Controller
 
         $results = Manga::search($keywords)
             ->filter(function ($manga) use ($libraryIds) {
-                foreach ($libraryIds as $libraryId) {
-                    if ($manga->library->id == $libraryId)
-                        return true;
-                }
-
-                return false;
+                return in_array($manga->library->id, $libraryIds);
             })
             ->sortBy('name');
 
