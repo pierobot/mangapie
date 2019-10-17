@@ -52,6 +52,8 @@
                             <small><strong>Read: </strong>{{ $archiveHistory->updated_at->diffForHumans() }}</small>
                         @endif
 
+                        <small><a href="{{ URL::action('PreviewController@index', [$manga, $archive]) }}">Preview</a></small>
+
                         @if (! empty($archiveHistory))
                             <div class="progress mt-1" style="height: 0.5em;" title="Page {{ $archiveHistory->page }}">
                                 <div class="progress-bar @if ($hasCompleted) bg-success @else bg-warning @endif"

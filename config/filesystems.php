@@ -70,6 +70,11 @@ return [
             'root' => storage_path('app/images'),
         ],
 
+        'previews' => [
+            'driver' => 'local',
+            'root' => storage_path('app/previews'),
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_KEY'),
