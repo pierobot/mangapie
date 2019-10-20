@@ -4,43 +4,43 @@ namespace App;
 
 use \Carbon\Carbon;
 
-/* TODO: Simplify Cover and Preview classes. */
+/* TODO: Simplify preview and Preview classes. */
 
-class Cover
+class Preview
 {
     /**
-     * Gets the covers disk.
+     * Gets the previews disk.
      *
      * @return \Illuminate\Filesystem\FilesystemAdapter
      */
     public static function disk()
     {
-        return \Storage::disk('covers');
+        return \Storage::disk('previews');
     }
 
     /**
-     * Gets the root path of the covers disk.
+     * Gets the root path of the previews disk.
      *
      * @return string
      */
     public static function rootPath()
     {
-        return \Storage::disk('covers')->path('');
+        return \Storage::disk('previews')->path('');
     }
 
     /**
-     * Gets the size, in bytes, of the covers disk.
+     * Gets the size, in bytes, of the previews disk.
      *
      * @return int
      */
     public static function size()
     {
         $size = 0;
-        $covers = \Storage::disk('covers');
-        $files = $covers->allFiles();
+        $previews = \Storage::disk('previews');
+        $files = $previews->allFiles();
 
         foreach ($files as $file) {
-            $size += $covers->size($file);
+            $size += $previews->size($file);
         }
 
         return $size;
@@ -57,7 +57,7 @@ class Cover
      * @param bool $small
      * @return string
      */
-    public static function xaccelPath(Manga $manga, Archive $archive, int $page = 1, bool $small = true)
+    public static function xaccelPath(Manga $manga, Archive $archive, int $page, bool $small = true)
     {
         return ($small === true ? 'small' : 'medium') . DIRECTORY_SEPARATOR
             . strval($manga->getId()) . DIRECTORY_SEPARATOR
@@ -66,19 +66,7 @@ class Cover
     }
 
     /**
-     * Gets the path of the default archive image.
-     * The path is intended for use with X-Accel-Redirect.
-     *
-     * @param bool $small
-     * @return string
-     */
-    public static function xaccelDefaultPath(bool $small = true)
-    {
-        return ($small === true ? 'small' : 'medium') . DIRECTORY_SEPARATOR . 'default.jpg';
-    }
-
-    /**
-     * Determine if a cover exists for an archive.
+     * Determine if a preview exists for an archive.
      *
      * @param Manga $manga
      * @param Archive $archive
@@ -86,25 +74,22 @@ class Cover
      * @param bool $small
      * @return bool
      */
-    public static function exists(Manga $manga, Archive $archive = null, int $page = 1, bool $small = true)
+    public static function exists(Manga $manga, Archive $archive, int $page, bool $small = true)
     {
-        if (empty($archive))
-            $archive = $manga->archives->first();
-
-        return \Storage::disk('covers')->exists(self::xaccelPath($manga, $archive, $page, $small));
+        return \Storage::disk('previews')->exists(self::xaccelPath($manga, $archive, $page, $small));
     }
 
     /**
      * Saves the contents of an image to the appropriate path.
      *
-     * @param string $contents The raw contents of the cover.
+     * @param string $contents The raw contents of the preview.
      * @param Manga $manga
      * @param Archive $archive
      * @param int $page
      * @param bool $small
      * @return bool
      */
-    public static function save(string $contents, Manga $manga, Archive $archive, int $page = 1, bool $small = true)
+    public static function save(string $contents, Manga $manga, Archive $archive, int $page, bool $small = true)
     {
         $path = self::xaccelPath($manga, $archive, $page, $small);
 
@@ -114,13 +99,13 @@ class Cover
             return false;
         }
 
-        return \Storage::disk('covers')->putStream(
+        return \Storage::disk('previews')->putStream(
             $path,
             $image->stream('jpg')->detach());
     }
 
     /**
-     * Creates a response compatible with X-Accel-Redirect for a cover.
+     * Creates a response compatible with X-Accel-Redirect for a preview.
      *
      * @param Manga $manga
      * @param Archive $archive
@@ -131,33 +116,13 @@ class Cover
     public static function response(Manga $manga, Archive $archive, int $page, bool $small = true)
     {
         $path = self::xaccelPath($manga, $archive, $page, $small);
-        $mime = \Storage::disk('covers')->mimeType($path);
+        $mime = \Storage::disk('previews')->mimeType($path);
 
         return response()->make('', 200, [
             'Content-Type' => $mime,
             'Cache-Control' => 'public, max-age=2629800',
             'Expires' => Carbon::now()->addMonth()->toRfc2822String(),
-            'X-Accel-Redirect' => '/covers/' . $path,
-            'X-Accel-Charset' => 'utf-8'
-        ]);
-    }
-
-    /**
-     * Creates a response compatible with X-Accel-Redirect for the default cover.
-     *
-     * @param bool $small
-     * @return \Illuminate\Http\Response
-     */
-    public static function defaultResponse(bool $small = true)
-    {
-        $path = self::xaccelDefaultPath($small);
-        $mime = \Storage::disk('covers')->mimeType($path);
-
-        return response()->make('', 200, [
-            'Content-Type' => $mime,
-            'Cache-Control' => 'public, max-age=2629800',
-            'Expires' => Carbon::now()->addMonth()->toRfc2822String(),
-            'X-Accel-Redirect' => '/covers/' . $path,
+            'X-Accel-Redirect' => '/previews/' . $path,
             'X-Accel-Charset' => 'utf-8'
         ]);
     }

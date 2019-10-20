@@ -49,8 +49,10 @@
 
                         <small><strong>Added: </strong>{{ $archive->created_at->diffForHumans() }}</small><br>
                         @if (! empty($archiveHistory))
-                            <small><strong>Read: </strong>{{ $archiveHistory->updated_at->diffForHumans() }}</small>
+                            <small><strong>Read: </strong>{{ $archiveHistory->updated_at->diffForHumans() }}</small><br>
                         @endif
+
+                        <small><a href="{{ URL::action('PreviewController@index', [$manga, $archive]) }}">Preview</a></small>
 
                         @if (! empty($archiveHistory))
                             <div class="progress mt-1" style="height: 0.5em;" title="Page {{ $archiveHistory->page }}">

@@ -148,6 +148,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{person}', 'PersonController@index');
     });
 
+    Route::prefix('preview')->group(function () {
+        Route::get('/{manga}/{archive}', 'PreviewController@index');
+
+        Route::get('/small/{manga}/{archive}/{page}', 'PreviewController@small');
+//        Route::get('/medium/{manga}/{archive}/{page}', 'PreviewController@medium');
+    });
+
     Route::prefix('reader')->middleware('archive_views')->name('reader')->group(function () {
         Route::get('/{manga}/{archive}/{page}', 'ReaderController@index');
 

@@ -1,0 +1,25 @@
+/* page indicator tag on the previews */
+.page-indicator-left {
+  width: 33%;
+  position: absolute;
+  font-size: 1.25em;
+
+  border-top-left-radius: $card-inner-border-radius;
+  border-bottom-right-radius: calc(0.5em - 1px);
+}
+
+/* floating action bar */
+.fab {
+  position: fixed;
+
+  /* only support 4 buttons for now - shouldn't need more, right? */
+  @for $i from 1 through 4 {
+    &.fab-#{$i} {
+      /* separate the buttons on the y axis */
+      bottom: calc(1.25em + (#{$i - 1}em * 2.5));
+
+      /* the buttons should line up on the x axis the same */
+      right: 2em;
+    }
+  }
+}
