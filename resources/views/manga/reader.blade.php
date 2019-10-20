@@ -1,7 +1,17 @@
 @extends ('layout')
 
 @section ('title')
-    Reader &middot; {{ $archive->name }}
+    @php
+        $volCh = App\Scanner::getVolumesAndChapters($archive->name);
+        // If there is no volume or chapter in the name, or if the parsing failed
+        // then just use the archive name :shrug:
+        if (empty($volCh) || empty($volCh[0]))
+            $nameVolCh = $archive->name;
+        else
+            $nameVolCh = $volCh[0][0];
+    @endphp
+
+    {{ $manga->name }} - {{ $nameVolCh }}
 @endsection
 
 @section ('content')
@@ -63,64 +73,67 @@
         @endif
     </div>
 
-    <div class="container-fluid">
-        <div class="row justify-content-between mt-2">
-            <div class="col text-left mt-auto pr-0">
-                @if ($readDirection === 'ltr')
-                    <a @if (empty($previousArchiveUrl)) class="btn btn-secondary disabled" @else class="btn btn-primary" href="{{ ! empty($previousArchiveUrl) ? $previousArchiveUrl : '#' }}" @endif id="a-left">
-                        <span class="fa fa-fast-backward"></span>
-                    </a>
-                @else
-                    <a @if (empty($nextArchiveUrl)) class="btn btn-secondary disabled" @else class="btn btn-primary" href="{{ ! empty($nextArchiveUrl) ? $nextArchiveUrl : '#' }}" @endif id="a-left">
-                        <span class="fa fa-fast-backward"></span>
-                    </a>
-                @endif
-            </div>
+    <div class="modal" id="preview-modal">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <span id="preview-start"></span>
 
-            <div class="col-8 col-md-9">
-                <input id="page-slider" type="text"
-                       data-min="1"
-                       data-max="{{ $pageCount }}"
-                       data-step="1"
-                       data-from="{{ $page }}"
-                       data-skin="round"
-                       data-type="single">
-            </div>
+                <div class="modal-header bg-dark">
+                    <h5 class="modal-title">
+                        <a href="{{ URL::action('MangaController@index', [$manga]) }}">{{ $manga->name }}</a> - {{ $nameVolCh }}
+                    </h5>
+                </div>
 
-            <div class="col text-right mt-auto pl-0">
-                @if ($readDirection === 'ltr')
-                    <a @if (empty($nextArchiveUrl)) class="btn btn-secondary disabled" @else class="btn btn-primary" href="{{ ! empty($nextArchiveUrl) ? $nextArchiveUrl : '#' }}" @endif id="a-right">
-                        <span class="fa fa-fast-forward"></span>
-                    </a>
-                @else
-                    <a @if (empty($previousArchiveUrl)) class="btn btn-secondary disabled" @else class="btn btn-primary" href="{{ ! empty($previousArchiveUrl) ? $previousArchiveUrl : '#' }}" @endif id="a-right">
-                        <span class="fa fa-fast-forward"></span>
-                    </a>
-                @endif
+                <div class="modal-body bg-dark">
+                    <div class="container">
+                        <div class="row mt-3 mb-3">
+                            @if ($pageCount >= 1)
+                                {{-- *** Do NOT use $page as that is reserved for the paginator *** --}}
+                                @for ($previewPage = 1; $previewPage <= $pageCount; $previewPage++)
+                                    <div class="col-6 col-md-4 col-lg-3 col-xl-2 mb-3" id="preview-{{ $previewPage }}">
+                                        <div class="card">
+                                            <a href="{{ URL::action('ReaderController@index', [$manga, $archive, $previewPage]) }}">
+                                                <span class="page-indicator-left bg-primary text-dark text-center">{{ $previewPage }}</span>
+
+                                                <img class="card-img lazyload"
+                                                     src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 250'%3E%3C/svg%3E"
+                                                     data-src="{{ URL::action('PreviewController@small', [$manga, $archive, $previewPage]) }}">
+                                            </a>
+                                        </div>
+                                    </div>
+                                @endfor
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <span id="preview-end"></span>
+
+                <a class="btn btn-lg btn-primary fab fab-3" href="#preview-start">
+                    <span class="fa fa-arrow-up"></span>
+                </a>
+                <a class="btn btn-lg btn-primary fab fab-2" href="#preview-end">
+                    <span class="fa fa-arrow-down"></span>
+                </a>
+
+                <button class="btn btn-lg btn-danger fab fab-1" data-dismiss="modal">
+                    <span class="fa fa-times"></span>
+                </button>
             </div>
         </div>
+    </div>
 
-
-        <div class="row mt-3 mb-3">
-            <div class="col-12 text-center">
-                @php
-                    $volCh = App\Scanner::getVolumesAndChapters($archive->name);
-                    // If there is no volume or chapter in the name, or if the parsing failed
-                    // then just use the archive name :shrug:
-                    if (empty($volCh) || empty($volCh[0]))
-                        $nameVolCh = $archive->name;
-                    else
-                        $nameVolCh = $volCh[0][0];
-                @endphp
-
-                <h4><a href="{{ URL::action('MangaController@index', [$manga]) }}">{{ $manga->name }}</a> &mdash; {{ $nameVolCh }}</h4>
+    <div class="container-fluid">
+        <div class="d-flex justify-content-center">
+            <div class="row">
+                <div class="col-12">
+                    <div class="btn-group btn-group-lg mt-3 mb-3">
+                        <button class="btn btn-primary"><span class="fa fa-fast-backward"></span></button>
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#preview-modal">{{ $page }} of {{ $pageCount }}</button>
+                        <button class="btn btn-primary"><span class="fa fa-fast-forward"></span></button>
+                    </div>
+                </div>
             </div>
-
-            @admin
-            <div class="col-12 text-center">
-                <small>{{ $archive->name }}</small>
-            </div>
-            @endadmin
         </div>
     </div>
 @endsection
@@ -141,13 +154,12 @@
          --}}
         const g_baseImageUrl = `{{ URL::to('/image') }}/${g_mangaId}/${g_archiveId}/`;
         const g_baseReaderUrl = `{{ URL::to('/reader') }}/${g_mangaId}/${g_archiveId}/`;
+        const g_basePreviewUrl = `{{ URL::to('/preview/small') }}/${g_mangaId}/${g_archiveId}/`;
 
         const g_readerKey = `reader-${g_mangaId}-${g_archiveId}`;
         const g_directionKey = `direction-${g_mangaId}-${g_archiveId}`;
 
         let g_readDirection = "{{ $readDirection }}";
-
-        let g_slider = undefined;
 
         /**
          * Alters the DOM so that all the available images are preloaded.
@@ -284,9 +296,7 @@
          * @param page
          */
         function updateNavigationControls(direction, page) {
-            g_slider.update({
-                from: page
-            });
+
         }
 
         function updateLastReadPage(mangaId, archiveId, page) {
@@ -306,16 +316,6 @@
 
         $(function () {
             preloadAll();
-
-            // initialize the page slider
-            let slider = $("#page-slider");
-            slider.ionRangeSlider({
-                onFinish: function (slider) {
-                    window.location = g_baseReaderUrl + slider.from;
-                }
-            });
-
-            g_slider = slider.data("ionRangeSlider");
 
             // initialize the reader session storage
             const storageResult = mangapie.sessionStorage.put(g_readerKey, {
@@ -440,6 +440,17 @@
             //
             //     adjustDirection(g_readDirection);
             // });
+
+            let lazyLoad = new LazyLoad({
+                elements_selector: ".lazyload",
+                load_delay: 300
+            });
+
+            $('#preview-modal').on('shown.bs.modal', function () {
+                $(`#preview-${g_page}`)[0].scrollIntoView({
+                    behavior: "smooth"
+                });
+            })
         });
     </script>
 @endsection

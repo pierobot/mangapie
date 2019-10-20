@@ -47,14 +47,12 @@ textarea {
   }
 }
 
-// ion.rangeSlider
-@import "ion-rangeslider/slider";
-
 // Mangapie
 @import "admin.libraries";
 @import "manga";
 @import "manga.edit";
 @import "reader";
+@import "previews";
 @import "shapes";
 
 // jquery-bar-rating

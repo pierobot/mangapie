@@ -74,11 +74,8 @@ class Preview
      * @param bool $small
      * @return bool
      */
-    public static function exists(Manga $manga, Archive $archive = null, int $page = 1, bool $small = true)
+    public static function exists(Manga $manga, Archive $archive, int $page, bool $small = true)
     {
-        if (empty($archive))
-            $archive = $manga->archives->first();
-
         return \Storage::disk('previews')->exists(self::xaccelPath($manga, $archive, $page, $small));
     }
 
