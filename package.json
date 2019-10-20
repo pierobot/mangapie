@@ -24,9 +24,8 @@
     "resolve-url-loader": "^2.3.2",
     "sass": "^1.22.9",
     "sass-loader": "^7.1.0",
+    "vanilla-lazyload": "^12.1.0",
     "vue-template-compiler": "^2.6.10"
   },
-  "dependencies": {
-    "vanilla-lazyload": "^12.1.0"
-  }
+  "dependencies": {}
 }

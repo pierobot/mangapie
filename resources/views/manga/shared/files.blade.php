@@ -49,7 +49,7 @@
 
                         <small><strong>Added: </strong>{{ $archive->created_at->diffForHumans() }}</small><br>
                         @if (! empty($archiveHistory))
-                            <small><strong>Read: </strong>{{ $archiveHistory->updated_at->diffForHumans() }}</small>
+                            <small><strong>Read: </strong>{{ $archiveHistory->updated_at->diffForHumans() }}</small><br>
                         @endif
 
                         <small><a href="{{ URL::action('PreviewController@index', [$manga, $archive]) }}">Preview</a></small>

@@ -128,9 +128,38 @@
             <div class="row">
                 <div class="col-12">
                     <div class="btn-group btn-group-lg mt-3 mb-3">
-                        <button class="btn btn-primary"><span class="fa fa-fast-backward"></span></button>
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#preview-modal">{{ $page }} of {{ $pageCount }}</button>
-                        <button class="btn btn-primary"><span class="fa fa-fast-forward"></span></button>
+                        {{-- Use of the zero-width space, &#8203;, is required to have the fa icon align properly. :shrug: --}}
+                        @if ($readDirection === "ltr")
+                            @if (! empty($previousArchiveUrl))
+                                <a href="{{ $previousArchiveUrl }}" class="btn btn-primary"><span class="fa fa-fast-backward"></span>&#8203;</a>
+                            @else
+                                <a href="#" class="btn btn-primary disabled"><span class="fa fa-fast-backward"></span>&#8203;</a>
+                            @endif
+                        @elseif ($readDirection === "rtl")
+                            @if (! empty($nextArchiveUrl))
+                                <a href="{{ $nextArchiveUrl }}" class="btn btn-primary"><span class="fa fa-fast-backward"></span>&#8203;</a>
+                            @else
+                                <a href="#" class="btn btn-primary disabled"><span class="fa fa-fast-backward"></span>&#8203;</a>
+                            @endif
+                        @endif
+
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#preview-modal">
+                            <span id="page-text">{{ $page }} of {{ $pageCount }}</span>
+                        </button>
+
+                        @if ($readDirection === "ltr")
+                            @if (! empty($nextArchiveUrl))
+                                <a href="{{ $nextArchiveUrl }}" class="btn btn-primary"><span class="fa fa-fast-forward"></span>&#8203;</a>
+                            @else
+                                <a href="#" class="btn btn-primary disabled"><span class="fa fa-fast-forward"></span>&#8203;</a>
+                            @endif
+                        @elseif ($readDirection === "rtl")
+                            @if (! empty($previousArchiveUrl))
+                                <a href="{{ $previousArchiveUrl }}" class="btn btn-primary"><span class="fa fa-fast-forward"></span>&#8203;</a>
+                            @else
+                                <a href="#" class="btn btn-primary disabled"><span class="fa fa-fast-forward"></span>&#8203;</a>
+                            @endif
+                        @endif
                     </div>
                 </div>
             </div>
@@ -154,10 +183,9 @@
          --}}
         const g_baseImageUrl = `{{ URL::to('/image') }}/${g_mangaId}/${g_archiveId}/`;
         const g_baseReaderUrl = `{{ URL::to('/reader') }}/${g_mangaId}/${g_archiveId}/`;
-        const g_basePreviewUrl = `{{ URL::to('/preview/small') }}/${g_mangaId}/${g_archiveId}/`;
 
         const g_readerKey = `reader-${g_mangaId}-${g_archiveId}`;
-        const g_directionKey = `direction-${g_mangaId}-${g_archiveId}`;
+        // const g_directionKey = `direction-${g_mangaId}-${g_archiveId}`;
 
         let g_readDirection = "{{ $readDirection }}";
 
@@ -296,7 +324,8 @@
          * @param page
          */
         function updateNavigationControls(direction, page) {
-
+            $("#reader-image").attr('data-page', `${page}`);
+            $("#page-text").text(`${page} of ${g_pageCount}`);
         }
 
         function updateLastReadPage(mangaId, archiveId, page) {
@@ -447,7 +476,10 @@
             });
 
             $('#preview-modal').on('shown.bs.modal', function () {
-                $(`#preview-${g_page}`)[0].scrollIntoView({
+                const readerData = mangapie.sessionStorage.find(g_readerKey);
+                const page = readerData['page'];
+
+                $(`#preview-${page}`)[0].scrollIntoView({
                     behavior: "smooth"
                 });
             })
