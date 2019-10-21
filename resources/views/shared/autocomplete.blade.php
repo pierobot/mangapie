@@ -3,30 +3,40 @@
         let baseUrl = '{{ \URL::to('/manga') }}';
 
         $('#searchbar').typeahead({
-            minLength: 3,
             delay: 250,
+            fitToElement: true,
+            followLinkOnSelect: true,
+            minLength: 3,
+            selectOnBlur: false,
+            theme: "bootstrap4",
+
+            itemLink: function (manga) {
+                return baseUrl + '/' + manga.id;
+            },
+
             source: function (query, process) {
                 return $.getJSON('{{ \URL::to('/search/autocomplete') }}', { query : query}, function (data) {
                     return process(data);
                 });
-            },
-            followLinkOnSelect: true,
-            itemLink: function (manga) {
-                return baseUrl + '/' + manga.id;
             }
         });
 
         $('#searchbar-small').typeahead({
-            minLength: 3,
             delay: 250,
+            fitToElement: true,
+            followLinkOnSelect: true,
+            minLength: 3,
+            selectOnBlur: false,
+            theme: "bootstrap4",
+
+            itemLink: function (manga) {
+                return baseUrl + '/' + manga.id;
+            },
+
             source: function (query, process) {
                 return $.getJSON('{{ \URL::to('/search/autocomplete') }}', { query : query}, function (data) {
                     return process(data);
                 });
-            },
-            followLinkOnSelect: true,
-            itemLink: function (manga) {
-                return baseUrl + '/' + manga.id;
             }
         });
     });
