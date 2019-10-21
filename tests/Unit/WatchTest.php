@@ -200,7 +200,7 @@ class WatchTest extends TestCase
         self::$root6 = getcwd() . DIRECTORY_SEPARATOR . 'tests/Data/Libraries/manga6';
     }
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -245,7 +245,7 @@ class WatchTest extends TestCase
         ]);
     }
 
-    public function tearDown()
+    public function tearDown() : void
     {
         parent::tearDown();
 

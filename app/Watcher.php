@@ -369,7 +369,7 @@ final class Watcher
 
         $rootDescriptor = $this->root($parentDescriptor);
 
-        \Event::fire(new Events\NewDirectoryEvent(
+        \Event::dispatch(new Events\NewDirectoryEvent(
             $name,
             $path,
             $rootDescriptor->getPath(),
@@ -420,7 +420,7 @@ final class Watcher
         );
 
         if ($newWd !== false) {
-            \Event::fire(new Events\NewDirectoryEvent(
+            \Event::dispatch(new Events\NewDirectoryEvent(
                 $name,
                 $path,
                 $rootDescriptor->getPath(),
@@ -450,7 +450,7 @@ final class Watcher
         );
 
         if ($newWd !== false) {
-            \Event::fire(new Events\NewArchiveEvent(
+            \Event::dispatch(new Events\NewArchiveEvent(
                 $name,
                 $path,
                 $rootDescriptor->getPath(),
@@ -491,7 +491,7 @@ final class Watcher
 
         $rootDescriptor = $this->root($parentDescriptor);
 
-        \Event::fire(new Events\RemovedDirectoryEvent(
+        \Event::dispatch(new Events\RemovedDirectoryEvent(
             $name,
             $path,
             $rootDescriptor->getPath(),
@@ -512,7 +512,7 @@ final class Watcher
 
         $rootDescriptor = $this->root($parentDescriptor);
 
-        \Event::fire(new Events\RemovedArchiveEvent(
+        \Event::dispatch(new Events\RemovedArchiveEvent(
             $name,
             $path,
             $rootDescriptor->getPath(),
