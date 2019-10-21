@@ -11,7 +11,7 @@
         "imtigger/laravel-job-status": "^0.1.13",
         "intervention/image": "^2.4",
         "ixudra/curl": "6.*",
-        "laravel/framework": "5.7.*",
+        "laravel/framework": "5.8.*",
         "laravel/tinker": "^1.0",
         "laravelcollective/html": "^5.7",
         "php-curl-class/php-curl-class": "^7.2",
