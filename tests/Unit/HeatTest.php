@@ -21,30 +21,31 @@ class HeatTest extends TestCase
     use RefreshDatabase;
 
     /**
-     * @param float $heat
+     * @param float $temperature The initial temperature.
+     * @param float $rate The rate at which to increase.
      *
-     * @testWith [100.0]
+     * @testWith [100.0, 3.0]
      */
-    public function testIncrease(float $heat)
+    public function testIncrease(float $temperature, float $rate)
     {
-        $expected = $heat + \Config::get('app.heat.heat');
-        $actual = Heat::increase($heat);
+        $expected = $temperature + $rate;
+        $actual = Heat::increase($temperature);
 
         $this->assertEquals($expected, $actual);
     }
 
     /**
-     * @param float $heat
+     * @param float $temperature The initial temperature.
      *
      * @testWith [100.0]
      */
-    public function testCooldown(float $heat)
+    public function testCooldown(float $temperature)
     {
-        $after1Hour = Heat::decrease($heat, Carbon::now()->subHour());
+        $after1Hour = Heat::decrease($temperature, Carbon::now()->subHour());
         $after2Hour = Heat::decrease($after1Hour, Carbon::now()->subHour());
         $after3Hour = Heat::decrease($after2Hour, Carbon::now()->subHour());
 
-        $this->assertLessThan($heat, $after1Hour);
+        $this->assertLessThan($temperature, $after1Hour);
         $this->assertLessThan($after1Hour, $after2Hour);
         $this->assertLessThan($after2Hour, $after3Hour);
     }
@@ -55,10 +56,15 @@ class HeatTest extends TestCase
 
         $this->expectException(\InvalidArgumentException::class);
 
-        $heat = new Heat($user, $user);
+        $heat = new Heat($user);
     }
 
-    public function testUpdate()
+    /**
+     * @param float $expectedTemp The initial and expected temperature.
+     *
+     * @testWith [100.0]
+     */
+    public function testUpdate(float $expectedTemp)
     {
         $archive = factory(Archive::class)->create([
             'manga_id' => factory(Manga::class)->create([
@@ -68,7 +74,6 @@ class HeatTest extends TestCase
 
         $heat = new Heat($archive);
 
-        $expectedTemp = \Config::get('app.heat.default');
         $actualTemp = $heat->temperature();
 
         $this->assertEquals($expectedTemp, $actualTemp);
@@ -91,9 +96,11 @@ class HeatTest extends TestCase
     /**
      * Asserts that the AdjustsHeatsJob works as expected.
      *
-     * @return void
+     * @param float $temperature The initial and expected temperature.
+     *
+     * @testWith [100.0]
      */
-    public function testAdjustHeatsJob()
+    public function testAdjustHeatsJob(float $temperature)
     {
         $archive = factory(Archive::class)->create([
             'manga_id' => factory(Manga::class)->create([
@@ -115,8 +122,7 @@ class HeatTest extends TestCase
 
         \Queue::push(new \App\Jobs\DecreaseHeats());
 
-        $default = \Config::get('app.heat.default');
-        $this->assertLessThan($default, $archiveHeat->temperature());
-        $this->assertLessThan($default, $mangaHeat->temperature());
+        $this->assertLessThan($temperature, $archiveHeat->temperature());
+        $this->assertLessThan($temperature, $mangaHeat->temperature());
     }
 }
