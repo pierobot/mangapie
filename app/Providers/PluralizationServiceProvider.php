@@ -16,7 +16,7 @@ class PluralizationServiceProvider extends ServiceProvider {
             'uninflected' => [
                 'completed',
                 'dropped',
-                'on_?hold',
+                'hold',
                 'planned',
                 'reading'
             ]

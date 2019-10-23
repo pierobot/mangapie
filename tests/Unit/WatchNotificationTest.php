@@ -28,7 +28,7 @@ class WatchNotificationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 
@@ -57,6 +57,7 @@ class WatchNotificationTest extends TestCase
             'user_id' => $user->id,
             'manga_id' => $manga->id,
         ]);
+
         $response->assertSeeText('You are now watching this manga.');
     }
 

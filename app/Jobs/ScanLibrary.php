@@ -84,11 +84,11 @@ class ScanLibrary implements ShouldQueue
             });
 
             if ($removedArchives->count() > 0) {
-                \Event::fire(new \App\Events\Archive\RemovedArchives($removedArchives));
+                \Event::dispatch(new \App\Events\Archive\RemovedArchives($removedArchives));
             }
 
             if ($newArchives->count() > 0) {
-                \Event::fire(new \App\Events\Archive\NewArchives($newArchives));
+                \Event::dispatch(new \App\Events\Archive\NewArchives($newArchives));
             }
 
             $this->incrementProgress();

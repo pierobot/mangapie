@@ -23,7 +23,7 @@ class MangaUpdatesTest extends TestCase
 {
     use DatabaseMigrations, RefreshDatabase;
 
-    public function setUp()
+    public function setUp() : void
     {
         parent::setUp();
 

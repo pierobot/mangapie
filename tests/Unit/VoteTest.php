@@ -30,7 +30,7 @@ class VoteTest extends TestCase
      *
      * @param $rating
      *
-     * @testWith [75]
+     * @testWith [3]
      */
     public function testCreateVote($rating)
     {
@@ -41,7 +41,7 @@ class VoteTest extends TestCase
         ]);
 
         $response =  $this->actingAs($user)
-            ->from(\URL::action('MangaController@index', [$manga]))
+//            ->from(\URL::action('MangaController@index', [$manga]))
             ->followingRedirects()
             ->put(\URL::action('VoteController@put', [
                 'manga_id' => $manga->id,
@@ -55,7 +55,6 @@ class VoteTest extends TestCase
         ]);
 
         $response->assertSuccessful();
-        $response->assertSee('Your vote was successfully created.');
     }
 
     /**
@@ -63,7 +62,7 @@ class VoteTest extends TestCase
      *
      * @param $rating
      *
-     * @testWith [100, 88]
+     * @testWith [5, 2]
      */
     public function testChangeVote($initialRating, $newRating)
     {
@@ -82,8 +81,8 @@ class VoteTest extends TestCase
         $response = $this->actingAs($user)
             ->from(\URL::action('MangaController@index', [$manga]))
             ->followingRedirects()
-            ->patch(\URL::action('VoteController@patch', [
-                'vote_id' => $vote->id,
+            ->put(\URL::action('VoteController@put', [
+                'manga_id' => $manga->id,
                 'rating' => $newRating
             ]));
 
@@ -94,7 +93,6 @@ class VoteTest extends TestCase
         ]);
 
         $response->assertSuccessful();
-        $response->assertSee('Your vote was successfully updated.');
     }
 
     /**

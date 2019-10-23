@@ -27,7 +27,7 @@ class ImageArchive
      * @param string $name
      * @return bool
      */
-    public static function isJunk(string $name)
+    public static function isJunk(string $name) : bool
     {
         return preg_match('/^(__MACOSX|\.DS_STORE)/', $name) != false;
     }
@@ -38,7 +38,7 @@ class ImageArchive
      * @param $name
      * @return bool
      */
-    public static function isImage(string $name)
+    public static function isImage(string $name) : bool
     {
         // there are some images in junk folders that we don't care about
         return ! ImageArchive::isJunk($name) ?
