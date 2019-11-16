@@ -2,8 +2,11 @@
 
 namespace App;
 
+use App\Exceptions\MissingIdAttributeException;
+use App\Exceptions\NullIdAttributeException;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Arr;
 
 class User extends Authenticatable
 {
@@ -39,6 +42,14 @@ class User extends Authenticatable
     }
 
     /**
+     * @return bool
+     */
+    public function isAdministrator()
+    {
+        return $this->hasRole('Administrator');
+    }
+
+    /**
      * @param array|mixed $columns
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
@@ -62,16 +73,6 @@ class User extends Authenticatable
     public function getEmail()
     {
         return $this->email;
-    }
-
-    public function isAdmin()
-    {
-        return $this->admin;
-    }
-
-    public function isMaintainer()
-    {
-        return $this->maintainer;
     }
 
     public function getLastSeen()
@@ -172,5 +173,158 @@ class User extends Authenticatable
     public function reading()
     {
         return $this->hasMany(\App\Reading::class);
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function roles()
+    {
+        return $this->belongsToMany(\App\Role::class, 'user_roles')
+            ->using(\App\UserRole::class);
+    }
+
+    /**
+     * Gets a cached Collection of roles.
+     *
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function cachedRoles()
+    {
+        return \Cache::remember("{$this->name}.roles", '1h', function () {
+            return $this->roles()->get();
+        });
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function permissions()
+    {
+        return $this->belongsToMany(\App\Permission::class, 'user_permissions')
+            ->using(\App\UserPermission::class);
+    }
+
+    /**
+     * Gets whether or not a user has permission to perform an action on a class or object.
+     *
+     * @param string $action
+     * @param string|object $classOrObject
+     * @return bool
+     */
+    public function hasPermissionThroughRole(string $action, $classOrObject)
+    {
+        // Model::class will return a string - so if the parameter is a string then it's not a specific model
+        $isObject = ! is_string($classOrObject);
+
+        $permissions = $this->roles()
+            ->whereHas('permissions', function (\Illuminate\Database\Eloquent\Builder $permissionQuery) use ($action, $classOrObject, $isObject) {
+                $permissionQuery = $permissionQuery
+                    ->where('action', $action)
+                    ->where('model_type', $isObject ? get_class($classOrObject) : $classOrObject );
+
+                if ($isObject) {
+                    $permissionQuery = $permissionQuery->where('model_id', $classOrObject->id);
+                }
+
+                return $permissionQuery;
+            });
+
+        return ! empty($permissions->count('id'));
+    }
+
+    /**
+     * Grants permission to perform an action on a class or object.
+     *
+     * @param string $action
+     * @param $classOrObject
+     * @return bool
+     */
+    public function grantPermission(string $action, $classOrObject)
+    {
+        // if the user inherits the permission from the role, then do not add an entry to the user permissions
+        $permissionExistsThroughRole = $this->hasPermissionThroughRole($action, $classOrObject);
+        if ($permissionExistsThroughRole)
+            return true;
+
+        // Model::class will return a string - so if the parameter is a string then it's not a specific model
+        $isObject = ! is_string($classOrObject);
+
+        $permission = Permission::where('action', $action)
+            ->where('model_type', $isObject ? get_class($classOrObject) : $classOrObject );
+
+        if ($isObject) {
+            $permission = $permission->where('model_id', $classOrObject->id);
+        }
+
+        $this->permissions()->detach($permission);
+        $this->permissions()->attach($permission);
+
+        return true;
+    }
+
+    /**
+     * Grants a role to the user.
+     *
+     * @param Role|string $nameOrObject
+     * @return bool
+     */
+    public function grantRole($nameOrObject)
+    {
+        // Model::class will return a string - so if the parameter is a string then it's not a specific model
+        $isObject = ! is_string($nameOrObject);
+
+        $role = $isObject ?
+            $nameOrObject :
+            Role::where('name', $nameOrObject)->firstOrFail();
+
+        $this->roles()->attach($role);
+
+        return true;
+    }
+
+    /**
+     * Revokes a role from the user.
+     *
+     * @param string|Role $nameOrObject
+     * @return bool
+     */
+    public function revokeRole($nameOrObject)
+    {
+        // Model::class will return a string - so if the parameter is a string then it's not a specific model
+        $isObject = ! is_string($nameOrObject);
+
+        $role = $isObject ?
+            $nameOrObject :
+            Role::where('name', $nameOrObject)->firstOrFail();
+
+        $this->roles()->detach($role);
+
+        return true;
+    }
+
+    /**
+     * Determine if a user has a role.
+     *
+     * @param string $name
+     * @return bool
+     */
+    public function hasRole(string $name) : bool
+    {
+        $cachedRoles = $this->roles();
+
+        return !! $cachedRoles->where('name', $name)->count();
+    }
+
+    public function hasAnyRole(string ... $names)
+    {
+        $roles = $this->roles()->select('id', 'name')->get();
+
+        foreach ($roles as $role) {
+            if (in_array($role->name, $names))
+                return true;
+        }
+
+        return false;
     }
 }

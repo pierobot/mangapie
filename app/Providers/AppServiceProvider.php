@@ -17,14 +17,13 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         \URL::forceRootUrl(config('app.url'));
-        \URL::forceScheme('https');
 
         \Blade::if('admin', function () {
-            return auth()->check() && auth()->user()->admin == true;
+            return auth()->check() && auth()->user()->hasRole('Administrator');
         });
 
-        \Blade::if('maintainer', function () {
-            return auth()->check() && auth()->user()->admin == true || auth()->user()->maintainer == true;
+        \Blade::if('editor', function () {
+            return auth()->check() && auth()->user()->hasRole('Administrator') || auth()->user()->hasRole('Editor');
         });
 
         \Validator::extend('dateinterval', function ($attribute, $value, $parameters, $validator) {
