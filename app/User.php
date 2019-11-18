@@ -2,8 +2,6 @@
 
 namespace App;
 
-use App\Exceptions\MissingIdAttributeException;
-use App\Exceptions\NullIdAttributeException;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Support\Arr;
@@ -206,14 +204,17 @@ class User extends Authenticatable
     }
 
     /**
-     * Gets whether or not a user has permission to perform an action on a class or object.
+     * Gets whether or not a user has permission to perform an action on a class or object through its role.
      *
      * @param string $action
      * @param string|object $classOrObject
      * @return bool
      */
-    public function hasPermissionThroughRole(string $action, $classOrObject)
+    private function hasPermissionThroughRole(string $action, $classOrObject)
     {
+        if ($this->hasRole('Administrator'))
+            return true;
+
         // Model::class will return a string - so if the parameter is a string then it's not a specific model
         $isObject = ! is_string($classOrObject);
 
@@ -230,7 +231,46 @@ class User extends Authenticatable
                 return $permissionQuery;
             });
 
-        return ! empty($permissions->count('id'));
+        return !! $permissions->count();
+    }
+
+    /**
+     * Gets whether or not a user has permission to perform an action on a class or object through itself.
+     *
+     * @param string $action
+     * @param string|object $classOrObject
+     * @return bool
+     */
+    private function hasExplicitPermission(string $action, $classOrObject)
+    {
+        if ($this->hasRole('Administrator'))
+            return true;
+
+        // Model::class will return a string - so if the parameter is a string then it's not a specific model
+        $isObject = ! is_string($classOrObject);
+
+        $permissions = $this->permissions()->where('action', $action);
+        if ($isObject) {
+            $permissions = $permissions->where('model_type', get_class($classOrObject))
+                ->where('model_id', $classOrObject->id);
+        } else {
+            $permissions = $permissions->where('model_type', $classOrObject);
+        }
+
+        return !! $permissions->count();
+    }
+
+    /**
+     * Gets whether or not a user has permission to perform an action on a class or object.
+     *
+     * @param string $action
+     * @param string|object $classOrObject
+     * @return bool
+     */
+    public function hasPermission(string $action, $classOrObject)
+    {
+        return $this->hasPermissionThroughRole($action, $classOrObject) ||
+            $this->hasExplicitPermission($action, $classOrObject);
     }
 
     /**
@@ -257,8 +297,52 @@ class User extends Authenticatable
             $permission = $permission->where('model_id', $classOrObject->id);
         }
 
+        if (! $permission->count()) {
+            // create the permission if it does not exist
+            $permission = Permission::create([
+                'action' => $action,
+                'model_type' => $isObject ? get_class($classOrObject) : $classOrObject,
+                'model_id' => $isObject ? $classOrObject->id : null
+            ]);
+        } else {
+            $permission = $permission->firstOrFail();
+        }
+
         $this->permissions()->detach($permission);
         $this->permissions()->attach($permission);
+
+        return true;
+    }
+
+    /**
+     * Revokes permission to perform an action on a class or object.
+     *
+     * @param string $action
+     * @param string|object $classOrObject
+     * @return bool
+     */
+    public function revokePermission(string $action, $classOrObject)
+    {
+        // if the user inherits the permission from the role, then do not add an entry to the user permissions
+        $permissionExistsThroughRole = $this->hasPermissionThroughRole($action, $classOrObject);
+        if ($permissionExistsThroughRole)
+            return true;
+
+        // Model::class will return a string - so if the parameter is a string then it's not a specific model
+        $isObject = ! is_string($classOrObject);
+
+        $permission = Permission::where('action', $action)
+            ->where('model_type', $isObject ? get_class($classOrObject) : $classOrObject )
+            ->where('model_id', $isObject ? $classOrObject->id : null);
+
+        // fail if the permission was not found
+        if (! $permission->count()) {
+            return false;
+        }
+
+        $permission = $permission->firstOrFail();
+
+        $this->permissions()->detach($permission);
 
         return true;
     }

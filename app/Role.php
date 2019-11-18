@@ -2,8 +2,6 @@
 
 namespace App;
 
-use App\Exceptions\MissingIdAttributeException;
-use App\Exceptions\NullIdAttributeException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
