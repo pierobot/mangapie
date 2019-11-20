@@ -40,13 +40,13 @@ class RolesTableSeeder extends Seeder
             ->grantPermission('update', Comment::class);
 
         self::role('Editor')
+            ->grantPermission('create', Comment::class)
             ->grantPermission('create', Person::class)
             ->grantPermission('update', Person::class)
             ->grantPermission('update', Manga::class);
 
         self::role('Member')
-            ->grantPermission('create', Comment::class)
-            ->grantPermission('update', Comment::class);
+            ->grantPermission('create', Comment::class);
 
         self::role('Banned');
 

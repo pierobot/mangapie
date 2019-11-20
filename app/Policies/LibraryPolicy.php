@@ -19,7 +19,8 @@ class LibraryPolicy
      */
     public function view(User $user, Library $library)
     {
-        return $user->hasPermission('view', $library);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('view', $library);
     }
 
     /**
@@ -30,7 +31,8 @@ class LibraryPolicy
      */
     public function create(User $user)
     {
-        return $user->hasPermission('create', Library::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('create', Library::class);
     }
 
     /**
@@ -42,7 +44,8 @@ class LibraryPolicy
      */
     public function update(User $user, Library $library)
     {
-        return $user->hasPermission('update', Library::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('update', Library::class);
     }
 
     /**
@@ -54,7 +57,8 @@ class LibraryPolicy
      */
     public function delete(User $user, Library $library)
     {
-        return $user->hasPermission('delete', Library::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('delete', Library::class);
     }
 
     /**
@@ -66,7 +70,8 @@ class LibraryPolicy
      */
     public function restore(User $user, Library $library)
     {
-        return $user->hasPermission('restore', Library::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('restore', Library::class);
     }
 
     /**
@@ -78,6 +83,7 @@ class LibraryPolicy
      */
     public function forceDelete(User $user, Library $library)
     {
-        return $user->hasPermission('forceDelete', Library::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('forceDelete', Library::class);
     }
 }

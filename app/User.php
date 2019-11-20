@@ -31,6 +31,8 @@ class User extends Authenticatable
     /**
      * @param array|mixed $columns
      * @return \Illuminate\Database\Eloquent\Collection|static[]
+     *
+     * @deprecated
      */
     public static function admins($columns = ['*'])
     {
@@ -40,16 +42,10 @@ class User extends Authenticatable
     }
 
     /**
-     * @return bool
-     */
-    public function isAdministrator()
-    {
-        return $this->hasRole('Administrator');
-    }
-
-    /**
      * @param array|mixed $columns
      * @return \Illuminate\Database\Eloquent\Collection|static[]
+     *
+     * @deprecated
      */
     public static function maintainers($columns = ['*'])
     {
@@ -190,7 +186,7 @@ class User extends Authenticatable
     public function cachedRoles()
     {
         return \Cache::remember("{$this->name}.roles", '1h', function () {
-            return $this->roles()->get();
+            return $this->roles;
         });
     }
 
@@ -395,14 +391,14 @@ class User extends Authenticatable
      */
     public function hasRole(string $name) : bool
     {
-        $cachedRoles = $this->roles();
+        $cachedRoles = $this->roles;
 
         return !! $cachedRoles->where('name', $name)->count();
     }
 
     public function hasAnyRole(string ... $names)
     {
-        $roles = $this->roles()->select('id', 'name')->get();
+        $roles = $this->roles;
 
         foreach ($roles as $role) {
             if (in_array($role->name, $names))

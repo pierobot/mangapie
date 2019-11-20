@@ -17,7 +17,8 @@ class GenrePolicy
      */
     public function view(User $user, Genre $genre)
     {
-        return true;
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('view', Genre::class);
     }
 
     /**
@@ -26,7 +27,8 @@ class GenrePolicy
      */
     public function create(User $user)
     {
-        return $user->hasPermission('create', Genre::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('create', Genre::class);
     }
 
     /**
@@ -36,7 +38,8 @@ class GenrePolicy
      */
     public function delete(User $user, Genre $genre)
     {
-        return $user->hasPermission('delete', Genre::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('delete', Genre::class);
     }
 
     /**
@@ -46,7 +49,8 @@ class GenrePolicy
      */
     public function forceDelete(User $user, Genre $genre)
     {
-        return $user->hasPermission('forceDelete', Genre::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('forceDelete', Genre::class);
     }
 
     /**
@@ -56,7 +60,8 @@ class GenrePolicy
      */
     public function restore(User $user, Genre $genre)
     {
-        return $user->hasPermission('restore', Genre::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('restore', Genre::class);
     }
 
     /**
@@ -66,6 +71,7 @@ class GenrePolicy
      */
     public function update(User $user, Genre $genre)
     {
-        return $user->hasPermission('update', Genre::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('update', Genre::class);
     }
 }
