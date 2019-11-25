@@ -18,7 +18,7 @@ class UserPolicy
      */
     public function view(User $user, User $otherUser)
     {
-        return true;
+        return ! $user->hasRole('Banned');
     }
 
     /**
@@ -29,7 +29,8 @@ class UserPolicy
      */
     public function create(User $user)
     {
-        return $user->hasPermission('create', User::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('create', User::class);
     }
 
     /**
@@ -41,7 +42,8 @@ class UserPolicy
      */
     public function update(User $user, User $targetUser)
     {
-        return $user->id === $targetUser->id ||
+        return ! $user->hasRole('Banned') &&
+            $user->id === $targetUser->id ||
             $user->hasPermission('update', User::class);
     }
 
@@ -55,7 +57,8 @@ class UserPolicy
     public function delete(User $user, User $targetUser)
     {
         // TODO: allow users to delete their own accounts?
-        return $user->hasPermission('delete', User::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('delete', User::class);
     }
 
     /**
@@ -67,7 +70,8 @@ class UserPolicy
      */
     public function restore(User $user, User $targetUser)
     {
-        return $user->hasPermission('restore', User::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('restore', User::class);
     }
 
     /**
@@ -79,6 +83,7 @@ class UserPolicy
      */
     public function forceDelete(User $user, User $targetUser)
     {
-        return $user->hasPermission('forceDelete', User::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('forceDelete', User::class);
     }
 }

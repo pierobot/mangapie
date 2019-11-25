@@ -17,7 +17,7 @@ class PersonPolicy
      */
     public function view(User $user, Person $person)
     {
-        return true;
+        return ! $user->hasRole('Banned');
     }
 
     /**
@@ -26,7 +26,8 @@ class PersonPolicy
      */
     public function create(User $user)
     {
-        return $user->hasPermission('create', Person::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('create', Person::class);
     }
 
     /**
@@ -36,7 +37,8 @@ class PersonPolicy
      */
     public function delete(User $user, Person $person)
     {
-        return $user->hasPermission('delete', Person::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('delete', Person::class);
     }
 
     /**
@@ -46,7 +48,8 @@ class PersonPolicy
      */
     public function forceDelete(User $user, Person $person)
     {
-        return $user->hasPermission('forceDelete', Person::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('forceDelete', Person::class);
     }
 
     /**
@@ -56,7 +59,8 @@ class PersonPolicy
      */
     public function restore(User $user, Person $person)
     {
-        return $user->hasPermission('restore', Person::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('restore', Person::class);
     }
 
     /**
@@ -66,6 +70,7 @@ class PersonPolicy
      */
     public function update(User $user, Person $person)
     {
-        return $user->hasPermission('update', Person::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('update', Person::class);
     }
 }

@@ -20,7 +20,9 @@ class MangaPolicy
      */
     public function view(User $user, Manga $manga)
     {
-        return $user->can('view', $manga->library);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('view', $manga->library) ||
+            $user->hasPermission('view', $manga);
     }
 
     /**
@@ -31,7 +33,8 @@ class MangaPolicy
      */
     public function create(User $user)
     {
-        return $user->hasPermission('create', Manga::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('create', Manga::class);
     }
 
     /**
@@ -43,7 +46,8 @@ class MangaPolicy
      */
     public function update(User $user, Manga $manga)
     {
-        return $user->hasPermission('update', Manga::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('update', Manga::class);
     }
 
     /**
@@ -55,7 +59,8 @@ class MangaPolicy
      */
     public function delete(User $user, Manga $manga)
     {
-        return $user->hasPermission('delete', Manga::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('delete', Manga::class);
     }
 
     /**
@@ -67,7 +72,8 @@ class MangaPolicy
      */
     public function restore(User $user, Manga $manga)
     {
-        return $user->hasPermission('restore', Manga::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('restore', Manga::class);
     }
 
     /**
@@ -79,6 +85,7 @@ class MangaPolicy
      */
     public function forceDelete(User $user, Manga $manga)
     {
-        return $user->hasPermission('forceDelete', Manga::class);
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('forceDelete', Manga::class);
     }
 }
