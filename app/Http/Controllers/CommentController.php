@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 use App\Http\Requests\CommentCreateRequest;
@@ -13,8 +14,20 @@ use App\Comment;
 
 class CommentController extends Controller
 {
-    public function put(CommentCreateRequest $request)
+    use AuthorizesRequests;
+
+    public function __construct()
     {
+        $this->authorizeResource(Comment::class, 'comment');
+    }
+
+    /**
+     * @param CommentCreateRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function create(CommentCreateRequest $request)
+    {
+        /** @var Manga $manga */
         $manga = Manga::findOrFail($request->get('manga_id'));
 
         $comment = $manga->comments()->create([
@@ -29,16 +42,15 @@ class CommentController extends Controller
             $redirect->withErrors('There was an error posting your comment.');
     }
 
-    public function delete(CommentDeleteRequest $request)
+    /**
+     * @param Comment $comment
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy(Comment $comment)
     {
-        $comment = Comment::findOrFail($request->get('comment_id'))->with(['user', 'manga']);
-        $manga = $comment->manga;
+        $comment->forceDelete();
 
-        $redirect = redirect()->action('MangaController@comments', [$manga]);
-
-        if (\Auth::user() !== $comment->user)
-            return $redirect->withErrors('You are not authorized to do that.');
-
-        return $redirect->with('success', 'Successfully deleted the comment.');
+        return redirect()->back()
+            ->with('success', 'Successfully deleted the comment.');
     }
 }
