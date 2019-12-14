@@ -13,7 +13,7 @@ class LibraryUpdateRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->check() && auth()->user()->admin == true;
+        return auth()->check();
     }
 
     /**
@@ -24,7 +24,6 @@ class LibraryUpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'library_id' => 'required|int|exists:libraries,id',
             'action' => 'required|string|in:rename,refresh',
             'name' => 'required_if:action,rename|string|nullable|unique:libraries,name'
         ];

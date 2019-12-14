@@ -13,7 +13,7 @@ class LibraryCreateRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->check() && auth()->user()->admin == true;
+        return \Auth::check();
     }
 
     /**
