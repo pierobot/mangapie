@@ -185,8 +185,8 @@ class User extends Authenticatable
      */
     public function cachedRoles()
     {
-        return \Cache::remember("{$this->name}.roles", '1h', function () {
-            return $this->roles;
+        return \Cache::remember("{$this->name}.roles", now()->addHour(), function () {
+            return $this->roles()->get();
         });
     }
 
@@ -360,6 +360,11 @@ class User extends Authenticatable
 
         $this->roles()->attach($role);
 
+        \Cache::forget("{$this->name}.roles");
+        \Cache::remember("{$this->name}.roles", now()->addHour(), function () {
+            return $this->roles()->get();
+        });
+
         return true;
     }
 
@@ -380,6 +385,11 @@ class User extends Authenticatable
 
         $this->roles()->detach($role);
 
+        \Cache::forget("{$this->name}.roles");
+        \Cache::remember("{$this->name}.roles", now()->addHour(), function () {
+            return $this->roles()->get();
+        });
+
         return true;
     }
 
@@ -391,14 +401,14 @@ class User extends Authenticatable
      */
     public function hasRole(string $name) : bool
     {
-        $cachedRoles = $this->roles;
+        $cachedRoles = $this->cachedRoles();
 
-        return !! $cachedRoles->where('name', $name)->count();
+        return $cachedRoles->where('name', $name)->count() > 0;
     }
 
     public function hasAnyRole(string ... $names)
     {
-        $roles = $this->roles;
+        $roles = $this->cachedRoles();
 
         foreach ($roles as $role) {
             if (in_array($role->name, $names))

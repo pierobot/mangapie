@@ -16,6 +16,17 @@
         <testsuite name="Unit Tests">
             <directory suffix="Test.php">./tests/Unit</directory>
         </testsuite>
+
+        <testsuite name="Permissions">
+            <file>./tests/Unit/CommentPolicyTest.php</file>
+            <file>./tests/Unit/GenrePolicyTest.php</file>
+            <file>./tests/Unit/LibraryPolicyTest.php</file>
+            <file>./tests/Unit/MangaPolicyTest.php</file>
+            <file>./tests/Unit/PersonPolicyTest.php</file>
+            <file>./tests/Unit/RolePermissionsTest.php</file>
+            <file>./tests/Unit/UserPermissionsTest.php</file>
+            <file>./tests/Unit/UserPolicyTest.php</file>
+        </testsuite>
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">

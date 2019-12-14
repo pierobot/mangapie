@@ -3,9 +3,6 @@
 namespace Tests\Unit;
 
 use App\Comment;
-use App\Exceptions\MissingIdAttributeException;
-use App\Exceptions\NullIdAttributeException;
-use App\Library;
 use App\Manga;
 use App\Role;
 use App\User;
@@ -56,6 +53,7 @@ class RolePermissionsTest extends TestCase
      */
     public function testGrantRevokeRole(string ... $roles)
     {
+        /** @var User $user */
         $user = factory(User::class)->create();
 
         foreach ($roles as $role) {
@@ -78,7 +76,9 @@ class RolePermissionsTest extends TestCase
      */
     public function testClassPermissions()
     {
+        /** @var Role $memberRole */
         $memberRole = Role::where('name', 'Member')->firstOrFail();
+        /** @var Role $editorRole */
         $editorRole = Role::where('name', 'Editor')->firstOrFail();
 
         $this->assertTrue($memberRole->hasPermission('create', Comment::class));
@@ -96,6 +96,7 @@ class RolePermissionsTest extends TestCase
      */
     public function testObjectPermissions()
     {
+        /** @var Role $memberRole */
         $memberRole = Role::where('name', 'Member')->firstOrFail();
         $comment = factory(Comment::class)->create();
 
