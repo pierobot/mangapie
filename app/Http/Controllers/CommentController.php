@@ -3,12 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Http\Request;
 
 use App\Http\Requests\CommentCreateRequest;
-use App\Http\Requests\CommentDeleteRequest;
 
-use App\Archive;
 use App\Manga;
 use App\Comment;
 

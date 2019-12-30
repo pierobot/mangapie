@@ -119,7 +119,7 @@ class SearchController extends Controller
 //
 //        $results = $results->merge(collect($assocArray));
 
-        if ($user->isAdmin() == false)
+        if ($user->hasRole('Administrator') == false)
             $results = $results->whereIn('library_id', $library_ids);
 
         $results = $results->all();

@@ -10,28 +10,28 @@ class UserSettingsController extends Controller
 {
     public function index()
     {
-        $user = auth()->user();
+        $user = \Auth::user();
 
         return view('settings.index')->with('user', $user);
     }
 
     public function account()
     {
-        $user = auth()->user();
+        $user = \Auth::user();
 
         return view('settings.account')->with('user', $user);
     }
 
     public function visuals()
     {
-        $user = auth()->user();
+        $user = \Auth::user();
 
         return view('settings.visuals')->with('user', $user);
     }
 
     public function profile()
     {
-        $user = auth()->user();
+        $user = \Auth::user();
 
         return view('settings.profile')->with('user', $user);
     }

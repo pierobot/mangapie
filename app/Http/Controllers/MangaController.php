@@ -2,20 +2,38 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-
-use \Carbon\Carbon;
-
-use \App\Favorite;
-use \App\Genre;
-use \App\GenreInformation;
 use \App\Manga;
-use \App\Sources\MangaUpdates;
-use App\WatchReference;
+
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class MangaController extends Controller
 {
-    public function index(Manga $manga, $sort = 'ascending')
+    use AuthorizesRequests;
+
+    public function __construct()
+    {
+        $this->authorizeResource(Manga::class, 'manga');
+    }
+
+//    /**
+//     * Get the map of resource methods to ability names.
+//     *
+//     * @return array
+//     */
+//    protected function resourceAbilityMap()
+//    {
+//        return [
+//            'index' => 'viewAny',
+//            'show' => 'view',
+//            'create' => 'create',
+//            'store' => 'create',
+//            'edit' => 'update',
+//            'update' => 'update',
+//            'destroy' => 'delete',
+//        ];
+//    }
+
+    public function show(Manga $manga, $sort = 'ascending')
     {
         // these are all required because of the responsive layouts
         $manga = $manga->load([
@@ -28,9 +46,9 @@ class MangaController extends Controller
             'votes'
         ]);
 
-        $user = auth()->user()->load(['favorites', 'readerHistory', 'watchReferences']);
+        $user = \Auth::user()->loadMissing(['favorites', 'readerHistory', 'watchReferences']);
 
-        return view('manga.index')
+        return view('manga.show')
             ->with('user', $user)
             ->with('manga', $manga)
             ->with('sort', $sort);
@@ -49,7 +67,7 @@ class MangaController extends Controller
             'votes'
         ]);
 
-        $user = auth()->user()->load(['favorites', 'readerHistory', 'watchReferences']);
+        $user = \Auth::user()->loadMissing(['favorites', 'readerHistory', 'watchReferences']);
 
         return view('manga.files')
             ->with('user', $user)
@@ -70,7 +88,7 @@ class MangaController extends Controller
             'votes'
         ]);
 
-        $user = auth()->user()->load(['favorites', 'readerHistory', 'watchReferences']);
+        $user = \Auth::user()->loadMissing(['favorites', 'readerHistory', 'watchReferences']);
 
         return view('manga.comments')
             ->with('user', $user)

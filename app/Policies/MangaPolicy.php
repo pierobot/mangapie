@@ -12,6 +12,18 @@ class MangaPolicy
     use HandlesAuthorization;
 
     /**
+     * Determines whether the user can view any manga.
+     * This is always true as library access will be restricted in the view method.
+     * If this is false, MangaController@show will fail.
+     *
+     * @return bool
+     */
+//    public function viewAny(User $user)
+//    {
+//        return true;
+//    }
+
+    /**
      * Determine whether the user can view the manga.
      *
      * @param  \App\User  $user

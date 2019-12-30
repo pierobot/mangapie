@@ -13,9 +13,7 @@ class EditMangaRequest extends FormRequest
      */
     public function authorize()
     {
-        $user = \Auth::user();
-
-        return $user->isAdmin() == true || $user->isMaintainer() == true;
+        return \Auth::check();
     }
 
     /**

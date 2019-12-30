@@ -13,10 +13,7 @@ class EditMangaArtistAddRequest extends FormRequest
      */
     public function authorize()
     {
-        $authorized = \Auth::check();
-        $user = \Auth::user();
-
-        return $authorized && ($user->isAdmin() || $user->isMaintainer());
+        return \Auth::check();
     }
 
     /**

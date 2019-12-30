@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 class Person extends Model
 {
@@ -27,12 +28,21 @@ class Person extends Model
      */
     public function manga()
     {
-        // TODO: Optimize into a single query ?
+        /** @var \Illuminate\Database\Eloquent\Builder $authorReferences */
+        $authorReferences = AuthorReference::where('author_id', $this->id);
+        $artistReferences = ArtistReference::where('artist_id', $this->id);
 
-        $whereAuthor = $this->mangaWhereAuthor;
-        $whereArtist = $this->mangaWhereArtist;
+        $references = $authorReferences->joinSub(
+                $artistReferences,
+                'artist_references',
+                'author_references.author_id', '=', 'artist_references.artist_id')
+            ->get()
+            ->unique('manga_id')
+            ->load('manga', 'manga.library');
 
-        return $whereAuthor->merge($whereArtist)->unique('id');
+        return $references->map(function (AuthorReference $reference) {
+            return $reference->manga;
+        });
     }
 
     public function mangaWhereAuthor()

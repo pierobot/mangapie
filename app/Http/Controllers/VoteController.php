@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Vote\VotePatchRequest;
 use App\Http\Requests\Vote\VoteCreateRequest;
-use App\Http\Requests\Vote\VoteDeleteRequest;
+use App\Vote;
 
 class VoteController extends Controller
 {
@@ -21,11 +20,9 @@ class VoteController extends Controller
         return response()->make();
     }
 
-    public function delete(VoteDeleteRequest $request)
+    public function destroy(Vote $vote)
     {
-        $user = $request->user();
-
-        $user->votes()->find($request->get('vote_id'))->forceDelete();
+        $vote->forceDelete();
 
         return redirect()->back()->with('success', 'Your vote was successfully deleted.');
     }

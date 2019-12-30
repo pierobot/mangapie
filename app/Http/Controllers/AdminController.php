@@ -17,6 +17,8 @@ use App\Http\Requests\Admin\PutViewsTimeRequest;
 use App\Image;
 
 use App\Library;
+use App\Role;
+use App\User;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -43,17 +45,32 @@ class AdminController extends Controller
 
     public function users()
     {
-        $users = \App\User::orderBy('name', 'asc')->paginate(18);
+        $users = User::orderBy('name', 'asc')->paginate(18);
+        $roles = Role::all();
+        $libraries = Library::all();
 
         $users->onEachSide(1)->withPath(\URL::to('admin/users'));
 
-        return view('admin.users')->with('users', $users);
+        return view('admin.users')
+            ->with('users', $users)
+            ->with('roles', $roles)
+            ->with('libraries', $libraries);
+    }
+
+    public function roles()
+    {
+        $roles = Role::orderBy('name', 'asc')
+            ->with('permissions')
+            ->get();
+
+        return view('admin.roles')
+            ->with('roles', $roles);
     }
 
     public function searchUsers(PostSearchUsersRequest $request)
     {
         // good enough for now - not going to be used extensively
-        $users = \App\User::where('name', $request->get('name'))
+        $users = User::where('name', $request->get('name'))
             ->orWhere('name', 'like', '%' . $request->get('name') . '%')
             ->get();
 
@@ -236,5 +253,11 @@ class AdminController extends Controller
         }
 
         return redirect()->back()->with('success', 'The cron value has been updated.');
+    }
+
+    public function createRole($request)
+    {
+        dd($request);
+        return redirect()->back()->with('success', 'OK');
     }
 }

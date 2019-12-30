@@ -15,7 +15,7 @@ Route::auth();
 
 Route::middleware(['auth'])->group(function () {
 
-    Route::prefix('admin')->middleware('admin')->name('admin')->group(function () {
+    Route::prefix('admin')->middleware('role:Administrator')->name('admin')->group(function () {
         Route::get('/', 'AdminController@index');
 
         Route::patch('/config/registration', 'AdminController@patchRegistration');
@@ -40,6 +40,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/users', 'AdminController@users');
         Route::post('/users/search', 'AdminController@searchUsers');
+
+        Route::get('/roles', 'AdminController@roles');
+        Route::post('/roles', 'AdminController@createRole');
     });
 
     Route::prefix('avatar')->name('avatar')->group(function () {
@@ -49,8 +52,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('comments')->name('comments')->group(function () {
-        Route::put('/', 'CommentController@put');
-        Route::delete('/', 'CommentController@delete');
+        Route::post('/', 'CommentController@create');
+        Route::delete('/{comment}', 'CommentController@destroy');
     });
 
     Route::prefix('cover')->name('cover')->group(function () {
@@ -63,7 +66,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/', 'CoverController@put')->middleware('maintainer');
     });
 
-    Route::prefix('edit')->middleware('maintainer')->name('edit')->group(function () {
+    Route::prefix('edit')->middleware('role:Administrator,Maintainer')->name('edit')->group(function () {
         Route::get('/{manga}', 'MangaEditController@index');
 
         Route::post('/artist', 'MangaEditController@postArtist');
@@ -98,7 +101,7 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('favorites')->name('favorites')->group(function () {
         Route::get('/', 'FavoriteController@index');
         Route::post('/', 'FavoriteController@create');
-        Route::delete('/', 'FavoriteController@delete');
+        Route::delete('/{favorite}', 'FavoriteController@destroy');
     });
 
     Route::prefix('genre')->name('genre')->group(function () {
@@ -114,14 +117,14 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{manga}/{archive}/{page}', 'ReaderController@image');
     });
 
-    Route::prefix('job')->name('jobs')->group(function () {
+    Route::prefix('job')->middleware('role:Administrator')->name('jobs')->group(function () {
         Route::get('/{jobStatus}', 'JobStatusController@status');
     });
 
-    Route::prefix('library')->middleware('admin')->name('library')->group(function () {
-        Route::put('/', 'LibraryController@create');
-        Route::patch('/', 'LibraryController@update');
-        Route::delete('/', 'LibraryController@delete');
+    Route::prefix('library')->middleware('role:Administrator')->name('library')->group(function () {
+        Route::post('/', 'LibraryController@create');
+        Route::patch('/{library}', 'LibraryController@update');
+        Route::delete('/{library}', 'LibraryController@destroy');
     });
 
     Route::prefix('lists')->name('lists')->group(function () {
@@ -134,7 +137,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('manga')->middleware('manga_views')->name('manga')->group(function () {
-        Route::get('/{manga}/{sort?}', 'MangaController@index');
+        Route::get('/{manga}/{sort?}', 'MangaController@show');
         Route::get('/{manga}/files/{sort?}', 'MangaController@files');
         Route::get('/{manga}/comments', 'MangaController@comments');
     });
@@ -145,7 +148,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('person')->name('person')->group(function () {
-        Route::get('/{person}', 'PersonController@index');
+        Route::get('/{person}', 'PersonController@show');
     });
 
     Route::prefix('preview')->group(function () {
@@ -170,17 +173,17 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('user')->name('user')->group(function () {
-        Route::get('/{user}', 'UserController@index');
+        Route::get('/{user}', 'UserController@show');
         Route::get('/{user}/comments', 'UserController@comments');
         Route::get('/{user}/activity', 'UserController@activity');
 
         Route::put('/status', 'UserController@putStatus');
     });
 
-    Route::prefix('users')->middleware('admin')->name('users')->group(function () {
+    Route::prefix('users')->middleware('role:Administrator')->name('users')->group(function () {
         Route::put('/', 'UserController@create');
         Route::patch('/', 'UserController@edit');
-        Route::delete('/', 'UserController@delete');
+        Route::delete('/{user}', 'UserController@destroy');
     });
 
     Route::prefix('settings')->name('settings')->group(function () {
@@ -196,11 +199,11 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('vote')->name('votes')->group(function() {
         Route::put('/', 'VoteController@put');
-        Route::delete('/', 'VoteController@delete');
+        Route::delete('/{vote}', 'VoteController@destroy');
     });
 
     Route::prefix('watch')->name('watch')->group(function () {
         Route::post('/', 'WatchController@create');
-        Route::delete('/', 'WatchController@delete');
+        Route::delete('/{watchReference}', 'WatchController@destroy');
     });
 });

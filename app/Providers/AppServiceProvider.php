@@ -19,11 +19,11 @@ class AppServiceProvider extends ServiceProvider
         \URL::forceRootUrl(config('app.url'));
 
         \Blade::if('admin', function () {
-            return auth()->check() && auth()->user()->hasRole('Administrator');
+            return \Auth::check() && \Auth::user()->hasRole('Administrator');
         });
 
         \Blade::if('editor', function () {
-            return auth()->check() && auth()->user()->hasRole('Administrator') || auth()->user()->hasRole('Editor');
+            return \Auth::check() && \Auth::user()->hasRole('Administrator') || \Auth::user()->hasRole('Editor');
         });
 
         \Validator::extend('dateinterval', function ($attribute, $value, $parameters, $validator) {

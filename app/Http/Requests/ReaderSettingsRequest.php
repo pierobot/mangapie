@@ -13,7 +13,7 @@ class ReaderSettingsRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->check();
+        return \Auth::check();
     }
 
     /**

@@ -6,14 +6,41 @@ use App\Http\Requests\User\PutStatusRequest;
 use App\Http\Requests\User\UserCreateRequest;
 use App\Http\Requests\User\UserDeleteRequest;
 use App\Http\Requests\User\UserEditRequest;
-use Illuminate\Http\Request;
 
 use App\User;
 use App\LibraryPrivilege;
 
 class UserController extends Controller
 {
-    public function index(User $user)
+    /**
+     * UserController constructor.
+     */
+    public function __construct()
+    {
+        $this->authorizeResource(User::class);
+    }
+
+    /**
+     * Get the map of resource methods to ability names.
+     *
+     * @return array
+     */
+    protected function resourceAbilityMap()
+    {
+        return [
+            'show' => 'view',
+            // TODO: combine comments and activity into one page for the profile; remove from here
+            'comments' => 'view',
+            'activity' => 'view',
+            'create' => 'create',
+            'store' => 'create',
+            'edit' => 'update',
+            'update' => 'update',
+            'destroy' => 'delete',
+        ];
+    }
+
+    public function show(User $user)
     {
         $recentFavorites = $user->favorites->sortByDesc('updated_at')->take(4)->load('manga');
         $recentReads = $user->readerHistory->sortByDesc('updated_at')->unique('manga_id')->take(4)->load('manga');
@@ -24,6 +51,7 @@ class UserController extends Controller
             ->with('recentReads', $recentReads);
     }
 
+    // TODO: deprecate
     public function comments(User $user)
     {
         $comments = $user->comments->sortByDesc('created_at')->take(10)->load('manga');
@@ -154,12 +182,12 @@ class UserController extends Controller
         return redirect()->back();
     }
 
-    public function delete(UserDeleteRequest $request)
+    public function destroy(User $user)
     {
-        $user = User::where('name', $request->get('name'))->first();
+        // TODO: add observer to remove anything related
         $user->forceDelete();
 
-        $request->session()->flash('success', 'User was successfully deleted!');
+        session()->flash('success', 'User was successfully deleted!');
 
         return redirect()->back();
     }

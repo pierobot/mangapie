@@ -2,15 +2,9 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 
-use \Carbon\Carbon;
-
-use App\ArtistReference;
-use App\AuthorReference;
-use App\GenreReference;
-use App\Interfaces\ImageArchiveInterface;
 use App\Interfaces\EditableInterface;
 
 class Manga
@@ -115,6 +109,8 @@ class Manga
 
     public function forceDelete()
     {
+        // TODO: handle more elegantly using observers?
+
         // delete all information and references that belongs to this manga
         $this->artistReferences()->forceDelete();
         $this->authorReferences()->forceDelete();
@@ -231,7 +227,7 @@ class Manga
         return $genres;
     }
 
-    public function scopeSearch($query, $keywords)
+    public function scopeSearch(Builder $query, string $keywords)
     {
         $results = $query->whereRaw("match(name) against(? in boolean mode)", [$keywords])->get();
 

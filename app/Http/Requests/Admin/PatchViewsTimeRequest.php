@@ -13,7 +13,7 @@ class PatchViewsTimeRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->check() && auth()->user()->admin;
+        return \Auth::check() && \Auth::user()->hasRole('Administrator');
     }
 
     /**

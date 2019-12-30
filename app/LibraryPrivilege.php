@@ -28,7 +28,7 @@ class LibraryPrivilege extends Model
         $libraries = null;
         $ids = [];
 
-        if ($user->isAdmin()) {
+        if ($user->hasRole('Administrator')) {
             $libraries = Library::all();
 
             foreach ($libraries as $library) {

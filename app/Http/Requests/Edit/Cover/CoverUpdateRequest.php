@@ -15,7 +15,7 @@ class CoverUpdateRequest extends FormRequest
     {
         $user = \Auth::user();
 
-        return $user->isAdmin() || $user->isMaintainer();
+        return $user->hasRole('Administrator') || $user->hasRole('Editor');
     }
 
     /**

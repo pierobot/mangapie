@@ -4,32 +4,47 @@ namespace App\Http\Controllers;
 
 use App\Favorite;
 use App\Http\Requests\Favorite\FavoriteAddRequest;
-use App\Http\Requests\Favorite\FavoriteRemoveRequest;
-use App\Manga;
+
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class FavoriteController extends Controller
 {
+
+    /**
+     * Gets the view for the favorites.
+     * Do not perform resource based authorization.
+     *
+     * @return mixed
+     */
     public function index()
     {
         $user = \Auth::user();
-        $favorites = $user->favorites->load('manga');
-        $total = $favorites->count();
-        $favoriteIds = [];
+        /** @var Collection $favorites */
+        $favorites = $user->favorites->loadMissing(
+            'manga',
+            'manga.favorites',
+            'manga.votes',
+            'manga.authorReferences',
+            'manga.authorReferences.author');
 
-        $favorites->each(function (Favorite $favorite) use (&$favoriteIds) {
-            $favoriteIds[] = $favorite->manga->getId();
-        });
+        $collection = collect();
 
-        $favoriteList = Manga::whereIn('id', $favoriteIds)
-                             ->orderBy('name', 'asc')
-                             ->paginate(18);
+        // TODO: Should favorites to a library one can no longer access be viewable?
 
-        $favoriteList->onEachSide(1)->withPath(\Config::get('app.url'));
+        /** @var Favorite $favorite */
+        foreach ($favorites as $favorite) {
+            $collection->push($favorite->manga);
+        }
+
+        $page = request()->get('page');
+        $manga_list = new LengthAwarePaginator($collection->forPage($page, 18), $collection->count(), 18);
+        $manga_list->withPath(\Config::get('app.url'));
 
         return view('favorites.index')
-            ->with('manga_list', $favoriteList)
-            ->with('header', 'Favorites: (' . $total . ')')
-            ->with('total', $total);
+            ->with('manga_list', $manga_list)
+            ->with('header', 'Favorites: (' . $favorites->count() . ')')
+            ->with('total', $favorites->count());
     }
 
     public function create(FavoriteAddRequest $request)
@@ -46,16 +61,10 @@ class FavoriteController extends Controller
         return redirect()->back();
     }
 
-    public function delete(FavoriteRemoveRequest $request)
+    public function destroy(Favorite $favorite)
     {
-        $favorite = Favorite::find($request->get('favorite_id'));
-        if ($favorite->user->id !== \Auth::id())
-            return redirect()->back(403);
-
         $favorite->forceDelete();
 
-        session()->flash('success', 'You have unfavorited this manga.');
-
-        return redirect()->back();
+        return \Redirect::back()->with('success', 'You have unfavorited this manga.');
     }
 }
