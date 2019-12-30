@@ -43,6 +43,15 @@
                         </div>
 
                         <div class="form-row justify-content-center">
+                            <div class="col-12 col-xl-7 mb-3">
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input form-control" type="checkbox" id="remember" name="remember">
+                                    <label class="custom-control-label" for="remember">Remember me</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row justify-content-center">
                             <div class="col-12 col-xl-7">
                                 <button class="btn btn-primary form-control" type="submit">
                                     <span class="fa fa-sign-in"></span>&nbsp; Login
