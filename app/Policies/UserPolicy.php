@@ -44,7 +44,9 @@ class UserPolicy
     {
         return ! $user->hasRole('Banned') &&
             $user->id === $targetUser->id ||
-            $user->hasPermission('update', User::class);
+            $user->hasPermission('update', User::class) &&
+            // do not allow admins to update other admin accounts.
+            ! ($user->hasRole('Administrator') && $targetUser->hasRole('Administrator'));
     }
 
     /**
@@ -58,7 +60,9 @@ class UserPolicy
     {
         // TODO: allow users to delete their own accounts?
         return ! $user->hasRole('Banned') &&
-            $user->hasPermission('delete', User::class);
+            $user->hasPermission('delete', User::class) &&
+            // do not allow admins to delete other admin accounts.
+            ! ($user->hasRole('Administrator') && $targetUser->hasRole('Administrator'));
     }
 
     /**
@@ -84,6 +88,8 @@ class UserPolicy
     public function forceDelete(User $user, User $targetUser)
     {
         return ! $user->hasRole('Banned') &&
-            $user->hasPermission('forceDelete', User::class);
+            $user->hasPermission('forceDelete', User::class) &&
+            // do not allow admins to delete other admin accounts.
+            ! ($user->hasRole('Administrator') && $targetUser->hasRole('Administrator'));
     }
 }

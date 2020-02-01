@@ -21,6 +21,8 @@ class UserPolicyTest extends TestCase
     /** @var User */
     private $admin = null;
     /** @var User */
+    private $admin2 = null;
+    /** @var User */
     private $moderator = null;
     /** @var User */
     private $editor = null;
@@ -45,12 +47,14 @@ class UserPolicyTest extends TestCase
         ]);
 
         $this->admin = factory(User::class)->create();
+        $this->admin2 = factory(User::class)->create();
         $this->moderator = factory(User::class)->create();
         $this->editor = factory(User::class)->create();
         $this->member = factory(User::class)->create();
         $this->banned = factory(User::class)->create();
 
         $this->admin->grantRole('Administrator');
+        $this->admin2->grantRole('Administrator');
         $this->moderator->grantRole('Moderator');
         $this->editor->grantRole('Editor');
         $this->member->grantRole('Member');
@@ -91,6 +95,7 @@ class UserPolicyTest extends TestCase
     public function testDelete()
     {
         $this->assertTrue($this->policy->delete($this->admin, $this->randomUser));
+        $this->assertFalse($this->policy->delete($this->admin, $this->admin2));
         $this->assertFalse($this->policy->delete($this->moderator, $this->randomUser));
         $this->assertFalse($this->policy->delete($this->editor, $this->randomUser));
         $this->assertFalse($this->policy->delete($this->member, $this->randomUser));
@@ -103,6 +108,7 @@ class UserPolicyTest extends TestCase
     public function testForceDelete()
     {
         $this->assertTrue($this->policy->forceDelete($this->admin, $this->randomUser));
+        $this->assertFalse($this->policy->forceDelete($this->admin, $this->admin2));
         $this->assertFalse($this->policy->forceDelete($this->moderator, $this->randomUser));
         $this->assertFalse($this->policy->forceDelete($this->editor, $this->randomUser));
         $this->assertFalse($this->policy->forceDelete($this->member, $this->randomUser));
@@ -126,6 +132,7 @@ class UserPolicyTest extends TestCase
 
     public function testUpdate()
     {
+        $this->assertFalse($this->policy->update($this->admin, $this->admin2));
         $this->assertTrue($this->policy->update($this->admin, $this->randomUser));
         $this->assertFalse($this->policy->update($this->moderator, $this->randomUser));
         $this->assertFalse($this->policy->update($this->editor, $this->randomUser));
