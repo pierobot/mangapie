@@ -10,6 +10,7 @@
         <li class="nav-item"><a href="{{ URL::action('AdminController@config') }}" class="nav-link">Config</a></li>
         <li class="nav-item"><a href="{{ URL::action('AdminController@libraries') }}" class="nav-link">Libraries</a></li>
         <li class="nav-item"><a href="{{ URL::action('AdminController@users') }}" class="nav-link">Users</a></li>
+        <li class="nav-item"><a href="{{ URL::action('AdminController@roles') }}" class="nav-link">Roles</a></li>
     </ul>
 @endsection
 

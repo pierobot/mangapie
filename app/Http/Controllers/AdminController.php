@@ -14,6 +14,9 @@ use App\Http\Requests\Admin\PatchRegistrationRequest;
 
 use App\Http\Requests\Admin\PutSchedulerRequest;
 use App\Http\Requests\Admin\PutViewsTimeRequest;
+
+use App\Http\Requests\Role\CreateRoleRequest;
+
 use App\Image;
 
 use App\Library;
@@ -255,9 +258,20 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'The cron value has been updated.');
     }
 
-    public function createRole($request)
+    public function createRole(CreateRoleRequest $request)
     {
-        dd($request);
-        return redirect()->back()->with('success', 'OK');
+        $libraryIds = $request->get('libraries');
+
+        /** @var Role $role */
+        $role = Role::create([
+            'name' => $request->get('name')
+        ]);
+
+        $libraries = Library::whereIn('id', $libraryIds)->get();
+        foreach ($libraries as $library) {
+            $role->grantPermission('view', $library);
+        }
+
+        return redirect()->back()->with('success', 'The role has been created.');
     }
 }

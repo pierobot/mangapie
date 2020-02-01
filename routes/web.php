@@ -181,7 +181,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('users')->middleware('role:Administrator')->name('users')->group(function () {
-        Route::put('/', 'UserController@create');
+        Route::post('/', 'UserController@create');
         Route::patch('/', 'UserController@edit');
         Route::delete('/{user}', 'UserController@destroy');
     });
