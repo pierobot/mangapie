@@ -29,6 +29,8 @@ class Role extends Model
 
     /**
      * Gets a Permission model from the given action and class/object.
+     * If the Permission does not exist, then it will be created.
+     * @note This will not link the permission to a role or user.
      *
      * @param string $action
      * @param string|object $classOrObject
@@ -40,6 +42,7 @@ class Role extends Model
         $isObject = ! is_string($classOrObject);
 
         $permissions = Permission::where('action', $action);
+
         if ($isObject) {
             $permissions = $permissions->where('model_type', get_class($classOrObject))
                 ->where('model_id', $classOrObject->id);
@@ -89,11 +92,20 @@ class Role extends Model
      */
     public function hasPermission(string $action, $classOrObject)
     {
-        $permission = $this->permissionFromAction($action, $classOrObject);
+        // Model::class will return a string - so if the parameter is a string then it's not a specific model
+        $isObject = ! is_string($classOrObject);
 
-        return RolePermission::where('role_id', $this->id)
-            ->where('permission_id', $permission->id)
-            ->count() > 0;
+        /** @var Collection $permissions */
+        $permissions = $this->permissions->where('action', $action);
+
+        if ($isObject) {
+            $permissions = $permissions->where('model_type', get_class($classOrObject))
+                                       ->where('model_id', $classOrObject->id);
+        } else {
+            $permissions = $permissions->where('model_type', $classOrObject);
+        }
+
+        return $permissions->count() > 0;
     }
 
     /**
@@ -109,6 +121,9 @@ class Role extends Model
         // attach will throw a QueryException if it already exists
         $this->permissions()->detach($permissions);
         $this->permissions()->attach($permissions);
+
+        /* reload the permissions otherwise the Role will have stale data */
+        $this->load('permissions');
 
         return $this;
     }
@@ -128,6 +143,9 @@ class Role extends Model
         $this->permissions()->detach($permission);
         $this->permissions()->attach($permission);
 
+        /* reload the permissions otherwise the Role will have stale data */
+        $this->load('permissions');
+
         return $this;
     }
 
@@ -143,6 +161,9 @@ class Role extends Model
         $permission = $this->permissionFromAction($action, $classOrObject);
 
         $this->permissions()->detach($permission);
+
+        /* reload the permissions otherwise the Role will have stale data */
+        $this->load('permissions');
 
         return $this;
     }
