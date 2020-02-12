@@ -15,7 +15,7 @@ class Role extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'user_roles')
-            ->using(UserRole::class);
+                    ->using(UserRole::class);
     }
 
     /**
@@ -24,7 +24,7 @@ class Role extends Model
     public function permissions()
     {
         return $this->belongsToMany(Permission::class, 'role_permissions')
-            ->using(RolePermission::class);
+                    ->using(RolePermission::class);
     }
 
     /**
@@ -34,24 +34,29 @@ class Role extends Model
      *
      * @param string $action
      * @param string|object $classOrObject
+     * @param int $objectId
      * @return Permission
      */
-    private function permissionFromAction(string $action, $classOrObject)
+    private function permissionFromAction(string $action, $classOrObject, $objectId = null)
     {
         // Model::class will return a string - so if the parameter is a string then it's not a specific model
         $isObject = ! is_string($classOrObject);
 
         $permissions = Permission::where('action', $action);
 
-        if ($isObject) {
+        if ($isObject && $objectId === null) {
             $permissions = $permissions->where('model_type', get_class($classOrObject))
-                ->where('model_id', $classOrObject->id);
+                                       ->where('model_id', $classOrObject->id);
+        } elseif (!$isObject && $objectId !== null) {
+            $permissions = $permissions->where('model_type', $classOrObject)
+                                       ->where('model_id', $objectId);
         } else {
             $permissions = $permissions->where('model_type', $classOrObject);
         }
 
         // if the permission does not exist, then create it
         // the situation where this will occur is when granting permission to view a specific object
+        // TODO: This code block should probably be removed in favor of a firstOrFail()
         $permission = $permissions->first();
         if (empty($permission)) {
             if (! $isObject) {
@@ -88,9 +93,10 @@ class Role extends Model
      *
      * @param string $action
      * @param string|object $classOrObject
+     * @param int $objectId
      * @return bool
      */
-    public function hasPermission(string $action, $classOrObject)
+    public function hasPermission(string $action, $classOrObject, $objectId = null)
     {
         // Model::class will return a string - so if the parameter is a string then it's not a specific model
         $isObject = ! is_string($classOrObject);
@@ -98,14 +104,18 @@ class Role extends Model
         /** @var Collection $permissions */
         $permissions = $this->permissions->where('action', $action);
 
-        if ($isObject) {
+        if ($isObject && $objectId === null) {
             $permissions = $permissions->where('model_type', get_class($classOrObject))
                                        ->where('model_id', $classOrObject->id);
-        } else {
+        } elseif (!$isObject && $objectId !== null) {
+            $permissions = $permissions->where('model_type', $classOrObject)
+                                       ->where('model_id', $objectId);
+        }
+        else {
             $permissions = $permissions->where('model_type', $classOrObject);
         }
 
-        return $permissions->count() > 0;
+        return $this->name === "Administrator" || $permissions->count() > 0;
     }
 
     /**
@@ -133,14 +143,17 @@ class Role extends Model
      *
      * @param string $action
      * @param string|object $classOrObject
+     * @param int $modelId
      * @return $this
      */
-    public function grantPermission(string $action, $classOrObject)
+    public function grantPermission(string $action, $classOrObject, $modelId = null)
     {
-        $permission = $this->permissionFromAction($action, $classOrObject);
+        $isObject = ! is_string($classOrObject);
+
+        $permission = $this->permissionFromAction($action, $classOrObject, $modelId);
 
         // attach will throw a QueryException if it already exists
-        $this->permissions()->detach($permission);
+        $newCount = $this->permissions()->detach($permission);
         $this->permissions()->attach($permission);
 
         /* reload the permissions otherwise the Role will have stale data */
