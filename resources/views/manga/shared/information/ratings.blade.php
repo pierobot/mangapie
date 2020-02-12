@@ -28,7 +28,7 @@
         <label>Yours</label>
 
         @if (isset($userVote) && ! empty($userVote))
-            {{ Form::open(['action' => 'VoteController@delete', 'method' => 'delete', 'class' => 'form-inline d-inline']) }}
+            {{ Form::open(['action' => ['VoteController@destroy', $userVote], 'method' => 'delete', 'class' => 'form-inline d-inline']) }}
             {{ Form::hidden('vote_id', $userVote->id) }}
             <button class="btn bg-transparent border-0 p-0 text-danger" title="Delete your vote">
                 <span class="fa fa-times"></span>

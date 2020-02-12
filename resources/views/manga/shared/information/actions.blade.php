@@ -23,8 +23,7 @@
 
             {{ Form::close() }}
         @else
-            {{ Form::open(['action' => 'WatchController@delete', 'method' => 'delete']) }}
-            {{ Form::hidden('watch_reference_id', $watchReference->id) }}
+            {{ Form::open(['action' => ['WatchController@destroy', $watchReference], 'method' => 'delete']) }}
 
             <button class="btn btn-danger form-control" type="submit" title="Stop watching this series.">
                 <span class="fa fa-eye-slash"></span>
@@ -48,8 +47,7 @@
 
             {{ Form::close() }}
         @else
-            {{ Form::open(['action' => 'FavoriteController@delete', 'method' => 'delete']) }}
-            {{ Form::hidden('favorite_id', $favorite->id) }}
+            {{ Form::open(['action' => ['FavoriteController@destroy', $favorite->id], 'method' => 'delete']) }}
 
             <button class="btn btn-danger form-control" type="submit" title="Remove from your favorites.">
                 <span class="fa fa-heart-o"></span>

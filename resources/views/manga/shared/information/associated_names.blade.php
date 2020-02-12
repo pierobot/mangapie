@@ -1,6 +1,6 @@
 <h5>
     Associated Name(s)
-    @if ($user->admin || $user->maintainer)
+    @if ($user->hasRole('Administrator') || $user->hasRole('Editor'))
         <a href="{{ action('MangaEditController@names', [$manga]) }}">
             <span class="fa fa-edit"></span>
         </a>

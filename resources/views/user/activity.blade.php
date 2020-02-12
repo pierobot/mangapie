@@ -24,12 +24,12 @@
                     @foreach ($recentFavorites as $favorite)
                         <div class="col-12 col-sm-6">
                             <div class="media mb-3">
-                                <a href="{{ URL::action('MangaController@index', [$favorite->manga]) }}">
+                                <a href="{{ URL::action('MangaController@show', [$favorite->manga]) }}">
                                     <img height="100" class="rounded mr-3" src="{{ URL::action('CoverController@smallDefault', [ $favorite->manga]) }}">
                                 </a>
 
                                 <div class="media-body">
-                                    <a href="{{ URL::action('MangaController@index', [$favorite->manga]) }}">
+                                    <a href="{{ URL::action('MangaController@show', [$favorite->manga]) }}">
                                         <h5>{{ $favorite->manga->name }}</h5>
                                     </a>
 
@@ -51,12 +51,12 @@
                     @foreach ($recentReads as $read)
                         <div class="col-12 col-sm-6">
                             <div class="media mb-3">
-                                <a href="{{ URL::action('MangaController@index', [$read->manga]) }}">
+                                <a href="{{ URL::action('MangaController@show', [$read->manga]) }}">
                                     <img height="100" class="rounded mr-3" src="{{ URL::action('CoverController@smallDefault', [ $read->manga]) }}">
                                 </a>
 
                                 <div class="media-body">
-                                    <a href="{{ URL::action('MangaController@index', [$read->manga]) }}">
+                                    <a href="{{ URL::action('MangaController@show', [$read->manga]) }}">
                                         <h5>{{ $read->manga->name }}</h5>
                                     </a>
 

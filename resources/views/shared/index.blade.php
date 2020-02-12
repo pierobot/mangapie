@@ -22,18 +22,18 @@
 
                             <div class="d-sm-none">
                                 <h3 class="card-title">
-                                    <a href="{{ URL::action('MangaController@index', [$manga]) }}">{{ $manga->name }}</a>
+                                    <a href="{{ URL::action('MangaController@show', [$manga]) }}">{{ $manga->name }}</a>
                                 </h3>
                             </div>
 
                             <div class="d-none d-sm-flex">
                                 <h4 class="card-title">
-                                    <a href="{{ URL::action('MangaController@index', [$manga]) }}">{{ $manga->name }}</a>
+                                    <a href="{{ URL::action('MangaController@show', [$manga]) }}">{{ $manga->name }}</a>
                                 </h4>
                             </div>
 
                             @foreach ($manga->authorReferences as $authorReference)
-                                <a href="{{ URL::action('PersonController@index', [$authorReference->author]) }}">{{ $authorReference->author->name }}</a>
+                                <a href="{{ URL::action('PersonController@show', [$authorReference->author]) }}">{{ $authorReference->author->name }}</a>
                             @endforeach
 
                             <p>

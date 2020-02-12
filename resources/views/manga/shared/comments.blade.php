@@ -7,6 +7,9 @@
                     <h5>{{ $comment->user->name }}</h5>
                     <p class="mb-2">{!! e(nl2br($comment->getText())) !!}</p>
                     <span class="text-muted">{{ $comment->created_at->diffForHumans() }}</span>
+                    {{ Form::open(['action' => ['CommentController@destroy', $comment], 'method' => 'delete']) }}
+                    <button class="btn btn-danger" type="submit"><span class="fa fa-times"></span>&nbsp;Delete</button>
+                    {{ Form::close() }}
                 </div>
             </div>
         @endforeach
@@ -17,7 +20,7 @@
     <div class="col-12">
         <h4>Post a comment</h4>
 
-        {{ Form::open(['action' => 'CommentController@put', 'method' => 'put']) }}
+        {{ Form::open(['action' => 'CommentController@create']) }}
         {{ Form::hidden('manga_id', $manga->id) }}
 
         <div class="form-group">

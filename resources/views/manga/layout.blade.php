@@ -23,7 +23,7 @@
                         <strong>{{ $manga->name }}</strong>
                     </h3>
 
-                    {{--@if ($user->admin || $user->maintainer)--}}
+                    {{--@if ($user->hasRole('Administrator') || $user->hasRole('Editor'))--}}
                     {{--<a href="{{ action('MangaEditController@covers', [$manga]) }}" style="position: relative; left: 50%;">--}}
                     {{--<span class="fa fa-edit"></span>--}}
                     {{--</a>--}}
@@ -71,7 +71,7 @@
                         </div>
 
                         {{--<div class="col-9">--}}
-                        {{--@if ($user->admin || $user->maintainer)--}}
+                        {{--@if ($user->hasRole('Administrator') || $user->hasRole('Editor'))--}}
                         {{--<a href="{{ action('MangaEditController@covers', [$manga]) }}">--}}
                         {{--<span class="fa fa-edit fa-2x"></span>--}}
                         {{--</a>--}}

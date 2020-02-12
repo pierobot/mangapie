@@ -5,7 +5,7 @@
         <div class="row">
             <div class="col-12">
                 <ul class="nav nav-pills justify-content-center">
-                    <li class="nav-item"><a class="nav-link" href="{{ URL::action('MangaController@index', [$manga]) }}">Information</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ URL::action('MangaController@show', [$manga]) }}">Information</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ URL::action('MangaController@files', [$manga]) }}">Files</a></li>
                     <li class="nav-item"><a class="nav-link active" href="#">Comments</a></li>
                 </ul>
