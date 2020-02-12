@@ -18,37 +18,102 @@
     <hr>
     <h4><strong>Existing</strong></h4>
     <div class="row">
-        @foreach ($roles as $role)
-            <div class="col-12 col-md-3 mb-3">
-                <div class="card">
-                    <div class="card-header">
-                        <span class="card-title">{{ $role->name }}</span>
-                    </div>
-                    <div class="card-body">
-                        @php($permissions = $role->permissions)
-
-                        @if ($role->name == 'Administrator')
-                            All permissions are granted.
-                        @elseif (! empty($permissions->count()))
-                            {{-- TODO: List these in a better looking way --}}
-                            @foreach ($permissions as $permission)
-                                {{ $permission->action }}
-                                @if (! empty($permission->model_type))
-                                    {{ class_basename($permission->model_type) }}
-                                @endif
-
-                                @if (! empty($permission->model_id))
-                                    {{ $permission->model_id }}
-                                @endif
-                                <br>
-                            @endforeach
-                        @else
-                            No permissions.
-                        @endif
-                    </div>
-                </div>
+        <div class="col-12">
+            <div class="nav nav-pills mb-3">
+                @foreach ($roles as $role)
+                    <a href="#{{ $role->name }}" class="nav-link @if ($role->name === "Administrator") active @endif" data-toggle="pill">{{ $role->name }}</a>
+                @endforeach
             </div>
-        @endforeach
+        </div>
+
+        <div class="col-12">
+            <div class="tab-content">
+                @foreach ($roles as $role)
+                    <div class="tab-pane fade @if ($role->name === "Administrator") show active @endif" id="{{ $role->name }}" role="tabpanel">
+                        <strong>Comments</strong>
+
+                        {{ Form::open(['action' => ['AdminController@putRole', $role], 'method' => 'put']) }}
+                        {{ Form::hidden('model_type', \App\Comment::class) }}
+
+                            @foreach ($allActions as $action)
+                                @php($hasPermissionForAction = $role->hasPermission($action, \App\Comment::class))
+
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" type="checkbox" id="{{ $role->name }}-comment-{{ $action }}" @if ($hasPermissionForAction) checked @endif name="actions[]"  value="{{ $action }}">
+                                    <label class="custom-control-label" for="{{ $role->name }}-comment-{{ $action }}">{{ $action }}</label>
+                                </div>
+                            @endforeach
+
+                            <button class="btn btn-primary mt-3"><span class="fa fa-check"></span>&nbsp;Save</button>
+
+                        {{ Form::close() }}
+
+                        <hr>
+                        <strong>Library</strong>
+
+                        {{ Form::open(['action' => ['AdminController@putRole', $role], 'method' => 'put']) }}
+                        {{ Form::hidden('model_type', \App\Library::class) }}
+
+                            @foreach ($allActions as $action)
+                                @php($hasPermissionForAction = $role->hasPermission($action, \App\Library::class))
+
+                                <div class="custom-control custom-checkbox">
+                                    <input class="custom-control-input" type="checkbox" id="{{ $role->name }}-library-{{ $action }}" @if ($hasPermissionForAction) checked @endif name="actions[]" value="{{ $action }}">
+                                    <label class="custom-control-label" for="{{ $role->name }}-library-{{ $action }}">{{ $action }}</label>
+                                </div>
+                            @endforeach
+
+                            @php($hasPermissionForAction = $role->hasPermission('viewAny', \App\Library::class))
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" type="checkbox" id="{{ $role->name }}-library-viewAny" @if ($hasPermissionForAction) checked @endif name="actions[]" value="viewAny">
+                                <label class="custom-control-label" for="{{ $role->name }}-library-viewAny">viewAny</label>
+                            </div>
+
+                            @foreach ($libraries as $library)
+                            <div class="custom-control custom-checkbox">
+                                @php($hasPermissionForAction = $role->hasPermission('view', \App\Library::class, $library->id))
+                                <input class="custom-control-input" type="checkbox" id="{{ $role->name }}-library-view-{{ $library->id }}" @if ($hasPermissionForAction) checked @endif name="actions[]" value="view">
+                                {{ Form::hidden('model_id', $library->id) }}
+                                <label class="custom-control-label" for="{{ $role->name }}-library-view-{{ $library->id }}">view <mark>{{ $library->name }}</mark></label>
+                            </div>
+                            @endforeach
+
+                            <button class="btn btn-primary mt-3"><span class="fa fa-check"></span>&nbsp;Save</button>
+
+                        {{ Form::close() }}
+
+                        <hr>
+                        <strong>Manga</strong>
+
+                        {{ Form::open(['action' => ['AdminController@putRole', $role], 'method' => 'put']) }}
+                        {{ Form::hidden('model_type', \App\Manga::class) }}
+                        @foreach ($allActions as $action)
+                            @php($hasPermissionForAction = $role->hasPermission($action, \App\Manga::class))
+
+                            <div class="custom-control custom-checkbox">
+                                <input class="custom-control-input" type="checkbox" id="{{ $role->name }}-manga-{{ $action }}" @if ($hasPermissionForAction) checked @endif name="actions[]"  value="{{ $action }}">
+                                <label class="custom-control-label" for="{{ $role->name }}-manga-{{ $action }}">{{ $action }}</label>
+                            </div>
+                        @endforeach
+
+                        <button class="btn btn-primary mt-3"><span class="fa fa-check"></span>&nbsp;Save</button>
+
+                        {{ Form::close() }}
+
+                        <hr>
+                        <div class="row">
+                            <div class="col">
+                                {{ Form::open(['action' => ['AdminController@destroyRole', $role], 'method' => 'delete']) }}
+                                <button class="btn btn-danger" type="submit">
+                                    <span class="fa fa-times"></span>&nbsp;Delete
+                                </button>
+                                {{ Form::close() }}
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
     </div>
 
     <hr>
@@ -64,21 +129,18 @@
                         </div>
 
                         <input class="form-control" autocomplete="off" placeholder="Role name" name="name">
-                    </div>
-                    <br>
 
-                    Has access to:
-                    @php($libraries = App\Library::all())
-                    @foreach ($libraries as $library)
-                        <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input form-control" type="checkbox" id="library-{{ $library->id }}" name="libraries[]" value="{{ $library->id }}">
-                            <label class="custom-control-label" for="library-{{ $library->id }}">{{ $library->name }}</label>
+                        <div class="input-group-append">
+                            <button class="btn btn-primary"  type="submit">
+                                <span class="fa fa-check"></span>
+
+                                <span class="d-none d-lg-inline-flex">
+                                    &nbsp;Create
+                                </span>
+                            </button>
                         </div>
-                    @endforeach
-
-                    <hr>
-
-                    <button class="btn btn-primary" type="submit">Create</button>
+                    </div>
+                </div>
 
             </div>
             {{ Form::close() }}

@@ -28,10 +28,8 @@ class UserCreateRequest extends FormRequest
             'name' => 'required|string|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|string',
-            'libraries' => 'required|array',
-            'libraries.*' => 'required|exists:libraries,id',
-            'admin' => 'boolean',
-            'maintainer' => 'boolean'
+            'roles' => 'required|array',
+            'roles.*' => 'required|exists:roles,id',
         ];
     }
 }

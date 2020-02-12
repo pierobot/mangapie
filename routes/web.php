@@ -43,6 +43,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/roles', 'AdminController@roles');
         Route::post('/roles', 'AdminController@createRole');
+        Route::put('/roles/{role}', 'AdminController@putRole');
+        Route::delete('/roles/{role}', 'AdminController@destroyRole');
     });
 
     Route::prefix('avatar')->name('avatar')->group(function () {
@@ -63,7 +65,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/small/{manga}/{archive}/{page}', 'CoverController@small');
         Route::get('/medium/{manga}/{archive}/{page}', 'CoverController@medium');
 
-        Route::put('/', 'CoverController@put')->middleware('maintainer');
+        Route::put('/', 'CoverController@put')->middleware('role:Administrator,Maintainer');
     });
 
     Route::prefix('edit')->middleware('role:Administrator,Maintainer')->name('edit')->group(function () {

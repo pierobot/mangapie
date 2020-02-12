@@ -84,38 +84,6 @@
                     </div>
                 @endforeach
             </div>
-
-            <hr>
-
-            <div class="row mt-3">
-                <div class="col-12">
-                    <h5>Libraries</h5>
-                </div>
-
-                <div class="col-12">
-                    <span class="text-info">This step is not required if you are assigning a role with access to libraries.</span>
-                </div>
-
-                @foreach ($libraries as $library)
-                    <div class="col-12 col-md-6">
-                        <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" id="library-{{ $library->id }}" type="checkbox" name="libraries[]" value="{{ $library->id }}">
-                            <label class="custom-control-label" for="library-{{ $library->id }}">{{ $library->name }}</label>
-                        </div>
-                    </div>
-                @endforeach
-            </div>
-
-            <hr>
-
-            {{--<div class="row mt-3">--}}
-                {{--<div class="col-12">--}}
-                    {{--<h5>Permissions</h5>--}}
-                {{--</div>--}}
-                {{--<div class="col-12">--}}
-                    {{-- TODO: implement --}}
-                {{--</div>--}}
-            {{--</div>--}}
         </div>
     </div>
 

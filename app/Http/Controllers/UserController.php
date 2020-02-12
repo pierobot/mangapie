@@ -172,12 +172,6 @@ class UserController extends Controller
             $user->grantRole($role->name);
         }
 
-        $libraryIds = $request->get('libraries');
-        $libraries = Library::whereIn('id', $libraryIds)->get();
-        foreach ($libraries as $library) {
-            $user->grantPermission('view', $library);
-        }
-
         \Session::flash('success', 'User was successfully created.');
 
         return \Redirect::back();

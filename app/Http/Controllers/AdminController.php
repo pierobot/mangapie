@@ -15,6 +15,7 @@ use App\Http\Requests\Admin\PatchRegistrationRequest;
 use App\Http\Requests\Admin\PutSchedulerRequest;
 use App\Http\Requests\Admin\PutViewsTimeRequest;
 
+use App\Http\Requests\Role\PutRoleRequest;
 use App\Http\Requests\Role\CreateRoleRequest;
 
 use App\Image;
@@ -22,6 +23,7 @@ use App\Image;
 use App\Library;
 use App\Role;
 use App\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
@@ -62,12 +64,26 @@ class AdminController extends Controller
 
     public function roles()
     {
+        /** @var Collection $roles */
         $roles = Role::orderBy('name', 'asc')
             ->with('permissions')
             ->get();
 
+        $libraries = Library::orderBy('name', 'asc')
+            ->get();
+
+        $allActions = [
+            'create',
+            'delete',
+            'forceDelete',
+            'restore',
+            'update',
+        ];
+
         return view('admin.roles')
-            ->with('roles', $roles);
+            ->with('roles', $roles)
+            ->with('libraries', $libraries)
+            ->with('allActions', $allActions);
     }
 
     public function searchUsers(PostSearchUsersRequest $request)
@@ -248,7 +264,6 @@ class AdminController extends Controller
     public function putScheduler(PutSchedulerRequest $request)
     {
         \Cache::tags(['config', 'image', 'scheduler'])->forget('cron');
-
         if ($request->get('action') === 'reset') {
             \Cache::tags(['config', 'image', 'scheduler'])->forever('cron', '@daily');
         } else {
@@ -267,11 +282,48 @@ class AdminController extends Controller
             'name' => $request->get('name')
         ]);
 
-        $libraries = Library::whereIn('id', $libraryIds)->get();
-        foreach ($libraries as $library) {
-            $role->grantPermission('view', $library);
+        return redirect()->back()->with('success', 'The role has been created.');
+    }
+
+    /**
+     * @param Role $role
+     * @param PutRoleRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Throwable
+     */
+    public function putRole(Role $role, PutRoleRequest $request)
+    {
+        if ($role->name === "Administrator") {
+            return redirect()->back()->withErrors('The Administrator role cannot be modified.');
         }
 
-        return redirect()->back()->with('success', 'The role has been created.');
+        $actions = collect($request->get('actions'));
+        $actionsOnClass = $actions->diff(['view']);
+        $actionsOnModel = $actions->diff($actionsOnClass);
+        $modelType = $request->get('model_type');
+        $modelId = $request->get('model_id');
+
+        \DB::transaction(function () use ($role, $actionsOnClass, $actionsOnModel, $modelType, $modelId) {
+            foreach ($actionsOnClass as $action) {
+                $role->grantPermission($action, $modelType);
+            }
+
+            foreach ($actionsOnModel as $action) {
+                $role->grantPermission($action, $modelType, $modelId);
+            }
+        });
+
+        return redirect()->back()->with('success', 'The role has been updated.');
+    }
+
+    public function destroyRole(Role $role)
+    {
+        if ($role->name === "Administrator") {
+            return redirect()->back()->withErrors('The Administrator role cannot be deleted.');
+        }
+
+        $role->forceDelete();
+
+        return redirect()->back()->with('success', 'The role has been deleted.');
     }
 }
