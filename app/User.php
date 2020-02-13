@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -17,7 +18,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $guarded = [
-        'id', 'created_at', 'admin', 'maintainer'
+        'id', 'created_at'
     ];
 
     /**
@@ -30,29 +31,42 @@ class User extends Authenticatable
     ];
 
     /**
-     * @param array|mixed $columns
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     * Applies a local scope to get users with the Administrator role.
      *
-     * @deprecated
+     * @param $query
+     * @return Builder
      */
-    public static function admins($columns = ['*'])
+    public static function scopeAdministrators(Builder $query)
     {
-        return (new static)->newQuery()->where('admin', true)->get(
-            is_array($columns) ? $columns : func_get_args()
-        );
+        return $query->whereHas('roles', function (Builder $query) {
+            $query->where('name', 'Administrator');
+        });
     }
 
     /**
-     * @param array|mixed $columns
-     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     * Applies a local scope to get users with the Moderator role.
      *
-     * @deprecated
+     * @param $query
+     * @return Builder
      */
-    public static function maintainers($columns = ['*'])
+    public static function scopeModerators(Builder $query)
     {
-        return (new static)->newQuery()->where('maintainer', true)->get(
-            is_array($columns) ? $columns : func_get_args()
-        );
+        return $query->whereHas('roles', function (Builder $query) {
+            $query->where('name', 'Moderator');
+        });
+    }
+
+    /**
+     * Applies a local scope to get users with the Editor role.
+     *
+     * @param $query
+     * @return Builder
+     */
+    public static function scopeEditors(Builder $query)
+    {
+        return $query->whereHas('roles', function (Builder $query) {
+            $query->where('name', 'Editor');
+        });
     }
 
     public function getId()

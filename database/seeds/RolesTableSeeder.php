@@ -49,16 +49,6 @@ class RolesTableSeeder extends Seeder
             ->grantPermission('create', Comment::class);
 
         self::role('Banned');
-
-        // Grant appropriate role to administrators; next migration drops the admin column
-        User::where('admin', true)->each(function (User $user) {
-            $user->grantRole('Administrator');
-        });
-
-        // Grant appropriate role to editors; next migration drops the maintainer column
-        User::where('maintainer', true)->each(function (User $user) {
-            $user->grantRole('Editor');
-        });
     }
 
     /**
