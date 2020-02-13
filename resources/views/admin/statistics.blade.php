@@ -20,9 +20,10 @@
         <div class="col-12 col-md-6 col-lg-4">
             <h4><b>Users</b></h4>
 
-            <label>Number of admins:</label> {{ \App\User::admins('id')->count() }} <br>
-            <label>Number of maintainers:</label> {{ \App\User::maintainers('id')->count() }} <br>
-            <label>Number of users:</label> {{ \App\User::all('id')->count() }}
+            <label>Number of Admins:</label> {{ \App\User::administrators()->count() }} <br>
+            <label>Number of Moderators:</label> {{ \App\User::moderators()->count() }}<br>
+            <label>Number of Editors:</label> {{ \App\User::editors()->count() }} <br>
+            <label>Number of Users:</label> {{ \App\User::all()->count() }}
 
             <hr>
         </div>
