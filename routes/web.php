@@ -19,7 +19,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/', 'AdminController@index');
 
         Route::patch('/config/registration', 'AdminController@patchRegistration');
-        Route::put('/config/libraries', 'AdminController@putDefaultLibraries');
+        Route::put('/config/roles', 'AdminController@putDefaultRoles');
         Route::patch('/config/heat', 'AdminController@patchHeat');
         Route::post('/config/heat', 'AdminController@postHeat');
 

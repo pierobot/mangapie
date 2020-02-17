@@ -9,7 +9,7 @@ use App\Http\Requests\Admin\PatchViewsRequest;
 use App\Http\Requests\Admin\PatchViewsTimeRequest;
 use App\Http\Requests\Admin\PostHeatRequest;
 use App\Http\Requests\Admin\PostSearchUsersRequest;
-use App\Http\Requests\Admin\PutDefaultLibrariesRequest;
+use App\Http\Requests\Admin\PutDefaultRolesRequest;
 use App\Http\Requests\Admin\PatchRegistrationRequest;
 
 use App\Http\Requests\Admin\PutSchedulerRequest;
@@ -146,20 +146,20 @@ class AdminController extends Controller
         }
     }
 
-    public function putDefaultLibraries(PutDefaultLibrariesRequest $request)
+    public function putDefaultRoles(PutDefaultRolesRequest $request)
     {
-        $libraryIds = $request->has('library_ids') ? $request->get('library_ids') : [];
-        $defaultLibraries = [];
+        $roleIds = $request->get('role_ids', []);
+        $defaultRoles = [];
 
-        \Cache::tags(['config', 'registration'])->forget('libraries');
+        \Cache::tags(['config', 'registration'])->forget('roles');
 
-        foreach ($libraryIds as $id) {
-            $defaultLibraries[$id] = $id;
+        foreach ($roleIds as $id) {
+            $defaultRoles[$id] = $id;
         }
 
-        \Cache::tags(['config', 'registration'])->forever('libraries', $defaultLibraries);
+        \Cache::tags(['config', 'registration'])->forever('roles', $defaultRoles);
 
-        return redirect()->back()->with('success', 'Default libraries have been updated.');
+        return redirect()->back()->with('success', 'Default roles have been updated.');
     }
 
     public function patchHeat(PatchHeatRequest $request)

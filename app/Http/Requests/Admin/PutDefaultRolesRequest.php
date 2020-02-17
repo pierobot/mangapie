@@ -4,7 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class PutDefaultLibrariesRequest extends FormRequest
+class PutDefaultRolesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,9 +24,8 @@ class PutDefaultLibrariesRequest extends FormRequest
     public function rules()
     {
         return [
-            'library_ids' => 'array',
-            'library_ids.*' => 'integer|exists:libraries,id',
-            'enabled' => 'boolean|nullable'
+            'role_ids' => 'array',
+            'role_ids.*' => 'integer|exists:roles,id'
         ];
     }
 }
