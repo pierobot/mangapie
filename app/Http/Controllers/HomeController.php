@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 use \App\Library;
@@ -18,31 +19,20 @@ class HomeController extends Controller
     {
         $user = \Auth::user();
 
-        $libraries = Library::all()->filter(function (Library $library) use ($user) {
-            return $user->can('view', $library);
-        });
-
-        $collection = collect();
-
-        $libraries = $libraries->loadMissing(
-            'manga',
-            'manga.favorites',
-            'manga.votes',
-            'manga.authorReferences',
-            'manga.authorReferences.author');
-
-        foreach ($libraries as $library) {
-            $mangas = $library->manga;
-
-            foreach ($mangas as $manga) {
-                $collection->push($manga);
-            }
-        }
-
         $page = request()->get('page');
-        $manga_list = new LengthAwarePaginator($collection->forPage($page, 18), $collection->count(), 18);
-        $manga_list->withPath(\Config::get('app.url'));
 
-        return view('home.index')->with('manga_list', $manga_list);
+        /** @var Builder $items */
+        $items = $user->manga()->with([
+            'favorites',
+            'votes',
+            'authorReferences',
+            'authorReferences.author'
+        ]);
+
+        $items = $items->paginate(18, ['id', 'name'], 'page', $page);
+        /** @var LengthAwarePaginator $items */
+        $items = $items->withPath(\Config::get('app.url'));
+
+        return view('home.index')->with('manga_list', $items);
     }
 }

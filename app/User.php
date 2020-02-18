@@ -7,6 +7,7 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 
 class User extends Authenticatable
 {
@@ -67,6 +68,30 @@ class User extends Authenticatable
         return $query->whereHas('roles', function (Builder $query) {
             $query->where('name', 'Editor');
         });
+    }
+
+    /**
+     * Gets a Collection of the libraries a user can access.
+     *
+     * @return Collection
+     */
+    public function libraries()
+    {
+        return Library::all()->filter(function (Library $library) {
+            return $this->can('view', $library);
+        });
+    }
+
+    /**
+     * Gets a Builder of the manga a user can access.
+     *
+     * @return Builder
+     */
+    public function manga()
+    {
+        $libraries = $this->libraries();
+
+        return Manga::whereIn('library_id', $libraries);
     }
 
     public function getId()
