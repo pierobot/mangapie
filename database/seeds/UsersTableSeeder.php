@@ -15,14 +15,17 @@ class UsersTableSeeder extends Seeder
     {
         if (User::count() > 0) {
             $this->command->getOutput()->writeln('Users table is not empty, skipping...');
+
             return;
         }
 
-        User::create([
+        /** @var User $dev */
+        $dev = User::create([
             'name' => 'dev',
             'email' => 'fake@email.com',
             'password' => Hash::make('dev'),
-            'admin' => true
         ]);
+
+        $dev->grantRole('Administrator');
     }
 }

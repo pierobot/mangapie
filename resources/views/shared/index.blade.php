@@ -32,8 +32,8 @@
                                 </h4>
                             </div>
 
-                            @foreach ($manga->authorReferences as $authorReference)
-                                <a href="{{ URL::action('PersonController@show', [$authorReference->author]) }}">{{ $authorReference->author->name }}</a>
+                            @foreach ($manga->authors as $author)
+                                <a href="{{ URL::action('PersonController@show', [$author->name]) }}">{{ $author->name }}</a>
                             @endforeach
 
                             <p>

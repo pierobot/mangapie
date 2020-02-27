@@ -28,7 +28,6 @@ class AddMaintainerToUsersTable extends Migration
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-
             $table->boolean('admin')->change();
             $table->dropColumn('maintainer');
         });

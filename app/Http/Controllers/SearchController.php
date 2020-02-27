@@ -2,22 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Search\SearchAdvancedRequest;
-use App\Http\Requests\Search\SearchAutoCompleteRequest;
-use App\Http\Requests\Search\SearchRequest;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-use \App\Manga;
-use \App\LibraryPrivilege;
+use App\Http\Requests\Search\SearchAdvancedRequest;
+use App\Http\Requests\Search\SearchRequest;
+use App\Manga;
+use App\User;
 
 class SearchController extends Controller
 {
+    /**
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function index()
     {
         // if the query parameter 'type' exists then we're being requested another page of a search
-        if (\Input::has('type')) {
-            $type = \Input::get('type');
-            $keywords = \Input::get('keywords');
+        if (request()->has('type')) {
+            $type = request()->get('type');
+            $keywords = request()->get('keywords');
 
             if ($type == 'basic') {
                 return $this->doBasicSearch($keywords);
@@ -27,6 +30,22 @@ class SearchController extends Controller
                 $author = \Input::get('author');
                 $artist = \Input::get('artist');
 
+                if (is_null($keywords)) {
+                    $keywords = '';
+                }
+
+                if (is_null($genres)) {
+                    $genres = [];
+                }
+
+                if (is_null($author)) {
+                    $author = '';
+                }
+
+                if (is_null($artist)) {
+                    $artist = '';
+                }
+
                 return $this->doAdvancedSearch($genres, $author, $artist, $keywords);
             }
         }
@@ -34,104 +53,145 @@ class SearchController extends Controller
         return view('search.index');
     }
 
-    private function doBasicSearch($keywords)
+    /**
+     * Perform a quick search on a series' name and associated names using the like operator.
+     * Requires the url parameter 'query' to be present. (?query=xxx)
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function autoComplete()
     {
-        // if the query is empty, then redirect to the advanced search page
-        if ($keywords == null)
-            return \Redirect::action('SearchController@index');
+        /** @var User $user */
+        $user = request()->user();
+        $libraries = $user->libraries()->toArray();
+        $searchQuery = request()->get('query');
 
-        $libraryIds = LibraryPrivilege::getIds();
+        /** @var Builder $items */
+        $items = Manga::where('name', 'like', "%$searchQuery%");
 
-        $results = Manga::search($keywords)
-            ->filter(function ($manga) use ($libraryIds) {
-                return in_array($manga->library->id, $libraryIds);
-            })
-            ->sortBy('name');
+        $items = $items->orWhereHas('associatedNames', function (Builder $query) use ($searchQuery) {
+            $query->where('name', 'like', "%$searchQuery%");
+        });
 
-        $currentPage = \Input::get('page', 1);
-        $mangaList = new LengthAwarePaginator($results->forPage($currentPage, 18), $results->count(), 18);
-        $mangaList->onEachSide(1)
-            ->withPath(\Request::getBaseUrl())
-            ->appends([
-                'type' => 'basic',
-                'keywords' => $keywords
-            ]);
+        // filter out the items the user cannot access
+        $items = $items->whereIn('library_id', $libraries)->get(['id', 'name']);
 
-        return view('home.index')
-            ->with('header', 'Search Results (' . $mangaList->total() . ')')
-            ->with('manga_list', $mangaList);
+        return response()->json($items);
     }
 
-    private function doAdvancedSearch($genres, $author, $artist, $keywords)
-    {
-        $results = Manga::advancedSearch($genres, $author, $artist, $keywords)->sortBy('name');
-        $total = $results->count();
-
-        $current_page = \Input::get('page', 1);
-        $mangaList = new LengthAwarePaginator($results->forPage($current_page, 18), $total, 18);
-
-        $mangaList = $mangaList->onEachSide(1)
-            ->withPath(\Request::getBaseUrl())
-            ->appends([
-                'type' => 'advanced',
-                'keywords' => $keywords,
-                'genres' => $genres,
-                'author' => $author,
-                'artist' => $artist
-            ]);
-
-        return view('home.advancedsearch')
-            ->with('header', 'Search Results (' . $total . ')')
-            ->with('manga_list', $mangaList);
-    }
-
+    /**
+     * @param SearchRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     public function basic(SearchRequest $request)
     {
-        $keywords = \Input::get('keywords');
+        $keywords = $request->get('keywords');
 
         return $this->doBasicSearch($keywords);
     }
 
+    /**
+     * @param SearchAdvancedRequest $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function advanced(SearchAdvancedRequest $request)
     {
-        $keywords = \Input::get('keywords');
-        $genres = \Input::get('genres');
-        $author = \Input::get('author');
-        $artist = \Input::get('artist');
+        $keywords = $request->get('keywords');
+        $genres = $request->get('genres');
+        $author = $request->get('author');
+        $artist = $request->get('artist');
+
+        if (is_null($keywords)) {
+            $keywords = '';
+        }
+
+        if (is_null($genres)) {
+            $genres = [];
+        }
+
+        if (is_null($author)) {
+            $author = '';
+        }
+
+        if (is_null($artist)) {
+            $artist = '';
+        }
 
         return $this->doAdvancedSearch($genres, $author, $artist, $keywords);
     }
 
-    public function autoComplete()
+    /**
+     * @param string|null $keywords
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
+    private function doBasicSearch($keywords)
     {
-        $query = \Input::get('query');
-
-        $user = \Auth::user();
-        $library_ids = LibraryPrivilege::getIds();
-
-        $results = Manga::where('name', 'like', '%' . $query . '%')->get();
-//        $assocResults = AssociatedName::where('name', 'like', '%' . $query . '%')->get();
-//
-//        $assocArray = [];
-//        foreach ($assocResults as $assocName) {
-//            array_push($assocArray, $assocName->reference->manga);
-//        }
-//
-//        $results = $results->merge(collect($assocArray));
-
-        if ($user->hasRole('Administrator') == false)
-            $results = $results->whereIn('library_id', $library_ids);
-
-        $results = $results->all();
-
-        $array = [];
-        foreach ($results as $manga) {
-            array_push($array, [
-                'id' => $manga->id,
-                'name' => $manga->name
-            ]);
+        // if the query is empty, then redirect to the advanced search page
+        if ($keywords == null) {
+            return \Redirect::action('SearchController@index');
         }
 
-        return \Response::json($array);
+        /** @var User $user */
+        $user = request()->user();
+        $libraries = $user->libraries()->toArray();
+        $perPage = 18;
+
+        $items = Manga::search($keywords)
+            ->whereIn('library_id', $libraries)
+            ->orderBy('name', 'asc')
+            ->with([
+                'authors',
+                'artists',
+                'favorites',
+                'votes'
+            ])
+            ->paginate($perPage);
+
+        /** @var LengthAwarePaginator $items */
+        $items = $items->onEachSide(1)
+            ->withPath(request()->getBaseUrl())
+            ->appends([
+                'type' => 'basic',
+                'keywords' => $keywords,
+            ]);
+
+        return view('home.index')
+            ->with('header', 'Search Results (' . $items->total() . ')')
+            ->with('manga_list', $items);
+    }
+
+    /**
+     * @param array $genres
+     * @param string $author
+     * @param string $artist
+     * @param string $keywords
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    private function doAdvancedSearch(array $genres, string $author, string $artist, string $keywords)
+    {
+        /** @var User $user */
+        $user = request()->user();
+        $libraries = $user->libraries()->toArray();
+        $perPage = 18;
+
+        $items = Manga::advancedSearch($genres, $author, $artist, $keywords)
+            ->whereIn('library_id', $libraries)
+            ->orderBy('name', 'asc')
+            ->with([
+                'authors',
+                'artists',
+                'favorites',
+                'votes'
+            ])
+            ->paginate($perPage)
+            ->appends(request()->input());
+
+        /** @var LengthAwarePaginator $items */
+        $items = $items->onEachSide(1)
+            ->withPath(request()->getBaseUrl());
+
+        return view('home.advancedsearch')
+            ->with('header', 'Search Results (' . $items->total() . ')')
+            ->with('manga_list', $items);
     }
 }

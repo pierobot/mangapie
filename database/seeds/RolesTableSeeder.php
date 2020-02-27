@@ -3,7 +3,6 @@
 use App\Comment;
 use App\Genre;
 use App\Library;
-use App\LibraryPrivilege;
 use App\Manga;
 use App\Person;
 use App\Role;

@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Library;
-use App\LibraryPrivilege;
 use App\Role;
 use App\User;
 use App\Http\Controllers\Controller;

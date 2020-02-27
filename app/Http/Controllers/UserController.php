@@ -4,13 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\User\PutStatusRequest;
 use App\Http\Requests\User\UserCreateRequest;
-use App\Http\Requests\User\UserDeleteRequest;
 use App\Http\Requests\User\UserEditRequest;
 
-use App\Library;
 use App\Role;
 use App\User;
-use App\LibraryPrivilege;
 
 class UserController extends Controller
 {

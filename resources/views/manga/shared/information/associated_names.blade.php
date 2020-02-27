@@ -7,11 +7,13 @@
     @endif
 </h5>
 
-@if (! empty($manga->associatedNameReferences))
+@if ($manga->associatedNames->count())
     <div class="row">
-        @foreach ($manga->associatedNameReferences as $associatedNameReference)
+        @php($associatedNames = $manga->associatedNames)
+
+        @foreach ($associatedNames as $associatedName)
             <div class="col-6 col-sm-4 col-md-3 col-lg-3">
-                {{ $associatedNameReference->associatedName->name }}
+                {{ $associatedName->name }}
             </div>
         @endforeach
     </div>

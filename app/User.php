@@ -89,7 +89,7 @@ class User extends Authenticatable
      */
     public function manga()
     {
-        $libraries = $this->libraries();
+        $libraries = $this->libraries()->toArray();
 
         return Manga::whereIn('library_id', $libraries);
     }
@@ -127,11 +127,6 @@ class User extends Authenticatable
     public function favorites()
     {
         return $this->hasMany(\App\Favorite::class);
-    }
-
-    public function privileges()
-    {
-        return $this->hasMany(\App\LibraryPrivilege::class);
     }
 
     public function watchReferences()

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\LibraryPrivilege;
 use App\Manga;
 use App\Person;
 

@@ -5,7 +5,6 @@ namespace Tests\Unit;
 use Tests\TestCase;
 
 use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 use App\AssociatedName;
@@ -42,6 +41,7 @@ class MangaUpdatesTest extends TestCase
      */
     public function testAutofillLatin($id, $name, $type, $description, $assocNames, $authors, $artists, $genres, $year)
     {
+        /** @var Manga $manga */
         $manga = factory(Manga::class)->create([
             'name' => $name,
             'library_id' => factory(Library::class)->create()->getId()
@@ -49,46 +49,43 @@ class MangaUpdatesTest extends TestCase
 
         $this->assertTrue(MangaUpdates::autofill($manga));
 
-        $this->assertEquals($id, $manga->getMangaUpdatesId());
-//        $this->assertEquals($description, $manga->getDescription());
-        $this->assertEquals($type, $manga->getType());
-        $this->assertEquals($year, $manga->getYear());
+        $this->assertEquals($id, $manga->mu_id);
+        $this->assertEquals($description, $manga->description);
+        $this->assertEquals($type, $manga->type);
+        $this->assertEquals($year, $manga->year);
 
-        $actualAssocNames = collect(array_map(function (AssociatedName $assocName) {
-            return $assocName->getName();
-        }, $manga->getAssociatedNames()))->values();
+        $actualAssocNames = $manga->associatedNames
+            ->transform(function (AssociatedName $assocName) {
+                return $assocName->name;
+            })
+            ->toArray();
 
-        $actualArtists = collect(array_map(function (Person $artist) {
-            return $artist->getName();
-        }, $manga->getArtists()));
+        $actualArtists = $manga->artists
+            ->transform(function (Person $artist) {
+                return $artist->name;
+            })
+            ->toArray();
 
-        $actualAuthors = collect(array_map(function (Person $author) {
-            return $author->getName();
-        }, $manga->getAuthors()));
+        $actualAuthors = $manga->authors
+            ->transform(function (Person $author) {
+                return $author->name;
+            })
+            ->toArray();
 
-        $actualGenres = collect(array_map(function (Genre $genre) {
-            return $genre->getName();
-        }, $manga->getGenres()));
+        $actualGenres = $manga->genres
+            ->transform(function (Genre $genre) {
+                return $genre->name;
+            })
+            ->toArray();
 
-        foreach ($assocNames as $assocName) {
-            $this->assertTrue($actualAssocNames->contains($assocName));
-        }
-
-        foreach ($artists as $artist) {
-            $this->assertTrue($actualArtists->contains($artist));
-        }
-
-        foreach ($authors as $author) {
-            $this->assertTrue($actualAuthors->contains($author));
-        }
-
-        foreach ($genres as $genre) {
-            $this->assertTrue($actualGenres->contains($genre));
-        }
+        $this->assertTrue(count(array_diff($actualAssocNames, $assocNames)) == 0);
+        $this->assertTrue(count(array_diff($actualArtists, $artists)) == 0);
+        $this->assertTrue(count(array_diff($actualAuthors, $authors)) == 0);
+        $this->assertTrue(count(array_diff($actualGenres, $genres)) == 0);
     }
 
     /**
-     * @testWith [1051, "めぞん一刻", "Manga", "Travel into Japan's nuttiest apartment house and meet its volatile inhabitants: Kyoko, the beautiful and mysterious new apartment manager; Yusaku, the exam-addled college student; Mrs. Ichinose, the drunken gossip; Kentaro, her bratty son; Akemi, the boozy bar hostess; and the mooching and peeping Mr. Yotsuya.", ["Доходный дом Иккоку", "めぞん一刻", "相聚一刻", "Mezon Ikkoku"], ["TAKAHASHI Rumiko"], ["TAKAHASHI Rumiko"], ["Comedy", "Drama", "Romance", "Seinen", "Slice of Life"], 1980]
+     * @testWith [1051, "めぞん一刻", "Manga", "Travel into Japan's nuttiest apartment house and meet its volatile inhabitants: Kyoko, the beautiful and mysterious new apartment manager; Yusaku, the exam-addled college student; Mrs. Ichinose, the drunken gossip; Kentaro, her bratty son; Akemi, the boozy bar hostess; and the mooching and peeping Mr. Yotsuya.", ["Mezon Ikkoku", "Nhà trọ Nhất Khắc", "Доходный дом Иккоку", "めぞん一刻", "相聚一刻", "도레미 하우스", "메종일각"], ["TAKAHASHI Rumiko"], ["TAKAHASHI Rumiko"], ["Comedy", "Drama", "Romance", "Seinen", "Slice of Life"], 1980]
      */
     public function testAutofillJapanese($id, $name, $type, $description, $assocNames, $authors, $artists, $genres, $year)
     {
@@ -99,41 +96,38 @@ class MangaUpdatesTest extends TestCase
 
         $this->assertTrue(MangaUpdates::autofill($manga));
 
-        $this->assertEquals($id, $manga->getMangaUpdatesId());
-        $this->assertEquals($description, $manga->getDescription());
-        $this->assertEquals($type, $manga->getType());
-        $this->assertEquals($year, $manga->getYear());
+        $this->assertEquals($id, $manga->mu_id);
+        $this->assertEquals($description, $manga->description);
+        $this->assertEquals($type, $manga->type);
+        $this->assertEquals($year, $manga->year);
 
-        $actualAssocNames = collect(array_map(function (AssociatedName $assocName) {
-            return $assocName->getName();
-        }, $manga->getAssociatedNames()))->values();
+        $actualAssocNames = $manga->associatedNames
+            ->transform(function (AssociatedName $assocName) {
+                return $assocName->name;
+            })
+            ->toArray();
 
-        $actualArtists = collect(array_map(function (Person $artist) {
-            return $artist->getName();
-        }, $manga->getArtists()));
+        $actualArtists = $manga->artists
+            ->transform(function (Person $artist) {
+                return $artist->name;
+            })
+            ->toArray();
 
-        $actualAuthors = collect(array_map(function (Person $author) {
-            return $author->getName();
-        }, $manga->getAuthors()));
+        $actualAuthors = $manga->authors
+            ->transform(function (Person $author) {
+                return $author->name;
+            })
+            ->toArray();
 
-        $actualGenres = collect(array_map(function (Genre $genre) {
-            return $genre->getName();
-        }, $manga->getGenres()));
+        $actualGenres = $manga->genres
+            ->transform(function (Genre $genre) {
+                return $genre->name;
+            })
+            ->toArray();
 
-        foreach ($assocNames as $assocName) {
-            $this->assertTrue($actualAssocNames->contains($assocName));
-        }
-
-        foreach ($artists as $artist) {
-            $this->assertTrue($actualArtists->contains($artist));
-        }
-
-        foreach ($authors as $author) {
-            $this->assertTrue($actualAuthors->contains($author));
-        }
-
-        foreach ($genres as $genre) {
-            $this->assertTrue($actualGenres->contains($genre));
-        }
+        $this->assertTrue(count(array_diff($actualAssocNames, $assocNames)) == 0);
+        $this->assertTrue(count(array_diff($actualArtists, $artists)) == 0);
+        $this->assertTrue(count(array_diff($actualAuthors, $authors)) == 0);
+        $this->assertTrue(count(array_diff($actualGenres, $genres)) == 0);
     }
 }
