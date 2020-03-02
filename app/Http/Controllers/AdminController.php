@@ -21,10 +21,13 @@ use App\Http\Requests\Role\CreateRoleRequest;
 use App\Image;
 
 use App\Library;
+use App\Permission;
 use App\Role;
 use App\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class AdminController extends Controller
 {
@@ -297,20 +300,56 @@ class AdminController extends Controller
             return redirect()->back()->withErrors('The Administrator role cannot be modified.');
         }
 
-        $actions = collect($request->get('actions'));
-        $actionsOnClass = $actions->diff(['view']);
-        $actionsOnModel = $actions->diff($actionsOnClass);
-        $modelType = $request->get('model_type');
-        $modelId = $request->get('model_id');
+        $items = $request->get('actions');
 
-        \DB::transaction(function () use ($role, $actionsOnClass, $actionsOnModel, $modelType, $modelId) {
-            foreach ($actionsOnClass as $action) {
-                $role->grantPermission($action, $modelType);
+        \DB::transaction(function () use ($items, $role) {
+            /** @var Collection $classPermissionsToGrant */
+            $classPermissionsToGrant = collect();
+            /** @var Collection $objectPermissionsToGrant */
+            $objectPermissionsToGrant = collect();
+
+            foreach ($items as $item) {
+                $modelType = Arr::get($item, 'model_type');
+
+                // Get a Collection of permissions that act on a class
+                if (Arr::has($item, 'class')) {
+                    $actions = Arr::get($item, 'class.actions');
+
+                    // Get the ids of all the permissions that match the model type and actions
+                    $classPermissionsToGrant = $classPermissionsToGrant->merge(Permission::where('model_type', $modelType)
+                        ->whereIn('action', $actions)
+                        ->select(['id'])
+                        ->get()
+                        ->transform(function (Permission $permission) {
+                            return $permission->id;
+                        }));
+                }
+
+                // Get a Collection of permissions that act on an object
+                if (Arr::has($item, 'object')) {
+                    $objectItems = Arr::get($item, 'object');
+
+                    foreach ($objectItems as $objectIndex => $objectItem) {
+                        $modelId = Arr::get($item, "object.${objectIndex}.model_id");
+                        $actions = Arr::get($item, "object.${objectIndex}.actions");
+
+                        // Get the ids of all the permissions that match the model type, actions, and model id
+                        $objectPermissionsToGrant = $objectPermissionsToGrant->merge(Permission::where('model_type', $modelType)
+                            ->where('model_id', $modelId)
+                            ->whereIn('action', $actions)
+                            ->select(['id'])
+                            ->get()
+                            ->transform(function (Permission $permission) {
+                                return $permission->id;
+                            }));
+                    }
+                }
             }
 
-            foreach ($actionsOnModel as $action) {
-                $role->grantPermission($action, $modelType, $modelId);
-            }
+            $permissionsToGrant = collect()->merge($classPermissionsToGrant)
+                                           ->merge($objectPermissionsToGrant);
+
+            $role->permissions()->sync($permissionsToGrant);
         });
 
         return redirect()->back()->with('success', 'The role has been updated.');

@@ -104,16 +104,27 @@ class Role extends Model
         /** @var Collection $permissions */
         $permissions = $this->permissions->where('action', $action);
 
-        if ($isObject && $objectId === null) {
-            $permissions = $permissions->where('model_type', get_class($classOrObject))
-                                       ->where('model_id', $classOrObject->id);
-        } elseif (!$isObject && $objectId !== null) {
-            $permissions = $permissions->where('model_type', $classOrObject)
-                                       ->where('model_id', $objectId);
-        }
-        else {
+        if ($isObject) {
+            if (empty($objectId)) {
+                $permissions = $permissions->where('model_type', get_class($classOrObject))
+                                           ->where('model_id', $classOrObject->id);
+            } else {
+                $permissions = $permissions->where('model_type', $classOrObject)
+                                           ->where('model_id', $objectId);
+            }
+        } else {
             $permissions = $permissions->where('model_type', $classOrObject);
         }
+
+//        if ($isObject && $objectId === null) {
+//            $permissions = $permissions->where('model_type', get_class($classOrObject))
+//                ->where('model_id', $classOrObject->id);
+//        } elseif (!$isObject && $objectId !== null) {
+//            $permissions = $permissions->where('model_type', $classOrObject)
+//                ->where('model_id', $objectId);
+//        } else {
+//            $permissions = $permissions->where('model_type', $classOrObject);
+//        }
 
         return $this->name === "Administrator" || $permissions->count() > 0;
     }
@@ -148,8 +159,6 @@ class Role extends Model
      */
     public function grantPermission(string $action, $classOrObject, $modelId = null)
     {
-        $isObject = ! is_string($classOrObject);
-
         $permission = $this->permissionFromAction($action, $classOrObject, $modelId);
 
         // attach will throw a QueryException if it already exists

@@ -28,88 +28,78 @@
 
         <div class="col-12">
             <div class="tab-content">
-                @foreach ($roles as $role)
+                @foreach ($roles as $index => $role)
                     <div class="tab-pane fade @if ($role->name === "Administrator") show active @endif" id="{{ $role->name }}" role="tabpanel">
-                        <strong>Comments</strong>
-
                         {{ Form::open(['action' => ['AdminController@putRole', $role], 'method' => 'put']) }}
-                        {{ Form::hidden('model_type', \App\Comment::class) }}
+                        {{ Form::hidden('role_id', $role->id) }}
+
+                        <strong>Comments</strong>
+                        {{ Form::hidden("actions[0][model_type]", \App\Comment::class) }}
 
                             @foreach ($allActions as $action)
                                 @php($hasPermissionForAction = $role->hasPermission($action, \App\Comment::class))
 
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="{{ $role->name }}-comment-{{ $action }}" @if ($hasPermissionForAction) checked @endif name="actions[]"  value="{{ $action }}">
+                                    <input class="custom-control-input" type="checkbox" id="{{ $role->name }}-comment-{{ $action }}" @if ($hasPermissionForAction) checked @endif name="{{ "actions[0][class][actions][]" }}"  value="{{ $action }}">
                                     <label class="custom-control-label" for="{{ $role->name }}-comment-{{ $action }}">{{ $action }}</label>
                                 </div>
                             @endforeach
 
-                            <button class="btn btn-primary mt-3"><span class="fa fa-check"></span>&nbsp;Save</button>
-
-                        {{ Form::close() }}
-
                         <hr>
                         <strong>Library</strong>
 
-                        {{ Form::open(['action' => ['AdminController@putRole', $role], 'method' => 'put']) }}
-                        {{ Form::hidden('model_type', \App\Library::class) }}
+                        {{ Form::hidden("actions[1][model_type]", \App\Library::class) }}
 
                             @foreach ($allActions as $action)
                                 @php($hasPermissionForAction = $role->hasPermission($action, \App\Library::class))
 
                                 <div class="custom-control custom-checkbox">
-                                    <input class="custom-control-input" type="checkbox" id="{{ $role->name }}-library-{{ $action }}" @if ($hasPermissionForAction) checked @endif name="actions[]" value="{{ $action }}">
+                                    <input class="custom-control-input" type="checkbox" id="{{ $role->name }}-library-{{ $action }}" @if ($hasPermissionForAction) checked @endif name="{{ "actions[1][class][actions][]" }}" value="{{ $action }}">
                                     <label class="custom-control-label" for="{{ $role->name }}-library-{{ $action }}">{{ $action }}</label>
                                 </div>
                             @endforeach
 
                             @php($hasPermissionForAction = $role->hasPermission('viewAny', \App\Library::class))
                             <div class="custom-control custom-checkbox">
-                                <input class="custom-control-input" type="checkbox" id="{{ $role->name }}-library-viewAny" @if ($hasPermissionForAction) checked @endif name="actions[]" value="viewAny">
+                                <input class="custom-control-input" type="checkbox" id="{{ $role->name }}-library-viewAny" @if ($hasPermissionForAction) checked @endif name="{{ "actions[1][class][actions][]" }}" value="viewAny">
                                 <label class="custom-control-label" for="{{ $role->name }}-library-viewAny">viewAny</label>
                             </div>
 
-                            @foreach ($libraries as $library)
+                            @foreach ($libraries as $libraryIndex => $library)
                             <div class="custom-control custom-checkbox">
+                                {{ Form::hidden("actions[1][object][${libraryIndex}][model_id]", $library->id) }}
                                 @php($hasPermissionForAction = $role->hasPermission('view', \App\Library::class, $library->id))
-                                <input class="custom-control-input" type="checkbox" id="{{ $role->name }}-library-view-{{ $library->id }}" @if ($hasPermissionForAction) checked @endif name="actions[]" value="view">
-                                {{ Form::hidden('model_id', $library->id) }}
+                                <input class="custom-control-input" type="checkbox" id="{{ $role->name }}-library-view-{{ $library->id }}" @if ($hasPermissionForAction) checked @endif name="{{ "actions[1][object][${libraryIndex}][actions][]" }}" value="view">
                                 <label class="custom-control-label" for="{{ $role->name }}-library-view-{{ $library->id }}">view <mark>{{ $library->name }}</mark></label>
                             </div>
                             @endforeach
 
-                            <button class="btn btn-primary mt-3"><span class="fa fa-check"></span>&nbsp;Save</button>
-
-                        {{ Form::close() }}
-
                         <hr>
                         <strong>Manga</strong>
 
-                        {{ Form::open(['action' => ['AdminController@putRole', $role], 'method' => 'put']) }}
-                        {{ Form::hidden('model_type', \App\Manga::class) }}
+                        {{ Form::hidden("actions[2][model_type]", \App\Manga::class) }}
                         @foreach ($allActions as $action)
                             @php($hasPermissionForAction = $role->hasPermission($action, \App\Manga::class))
 
                             <div class="custom-control custom-checkbox">
-                                <input class="custom-control-input" type="checkbox" id="{{ $role->name }}-manga-{{ $action }}" @if ($hasPermissionForAction) checked @endif name="actions[]"  value="{{ $action }}">
+                                <input class="custom-control-input" type="checkbox" id="{{ $role->name }}-manga-{{ $action }}" @if ($hasPermissionForAction) checked @endif name="{{ "actions[2][class][actions][]" }}"  value="{{ $action }}">
                                 <label class="custom-control-label" for="{{ $role->name }}-manga-{{ $action }}">{{ $action }}</label>
                             </div>
                         @endforeach
 
                         <button class="btn btn-primary mt-3"><span class="fa fa-check"></span>&nbsp;Save</button>
 
+{{--                        <hr>--}}
+{{--                        <div class="row">--}}
+{{--                            <div class="col">--}}
+{{--                                {{ Form::open(['action' => ['AdminController@destroyRole', $role], 'method' => 'delete']) }}--}}
+{{--                                <button class="btn btn-danger" type="submit">--}}
+{{--                                    <span class="fa fa-times"></span>&nbsp;Delete--}}
+{{--                                </button>--}}
+{{--                                {{ Form::close() }}--}}
+{{--                            </div>--}}
+{{--                        </div>--}}
                         {{ Form::close() }}
-
-                        <hr>
-                        <div class="row">
-                            <div class="col">
-                                {{ Form::open(['action' => ['AdminController@destroyRole', $role], 'method' => 'delete']) }}
-                                <button class="btn btn-danger" type="submit">
-                                    <span class="fa fa-times"></span>&nbsp;Delete
-                                </button>
-                                {{ Form::close() }}
-                            </div>
-                        </div>
                     </div>
                 @endforeach
             </div>
