@@ -35,7 +35,7 @@ class PutRoleRequest extends FormRequest
             'actions.*.class' => 'array',
             'actions.*.class.*' => 'array',
             'actions.*.class.*.actions' => 'array',
-            'actions.*.class.*.actions.*' => 'string|in:create,delete,forceDelete,restore,update,view,viewAny',
+            'actions.*.class.*.actions.*' => 'string|in:create,delete,forceDelete,restore,update,viewAny',
 
             /*
              * data that determines what actions a role has on ONE object that pertains to model_type and model_id
@@ -45,14 +45,6 @@ class PutRoleRequest extends FormRequest
             'actions.*.object.*.model_id' => 'integer',
             'actions.*.object.*.actions' => 'array',
             'actions.*.object.*.actions.*' => 'string|in:create,delete,forceDelete,restore,update,view'
-
-            // TODO: Refactor into a simpler rule without a callable
-//            'actions.*.model_id' => [ 'int', Rule::requiredIf(function () {
-//                $actions = \Request::get('actions');
-//
-//                return empty($actions) ? false
-//                    : in_array('view', $actions);
-//            })]
         ];
     }
 }

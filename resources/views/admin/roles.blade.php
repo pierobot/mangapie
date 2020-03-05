@@ -89,17 +89,18 @@
 
                         <button class="btn btn-primary mt-3"><span class="fa fa-check"></span>&nbsp;Save</button>
 
-{{--                        <hr>--}}
-{{--                        <div class="row">--}}
-{{--                            <div class="col">--}}
-{{--                                {{ Form::open(['action' => ['AdminController@destroyRole', $role], 'method' => 'delete']) }}--}}
-{{--                                <button class="btn btn-danger" type="submit">--}}
-{{--                                    <span class="fa fa-times"></span>&nbsp;Delete--}}
-{{--                                </button>--}}
-{{--                                {{ Form::close() }}--}}
-{{--                            </div>--}}
-{{--                        </div>--}}
                         {{ Form::close() }}
+
+                        <hr>
+                        <div class="row">
+                            <div class="col">
+                                {{ Form::open(['action' => ['AdminController@destroyRole', $role], 'method' => 'delete']) }}
+                                <button class="btn btn-danger" type="submit">
+                                    <span class="fa fa-times"></span>&nbsp;Delete
+                                </button>
+                                {{ Form::close() }}
+                            </div>
+                        </div>
                     </div>
                 @endforeach
             </div>

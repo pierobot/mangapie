@@ -302,21 +302,39 @@ class AdminController extends Controller
 
         $items = $request->get('actions');
 
-        \DB::transaction(function () use ($items, $role) {
-            /** @var Collection $classPermissionsToGrant */
-            $classPermissionsToGrant = collect();
-            /** @var Collection $objectPermissionsToGrant */
-            $objectPermissionsToGrant = collect();
+        /** @var Collection $classPermissionsToGrant */
+        $classPermissionsToGrant = collect();
+        /** @var Collection $objectPermissionsToGrant */
+        $objectPermissionsToGrant = collect();
 
-            foreach ($items as $item) {
-                $modelType = Arr::get($item, 'model_type');
+        foreach ($items as $item) {
+            $modelType = Arr::get($item, 'model_type');
 
-                // Get a Collection of permissions that act on a class
-                if (Arr::has($item, 'class')) {
-                    $actions = Arr::get($item, 'class.actions');
+            // Get a Collection of permissions that act on a class
+            if (Arr::has($item, 'class')) {
+                $actions = Arr::get($item, 'class.actions');
 
-                    // Get the ids of all the permissions that match the model type and actions
-                    $classPermissionsToGrant = $classPermissionsToGrant->merge(Permission::where('model_type', $modelType)
+                // Get the ids of all the permissions that match the model type and actions
+                $classPermissionsToGrant = $classPermissionsToGrant->merge(Permission::where('model_type', $modelType)
+                    ->whereIn('action', $actions)
+                    ->select(['id'])
+                    ->get()
+                    ->transform(function (Permission $permission) {
+                        return $permission->id;
+                    }));
+            }
+
+            // Get a Collection of permissions that act on an object
+            if (Arr::has($item, 'object')) {
+                $objectItems = Arr::get($item, 'object');
+
+                foreach ($objectItems as $objectIndex => $objectItem) {
+                    $modelId = Arr::get($item, "object.${objectIndex}.model_id");
+                    $actions = Arr::get($item, "object.${objectIndex}.actions");
+
+                    // Get the ids of all the permissions that match the model type, actions, and model id
+                    $objectPermissionsToGrant = $objectPermissionsToGrant->merge(Permission::where('model_type', $modelType)
+                        ->where('model_id', $modelId)
                         ->whereIn('action', $actions)
                         ->select(['id'])
                         ->get()
@@ -324,31 +342,13 @@ class AdminController extends Controller
                             return $permission->id;
                         }));
                 }
-
-                // Get a Collection of permissions that act on an object
-                if (Arr::has($item, 'object')) {
-                    $objectItems = Arr::get($item, 'object');
-
-                    foreach ($objectItems as $objectIndex => $objectItem) {
-                        $modelId = Arr::get($item, "object.${objectIndex}.model_id");
-                        $actions = Arr::get($item, "object.${objectIndex}.actions");
-
-                        // Get the ids of all the permissions that match the model type, actions, and model id
-                        $objectPermissionsToGrant = $objectPermissionsToGrant->merge(Permission::where('model_type', $modelType)
-                            ->where('model_id', $modelId)
-                            ->whereIn('action', $actions)
-                            ->select(['id'])
-                            ->get()
-                            ->transform(function (Permission $permission) {
-                                return $permission->id;
-                            }));
-                    }
-                }
             }
+        }
 
-            $permissionsToGrant = collect()->merge($classPermissionsToGrant)
-                                           ->merge($objectPermissionsToGrant);
+        $permissionsToGrant = collect()->merge($classPermissionsToGrant)
+                                       ->merge($objectPermissionsToGrant);
 
+        \DB::transaction(function () use ($role, $permissionsToGrant) {
             $role->permissions()->sync($permissionsToGrant);
         });
 
