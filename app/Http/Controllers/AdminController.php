@@ -15,7 +15,7 @@ use App\Http\Requests\Admin\PatchRegistrationRequest;
 use App\Http\Requests\Admin\PutSchedulerRequest;
 use App\Http\Requests\Admin\PutViewsTimeRequest;
 
-use App\Http\Requests\Role\PutRoleRequest;
+use App\Http\Requests\Role\PatchRoleRequest;
 use App\Http\Requests\Role\CreateRoleRequest;
 
 use App\Image;
@@ -65,30 +65,6 @@ class AdminController extends Controller
             ->with('libraries', $libraries);
     }
 
-    public function roles()
-    {
-        /** @var Collection $roles */
-        $roles = Role::orderBy('name', 'asc')
-            ->with('permissions')
-            ->get();
-
-        $libraries = Library::orderBy('name', 'asc')
-            ->get();
-
-        $allActions = [
-            'create',
-            'delete',
-            'forceDelete',
-            'restore',
-            'update',
-        ];
-
-        return view('admin.roles')
-            ->with('roles', $roles)
-            ->with('libraries', $libraries)
-            ->with('allActions', $allActions);
-    }
-
     public function searchUsers(PostSearchUsersRequest $request)
     {
         // good enough for now - not going to be used extensively
@@ -96,7 +72,11 @@ class AdminController extends Controller
             ->orWhere('name', 'like', '%' . $request->get('name') . '%')
             ->get();
 
-        return view('admin.users')->with('users', $users);
+        $roles = Role::all();
+
+        return view('admin.users')
+            ->with('users', $users)
+            ->with('roles', $roles);
     }
 
 
@@ -274,95 +254,5 @@ class AdminController extends Controller
         }
 
         return redirect()->back()->with('success', 'The cron value has been updated.');
-    }
-
-    public function createRole(CreateRoleRequest $request)
-    {
-        $libraryIds = $request->get('libraries');
-
-        /** @var Role $role */
-        $role = Role::create([
-            'name' => $request->get('name')
-        ]);
-
-        return redirect()->back()->with('success', 'The role has been created.');
-    }
-
-    /**
-     * @param Role $role
-     * @param PutRoleRequest $request
-     * @return \Illuminate\Http\RedirectResponse
-     * @throws \Throwable
-     */
-    public function putRole(Role $role, PutRoleRequest $request)
-    {
-        if ($role->name === "Administrator") {
-            return redirect()->back()->withErrors('The Administrator role cannot be modified.');
-        }
-
-        $items = $request->get('actions');
-
-        /** @var Collection $classPermissionsToGrant */
-        $classPermissionsToGrant = collect();
-        /** @var Collection $objectPermissionsToGrant */
-        $objectPermissionsToGrant = collect();
-
-        foreach ($items as $item) {
-            $modelType = Arr::get($item, 'model_type');
-
-            // Get a Collection of permissions that act on a class
-            if (Arr::has($item, 'class')) {
-                $actions = Arr::get($item, 'class.actions');
-
-                // Get the ids of all the permissions that match the model type and actions
-                $classPermissionsToGrant = $classPermissionsToGrant->merge(Permission::where('model_type', $modelType)
-                    ->whereIn('action', $actions)
-                    ->select(['id'])
-                    ->get()
-                    ->transform(function (Permission $permission) {
-                        return $permission->id;
-                    }));
-            }
-
-            // Get a Collection of permissions that act on an object
-            if (Arr::has($item, 'object')) {
-                $objectItems = Arr::get($item, 'object');
-
-                foreach ($objectItems as $objectIndex => $objectItem) {
-                    $modelId = Arr::get($item, "object.${objectIndex}.model_id");
-                    $actions = Arr::get($item, "object.${objectIndex}.actions");
-
-                    // Get the ids of all the permissions that match the model type, actions, and model id
-                    $objectPermissionsToGrant = $objectPermissionsToGrant->merge(Permission::where('model_type', $modelType)
-                        ->where('model_id', $modelId)
-                        ->whereIn('action', $actions)
-                        ->select(['id'])
-                        ->get()
-                        ->transform(function (Permission $permission) {
-                            return $permission->id;
-                        }));
-                }
-            }
-        }
-
-        $permissionsToGrant = collect()->merge($classPermissionsToGrant)
-                                       ->merge($objectPermissionsToGrant);
-
-        \DB::transaction(function () use ($role, $permissionsToGrant) {
-            $role->permissions()->sync($permissionsToGrant);
-        });
-
-        return redirect()->back()->with('success', 'The role has been updated.');
-    }
-
-    public function destroyRole(Role $role)
-    {
-        if ($role->name === "Administrator") {
-            return redirect()->back()->withErrors('The Administrator role cannot be deleted.');
-        }
-
-        $role->forceDelete();
-
-        return redirect()->back()->with('success', 'The role has been deleted.');
     }
 }

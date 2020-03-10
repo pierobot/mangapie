@@ -10,7 +10,7 @@
         <li class="nav-item"><a href="{{ URL::action('AdminController@config') }}" class="nav-link">Config</a></li>
         <li class="nav-item"><a href="{{ URL::action('AdminController@libraries') }}" class="nav-link">Libraries</a></li>
         <li class="nav-item"><a href="#" class="nav-link active">Users</a></li>
-        <li class="nav-item"><a href="{{ URL::action('AdminController@roles') }}" class="nav-link">Roles</a></li>
+        <li class="nav-item"><a href="{{ URL::action('RoleController@index') }}" class="nav-link">Roles</a></li>
     </ul>
 @endsection
 
@@ -119,15 +119,13 @@
             <table class="table">
                 <thead class="bg-dark">
                     <tr>
-                        <td>Id</td>
                         <td>Name</td>
-                        <td>Created</td>
+                        <td>Roles</td>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach ($users as $user)
                         <tr @if ($user->id == \Auth::user()->id) class="bg-secondary" @endif>
-                            <td>{{ $user->id }}</td>
                             <td>
                                 {{ Form::open(['action' => ['UserController@destroy', $user], 'method' => 'delete', 'class' => 'form-inline']) }}
                                 <a href="{{ URL::action('UserController@show', [$user]) }}">{{ $user->name }}</a>
@@ -139,7 +137,24 @@
                                 </button>
                                 {{ Form::close() }}
                             </td>
-                            <td>{{ $user->created_at->diffForHumans() }}</td>
+                            <td>
+                                @php($userRoles = $user->roles)
+                                @foreach ($roles as $role)
+                                    @if ($user->hasRole($role->name))
+                                        {{ Form::open(['action' => ['RoleController@revoke', $user, $role], 'method' => 'delete', 'style' => 'display: inline']) }}
+                                        <button class="btn btn-sm btn-primary" data-hasrole="yes" type="submit">
+                                            {{ $role->name }}
+                                        </button>
+                                        {{ Form::close() }}
+                                    @else
+                                        {{ Form::open(['action' => ['RoleController@grant', $user, $role], 'method' => 'patch', 'style' => 'display:inline']) }}
+                                        <button class="btn btn-sm btn-outline-primary" data-hasrole="yes" type="submit">
+                                            {{ $role->name }}
+                                        </button>
+                                        {{ Form::close() }}
+                                    @endif
+                                @endforeach
+                            </td>
                         </tr>
                     @endforeach
                 </tbody>

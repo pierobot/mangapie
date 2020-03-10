@@ -30,8 +30,8 @@
             <div class="tab-content">
                 @foreach ($roles as $index => $role)
                     <div class="tab-pane fade @if ($role->name === "Administrator") show active @endif" id="{{ $role->name }}" role="tabpanel">
-                        {{ Form::open(['action' => ['AdminController@putRole', $role], 'method' => 'put']) }}
-                        {{ Form::hidden('role_id', $role->id) }}
+                        {{ Form::open(['action' => ['RoleController@update', $role], 'method' => 'patch']) }}
+{{--                        {{ Form::hidden('role_id', $role->id) }}--}}
 
                         <strong>Comments</strong>
                         {{ Form::hidden("actions[0][model_type]", \App\Comment::class) }}
@@ -94,7 +94,7 @@
                         <hr>
                         <div class="row">
                             <div class="col">
-                                {{ Form::open(['action' => ['AdminController@destroyRole', $role], 'method' => 'delete']) }}
+                                {{ Form::open(['action' => ['RoleController@destroy', $role], 'method' => 'delete']) }}
                                 <button class="btn btn-danger" type="submit">
                                     <span class="fa fa-times"></span>&nbsp;Delete
                                 </button>
@@ -111,7 +111,7 @@
     <h4><strong>Create</strong></h4>
     <div class="row">
         <div class="col">
-            {{ Form::open(['action' => 'AdminController@createRole']) }}
+            {{ Form::open(['action' => 'RoleController@create']) }}
             <div class="row">
                 <div class="col-12 col-sm-6">
                     <div class="input-group">

@@ -40,11 +40,6 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/users', 'AdminController@users');
         Route::post('/users/search', 'AdminController@searchUsers');
-
-        Route::get('/roles', 'AdminController@roles');
-        Route::post('/roles', 'AdminController@createRole');
-        Route::put('/roles/{role}', 'AdminController@putRole');
-        Route::delete('/roles/{role}', 'AdminController@destroyRole');
     });
 
     Route::prefix('avatar')->name('avatar')->group(function () {
@@ -164,6 +159,16 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{manga}/{archive}/{page}', 'ReaderController@index');
 
         Route::put('/history', 'ReaderController@putReaderHistory');
+    });
+
+    Route::prefix('roles')->middleware('role:Administrator')->name('roles')->group(function () {
+        Route::get('/', 'RoleController@index');
+        Route::post('/', 'RoleController@create');
+        Route::patch('/{role}', 'RoleController@update');
+        Route::delete('/{role}', 'RoleController@destroy');
+
+        Route::patch('/grant/{user}/{role}', 'RoleController@grant');
+        Route::delete('/revoke/{user}/{role}', 'RoleController@revoke');
     });
 
     Route::prefix('search')->name('search')->group(function () {
