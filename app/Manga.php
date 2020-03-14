@@ -2,15 +2,10 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 
-use \Carbon\Carbon;
-
-use App\ArtistReference;
-use App\AuthorReference;
-use App\GenreReference;
-use App\Interfaces\ImageArchiveInterface;
 use App\Interfaces\EditableInterface;
 
 class Manga
@@ -115,6 +110,8 @@ class Manga
 
     public function forceDelete()
     {
+        // TODO: handle more elegantly using observers?
+
         // delete all information and references that belongs to this manga
         $this->artistReferences()->forceDelete();
         $this->authorReferences()->forceDelete();
@@ -163,182 +160,176 @@ class Manga
         return $this->belongsTo('App\Library');
     }
 
+    /**
+     * Gets a HasManyThrough instance of all the associated names.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function associatedNames()
+    {
+        return $this->hasManyThrough(
+            AssociatedName::class,
+            AssociatedNameReference::class,
+            'manga_id',
+            'id',
+            'id',
+            'associated_name_id'
+        );
+    }
+
+    /**
+     * Gets a HasMany instance of all the associated name references.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function associatedNameReferences()
     {
-        return $this->hasMany('App\AssociatedNameReference', 'manga_id', 'id');
+        return $this->hasMany(AssociatedNameReference::class);
     }
 
-    public function getAssociatedNames()
+    /**
+     * Gets a HasManyThrough instance of all the authors.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function authors()
     {
-        $assocNames = [];
-
-        $references = $this->associatedNameReferences->load('associatedName');
-        foreach ($references as $reference) {
-            array_push($assocNames, $reference->associatedName);
-        }
-
-        return $assocNames;
+        return $this->hasManyThrough(
+            Person::class,
+            AuthorReference::class,
+            'manga_id',
+            'id',
+            'id',
+            'author_id'
+        );
     }
 
+    /**
+     * Gets a HasMany instance of all the author references.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function authorReferences()
     {
-        return $this->hasMany('App\AuthorReference', 'manga_id', 'id');
+        return $this->hasMany(AuthorReference::class, 'manga_id', 'id');
     }
 
-    public function getAuthors()
+    /**
+     * Gets a HasManyThrough instance of all the artists.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function artists()
     {
-        $authors = [];
-
-        $references = $this->authorReferences->load('author');
-        foreach ($references as $reference) {
-            array_push($authors, $reference->author);
-        }
-
-        return $authors;
+        return $this->hasManyThrough(
+            Person::class,
+            ArtistReference::class,
+            'manga_id',
+            'id',
+            'id',
+            'artist_id'
+        );
     }
 
+    /**
+     * Gets a HasMany instance of all the artist references.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function artistReferences()
     {
         return $this->hasMany('App\ArtistReference', 'manga_id', 'id');
     }
 
-    public function getArtists()
+    /**
+     * Gets a HasManyThrough instance of all the genres.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
+     */
+    public function genres()
     {
-        $artists = [];
-
-        $references = $this->artistReferences->load('artist');
-        foreach ($references as $reference) {
-            array_push($artists, $reference->artist);
-        }
-
-        return $artists;
+        return $this->hasManyThrough(
+            Genre::class,
+            GenreReference::class,
+            'manga_id',
+            'id',
+            'id',
+            'genre_id'
+        );
     }
 
+    /**
+     * Gets a HasMany instance of all the genre references.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function genreReferences()
     {
         return $this->hasMany('App\GenreReference', 'manga_id', 'id');
     }
 
-    public function getGenres()
+    /**
+     * Gets an instance of Builder that performs a full text search based on the keywords.
+     *
+     * @param string $keywords
+     * @return Builder
+     */
+    public static function search(string $keywords)
     {
-        $genres = [];
-
-        $references = $this->genreReferences->load('genre');
-        foreach ($references as $reference) {
-            array_push($genres, $reference->genre);
-        }
-
-        return $genres;
-    }
-
-    public function scopeSearch($query, $keywords)
-    {
-        $results = $query->whereRaw("match(name) against(? in boolean mode)", [$keywords])->get();
-
-        // get the associated names that match
-        $assocNames = AssociatedName::search($keywords)->get();
-        $assocArray = [];
-        // convert the associated names to a manga object and store them in an array
-        foreach ($assocNames as $assocName) {
-            array_push($assocArray, $assocName->reference->manga);
-        }
-
-        // convert the associated name array to an Illuminate\Support\Collection and merge
-        $results = $results->merge(collect($assocArray));
-
-        return empty($keywords) ? $query : $results;
+        return Manga::whereHas('associatedNames', function (Builder $query) use ($keywords) {
+            $query->whereRaw('match(name) against(? in boolean mode)', [$keywords]);
+        });
     }
 
     /**
      * Performs an advanced search based on the given data.
-     * At least one of the parameters is required to not be null.
      *
-     * @param array $genres An array of genre names.
+     * @param int[] $genres An array of genre names.
      * @param string $author The name of an author.
      * @param string $artist The name of an artist.
      * @param string $keywords Keywords to match against.
-     * @return \Illuminate\Support\Collection
+     * @return Builder
      */
-    public static function advancedSearch($genres, $author, $artist, $keywords)
+    public static function advancedSearch(array $genres, string $author, string $artist, string $keywords)
     {
-        $libraryIds = LibraryPrivilege::getIds();
-        $collection = null;
+        // match by keywords if present
+        if (! empty($keywords)) {
+            /** @var Builder $items */
+            $items = Manga::search($keywords);
 
-        // get a Collection object depending on whether keywords are present
-        if (empty($keywords) == false) {
-            $collection = Manga::whereRaw("match(name) against(? in boolean mode)", [$keywords])->get();
-
-            // get the associated names that match
-            $assocNames = AssociatedName::search($keywords)->get();
-            $assocArray = [];
-            // convert the associated names to a manga object and store them in an array
-            foreach ($assocNames as $assocName) {
-                array_push($assocArray, $assocName->reference->manga);
-            }
-
-            // convert the associated name array to an Illuminate\Support\Collection and merge
-            $collection = $collection->merge(collect($assocArray));
         } else {
-            $collection = Manga::all();
+            // no keywords were given so get a clean query to build from
+            /** @var Builder $items */
+            $items = Manga::query();
         }
 
-        // filter by library permissions
-        $collection = $collection->whereIn('library_id', $libraryIds);
+        // filter by genre ids
+        if (! empty($genres)) {
+            $items = $items->whereHas('genres', function (Builder $query) use ($genres) {
+                $query->whereIn('id', $genres);
+            });
+        }
 
-        // filter by genres
-        $collection = $collection->filter(function ($manga) use ($genres) {
-            if (empty($genres))
-                return true;
+        // filter by author name
+        if (! empty($author)) {
+            $items = $items->whereHas('authors', function (Builder $query) use ($author) {
+                $query->where('name', $author)
+                    // TODO: refactor for fulltext instead of using the like operator?
+                    ->orWhere('name', 'like', "%${author}%");
+            });
+        }
 
-            $keep = false;
+        // filter by artist name
+        if (! empty($artist)) {
+            // TODO: add in fulltext search ?
+            $items = $items->whereHas('artists', function (Builder $query) use ($artist) {
+                $query->where('name', $artist)
+                    // TODO: refactor for fulltext instead of using the like operator?
+                    ->orWhere('name', 'like', "%${artist}%");
+            });
+        }
 
-            // if any of the genres match the ones in the request then we keep the manga
-            foreach ($manga->genreReferences as $genreReference) {
-                if (in_array($genreReference->genre->id, $genres) == true) {
-                    $keep = true;
-                    break;
-                }
-            }
-
-            return $keep;
-        });
-
-        // filter by author and artist
-        $collection = $collection->filter(function ($manga) use ($author, $artist) {
-            if (empty($author) && empty($artist))
-                return true;
-
-            $keep = false;
-
-            if (empty($author) == false) {
-                // if any of the authors match the ones in the request then we keep the manga
-                foreach ($manga->authorReferences as $authorReference) {
-                    if (IntlString::strcmp($authorReference->author->name, $author) == 0) {
-                        $keep = true;
-                        break;
-                    }
-                }
-            }
-
-            if (empty($artist) == false) {
-                // if any of the artists match the ones in the request then we keep the manga
-                foreach ($manga->artistReferences as $artistReference) {
-                    if (IntlString::strcmp($artistReference->artist->name, $artist) == 0) {
-                        $keep = true;
-                        break;
-                    }
-                }
-            }
-
-            return $keep;
-        });
-
-        return $collection;
-    }
-
-    public function scopeFromLibrary($library_ids)
-    {
-        return Manga::whereIn('library_id', $library_ids);
+        return $items;
     }
 
 //    private function getNumberTokens($name)
@@ -472,9 +463,10 @@ class Manga
      */
     public function getArchives($sort = 'ascending')
     {
-        $archives = $this->archives->sort(function ($left, $right) use ($sort) {
-            return $sort == 'ascending' ? strnatcasecmp($left->getName(), $right->getName()) :
-                                          strnatcasecmp($right->getName(), $left->getName());
+        // TODO: deprecate this function and have the callees sort the archives.
+        $archives = $this->archives->sort(function (Archive $left, Archive $right) use ($sort) {
+            return $sort == 'ascending' ? strnatcasecmp($left->name, $right->name) :
+                                          strnatcasecmp($right->name, $left->name);
         });
 
         return $archives;

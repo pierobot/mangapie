@@ -4,17 +4,45 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\User\PutStatusRequest;
 use App\Http\Requests\User\UserCreateRequest;
-use App\Http\Requests\User\UserDeleteRequest;
 use App\Http\Requests\User\UserEditRequest;
-use Illuminate\Http\Request;
 
+use App\Role;
 use App\User;
-use App\LibraryPrivilege;
 
 class UserController extends Controller
 {
-    public function index(User $user)
+    /**
+     * UserController constructor.
+     */
+    public function __construct()
     {
+        $this->authorizeResource(User::class);
+    }
+
+    /**
+     * Get the map of resource methods to ability names.
+     *
+     * @return array
+     */
+    protected function resourceAbilityMap()
+    {
+        return [
+            'show' => 'view',
+            // TODO: combine comments and activity into one page for the profile; remove from here
+            'comments' => 'view',
+            'activity' => 'view',
+            'create' => 'create',
+            'store' => 'create',
+            'edit' => 'update',
+            'update' => 'update',
+            'destroy' => 'delete',
+        ];
+    }
+
+    public function show(User $user)
+    {
+        // TODO: Make config option for the # to load
+
         $recentFavorites = $user->favorites->sortByDesc('updated_at')->take(4)->load('manga');
         $recentReads = $user->readerHistory->sortByDesc('updated_at')->unique('manga_id')->take(4)->load('manga');
 
@@ -24,6 +52,7 @@ class UserController extends Controller
             ->with('recentReads', $recentReads);
     }
 
+    // TODO: deprecate and make config option for the # to load
     public function comments(User $user)
     {
         $comments = $user->comments->sortByDesc('created_at')->take(10)->load('manga');
@@ -35,6 +64,8 @@ class UserController extends Controller
 
     public function activity(User $user)
     {
+        // TODO: Make config option for the # to load
+
         $recentFavorites = $user->favorites->sortByDesc('updated_at')->take(4)->load('manga');
         $recentReads = $user->readerHistory->sortByDesc('updated_at')->unique('manga_id')->take(4)->load('manga');
 
@@ -46,8 +77,8 @@ class UserController extends Controller
 
     public function avatar(User $user)
     {
-        $filePath = storage_path('app/public/avatars') . DIRECTORY_SEPARATOR . $user->getId();
-        $accelPath = '/avatars' . DIRECTORY_SEPARATOR . $user->getId();
+        $filePath = storage_path('app/public/avatars') . DIRECTORY_SEPARATOR . $user->id;
+        $accelPath = '/avatars' . DIRECTORY_SEPARATOR . $user->id;
 
         return response()->make('', 200, [
             'Content-Type' => \Image::make($filePath)->mime,
@@ -114,58 +145,61 @@ class UserController extends Controller
         return view('lists.planned')->with('user', $user);
     }
 
+    /**
+     * Creates a user with the provided role(s) and permission(s).
+     *
+     * @note If library permissions are explicitly requested but are inherited from a role,
+     * then the specific permission is not created.
+     *
+     * @param UserCreateRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function create(UserCreateRequest $request)
     {
-        // create the user
+        /** @var User $user */
         $user = User::create([
             'name' => $request->get('name'),
             'email' => $request->get('email'),
-            'password' => \Hash::make($request->get('password')),
-            'admin' => $request->get('admin') == null ? false : $request->get('admin'),
-            'maintainer' => $request->get('maintainer') == null ? false : $request->get('maintainer')
+            'password' => \Hash::make($request->get('password'))
         ]);
 
-        if ($user != null) {
-            // create the privileges for each library
-            $libraryIds = $request->get('libraries');
-
-            foreach ($libraryIds as $libraryId) {
-                LibraryPrivilege::create([
-                    'user_id' => $user->getId(),
-                    'library_id' => $libraryId
-                ]);
-            }
-
-            $request->session()->flash('success', 'User was successfully created!');
+        $roleIds = $request->get('roles');
+        $roles = Role::whereIn('id', $roleIds)->get();
+        foreach ($roles as $role) {
+            $user->grantRole($role->name);
         }
 
-        return redirect()->back();
+        \Session::flash('success', 'User was successfully created.');
+
+        return \Redirect::back();
     }
 
     public function edit(UserEditRequest $request)
     {
+        /** @var User $user */
         $user = User::where('name', $request->get('name'))->first();
         $user->update([
             'name' => $request->get('new-name')
         ]);
 
-        $request->session()->flash('success', 'User was successfully edited!');
+        \Session::flash('success', 'User was successfully edited!');
 
-        return redirect()->back();
+        return \Redirect::back();
     }
 
-    public function delete(UserDeleteRequest $request)
+    public function destroy(User $user)
     {
-        $user = User::where('name', $request->get('name'))->first();
+        // TODO: add observer to remove anything related
         $user->forceDelete();
 
-        $request->session()->flash('success', 'User was successfully deleted!');
+        \Session::flash('success', 'User was successfully deleted!');
 
-        return redirect()->back();
+        return \Redirect::back();
     }
 
     public function putStatus(PutStatusRequest $request)
     {
+        /** @var User $user */
         $user = $request->user()->load(['completed', 'dropped', 'onhold', 'planned', 'reading']);
         $mangaId = $request->get('manga_id');
         $status = $request->get('status');
@@ -206,9 +240,9 @@ class UserController extends Controller
                 }
             });
 
-            return redirect()->back();
+            return \Redirect::back();
         } catch (\Throwable $exception) {
-            return redirect()->back()->withErrors('Unable to update series status. Try again later.');
+            return \Redirect::back()->withErrors('Unable to update series status. Try again later.');
         }
     }
 }

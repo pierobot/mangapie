@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\User;
 
+use App\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserCreateRequest extends FormRequest
@@ -13,7 +14,7 @@ class UserCreateRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->check() && auth()->user()->admin == true;
+        return \Auth::check() && \Auth::user()->can('create', User::class);
     }
 
     /**
@@ -27,10 +28,8 @@ class UserCreateRequest extends FormRequest
             'name' => 'required|string|unique:users',
             'email' => 'required|email|unique:users',
             'password' => 'required|string',
-            'libraries' => 'required|array',
-            'libraries.*' => 'required|exists:libraries,id',
-            'admin' => 'boolean',
-            'maintainer' => 'boolean'
+            'roles' => 'required|array',
+            'roles.*' => 'required|exists:roles,id',
         ];
     }
 }

@@ -1,6 +1,6 @@
 <h5>
     Author(s)
-    @if ($user->admin || $user->maintainer)
+    @if ($user->hasRole('Administrator') || $user->hasRole('Editor'))
         <a href="{{ action('MangaEditController@authors', [$manga]) }}">
             <span class="fa fa-edit"></span>
         </a>
@@ -14,7 +14,7 @@
                 $author = $authorReference->author;
             @endphp
             <div class="col-6 col-sm-4 col-md-3 col-lg-3">
-                <a href="{{ \URL::action('PersonController@index', [$author]) }}">
+                <a href="{{ \URL::action('PersonController@show', [$author]) }}">
                     {{ $author->name }}
                 </a>
             </div>

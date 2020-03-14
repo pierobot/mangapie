@@ -2,23 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
-
 use App\Http\Requests\Library\LibraryCreateRequest;
-use App\Http\Requests\Library\LibraryDeleteRequest;
-use App\Http\Requests\Library\LibraryStatusRequest;
 use App\Http\Requests\Library\LibraryUpdateRequest;
 
 use \App\Library;
-use Imtigger\LaravelJobStatus\JobStatus;
 
 class LibraryController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Library::class, 'library');
+    }
+
     public function create(LibraryCreateRequest $request)
     {
-        $name = \Input::get('name');
-        $path = \Input::get('path');
+        $name = $request->input('name');
+        $path = $request->input('path');
 
         // ensure we have a valid path
         if (is_dir($path) == false) {
@@ -44,10 +43,8 @@ class LibraryController extends Controller
         return redirect()->back();
     }
 
-    public function update(LibraryUpdateRequest $request)
+    public function update(Library $library, LibraryUpdateRequest $request)
     {
-        $library = Library::find($request->get('library_id'));
-
         $action = $request->get('action');
         if ($action === 'rename') {
             $library->update([
@@ -66,9 +63,8 @@ class LibraryController extends Controller
         return redirect()->back();
     }
 
-    public function delete(LibraryDeleteRequest $request)
+    public function destroy(Library $library)
     {
-        $library = Library::find($request->get('library_id'));
         $library->forceDelete();
 
         session()->flash('success', 'Library was successfully deleted.');

@@ -24,7 +24,7 @@
 
         <div class="row mt-3">
             <div class="col">
-                <h3><a href="{{ URL::action('MangaController@index', [$manga]) }}">{{ $manga->name }}</a> - Preview - {{ $nameVolCh }}</h3>
+                <h3><a href="{{ URL::action('MangaController@show', [$manga]) }}">{{ $manga->name }}</a> - Preview - {{ $nameVolCh }}</h3>
             </div>
         </div>
 

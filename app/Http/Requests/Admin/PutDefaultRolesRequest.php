@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Admin;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CommentDeleteRequest extends FormRequest
+class PutDefaultRolesRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class CommentDeleteRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::check();
+        return \Auth::check() && \Auth::user()->hasRole('Administrator');
     }
 
     /**
@@ -24,7 +24,8 @@ class CommentDeleteRequest extends FormRequest
     public function rules()
     {
         return [
-            'comment_id' => 'required|int|exists:comments',
+            'role_ids' => 'array',
+            'role_ids.*' => 'integer|exists:roles,id'
         ];
     }
 }

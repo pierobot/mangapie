@@ -14,7 +14,7 @@ class NotificationController extends Controller
         return view('notifications.index');
     }
 
-    public function delete(NotificationRequest $request)
+    public function destroy(NotificationRequest $request)
     {
         $action = \Request::get('action');
         $watchNotificationIds= \Request::get('ids');

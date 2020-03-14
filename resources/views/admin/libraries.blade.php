@@ -10,6 +10,7 @@
         <li class="nav-item"><a href="{{ URL::action('AdminController@config') }}" class="nav-link">Config</a></li>
         <li class="nav-item"><a href="#" class="nav-link active">Libraries</a></li>
         <li class="nav-item"><a href="{{ URL::action('AdminController@users') }}" class="nav-link">Users</a></li>
+        <li class="nav-item"><a href="{{ URL::action('RoleController@index') }}" class="nav-link">Roles</a></li>
     </ul>
 @endsection
 
@@ -17,7 +18,7 @@
     <hr>
     <h4><strong>Create</strong></h4>
 
-    {{ Form::open(['action' => 'LibraryController@create', 'method' => 'put']) }}
+    {{ Form::open(['action' => 'LibraryController@create']) }}
     <div class="form-group">
         <div class="input-group">
             <input type="text" class="form-control" placeholder="Name" title="Name" id="create-name" name="name">
@@ -54,8 +55,7 @@
             @foreach ($libraries as $library)
                 <tr>
                     <td>
-                        {{ Form::open(['action' => 'LibraryController@update', 'method' => 'patch']) }}
-                        {{ Form::hidden('library_id', $library->id) }}
+                        {{ Form::open(['action' => ['LibraryController@update', $library], 'method' => 'patch']) }}
 
                         <div class="input-group">
                             <input class="form-control" type="text" placeholder="{{ $library->name }}" title="Enter new name" id="name" name="name">

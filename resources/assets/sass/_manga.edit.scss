@@ -48,3 +48,13 @@
     @include button-variant($success, $success);
   }
 }
+
+.btn.btn-primary {
+  &[data-hasrole="yes"]:hover {
+    @include button-variant($danger, $danger);
+  }
+
+  &[data-hasrole="yes"]:not(:hover) {
+    @include button-variant($primary, $primary);
+  }
+}

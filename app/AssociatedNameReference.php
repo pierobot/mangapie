@@ -2,29 +2,19 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class AssociatedNameReference extends Model
+class AssociatedNameReference extends Pivot
 {
-    protected $fillable = ['manga_id', 'assoc_name_id'];
-
-    public function getMangaId()
-    {
-        return $this->manga_id;
-    }
-
-    public function getAssociatedNameId()
-    {
-        return $this->assoc_name_id;
-    }
+    protected $table = 'associated_name_references';
 
     public function associatedName()
     {
-        return $this->hasOne('App\AssociatedName', 'id', 'assoc_name_id');
+        return $this->belongsTo(AssociatedName::class);
     }
 
     public function manga()
     {
-        return $this->belongsTo('App\Manga');
+        return $this->belongsTo(Manga::class);
     }
 }

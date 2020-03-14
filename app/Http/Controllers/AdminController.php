@@ -9,15 +9,25 @@ use App\Http\Requests\Admin\PatchViewsRequest;
 use App\Http\Requests\Admin\PatchViewsTimeRequest;
 use App\Http\Requests\Admin\PostHeatRequest;
 use App\Http\Requests\Admin\PostSearchUsersRequest;
-use App\Http\Requests\Admin\PutDefaultLibrariesRequest;
+use App\Http\Requests\Admin\PutDefaultRolesRequest;
 use App\Http\Requests\Admin\PatchRegistrationRequest;
 
 use App\Http\Requests\Admin\PutSchedulerRequest;
 use App\Http\Requests\Admin\PutViewsTimeRequest;
+
+use App\Http\Requests\Role\PatchRoleRequest;
+use App\Http\Requests\Role\CreateRoleRequest;
+
 use App\Image;
 
 use App\Library;
+use App\Permission;
+use App\Role;
+use App\User;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 
 class AdminController extends Controller
 {
@@ -43,21 +53,30 @@ class AdminController extends Controller
 
     public function users()
     {
-        $users = \App\User::orderBy('name', 'asc')->paginate(18);
+        $users = User::orderBy('name', 'asc')->paginate(18);
+        $roles = Role::all();
+        $libraries = Library::all();
 
         $users->onEachSide(1)->withPath(\URL::to('admin/users'));
 
-        return view('admin.users')->with('users', $users);
+        return view('admin.users')
+            ->with('users', $users)
+            ->with('roles', $roles)
+            ->with('libraries', $libraries);
     }
 
     public function searchUsers(PostSearchUsersRequest $request)
     {
         // good enough for now - not going to be used extensively
-        $users = \App\User::where('name', $request->get('name'))
+        $users = User::where('name', $request->get('name'))
             ->orWhere('name', 'like', '%' . $request->get('name') . '%')
             ->get();
 
-        return view('admin.users')->with('users', $users);
+        $roles = Role::all();
+
+        return view('admin.users')
+            ->with('users', $users)
+            ->with('roles', $roles);
     }
 
 
@@ -110,20 +129,20 @@ class AdminController extends Controller
         }
     }
 
-    public function putDefaultLibraries(PutDefaultLibrariesRequest $request)
+    public function putDefaultRoles(PutDefaultRolesRequest $request)
     {
-        $libraryIds = $request->has('library_ids') ? $request->get('library_ids') : [];
-        $defaultLibraries = [];
+        $roleIds = $request->get('role_ids', []);
+        $defaultRoles = [];
 
-        \Cache::tags(['config', 'registration'])->forget('libraries');
+        \Cache::tags(['config', 'registration'])->forget('roles');
 
-        foreach ($libraryIds as $id) {
-            $defaultLibraries[$id] = $id;
+        foreach ($roleIds as $id) {
+            $defaultRoles[$id] = $id;
         }
 
-        \Cache::tags(['config', 'registration'])->forever('libraries', $defaultLibraries);
+        \Cache::tags(['config', 'registration'])->forever('roles', $defaultRoles);
 
-        return redirect()->back()->with('success', 'Default libraries have been updated.');
+        return redirect()->back()->with('success', 'Default roles have been updated.');
     }
 
     public function patchHeat(PatchHeatRequest $request)
@@ -228,7 +247,6 @@ class AdminController extends Controller
     public function putScheduler(PutSchedulerRequest $request)
     {
         \Cache::tags(['config', 'image', 'scheduler'])->forget('cron');
-
         if ($request->get('action') === 'reset') {
             \Cache::tags(['config', 'image', 'scheduler'])->forever('cron', '@daily');
         } else {

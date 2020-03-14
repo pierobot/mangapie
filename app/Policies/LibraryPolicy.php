@@ -1,0 +1,89 @@
+<?php
+
+namespace App\Policies;
+
+use App\User;
+use App\Library;
+use Illuminate\Auth\Access\HandlesAuthorization;
+
+class LibraryPolicy
+{
+    use HandlesAuthorization;
+
+    /**
+     * Determine whether the user can view the library.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Library  $library
+     * @return bool
+     */
+    public function view(User $user, Library $library)
+    {
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('view', $library);
+    }
+
+    /**
+     * Determine whether the user can create libraries.
+     *
+     * @param  \App\User  $user
+     * @return bool
+     */
+    public function create(User $user)
+    {
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('create', Library::class);
+    }
+
+    /**
+     * Determine whether the user can update the library.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Library  $library
+     * @return bool
+     */
+    public function update(User $user, Library $library)
+    {
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('update', Library::class);
+    }
+
+    /**
+     * Determine whether the user can delete the library.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Library  $library
+     * @return bool
+     */
+    public function delete(User $user, Library $library)
+    {
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('delete', Library::class);
+    }
+
+    /**
+     * Determine whether the user can restore the library.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Library  $library
+     * @return bool
+     */
+    public function restore(User $user, Library $library)
+    {
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('restore', Library::class);
+    }
+
+    /**
+     * Determine whether the user can permanently delete the library.
+     *
+     * @param  \App\User  $user
+     * @param  \App\Library  $library
+     * @return bool
+     */
+    public function forceDelete(User $user, Library $library)
+    {
+        return ! $user->hasRole('Banned') &&
+            $user->hasPermission('forceDelete', Library::class);
+    }
+}

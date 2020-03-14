@@ -21,9 +21,9 @@ class WatchController extends Controller
         return redirect()->back();
     }
 
-    public function delete(WatchDeleteRequest $request)
+    public function destroy(WatchReference $watchReference)
     {
-        WatchReference::find($request->get('watch_reference_id'))->forceDelete();
+        $watchReference->forceDelete();
 
         session()->flash('success', 'You are no longer watching this manga.');
 

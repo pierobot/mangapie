@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Library;
-use App\LibraryPrivilege;
+use App\Role;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
@@ -50,7 +49,7 @@ class RegisterController extends Controller
     protected function validator(array $data)
     {
         return Validator::make($data, [
-            'name' => 'required|max:255',
+            'name' => 'required|max:255|unique:users',
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:8|confirmed',
         ]);
@@ -68,24 +67,24 @@ class RegisterController extends Controller
         if (! \Cache::tags(['config', 'registration'])->get('enabled', false))
             return null;
 
+        /** @var User $user */
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => \Hash::make($data['password']),
         ]);
 
-        // assign library permissions
-        $defaultLibraries = \Cache::tags(['config', 'registration'])->get('libraries', []);
-        if (! empty($defaultLibraries)) {
-            foreach ($defaultLibraries as $libraryId) {
-                $library = Library::findOrFail($libraryId);
+        // assign default roles
+        $defaultRoleIds = \Cache::tags(['config', 'registration'])->get('roles', []);
+        if (! empty($defaultRoleIds)) {
+            foreach ($defaultRoleIds as $roleId) {
+                $role = Role::findOrFail($roleId);
 
-                LibraryPrivilege::create([
-                   'user_id' => $user->id,
-                   'library_id' => $library->id
-                ]);
+                $user->grantRole($role);
             }
         }
+
+        session()->flash('success', 'Registration successful. Welcome.');
 
         return $user;
     }

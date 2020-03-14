@@ -80,7 +80,7 @@
 
                 <div class="modal-header bg-dark">
                     <h5 class="modal-title">
-                        <a href="{{ URL::action('MangaController@index', [$manga]) }}">{{ $manga->name }}</a> - {{ $nameVolCh }}
+                        <a href="{{ URL::action('MangaController@show', [$manga]) }}">{{ $manga->name }}</a> - {{ $nameVolCh }}
                     </h5>
                 </div>
 

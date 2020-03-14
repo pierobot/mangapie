@@ -19,9 +19,9 @@ class AssociatedName extends Model
         return $this->name;
     }
 
-    public function reference()
+    public function references()
     {
-        return $this->belongsTo('App\AssociatedNameReference', 'id', 'assoc_name_id');
+        return $this->hasMany(AssociatedNameReference::class);
     }
 
     public function scopeSearch($query, $keywords)

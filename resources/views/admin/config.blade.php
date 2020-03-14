@@ -10,6 +10,7 @@
         <li class="nav-item"><a href="#" class="nav-link active">Config</a></li>
         <li class="nav-item"><a href="{{ URL::action('AdminController@libraries') }}" class="nav-link">Libraries</a></li>
         <li class="nav-item"><a href="{{ URL::action('AdminController@users') }}" class="nav-link">Users</a></li>
+        <li class="nav-item"><a href="{{ URL::action('RoleController@index') }}" class="nav-link">Roles</a></li>
     </ul>
 @endsection
 
@@ -50,21 +51,21 @@
         </div>
 
         <div class="col-12 col-md-6">
-            <h5>Default libraries</h5>
+            <h5>Default Roles</h5>
 
-            @php ($libraries = App\Library::all())
-            @php ($defaultLibraries = \Cache::tags(['config', 'registration'])->get('libraries', []))
+            @php ($roles = App\Role::all())
+            @php ($defaultRoles = \Cache::tags(['config', 'registration'])->get('roles', []))
 
-            {{ Form::open(['action' => 'AdminController@putDefaultLibraries', 'method' => 'put']) }}
+            {{ Form::open(['action' => 'AdminController@putDefaultRoles', 'method' => 'put']) }}
 
             <div class="row">
-                @foreach ($libraries as $library)
-                    @php ($isDefault = array_key_exists($library->id, $defaultLibraries))
+                @foreach ($roles as $role)
+                    @php ($isDefault = array_key_exists($role->id, $defaultRoles))
 
                     <div class="col-4">
                         <div class="custom-control custom-checkbox">
-                            <input class="custom-control-input" type="checkbox" id="library-{{ $library->id }}" name="library_ids[]" value="{{ $library->id }}" title="Enable default access for new users" @if ($isDefault) checked="checked" @endif>
-                            <label class="custom-control-label" for="library-{{ $library->id }}">{{ $library->name }}</label>
+                            <input class="custom-control-input" type="checkbox" id="role-{{ $role->id }}" name="role_ids[]" value="{{ $role->id }}" title="Assign role to new users" @if ($isDefault) checked="checked" @endif>
+                            <label class="custom-control-label" for="role-{{ $role->id }}">{{ $role->name }}</label>
                         </div>
                     </div>
                 @endforeach

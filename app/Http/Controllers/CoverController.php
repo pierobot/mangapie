@@ -83,6 +83,6 @@ class CoverController extends Controller
 
         session()->flash('success', 'The cover was successfully updated');
 
-        return \Redirect::action('MangaController@index', [$manga->getId()]);
+        return \Redirect::action('MangaController@show', [$manga->getId()]);
     }
 }
