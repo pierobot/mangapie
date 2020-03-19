@@ -17,15 +17,17 @@ class GenreController extends Controller
      */
     public function index(Genre $genre)
     {
+        $request = request();
         /** @var User $user */
-        $user = request()->user();
+        $user = $request->user();
+        $sort = $request->input('sort');
         $libraries = $user->libraries()->toArray();
         $perPage = 18;
         $name = $genre->name;
 
         /** @var Builder $items */
         $items = Manga::whereHas('genres', function (Builder $query) use ($name) {
-            $query->where('name', $name);
+            $query->select(['genre_id'])->where('name', $name);
         });
 
         // filter out the items the user cannot access
@@ -37,14 +39,13 @@ class GenreController extends Controller
                 'favorites',
                 'votes'
             ])
-            ->paginate($perPage);
-
-        /** @var LengthAwarePaginator $items */
-        $items = $items->withPath(\Config::get('app.url'));
+            ->paginate($perPage, ['id', 'name'])
+            ->appends($request->input());
 
         return view('home.genre')
             ->with('header', 'Genre: ' . $name . ' (' . $items->total() . ')')
             ->with('genre', $genre)
-            ->with('manga_list', $items);
+            ->with('manga_list', $items)
+            ->with('sort', $sort);
     }
 }

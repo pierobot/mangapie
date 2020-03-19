@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Search;
+namespace App\Http\Requests\UserSettings;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class SearchRequest extends FormRequest
+class PutDisplayRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -13,7 +13,7 @@ class SearchRequest extends FormRequest
      */
     public function authorize()
     {
-        return \Auth::check();
+        return auth()->check();
     }
 
     /**
@@ -24,7 +24,7 @@ class SearchRequest extends FormRequest
     public function rules()
     {
         return [
-            'keywords' => 'present|nullable|string',
+            'display' => 'required|string|in:grid,list'
         ];
     }
 }

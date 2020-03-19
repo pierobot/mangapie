@@ -173,9 +173,10 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('search')->name('search')->group(function () {
         Route::get('/', 'SearchController@index');
-        Route::post('/basic', 'SearchController@basic');
-        Route::post('/advanced', 'SearchController@advanced');
-        Route::get('/advanced', 'SearchController@index');
+        Route::get('/basic', 'SearchController@getBasic');
+        Route::post('/basic', 'SearchController@postBasic');
+        Route::get('/advanced', 'SearchController@getAdvanced');
+        Route::post('/advanced', 'SearchController@postAdvanced');
         Route::get('/autocomplete', 'SearchController@autoComplete');
     });
 
@@ -202,6 +203,8 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/about', 'UserSettingsController@putAbout');
         Route::patch('/reader', 'UserSettingsController@patchReaderDirection');
         Route::patch('/password', 'UserSettingsController@patchPassword');
+
+        Route::put('/display', 'UserSettingsController@putDisplay');
     });
 
     Route::prefix('vote')->name('votes')->group(function() {

@@ -8,49 +8,33 @@
     </div>
 </div>
 
-<div class="row justify-content-center">
-    @if (isset($manga_list))
-        @foreach ($manga_list as $manga)
-        <div class="col-12 col-md-6 col-lg-4">
-            <div class="card mb-2">
-                <div class="row no-gutters bg-dark">
-                    <div class="col-4 col-md-5">
-                        <img class="card-img" src="{{ URL::action('CoverController@smallDefault', [$manga]) }}">
-                    </div>
-                    <div class="col-8 col-md-7">
-                        <div class="card-body">
+@php($user = request()->user())
 
-                            <div class="d-sm-none">
-                                <h3 class="card-title">
-                                    <a href="{{ URL::action('MangaController@show', [$manga]) }}">{{ $manga->name }}</a>
-                                </h3>
-                            </div>
+<div class="row mb-3">
+    <div class="col-12 text-center">
+        <button class="btn btn-primary @if ($user->display === 'list') active @endif" id="display-list" title="Display in a list">
+            <span class="fa fa-list"></span>
+        </button>
 
-                            <div class="d-none d-sm-flex">
-                                <h4 class="card-title">
-                                    <a href="{{ URL::action('MangaController@show', [$manga]) }}">{{ $manga->name }}</a>
-                                </h4>
-                            </div>
+        <button class="btn btn-primary @if ($user->display === 'grid') active @endif" id="display-grid" title="Display in a grid">
+            <span class="fa fa-th-large"></span>
+        </button>
 
-                            @foreach ($manga->authors as $author)
-                                <a href="{{ URL::action('PersonController@show', [$author->name]) }}">{{ $author->name }}</a>
-                            @endforeach
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'asc']) }}" class="btn btn-primary @if ($sort === 'asc') active @endif" title="Display in ascending order">
+            <span class="fa fa-sort-alpha-asc"></span>
+        </a>
 
-                            <p>
-                                <span class="fa fa-heart"><small>&nbsp;{{ $manga->favorites->count() }}</small></span>
-
-                                @php ($averageRating = \App\Rating::average($manga))
-                                <span class="fa fa-star offset-2"><small>&nbsp;{{ $averageRating == false ? 0 : $averageRating }}</small></span>
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        @endforeach
-    @else
-    @endif
+        <a href="{{ request()->fullUrlWithQuery(['sort' => 'desc']) }}" class="btn btn-primary @if ($sort === 'desc') active @endif" title="Display in descending order">
+            <span class="fa fa-sort-alpha-desc"></span>
+        </a>
+    </div>
 </div>
+
+@component('shared.components.display', [
+    'display' => $user->display,
+    'items' => $manga_list
+])
+@endcomponent
 
 <div class="row mt-3">
     <div class="col-12">
@@ -59,3 +43,34 @@
         @endif
     </div>
 </div>
+
+@section ('scripts')
+    <script type="text/javascript">
+        $(function () {
+            const displayList = document.getElementById('display-list');
+            const displayGrid = document.getElementById('display-grid');
+
+            displayList.addEventListener('click', function (event) {
+                axios.default.put("{{ URL::to('/settings/display') }}", { display: 'list' })
+                    .catch(function (error) {
+                        console.log(error.toJSON());
+                        alert(`Received unexpected response from server. Check the console output for more information.`);
+                    })
+                    .then(function (response) {
+                        location.reload();
+                    });
+            });
+
+            displayGrid.addEventListener('click', function (event) {
+                axios.default.put("{{ URL::to('/settings/display') }}", { display: 'grid' })
+                    .catch(function (error) {
+                        console.log(error.toJSON());
+                        alert(`Received unexpected response from server. Check the console output for more information.`);
+                    })
+                    .then(function (response) {
+                        location.reload();
+                    });
+            });
+        });
+    </script>
+@endsection

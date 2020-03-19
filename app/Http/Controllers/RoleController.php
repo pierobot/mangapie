@@ -176,7 +176,7 @@ final class RoleController extends Controller
     {
         $user->grantRole($role);
 
-        return back()->with('success', $role->name . ' has been granted to ' . $user->name . '.');
+        return back(303)->with('success', $role->name . ' has been granted to ' . $user->name . '.');
     }
 
     /**
@@ -190,6 +190,6 @@ final class RoleController extends Controller
     {
         $user->revokeRole($role);
 
-        return back()->with('success', $role->name . ' has been revoked from ' . $user->name . '.');
+        return back(303)->with('success', $role->name . ' has been revoked from ' . $user->name . '.');
     }
 }

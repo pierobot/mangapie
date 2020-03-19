@@ -1,6 +1,5 @@
 @auth
-    {{ Form::open(['action' => 'SearchController@basic', 'class' => 'form-inline mb-0']) }}
-    {{ Form::hidden('type', 'basic') }}
+    {{ Form::open(['action' => 'SearchController@postBasic', 'class' => 'form-inline mb-0']) }}
 
     <div class="form-group mb-0 w-100">
         <div class="input-group">

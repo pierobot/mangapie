@@ -14,8 +14,7 @@
 
         <div class="card">
             <div class="card-body">
-                {{ Form::open(['action' => 'SearchController@advanced']) }}
-                {{ Form::hidden('type', 'advanced') }}
+                {{ Form::open(['action' => 'SearchController@postAdvanced']) }}
 
                 <div class="row">
                     <div class="col-12">

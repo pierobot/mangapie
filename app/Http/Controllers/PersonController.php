@@ -23,19 +23,28 @@ class PersonController extends Controller
      */
     public function show(Person $person)
     {
-        $page = request()->get('page');
+        $request = request();
+        $sort = $request->input('sort', 'asc');
+        $perPage = 18;
 
-        $results = $person->manga()->filter(function (Manga $manga) {
-            return \Auth::user()->can('view', $manga->library);
-        });
-
-        $manga_list = new LengthAwarePaginator($results->forPage($page, 18), $results->count(), 18);
-        $manga_list->withPath(request()->getBaseUrl());
+        $libraries = $request->user()->libraries()->toArray();
+        /** @var LengthAwarePaginator $items */
+        $items = $person->manga()->whereIn('library_id', $libraries)
+            ->orderBy('name', 'asc')
+            ->with([
+                'authors',
+                'artists',
+                'favorites',
+                'votes'
+            ])
+            ->paginate($perPage, ['id', 'name'])
+            ->appends($request->input());
 
         return view('home.person')
-            ->with('header', 'Person: ' . $person->name . ' (' . $results->count() . ')')
+            ->with('header', 'Person: ' . $person->name . ' (' . $items->total() . ')')
             ->with('person', $person)
-            ->with('manga_list', $manga_list);
+            ->with('manga_list', $items)
+            ->with('sort', $sort);
     }
 
     // TODO: Add other resource methods

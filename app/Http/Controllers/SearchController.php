@@ -3,54 +3,144 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
-use App\Http\Requests\Search\SearchAdvancedRequest;
-use App\Http\Requests\Search\SearchRequest;
 use App\Manga;
 use App\User;
 
 class SearchController extends Controller
 {
     /**
+     * Action to present the advanced search view.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
      */
     public function index()
     {
-        // if the query parameter 'type' exists then we're being requested another page of a search
-        if (request()->has('type')) {
-            $type = request()->get('type');
-            $keywords = request()->get('keywords');
-
-            if ($type == 'basic') {
-                return $this->doBasicSearch($keywords);
-            } else if ($type == 'advanced') {
-
-                $genres = \Input::get('genres');
-                $author = \Input::get('author');
-                $artist = \Input::get('artist');
-
-                if (is_null($keywords)) {
-                    $keywords = '';
-                }
-
-                if (is_null($genres)) {
-                    $genres = [];
-                }
-
-                if (is_null($author)) {
-                    $author = '';
-                }
-
-                if (is_null($artist)) {
-                    $artist = '';
-                }
-
-                return $this->doAdvancedSearch($genres, $author, $artist, $keywords);
-            }
-        }
-
         return view('search.index');
+    }
+
+    /**
+     * Action that handles the GET request for a basic search.
+     * @note The method does not take any parameters as they are passed by query string.
+     *
+     * @return \Illuminate\Contracts\View\Factory|RedirectResponse|\Illuminate\View\View
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function getBasic()
+    {
+        $request = request();
+        $this->validate($request, [
+            'keywords' => 'string|required',
+            'page' => 'integer',
+            'sort' => 'string|in:asc,desc'
+        ]);
+
+        $keywords = $request->input('keywords', "");
+        $sort = $request->input('sort', 'asc');
+
+        /** @var User $user */
+        $user = $request->user();
+        $libraries = $user->libraries()->toArray();
+        $perPage = 18;
+
+        $items = Manga::search($keywords)
+            ->whereIn('library_id', $libraries)
+            ->orderBy('name', 'asc')
+            ->with([
+                'authors',
+                'artists',
+                'favorites',
+                'votes'
+            ])
+            ->paginate($perPage, ['id', 'name'])
+            ->appends($request->input());
+
+        return view('home.index')
+            ->with('header', 'Search Results (' . $items->total() . ')')
+            ->with('manga_list', $items)
+            ->with('sort', $sort);
+    }
+
+    /**
+     * Route to perform a redirect on a basic search request from POST to GET.
+     *
+     * @param Request $request
+     * @param string $sort
+     * @return RedirectResponse
+     */
+    public function postBasic(Request $request)
+    {
+        // Redirect to the search page if the keywords are empty, otherwise to the get route along with the input
+        return empty($request->post('keywords')) ?
+            redirect()->action('SearchController@index') :
+            // TODO: Find out why passing the input as an action parameter works but not the withInput method
+            redirect()->action('SearchController@getBasic', request()->except(['_token']))/*->withInput()*/;
+    }
+
+    /**
+     * Action that handles the GET request for an advanced search.
+     * @note The method does not take any parameters as they are passed by query string.
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function getAdvanced()
+    {
+        $request = request();
+
+        $this->validate($request, [
+            'genres' => 'array|nullable|required_without_all:artist,author,keywords',
+            'genres.*' => 'integer|exists:genres,id',
+            'artist' => 'nullable|required_without_all:genres,author,keywords|string',
+            'author' => 'nullable|required_without_all:genres,artist,keywords|string',
+            'keywords' => 'nullable|required_without_all:genres,artist,author|string',
+            'page' => 'integer',
+            'sort' => 'string|in:asc,desc'
+        ]);
+
+        $genres = $request->input('genres', []);
+        $author = $request->input('author', '');
+        $artist = $request->input('artist', '');
+        $keywords = $request->input('keywords', '');
+        $sort = $request->input('sort', 'asc');
+
+        /** @var User $user */
+        $user = $request->user();
+        $libraries = $user->libraries()->toArray();
+        $perPage = 18;
+
+        $items = Manga::advancedSearch($genres, $author, $artist, $keywords)
+            ->whereIn('library_id', $libraries)
+            ->orderBy('name', $sort)
+            ->with([
+                'authors',
+                'artists',
+                'favorites',
+                'votes'
+            ])
+            ->paginate($perPage, ['id', 'name'])
+            ->appends($request->input());
+
+        return view('home.advancedsearch')
+            ->with('header', 'Search Results (' . $items->total() . ')')
+            ->with('manga_list', $items)
+            ->with('sort', $sort);
+    }
+
+    /**
+     * Route to perform a redirect on an advanced search request from POST to GET.
+     *
+     * @param Request $request
+     *
+     * @return RedirectResponse
+     * @deprecated
+     */
+    public function postAdvanced(Request $request)
+    {
+        // TODO: Find out why passing the input as an action parameter works but not the withInput method
+        return redirect()->action('SearchController@getAdvanced', $request->except(['type', '_token']))/*->withInput()*/;
     }
 
     /**
@@ -77,121 +167,5 @@ class SearchController extends Controller
         $items = $items->whereIn('library_id', $libraries)->get(['id', 'name']);
 
         return response()->json($items);
-    }
-
-    /**
-     * @param SearchRequest $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
-     */
-    public function basic(SearchRequest $request)
-    {
-        $keywords = $request->get('keywords');
-
-        return $this->doBasicSearch($keywords);
-    }
-
-    /**
-     * @param SearchAdvancedRequest $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function advanced(SearchAdvancedRequest $request)
-    {
-        $keywords = $request->get('keywords');
-        $genres = $request->get('genres');
-        $author = $request->get('author');
-        $artist = $request->get('artist');
-
-        if (is_null($keywords)) {
-            $keywords = '';
-        }
-
-        if (is_null($genres)) {
-            $genres = [];
-        }
-
-        if (is_null($author)) {
-            $author = '';
-        }
-
-        if (is_null($artist)) {
-            $artist = '';
-        }
-
-        return $this->doAdvancedSearch($genres, $author, $artist, $keywords);
-    }
-
-    /**
-     * @param string|null $keywords
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
-     */
-    private function doBasicSearch($keywords)
-    {
-        // if the query is empty, then redirect to the advanced search page
-        if ($keywords == null) {
-            return \Redirect::action('SearchController@index');
-        }
-
-        /** @var User $user */
-        $user = request()->user();
-        $libraries = $user->libraries()->toArray();
-        $perPage = 18;
-
-        $items = Manga::search($keywords)
-            ->whereIn('library_id', $libraries)
-            ->orderBy('name', 'asc')
-            ->with([
-                'authors',
-                'artists',
-                'favorites',
-                'votes'
-            ])
-            ->paginate($perPage);
-
-        /** @var LengthAwarePaginator $items */
-        $items = $items->onEachSide(1)
-            ->withPath(request()->getBaseUrl())
-            ->appends([
-                'type' => 'basic',
-                'keywords' => $keywords,
-            ]);
-
-        return view('home.index')
-            ->with('header', 'Search Results (' . $items->total() . ')')
-            ->with('manga_list', $items);
-    }
-
-    /**
-     * @param array $genres
-     * @param string $author
-     * @param string $artist
-     * @param string $keywords
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    private function doAdvancedSearch(array $genres, string $author, string $artist, string $keywords)
-    {
-        /** @var User $user */
-        $user = request()->user();
-        $libraries = $user->libraries()->toArray();
-        $perPage = 18;
-
-        $items = Manga::advancedSearch($genres, $author, $artist, $keywords)
-            ->whereIn('library_id', $libraries)
-            ->orderBy('name', 'asc')
-            ->with([
-                'authors',
-                'artists',
-                'favorites',
-                'votes'
-            ])
-            ->paginate($perPage)
-            ->appends(request()->input());
-
-        /** @var LengthAwarePaginator $items */
-        $items = $items->onEachSide(1)
-            ->withPath(request()->getBaseUrl());
-
-        return view('home.advancedsearch')
-            ->with('header', 'Search Results (' . $items->total() . ')')
-            ->with('manga_list', $items);
     }
 }

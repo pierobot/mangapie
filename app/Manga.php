@@ -315,7 +315,7 @@ class Manga
             $items = $items->whereHas('authors', function (Builder $query) use ($author) {
                 $query->where('name', $author)
                     // TODO: refactor for fulltext instead of using the like operator?
-                    ->orWhere('name', 'like', "%${author}%");
+                    ->orWhere('name', 'like', "%$author%");
             });
         }
 
@@ -325,7 +325,7 @@ class Manga
             $items = $items->whereHas('artists', function (Builder $query) use ($artist) {
                 $query->where('name', $artist)
                     // TODO: refactor for fulltext instead of using the like operator?
-                    ->orWhere('name', 'like', "%${artist}%");
+                    ->orWhere('name', 'like', "%$artist%");
             });
         }
 
