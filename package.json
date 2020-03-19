@@ -8,24 +8,24 @@
     "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^5.10.1",
+    "@fortawesome/fontawesome-free": "^5.12.1",
     "awesome-bootstrap-checkbox": "github:flatlogic/awesome-bootstrap-checkbox#bump-to-bootstrap4",
-    "axios": "^0.19.0",
-    "bootstrap": ">=4.3.1",
+    "axios": "^0.19.2",
+    "bootstrap": "^4.4.1",
     "bootstrap-3-typeahead": "github:bassjobsen/Bootstrap-3-Typeahead#master",
-    "cross-env": "^5.1",
+    "cross-env": "^5.2.1",
     "del": "^3.0.0",
     "hoek": "^4.2.1",
     "jquery": "^3.4.1",
     "jquery-bar-rating": "^1.2.2",
-    "laravel-mix": "^4.1.2",
+    "laravel-mix": "^4.1.4",
     "lodash": "^4.17.15",
-    "popper.js": "^1.15.0",
+    "popper.js": "^1.16.1",
     "resolve-url-loader": "^2.3.2",
-    "sass": "^1.22.9",
-    "sass-loader": "^7.1.0",
-    "vanilla-lazyload": "^12.1.0",
-    "vue-template-compiler": "^2.6.10"
+    "sass": "^1.26.3",
+    "sass-loader": "^7.3.1",
+    "vanilla-lazyload": "^12.5.1",
+    "vue-template-compiler": "^2.6.11"
   },
   "dependencies": {}
 }
