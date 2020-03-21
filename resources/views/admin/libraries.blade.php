@@ -163,7 +163,6 @@
 
                 eventSource.onerror = (event) => {
                     console.log(event);
-                    eventSource.close();
 
                     let progressBar = Array.from(progressBars)
                         .find((element) => element.getAttribute('data-job-id') === `${id}`);
