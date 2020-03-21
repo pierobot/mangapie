@@ -6,6 +6,7 @@ use App\Http\Requests\Library\LibraryCreateRequest;
 use App\Http\Requests\Library\LibraryUpdateRequest;
 
 use \App\Library;
+use Illuminate\Http\JsonResponse;
 
 class LibraryController extends Controller
 {
@@ -67,8 +68,6 @@ class LibraryController extends Controller
     {
         $library->forceDelete();
 
-        session()->flash('success', 'Library was successfully deleted.');
-
-        return redirect()->back();
+        return response()->json();
     }
 }

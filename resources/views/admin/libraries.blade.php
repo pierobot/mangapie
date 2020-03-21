@@ -69,11 +69,19 @@
                                     </span>
                                 </button>
 
-                                <button class="btn btn-outline-primary" id="action" name="action" value="refresh" title="Refresh">
+                                <button class="btn btn-primary" id="action" name="action" value="refresh" title="Refresh">
                                     <span class="fa fa-refresh"></span>
 
                                     <span class="d-none d-lg-inline-flex">
                                         &nbsp;Refresh
+                                    </span>
+                                </button>
+
+                                <button class="btn btn-danger" id="delete-{{ $library->id }}" data-id="{{ $library->id }}" name="delete-library" title="Delete">
+                                    <span class="fa fa-trash"></span>
+
+                                    <span class="d-none d-lg-inline-flex">
+                                        &nbsp;Delete
                                     </span>
                                 </button>
                             </div>
@@ -117,45 +125,73 @@
 @section ('scripts')
     <script type="text/javascript">
         $(function () {
-            let progressBars = $("div.progress-bar");
+            const progressBars = document.querySelectorAll('.progress-bar');
             let jobIds = [];
 
-            progressBars.each(function (index, pb) {
-                if ($(pb).attr("data-job-ended") === "0") {
-                    jobIds.push($(pb).attr("data-job-id"));
+            // Iterate through the progress bars and get the latest job
+            progressBars.forEach((progressBar) => {
+                const done = progressBar.getAttribute('data-job-ended') === '0';
+                const jobId = progressBar.getAttribute('data-job-id');
+                if (done) {
+                    jobIds.push(jobId);
                 }
             });
 
-            $(jobIds).each(function (i, jobId) {
-                let eventSource = new EventSource("{{ URL::to('/job') }}/" + jobId);
-                eventSource["jobId"] = jobId;
+            jobIds.forEach((jobId) => {
+                let eventSource = new EventSource(`{{ URL::to('/job') }}/${jobId}`);
+                eventSource['jobId'] = jobId;
 
-                eventSource.onmessage = function (event) {
+                eventSource.onmessage = (event) => {
                     const job = JSON.parse(event.data);
                     const id = job["id"];
                     const status = job["status"];
-                    const ended = job["ended"];
+                    const done = job["ended"];
                     const finished = job["finished"];
                     const progress = job["progress"];
 
-                    let progressBar = progressBars.filter((index, pb) => $(pb).attr("data-job-id") === `${id}`);
+                    let progressBar = Array.from(progressBars)
+                        .find((element) => element.getAttribute('data-job-id') === `${id}`);
 
-                    if (ended === true) {
+                    if (done === true) {
                         eventSource.close();
                     }
 
-                    progressBar.attr("data-job-progress", progress)
-                        .attr("data-job-status", status)
-                        .attr("data-job-ended", (status === "finished" || status === "failed") ? 1 : 0);
+                    progressBar.setAttribute('data-job-progress', progress);
+                    progressBar.setAttribute('data-job-status', status);
+                    progressBar.setAttribute('data-job-ended', (status === 'finished' || status === 'failed') ? '1' : '0');
                 };
 
-                eventSource.onerror = function (event) {
+                eventSource.onerror = (event) => {
+                    console.log(event);
                     eventSource.close();
 
-                    let progressBar = progressBars.filter((index, pb) => $(pb).attr("data-job-id") === `${eventSource["jobId"]}`);
-                    progressBar.attr("data-job-status", "failed")
-                        .attr("data-job-ended", 1);
+                    let progressBar = Array.from(progressBars)
+                        .find((element) => element.getAttribute('data-job-id') === `${id}`);
+
+                    progressBar.setAttribute('data-job-status', 'failed');
+                    progressBar.setAttribute('data-job-ended', '1');
                 };
+            });
+
+            const deleteButtons = document.getElementsByName('delete-library');
+            deleteButtons.forEach(function (element) {
+
+                element.addEventListener('click', function (event) {
+                    event.preventDefault();
+
+                    const confirmed = confirm('Are you sure you want to delete this library?');
+                    if (confirmed) {
+                        const libraryId = element.getAttribute('data-id');
+                        axios.default.delete(`{{ URL::to('/library') }}/${libraryId}`)
+                            .catch((error) => {
+                                console.log(error);
+                                alert('Unable to delete library, check the console for more information.');
+                            })
+                            .then((response) => {
+                                location.reload();
+                            });
+                    }
+                });
             });
         });
     </script>
