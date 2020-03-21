@@ -9,7 +9,7 @@ use \Carbon\Carbon;
 class Cover
 {
     /**
-     * Gets the covers disk.
+     * Gets the cover disk.
      *
      * @return \Illuminate\Filesystem\FilesystemAdapter
      */
@@ -44,6 +44,30 @@ class Cover
         }
 
         return $size;
+    }
+
+    /**
+     * Deletes all the covers in the disk.
+     *
+     * @return bool
+     */
+    public static function delete()
+    {
+        $disk = Cover::disk();
+        $directories = array_merge(
+            $disk->directories('small'),
+            $disk->directories('medium')
+        );
+
+        $total = 0;
+        /** @var string $directory */
+        foreach ($directories as $directory) {
+            if ($disk->deleteDirectory($directory)) {
+                ++$total;
+            }
+        }
+
+        return $total === count($directories);
     }
 
     /**
@@ -114,7 +138,7 @@ class Cover
             return false;
         }
 
-        return \Storage::disk('covers')->putStream(
+        return Cover::disk()->put(
             $path,
             $image->stream('jpg')->detach());
     }

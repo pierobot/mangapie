@@ -10,7 +10,7 @@ use App\User;
 class Avatar
 {
     /**
-     * Gets the avatars disk.
+     * Gets the avatar disk.
      *
      * @return \Illuminate\Filesystem\FilesystemAdapter
      */
@@ -98,7 +98,7 @@ class Avatar
 
         $path = self::xaccelPath($user);
 
-        return \Storage::disk('avatars')->putStream(
+        return Avatar::disk()->put(
             $path,
             $image->stream()->detach());
     }

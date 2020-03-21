@@ -46,4 +46,14 @@ class PreviewController extends Controller
 
         return Preview::response($manga, $archive, $page, false);
     }
+
+    public function destroy()
+    {
+        $deleted = Preview::delete();
+        $response = redirect()->back();
+
+        return $deleted ?
+            $response->with('success', 'All previews have been deleted.') :
+            $response->withErrors('Unable to delete all previews.');
+    }
 }

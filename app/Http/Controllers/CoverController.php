@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Edit\Cover\CoverUpdateRequest;
 
 use App\Archive;
+use App\Library;
 use App\Manga;
 use App\Cover;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Filesystem\FilesystemAdapter;
 
 class CoverController extends Controller
 {
@@ -84,5 +87,18 @@ class CoverController extends Controller
         session()->flash('success', 'The cover was successfully updated');
 
         return \Redirect::action('MangaController@show', [$manga->getId()]);
+    }
+
+    /**
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function destroy()
+    {
+        $deleted = Cover::delete();
+        $response = redirect()->back();
+
+        return $deleted ?
+            $response->with('success', 'All covers have been deleted.') :
+            $response->withErrors('Unable to delete all covers.');
     }
 }

@@ -61,6 +61,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/medium/{manga}/{archive}/{page}', 'CoverController@medium');
 
         Route::put('/', 'CoverController@put')->middleware('role:Administrator,Maintainer');
+
+        Route::delete('/', 'CoverController@destroy')->middleware('role:Administrator');
     });
 
     Route::prefix('edit')->middleware('role:Administrator,Maintainer')->name('edit')->group(function () {
@@ -149,6 +151,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('preview')->group(function () {
+        Route::delete('/', 'PreviewController@destroy')->middleware('role:Administrator');
+
         Route::get('/{manga}/{archive}', 'PreviewController@index');
 
         Route::get('/small/{manga}/{archive}/{page}', 'PreviewController@small');

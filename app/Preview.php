@@ -47,6 +47,30 @@ class Preview
     }
 
     /**
+     * Deletes all the covers in the disk.
+     *
+     * @return bool
+     */
+    public static function delete()
+    {
+        $disk = Preview::disk();
+        $directories = array_merge(
+            $disk->directories('small'),
+            $disk->directories('medium')
+        );
+
+        $total = 0;
+        /** @var string $directory */
+        foreach ($directories as $directory) {
+            if ($disk->deleteDirectory($directory)) {
+                ++$total;
+            }
+        }
+
+        return $total === count($directories);
+    }
+
+    /**
      * Gets the path for the requested archive image.
      * The path is intended for use with X-Accel-Redirect.
      * Essentially, this will return (small|medium)/manga_id/archive_id/page
@@ -99,7 +123,7 @@ class Preview
             return false;
         }
 
-        return \Storage::disk('previews')->putStream(
+        return \Storage::disk('previews')->put(
             $path,
             $image->stream('jpg')->detach());
     }

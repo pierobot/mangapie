@@ -32,7 +32,7 @@
             <h4><b>Avatars</b></h4>
 
             <label>Size:</label> {{ App\Archive::convertSizeToReadable(App\Avatar::size()) }}<br>
-            <label>Path:</label> {{ App\Avatar::disk()->path('') }}
+            <label>Path:</label> {{ App\Avatar::rootPath() }}
 
             <hr>
         </div>
@@ -41,16 +41,41 @@
             <h4><b>Covers</b></h4>
 
             <label>Size:</label> {{ App\Archive::convertSizeToReadable(App\Cover::size()) }}<br>
-            <label>Path:</label> {{ App\Cover::disk()->path('') }}
+            <label>Path:</label> {{ App\Cover::rootPath() }}
 
-            <hr>
+            <div class="row mt-3">
+                <div class="col">
+                    {{ Form::open(['action' => 'CoverController@destroy', 'method' => 'delete']) }}
+                    <button class="btn btn-danger form-control">
+                        <span class="fa fa-trash"></span>&nbsp;Wipe
+                    </button>
+                    {{ Form::close() }}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4">
+            <h4><strong>Previews</strong></h4>
+
+            <label>Size:</label> {{ App\Archive::convertSizeToReadable(App\Preview::size()) }}<br>
+            <label>Path:</label> {{ App\Preview::rootPath() }}
+
+            <div class="row mt-3">
+                <div class="col">
+                    {{ Form::open(['action' => 'PreviewController@destroy', 'method' => 'delete']) }}
+                    <button class="btn btn-danger form-control">
+                        <span class="fa fa-trash"></span>&nbsp;Wipe
+                    </button>
+                    {{ Form::close() }}
+                </div>
+            </div>
         </div>
 
         <div class="col-12 col-md-6 col-lg-4">
             <h4><b>Images</b></h4>
 
             <label>Size:</label> {{ App\Archive::convertSizeToReadable(App\Image::size()) }}<br>
-            <label>Path:</label> {{ App\Image::disk()->path('') }}
+            <label>Path:</label> {{ App\Image::rootPath() }}
 
             <div class="row mt-3">
                 <div class="col-6">
