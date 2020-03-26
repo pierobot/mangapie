@@ -31,17 +31,21 @@
                         $volCh = App\Scanner::getVolumesAndChapters($archive->name);
                         // If there is no volume or chapter in the name, or if the parsing failed
                         // then just use the archive name :shrug:
-                        if (empty($volCh) || empty($volCh[0]))
+                        if (empty($volCh)) {
                             $nameVolCh = $archive->name;
-                        else
-                            $nameVolCh = $volCh[0][0];
+                        } else {
+                            $nameVolCh = '';
+                            foreach ($volCh as $part) {
+                                $nameVolCh .= $part . ' ';
+                            }
+                        }
                     @endphp
 
                     <div class="card-footer bg-dark">
 
                             <a href="{{ $resumeUrl }}">
                                 <h5 class="text-truncate">
-                                    <strong title="{{ $archive->name }}">
+                                    <strong title="{{ $nameVolCh }}">
                                         {{ $nameVolCh }}
                                     </strong>
                                 </h5>
