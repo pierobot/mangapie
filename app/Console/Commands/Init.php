@@ -51,11 +51,11 @@ class Init extends Command
             Artisan::call('vendor:publish', ['--provider' => 'Intervention\\Image\\ImageServiceProviderLaravel5']);
         } else {
             $this->comment('Config file for Intervention\\Image already exists. Skipping.');
-	}
+	    }
 
-	if (\File::exists('resources/views/vendor/pagination/bootstrap-4.blade.php') == false) {
+	    if (\File::exists('resources/views/vendor/pagination/bootstrap-4.blade.php') == false) {
             Artisan::call('vendor:publish', ['--provider' => 'Illuminate\\Pagination\\PaginationServiceProvider']);
-	} else {
+	    } else {
             $this->comment('Vendor pagination blade already exists. Skipping.');
         }
 

@@ -7,27 +7,27 @@
 
     <title>@yield ('title')</title>
 
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ URL::to('public/favicon/apple-touch-icon.png') }}">
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ URL::to('public/favicon/favicon-32x32.png') }}">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ URL::to('public/favicon/favicon-16x16.png') }}">
-    <link rel="manifest" href="{{ URL::to('public/favicon/site.webmanifest') }}">
-    <link rel="mask-icon" href="{{ URL::to('public/favicon/safari-pinned-tab.svg') }}" color="#5bbad5">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ URL::asset('favicon/apple-touch-icon.png') }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ URL::asset('favicon/favicon-32x32.png') }}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ URL::asset('favicon/favicon-16x16.png') }}">
+    <link rel="manifest" href="{{ URL::asset('favicon/site.webmanifest') }}">
+    <link rel="mask-icon" href="{{ URL::asset('favicon/safari-pinned-tab.svg') }}" color="#5bbad5">
     <meta name="apple-mobile-web-app-title" content="Mangapie">
     <meta name="application-name" content="Mangapie">
     <meta name="msapplication-TileColor" content="#3d3f4c">
     <meta name="theme-color" content="#ffffff">
 
-    <link href="{{ URL::to('public/assets/mangapie.css') }}" rel="stylesheet">
+    <link href="{{ URL::asset('assets/mangapie.css') }}" rel="stylesheet">
 
     @yield ('stylesheets')
 
-    <script src="{{ URL::to('public/assets/mangapie.js') }}"></script>
+    <script src="{{ URL::asset('assets/mangapie.js') }}"></script>
 </head>
 <body>
 
 <nav class="navbar navbar-dark bg-dark sticky-top @if (isset($archive, $page, $pageCount)) d-none @endif">
     <div class="container">
-        <a class="navbar-brand" href="{{ URL::action('HomeController@index') }}"><img style="width: 32px;" src="{{ URL::to('public/favicon/favicon.svg') }}">&nbsp;Mangapie</a>
+        <a class="navbar-brand" href="{{ URL::action('HomeController@index') }}"><img style="width: 32px;" src="{{ URL::asset('favicon/favicon.svg') }}">&nbsp;Mangapie</a>
 
         <div class="d-none d-sm-block">
             @component ('shared.searchbar', ['searchbarId' => 'searchbar'])
