@@ -16,7 +16,7 @@
 
         <div class="card">
             <div class="card-body">
-                {{ Form::open(['action' => 'NotificationController@delete', 'method' => 'delete']) }}
+                {{ Form::open(['action' => 'NotificationController@destroy', 'method' => 'delete']) }}
                 <table class="table">
                     <thead>
                         <tr class="d-flex">
