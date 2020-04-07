@@ -143,7 +143,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::prefix('notifications')->name('notifications')->group(function () {
         Route::get('/', 'NotificationController@index');
-        Route::delete('/', 'NotificationController@delete');
+        Route::delete('/', 'NotificationController@destroy');
     });
 
     Route::prefix('person')->name('person')->group(function () {
