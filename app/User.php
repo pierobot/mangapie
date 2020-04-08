@@ -89,7 +89,9 @@ class User extends Authenticatable
      */
     public function manga()
     {
-        $libraries = $this->libraries()->toArray();
+        $libraries = $this->libraries()->transform(function (Library $library) {
+            return $library->id;
+        });
 
         return Manga::whereIn('library_id', $libraries);
     }

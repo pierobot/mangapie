@@ -105,26 +105,14 @@ class Role extends Model
         $permissions = $this->permissions->where('action', $action);
 
         if ($isObject) {
-            if (empty($objectId)) {
-                $permissions = $permissions->where('model_type', get_class($classOrObject))
-                                           ->where('model_id', $classOrObject->id);
-            } else {
-                $permissions = $permissions->where('model_type', $classOrObject)
-                                           ->where('model_id', $objectId);
-            }
+            $permissions = $permissions->where('model_type', get_class($classOrObject))
+                                       ->where('model_id', $classOrObject->id);
+        } elseif (! empty($objectId)) {
+            $permissions = $permissions->where('model_type', $classOrObject)
+                                       ->where('model_id', $objectId);
         } else {
             $permissions = $permissions->where('model_type', $classOrObject);
         }
-
-//        if ($isObject && $objectId === null) {
-//            $permissions = $permissions->where('model_type', get_class($classOrObject))
-//                ->where('model_id', $classOrObject->id);
-//        } elseif (!$isObject && $objectId !== null) {
-//            $permissions = $permissions->where('model_type', $classOrObject)
-//                ->where('model_id', $objectId);
-//        } else {
-//            $permissions = $permissions->where('model_type', $classOrObject);
-//        }
 
         return $this->name === "Administrator" || $permissions->count() > 0;
     }
