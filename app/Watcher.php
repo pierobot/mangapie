@@ -101,6 +101,10 @@ final class Watcher
 
     public function __construct()
     {
+        if (PHP_OS_FAMILY === 'Windows') {
+            return;
+        }
+
         $this->fd = inotify_init();
         if ($this->fd === false)
             dd('Unable to initialize main inotify descriptor.');
@@ -117,6 +121,10 @@ final class Watcher
 
     protected function trackEx($path, $isDirectory, $parentWd, $data = [], $recursive = false)
     {
+        if (PHP_OS_FAMILY === 'Windows') {
+            return false;
+        }
+
         if (file_exists($path) === false)
             return false;
 
@@ -256,6 +264,10 @@ final class Watcher
 
     public function go($once = false)
     {
+        if (PHP_OS_FAMILY === 'Windows') {
+            return;
+        }
+
         while (true) {
             $events = inotify_read($this->fd);
             // keep polling for events if there are none

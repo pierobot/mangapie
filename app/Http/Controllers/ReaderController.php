@@ -30,9 +30,29 @@ class ReaderController extends Controller
             ->with('pageCount', $pageCount);
     }
 
+    /**
+     * @param Manga $manga
+     * @param Archive $archive
+     * @param int $page
+     * @return \Illuminate\Http\Response
+     *
+     * @throws \Exception
+     */
     public function image(Manga $manga, Archive $archive, int $page)
     {
-        return Image::response($manga, $archive, $page);
+        if (\Cache::tags(['config', 'image', 'extract'])->get('enabled', false) === true) {
+            $image = new Image($manga, $archive, $page);
+            $image->extract();
+
+            return $image->response();
+        } else {
+            $image = $manga->getImage($archive, $page);
+
+            return response()->make($image['contents'], 200, [
+                'Content-Length' => $image['size'],
+                'Content-Type' => $image['mime']
+            ]);
+        }
     }
 
     public function putReaderHistory(PutReaderHistoryRequest $request)

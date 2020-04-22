@@ -5,74 +5,101 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Edit\Cover\CoverUpdateRequest;
 
 use App\Archive;
-use App\Library;
 use App\Manga;
 use App\Cover;
-use Illuminate\Filesystem\Filesystem;
-use Illuminate\Filesystem\FilesystemAdapter;
 
 class CoverController extends Controller
 {
+    /**
+     * @param Manga $manga
+     * @param Archive $archive
+     * @param int $page
+     * @return \Illuminate\Http\Response
+     *
+     * @throws \Exception
+     */
     public function small(Manga $manga, Archive $archive, int $page)
     {
-        if (Cover::exists($manga, $archive, $page))
-            return Cover::response($manga, $archive, $page);
+        $cover = new Cover($manga, $archive, $page);
+        if (! $cover->exists()) {
+            $image = $manga->getImage($archive, $page);
+            if ($image) {
+                $cover->put($image['contents']);
+            }
+        }
 
-        $image = $manga->getImage($archive, $page);
-        if ($image === false)
-            return Cover::defaultResponse();
-
-        $saved = Cover::save($image['contents'], $manga, $archive, $page);
-
-        return $saved === true ? Cover::response($manga, $archive, $page) : Cover::defaultResponse();
+        return $cover->response();
     }
 
+    /**
+     * @param Manga $manga
+     * @return \Illuminate\Http\Response
+     *
+     * @throws \Exception
+     */
     public function smallDefault(Manga $manga)
     {
-        $archive = $manga->getCoverArchive();
-        $page = $manga->getCoverPage();
+        $archive = Archive::find($manga->cover_archive_id);
+        $page = $manga->cover_archive_page;
 
         if (empty($archive)) {
             $archive = $manga->archives->first();
 
             $manga->update([
-                'cover_archive_id' => $archive->getId()
+                'cover_archive_id' => $archive->id
             ]);
         }
 
         return $this->small($manga, $archive, $page);
     }
 
+    /**
+     * @param Manga $manga
+     * @param Archive $archive
+     * @param int $page
+     * @return \Illuminate\Http\Response
+     *
+     * @throws \Exception
+     */
     public function medium(Manga $manga, Archive $archive, int $page)
     {
-        if (Cover::exists($manga, $archive, $page, false))
-            return Cover::response($manga, $archive, $page, false);
+        $cover = new Cover($manga, $archive, $page, false);
+        if (! $cover->exists()) {
+            $image = $manga->getImage($archive, $page);
+            if ($image) {
+                $cover->put($image['contents']);
+            }
+        }
 
-        $image = $manga->getImage($archive, $page);
-        if ($image === false)
-            return Cover::defaultResponse(false);
-
-        $saved = Cover::save($image['contents'], $manga, $archive, $page, false);
-
-        return $saved === true ? Cover::response($manga, $archive, $page, false) : Cover::defaultResponse(false);
+        return $cover->response();
     }
 
+    /**
+     * @param Manga $manga
+     * @return \Illuminate\Http\Response
+     *
+     * @throws \Exception
+     */
     public function mediumDefault(Manga $manga)
     {
-        $archive = $manga->getCoverArchive();
-        $page = $manga->getCoverPage();
+        $archive = Archive::find($manga->cover_archive_id);
+        $page = $manga->cover_archive_page;
 
         if (empty($archive)) {
             $archive = $manga->archives->first();
 
             $manga->update([
-                'cover_archive_id' => $archive->getId()
+                'cover_archive_id' => $archive->id
             ]);
         }
 
         return $this->medium($manga, $archive, $page);
     }
 
+    /**
+     * @param CoverUpdateRequest $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
     public function put(CoverUpdateRequest $request)
     {
         $manga = Manga::find($request->get('manga_id'));
@@ -80,13 +107,13 @@ class CoverController extends Controller
         $page = $request->get('page');
 
         $manga->update([
-            'cover_archive_id' => $archive->getId(),
+            'cover_archive_id' => $archive->id,
             'cover_archive_page' => $page
         ]);
 
         session()->flash('success', 'The cover was successfully updated');
 
-        return \Redirect::action('MangaController@show', [$manga->getId()]);
+        return \Redirect::action('MangaController@show', [$manga->id]);
     }
 
     /**

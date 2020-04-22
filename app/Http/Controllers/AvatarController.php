@@ -11,14 +11,17 @@ class AvatarController extends Controller
 {
     public function index(User $user)
     {
-        return Avatar::exists($user) ? Avatar::response($user) : Avatar::defaultResponse();
+        $avatar = new Avatar($user);
+
+        return $avatar->response();
     }
 
     public function put(AvatarUpdateRequest $request)
     {
-        $storeResult = Avatar::save($request->file('avatar'), \Auth::user());
+        $avatar = new Avatar($request->user());
+        $putResult = $avatar->put($request->file('avatar'));
 
-        if ($storeResult !== false)
+        if ($putResult !== false)
             $request->session()->flash('success', 'Your avatar has been updated.');
         else
             $request->session()->flash('failure', 'Unable to update your avatar. Contact an admin.');

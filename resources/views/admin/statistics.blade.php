@@ -32,7 +32,7 @@
             <h4><b>Avatars</b></h4>
 
             <label>Size:</label> {{ App\Archive::convertSizeToReadable(App\Avatar::size()) }}<br>
-            <label>Path:</label> {{ App\Avatar::rootPath() }}
+            <label>Path:</label> {{ \Storage::disk('avatars')->path('') }}
 
             <hr>
         </div>
@@ -41,7 +41,7 @@
             <h4><b>Covers</b></h4>
 
             <label>Size:</label> {{ App\Archive::convertSizeToReadable(App\Cover::size()) }}<br>
-            <label>Path:</label> {{ App\Cover::rootPath() }}
+            <label>Path:</label> {{ \Storage::disk('covers')->path('') }}
 
             <div class="row mt-3">
                 <div class="col">
@@ -58,7 +58,7 @@
             <h4><strong>Previews</strong></h4>
 
             <label>Size:</label> {{ App\Archive::convertSizeToReadable(App\Preview::size()) }}<br>
-            <label>Path:</label> {{ App\Preview::rootPath() }}
+            <label>Path:</label> {{ \Storage::disk('previews')->path('') }}
 
             <div class="row mt-3">
                 <div class="col">
@@ -75,7 +75,7 @@
             <h4><b>Images</b></h4>
 
             <label>Size:</label> {{ App\Archive::convertSizeToReadable(App\Image::size()) }}<br>
-            <label>Path:</label> {{ App\Image::rootPath() }}
+            <label>Path:</label> {{ \Storage::disk('images')->path('') }}
 
             <div class="row mt-3">
                 <div class="col-6">
