@@ -271,8 +271,10 @@ final class Watcher
         while (true) {
             $events = inotify_read($this->fd);
             // keep polling for events if there are none
-            if ($events === false)
+            if ($events === false) {
+                sleep(1);
                 continue;
+            }
 
             foreach ($events as $event) {
                 $wd = $event['wd'];
