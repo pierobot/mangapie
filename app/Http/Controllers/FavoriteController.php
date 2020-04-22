@@ -20,6 +20,9 @@ class FavoriteController extends Controller
     public function index()
     {
         $user = \Auth::user();
+        $sort = request()->input('sort', 'asc');
+        $perPage = 18;
+
         /** @var Collection $favorites */
         $favorites = $user->favorites->loadMissing(
             'manga',
@@ -38,11 +41,13 @@ class FavoriteController extends Controller
         }
 
         $page = request()->get('page');
-        $manga_list = new LengthAwarePaginator($collection->forPage($page, 18), $collection->count(), 18);
-        $manga_list->withPath(\Config::get('app.url'));
+        $manga_list = new LengthAwarePaginator($collection->forPage($page, $perPage), $collection->count(), $perPage);
+        $manga_list->withPath(request()->path());
+        $manga_list->appends(request()->input());
 
         return view('favorites.index')
             ->with('manga_list', $manga_list)
+            ->with('sort', $sort)
             ->with('header', 'Favorites: (' . $favorites->count() . ')')
             ->with('total', $favorites->count());
     }
