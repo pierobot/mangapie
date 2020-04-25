@@ -17,10 +17,10 @@ final class Avatar extends StreamableStorageFile
     {
         $this->userId = $user->id;
         $root = storage_path('app');
-        $relativePath = "avatars/{$user->id}";
+        $relativePath = "public/avatars/{$user->id}";
 
         if (! file_exists($root . DIRECTORY_SEPARATOR . $relativePath)) {
-            $relativePath = 'avatars/default.jpeg';
+            $relativePath = 'public/avatars/default.jpg';
         }
 
         parent::__construct(

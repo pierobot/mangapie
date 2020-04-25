@@ -33,7 +33,7 @@ class Image extends StreamableStorageFile
         $this->archiveName = $archive->name;
         $this->page = $page;
         $root = storage_path('app');
-        $relativePath = "images/{$manga->id}/{$archive->id}/{$page}";
+        $relativePath = "public/images/{$manga->id}/{$archive->id}/{$page}";
 
         parent::__construct($root, $relativePath, CarbonInterval::month());
     }

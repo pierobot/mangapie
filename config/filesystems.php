@@ -57,22 +57,22 @@ return [
 
         'avatars' => [
             'driver' => 'local',
-            'root' => storage_path('app/avatars'),
+            'root' => storage_path('app/public/avatars'),
         ],
 
         'covers' => [
             'driver' => 'local',
-            'root' => storage_path('app/covers'),
+            'root' => storage_path('app/public/covers'),
         ],
 
         'images' => [
             'driver' => 'local',
-            'root' => storage_path('app/images'),
+            'root' => storage_path('app/public/images'),
         ],
 
         'previews' => [
             'driver' => 'local',
-            'root' => storage_path('app/previews'),
+            'root' => storage_path('app/public/previews'),
         ],
 
         's3' => [
