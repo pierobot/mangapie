@@ -35,10 +35,10 @@ final class Cover extends StreamableStorageFile
         $this->small = $small;
         $root = storage_path('app');
         $size = $small ? 'small' : 'medium';
-        $relativePath = "covers/{$size}/{$manga->id}/{$archive->id}/{$page}";
+        $relativePath = "public/covers/{$size}/{$manga->id}/{$archive->id}/{$page}";
 
         if (! file_exists($root . DIRECTORY_SEPARATOR . $relativePath)) {
-            $relativePath = 'covers/default.jpeg';
+            $relativePath = 'public/covers/default.jpg';
         }
 
         parent::__construct(

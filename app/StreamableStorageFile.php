@@ -61,7 +61,7 @@ class StreamableStorageFile
             ];
         } elseif ($webServer === 'apache') {
             $headers = [
-                'X-Sendfile' => $this->relativeFilePath,
+                'X-Sendfile' => $this->root . DIRECTORY_SEPARATOR . $this->relativeFilePath
             ];
         } else {
             $headers = [];

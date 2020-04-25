@@ -35,7 +35,7 @@ final class Preview extends StreamableStorageFile
         $this->small = $small;
         $root = storage_path('app');
         $size = $small ? 'small' : 'medium';
-        $relativePath = "previews/{$size}/{$manga->id}/{$archive->id}/{$page}";
+        $relativePath = "public/previews/{$size}/{$manga->id}/{$archive->id}/{$page}";
 
         $this->EXPIRES_IN_DAYS = 7;
 
