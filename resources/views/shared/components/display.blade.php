@@ -68,7 +68,7 @@
                         <img class="card-img-top" src="{{ URL::action('CoverController@smallDefault', [$series]) }}" alt="cover">
 
                         <div class="card-body bg-dark">
-                            <div class="card-title">
+                            <div class="card-title text-truncate" title="{{ $series->name }}">
                                 <strong>
                                     <a class="card-link" href="{{ URL::action('MangaController@show', [$series]) }}">{{ $series->name }}</a>
                                 </strong>
