@@ -115,9 +115,9 @@ final class Cover extends StreamableStorageFile
          * in case there was no cover in the first place as it would have defaulted to the default.jpeg.
          */
         $size = $this->small ? 'small' : 'medium';
-        $this->relativeFilePath = "covers/{$size}/{$this->mangaId}/{$this->archiveId}/{$this->page}";
+        $this->relativeFilePath = "public/covers/{$size}/{$this->mangaId}/{$this->archiveId}/{$this->page}";
 
-        return \Storage::disk('covers')->put(
+        return \Storage::disk('covers')->writeStream(
             "{$size}/{$this->mangaId}/{$this->archiveId}/{$this->page}",
             $image->stream('jpg')->detach());
     }

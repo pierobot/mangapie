@@ -96,12 +96,13 @@ class AdminController extends Controller
 
     public function deleteImages(Request $request)
     {
-        $dirs = Image::disk()->directories();
+        $disk = \Storage::disk('images');
+        $dirs = $disk->directories();
         $dirCount = count($dirs);
         $dirDeletedCount = 0;
 
         foreach ($dirs as $dir) {
-            $deletedSuccessfully = Image::disk()->deleteDirectory($dir);
+            $deletedSuccessfully = $disk->deleteDirectory($dir);
             if ($deletedSuccessfully)
                 ++$dirDeletedCount;
         }

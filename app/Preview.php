@@ -113,7 +113,7 @@ final class Preview extends StreamableStorageFile
          * in case there was no cover in the first place as it would have defaulted to the default.jpeg.
          */
         $size = $this->small ? 'small' : 'medium';
-        $this->relativeFilePath = "previews/{$size}/{$this->mangaId}/{$this->archiveId}/{$this->page}";
+        $this->relativeFilePath = "public/previews/{$size}/{$this->mangaId}/{$this->archiveId}/{$this->page}";
 
         return \Storage::disk('previews')->put(
             "{$size}/{$this->mangaId}/{$this->archiveId}/{$this->page}",
