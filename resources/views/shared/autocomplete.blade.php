@@ -4,7 +4,6 @@
 
         $('#searchbar').typeahead({
             delay: 250,
-            fitToElement: true,
             followLinkOnSelect: true,
             minLength: 3,
             selectOnBlur: false,
@@ -23,7 +22,6 @@
 
         $('#searchbar-small').typeahead({
             delay: 250,
-            fitToElement: true,
             followLinkOnSelect: true,
             minLength: 3,
             selectOnBlur: false,
