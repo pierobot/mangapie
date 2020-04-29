@@ -16,7 +16,7 @@
     "cross-env": "^5.2.1",
     "del": "^3.0.0",
     "hoek": "^4.2.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "jquery-bar-rating": "^1.2.2",
     "laravel-mix": "^4.1.4",
     "lodash": "^4.17.15",
