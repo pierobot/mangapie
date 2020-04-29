@@ -92,18 +92,12 @@ class MangaEditController extends Controller
 
     public function putAutofill(EditMangaAutofillRequest $request)
     {
-        $manga = Manga::find($request->get('manga_id'));
+        $manga = Manga::firstOrFail($request->get('manga_id'));
 
-        $successful = MangaUpdates::autofillFromId($manga, \Input::get('mu_id'));
+        MangaUpdates::autofillFromId($manga, $request->get('mu_id'));
 
-        $response = redirect()->action('MangaEditController@mangaupdates', [$manga->id]);
-
-        if (! $successful)
-            return $response->withErrors(['autofill' => 'Unable to scrape mangaupdates for information.']);
-
-        session()->flash('success', 'The information was successfully autofilled.');
-
-        return $response;
+        return redirect()->action('MangaEditController@mangaupdates', [$manga->id])
+            ->with('success', 'The information was successfully autofilled.');
     }
 
     public function putGenres(EditMangaGenresRequest $request)

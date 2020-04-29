@@ -49,85 +49,81 @@ class MangaUpdates implements AutoFillInterface
      */
     public static function autofillFromId($manga, $id)
     {
-        $result = false;
         $information = Series::information($id);
 
         if (! empty($information)) {
-            try {
-                \DB::transaction(function () use ($manga, $information) {
-                    /*
-                     * Remove all currently present information and relations as we will be
-                     * overriding it with what is retrieved from the auto fill.
-                     */
-                    $manga->authors()->forceDelete();
-                    $manga->artists()->forceDelete();
-                    $manga->genres()->forceDelete();
-                    $manga->associatedNames()->forceDelete();
+            \DB::transaction(function () use ($manga, $information) {
+                /*
+                 * Remove all currently present information and relations as we will be
+                 * overriding it with what is retrieved from the auto fill.
+                 */
+                $manga->authors()->forceDelete();
+                $manga->artists()->forceDelete();
+                $manga->genres()->forceDelete();
+                $manga->associatedNames()->forceDelete();
 
-                    $manga->update([
-                        'mu_id' => $information['mu_id'],
-                        'type' => $information['type'],
-                        'description' => $information['description'],
-                        'year' => $information['year'],
-                    ]);
+                $manga->update([
+                    'mu_id' => $information['mu_id'],
+                    'type' => $information['type'],
+                    'description' => $information['description'],
+                    'year' => $information['year'],
+                ]);
 
-                    $mangaId = $manga->id;
+                $mangaId = $manga->id;
 
-                    $associatedNames = collect($information['assoc_names'])->transform(
-                        function (string $name) use ($mangaId) {
-                            return [
-                                'manga_id' => $mangaId,
-                                'associated_name_id' => AssociatedName::firstOrCreate([
-                                    'name' => $name
-                                ])->id
-                            ];
-                        }
-                    )->toArray();
+                $associatedNames = collect($information['assoc_names'])->transform(
+                    function (string $name) use ($mangaId) {
+                        return [
+                            'manga_id' => $mangaId,
+                            'associated_name_id' => AssociatedName::firstOrCreate([
+                                'name' => $name
+                            ])->id
+                        ];
+                    }
+                )->toArray();
 
-                    $authors = collect($information['authors'])->transform(
-                        function (string $name) use ($mangaId) {
-                            return [
-                                'manga_id' => $mangaId,
-                                'author_id' => Person::firstOrCreate([
-                                    'name' => $name
-                                ])->id
-                            ];
-                        }
-                    )->toArray();
+                $authors = collect($information['authors'])->transform(
+                    function (string $name) use ($mangaId) {
+                        return [
+                            'manga_id' => $mangaId,
+                            'author_id' => Person::firstOrCreate([
+                                'name' => $name
+                            ])->id
+                        ];
+                    }
+                )->toArray();
 
-                    $artists = collect($information['artists'])->transform(
-                        function (string $name) use ($mangaId) {
-                            return [
-                                'manga_id' => $mangaId,
-                                'artist_id' => Person::firstOrCreate([
-                                    'name' => $name
-                                ])->id
-                            ];
-                        }
-                    )->toArray();
+                $artists = collect($information['artists'])->transform(
+                    function (string $name) use ($mangaId) {
+                        return [
+                            'manga_id' => $mangaId,
+                            'artist_id' => Person::firstOrCreate([
+                                'name' => $name
+                            ])->id
+                        ];
+                    }
+                )->toArray();
 
-                    $genres = collect($information['genres'])->transform(
-                        function (string $name) use ($mangaId) {
-                            return [
-                                'manga_id' => $mangaId,
-                                'genre_id' => Genre::firstOrCreate([
-                                    'name' => $name
-                                ])->id
-                            ];
-                        }
-                    )->toArray();
+                $genres = collect($information['genres'])->transform(
+                    function (string $name) use ($mangaId) {
+                        return [
+                            'manga_id' => $mangaId,
+                            'genre_id' => Genre::firstOrCreate([
+                                'name' => $name
+                            ])->id
+                        ];
+                    }
+                )->toArray();
 
-                    $manga->associatedNameReferences()->createMany($associatedNames);
-                    $manga->authorReferences()->createMany($authors);
-                    $manga->artistReferences()->createMany($artists);
-                    $manga->genreReferences()->createMany($genres);
-                });
+                $manga->associatedNameReferences()->createMany($associatedNames);
+                $manga->authorReferences()->createMany($authors);
+                $manga->artistReferences()->createMany($artists);
+                $manga->genreReferences()->createMany($genres);
+            });
 
-                $result = true;
-            } catch (\Throwable $e) {
-            }
+            return true;
         }
 
-        return $result;
+        return false;
     }
 }
