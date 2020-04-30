@@ -57,17 +57,10 @@ class MangaUpdates implements AutoFillInterface
                  * Remove all currently present information and relations as we will be
                  * overriding it with what is retrieved from the auto fill.
                  */
-                $manga->authors()->forceDelete();
-                $manga->artists()->forceDelete();
-                $manga->genres()->forceDelete();
-                $manga->associatedNames()->forceDelete();
-
-                $manga->update([
-                    'mu_id' => $information['mu_id'],
-                    'type' => $information['type'],
-                    'description' => $information['description'],
-                    'year' => $information['year'],
-                ]);
+                $manga->authorReferences()->forceDelete();
+                $manga->artistReferences()->forceDelete();
+                $manga->genreReferences()->forceDelete();
+                $manga->associatedNameReferences()->forceDelete();
 
                 $mangaId = $manga->id;
 
@@ -108,12 +101,20 @@ class MangaUpdates implements AutoFillInterface
                     function (string $name) use ($mangaId) {
                         return [
                             'manga_id' => $mangaId,
-                            'genre_id' => Genre::firstOrCreate([
-                                'name' => $name
-                            ])->id
+                            // cannot call firstOrCreate because if it does not exist then we do not have a description
+                            'genre_id' => Genre::where('name', $name)
+                                ->first()
+                                ->id
                         ];
                     }
                 )->toArray();
+
+                $manga->update([
+                    'mu_id' => $information['mu_id'],
+                    'type' => $information['type'],
+                    'description' => $information['description'],
+                    'year' => $information['year'],
+                ]);
 
                 $manga->associatedNameReferences()->createMany($associatedNames);
                 $manga->authorReferences()->createMany($authors);

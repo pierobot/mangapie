@@ -92,7 +92,7 @@ class MangaEditController extends Controller
 
     public function putAutofill(EditMangaAutofillRequest $request)
     {
-        $manga = Manga::firstOrFail($request->get('manga_id'));
+        $manga = Manga::find($request->get('manga_id'));
 
         MangaUpdates::autofillFromId($manga, $request->get('mu_id'));
 
