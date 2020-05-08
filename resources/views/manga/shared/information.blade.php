@@ -28,6 +28,10 @@
         @include ('manga.shared.information.path')
     </div>
     @endadmin
+
+    <div class="col-12 mb-3">
+        @include ('manga.shared.information.external')
+    </div>
 </div>
 
 <div class="row">
