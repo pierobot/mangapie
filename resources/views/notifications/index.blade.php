@@ -30,7 +30,7 @@
                         @php ($manga = $notification->getData())
                         <tr class="d-flex">
                             <th scope="row" class="col-4 col-md-2 col-xl-1">
-                                <a href="{{ URL::action('MangaController@files', [$manga, 'descending']) }}">
+                                <a href="{{ URL::to("/manga/{$manga}/files", ['sort' => 'desc']) }}">
                                     <img class="img-fluid rounded" src="{{ URL::action('CoverController@smallDefault', [empty($manga) ? 0 : $manga->getId()]) }}">
                                 </a>
                             </th>
@@ -46,7 +46,7 @@
                                 <ul class="list-unstyled ml-4 mt-2">
                                     <li>
                                         @if ($notification->getData() instanceof \App\Manga)
-                                            <a href="{{ URL::action('MangaController@files', [$manga, 'descending']) }}">
+                                            <a href="{{ URL::to("/manga/{$manga}/files", ['sort' => 'asc']) }}">
                                                 {{ $notification->getMessage() }}
                                             </a>
                                         @else

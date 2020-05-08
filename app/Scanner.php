@@ -119,4 +119,27 @@ class Scanner
 
         return $matchResult !== false ? $matches[0] : false;
     }
+
+    /**
+     * Simplifies the given name into volumes and chapters.
+     *
+     * @param string $name
+     * @return string
+     */
+    public static function simplifyName(string $name)
+    {
+        $volCh = self::getVolumesAndChapters($name);
+        // If there is no volume or chapter in the name, or if the parsing failed
+        // then just use the archive name :shrug:
+        if (empty($volCh)) {
+            $nameVolCh = $name;
+        } else {
+            $nameVolCh = '';
+            foreach ($volCh as $part) {
+                $nameVolCh .= $part . ' ';
+            }
+        }
+
+        return $nameVolCh;
+    }
 }

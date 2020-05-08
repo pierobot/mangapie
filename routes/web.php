@@ -136,8 +136,8 @@ Route::middleware(['auth'])->group(function () {
     });
 
     Route::prefix('manga')->middleware('manga_views')->name('manga')->group(function () {
-        Route::get('/{manga}/{sort?}', 'MangaController@show');
-        Route::get('/{manga}/files/{sort?}', 'MangaController@files');
+        Route::get('/{manga}', 'MangaController@show');
+        Route::get('/{manga}/files', 'MangaController@files');
         Route::get('/{manga}/comments', 'MangaController@comments');
     });
 

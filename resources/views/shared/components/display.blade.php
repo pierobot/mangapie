@@ -31,7 +31,9 @@
                         @foreach ($items as $series)
                             <tr class="d-table-row">
                                 <td class="col-4 col-md-1">
-                                    <img class="img-fluid" src="{{ URL::action('CoverController@smallDefault', [$series]) }}" alt="cover">
+                                    <a href="{{ URL::action('MangaController@show', [$series]) }}">
+                                        <img class="img-fluid" src="{{ URL::action('CoverController@smallDefault', [$series]) }}" alt="cover">
+                                    </a>
                                 </td>
                                 <td class="col">
                                     <strong>
@@ -65,7 +67,9 @@
             @foreach ($items as $series)
                 <div class="col-6 col-sm-3 col-xl-2">
                     <div class="card mb-3">
-                        <img class="card-img-top" src="{{ URL::action('CoverController@smallDefault', [$series]) }}" alt="cover">
+                        <a href="{{ URL::action('MangaController@show', [$series]) }}">
+                            <img class="card-img-top" src="{{ URL::action('CoverController@smallDefault', [$series]) }}" alt="cover">
+                        </a>
 
                         <div class="card-body bg-dark">
                             <div class="card-title text-truncate" title="{{ $series->name }}">
