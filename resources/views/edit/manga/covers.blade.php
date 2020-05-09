@@ -50,8 +50,8 @@
                                 </div>
                                 <div class="card-body collapse cover-collapse" id="dropdown-{{ $archive->id }}">
                                     <div class="row">
-                                        {{-- 8 pages should be enough, right? :| --}}
-                                        @for ($i = 1; $i <= 8; $i++)
+                                        @php($pageLimit = $archive->getPageCount() < 8 ? $archive->getPageCount() : 8)
+                                        @for ($i = 1; $i <= $pageLimit; $i++)
                                             <div class="col-6 col-md-3 mb-2">
                                                 <div class="card text-center">
                                                     <img class="card-img-top" src="{{ URL::action('CoverController@small', [$manga, $archive, $i]) }}">
