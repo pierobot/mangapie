@@ -3,10 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Interfaces\EditableInterface;
+use Symfony\Component\Finder\Finder;
 
 class Manga
     extends Model
@@ -330,6 +330,27 @@ class Manga
         }
 
         return $items;
+    }
+
+    /**
+     * Gets the top most directories in a series' path.
+     *
+     * @return array
+     */
+    public function topMostDirectories() : array
+    {
+        $dirs = Finder::create()
+            ->in($this->path)
+            ->depth(0)
+            ->directories()
+            ->sortByName();
+
+        $result = [];
+        foreach ($dirs as $dir) {
+            $result[] = $dir->getBasename();
+        }
+
+        return $result;
     }
 
 //    private function getNumberTokens($name)
