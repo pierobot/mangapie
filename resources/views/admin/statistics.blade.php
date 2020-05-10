@@ -28,7 +28,7 @@
             <hr>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-4">
+        <div class="col-12 col-md-6 col-lg-4 text-break">
             <h4><b>Avatars</b></h4>
 
             <label>Size:</label> {{ App\Archive::convertSizeToReadable(App\Avatar::size()) }}<br>
@@ -37,7 +37,7 @@
             <hr>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-4">
+        <div class="col-12 col-md-6 col-lg-4 text-break">
             <h4><b>Covers</b></h4>
 
             <label>Size:</label> {{ App\Archive::convertSizeToReadable(App\Cover::size()) }}<br>
@@ -54,7 +54,7 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-4">
+        <div class="col-12 col-md-6 col-lg-4 text-break">
             <h4><strong>Previews</strong></h4>
 
             <label>Size:</label> {{ App\Archive::convertSizeToReadable(App\Preview::size()) }}<br>
@@ -71,7 +71,7 @@
             </div>
         </div>
 
-        <div class="col-12 col-md-6 col-lg-4">
+        <div class="col-12 col-md-6 col-lg-4 text-break">
             <h4><b>Images</b></h4>
 
             <label>Size:</label> {{ App\Archive::convertSizeToReadable(App\Image::size()) }}<br>
