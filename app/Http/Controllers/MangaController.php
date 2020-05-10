@@ -72,7 +72,7 @@ class MangaController extends Controller
                 count($topMostDirectories)
             ){
                 $filter = $topMostDirectories[0];
-            } elseif ($rootItems->count()) {
+            } elseif ($rootItems->count() && ! empty($topMostDirectories)) {
                 $topMostDirectories = array_merge(['Root'], $topMostDirectories);
             }
 
@@ -141,7 +141,7 @@ class MangaController extends Controller
                 count($topMostDirectories)
             ){
                 $filter = $topMostDirectories[0];
-            } elseif ($rootItems->count()) {
+            } elseif ($rootItems->count() && ! empty($topMostDirectories)) {
                 $topMostDirectories = array_merge(['Root'], $topMostDirectories);
             }
 
