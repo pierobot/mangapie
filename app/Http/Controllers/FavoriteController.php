@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Favorite;
 use App\Http\Requests\Favorite\FavoriteAddRequest;
 
+use App\IntlString;
+use App\Manga;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
@@ -21,24 +23,30 @@ class FavoriteController extends Controller
     {
         $user = \Auth::user();
         $sort = request()->input('sort', 'asc');
+        $library = request()->query('library');
         $perPage = 18;
 
         /** @var Collection $favorites */
-        $favorites = $user->favorites->loadMissing(
-            'manga',
-            'manga.favorites',
-            'manga.votes',
-            'manga.authorReferences',
-            'manga.authorReferences.author');
+        $favorites = $user->favorites
+            ->loadMissing([
+                'manga',
+                'manga.favorites',
+                'manga.votes',
+                'manga.authorReferences',
+                'manga.authorReferences.author']
+            );
 
-        $collection = collect();
+        $collection = $favorites->transform(function (Favorite $favorite) {
+            return $favorite->manga;
+        });
+        $collection = $collection->filter(function (Manga $manga) use ($library) {
+            return $manga->library->id == $library;
+        });
+        $collection = $collection->sort(function (Manga $left, Manga $right) {
+            return IntlString::strcmp($left->name, $right->name);
+        });
 
         // TODO: Should favorites to a library one can no longer access be viewable?
-
-        /** @var Favorite $favorite */
-        foreach ($favorites as $favorite) {
-            $collection->push($favorite->manga);
-        }
 
         $page = request()->get('page');
         $manga_list = new LengthAwarePaginator($collection->forPage($page, $perPage), $collection->count(), $perPage);

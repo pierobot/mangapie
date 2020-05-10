@@ -15,11 +15,16 @@ class HomeController extends Controller
     public function index()
     {
         $user = \Auth::user();
-        $sort = request()->input('sort', 'asc');
+        $sort = request()->query('sort', 'asc');
+        $library = request()->query('library');
         $perPage = 18;
 
-        $items = $user->manga()
-            ->orderBy('name', $sort)
+        $items = $user->manga();
+        if (! empty($library)) {
+            $items = $items->whereIn('library_id', [$library]);
+        }
+
+        $items = $items->orderBy('name', $sort)
             ->with([
                 'favorites',
                 'votes',
