@@ -108,6 +108,14 @@ class Series
         return $results;
     }
 
+    private static function name(Crawler $crawler)
+    {
+        $crawler = $crawler->filter('span.releasestitle.tabletitle')
+            ->eq(0);
+
+        return $crawler->text();
+    }
+
     private static function description(Crawler $crawler)
     {
         $crawler = $crawler->filter('div.col-6.p-2.text > div.sCat + div.sContent')
@@ -210,6 +218,7 @@ class Series
     {
         $crawler = new Crawler($contents);
 
+        $information['name'] = self::name($crawler);
         $information['mu_id'] = $mu_id;
         $information['description'] = self::description($crawler);
         $information['type'] = self::type($crawler);

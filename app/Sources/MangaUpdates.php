@@ -111,6 +111,7 @@ class MangaUpdates implements AutoFillInterface
 
                 $manga->update([
                     'mu_id' => $information['mu_id'],
+                    'mu_name' => $information['name'],
                     'type' => $information['type'],
                     'description' => $information['description'],
                     'year' => $information['year'],
