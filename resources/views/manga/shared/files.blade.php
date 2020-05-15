@@ -30,11 +30,11 @@
                 </th>
                 <th scope="col">
                 </th>
-                <th scope="col">
+                <th scope="col" class="pr-0">
                     <span class="fa fa-history d-flex d-md-none"></span>
                     <span class="d-none d-md-flex">Last Read</span>
                 </th>
-                <th scope="col">
+                <th scope="col" class="pr-0">
                     <span class="fa fa-clock d-flex d-md-none"></span>
                     <span class="d-none d-md-flex">Date Added</span>
                 </th>
@@ -55,25 +55,37 @@
                 @endphp
 
                 <tr class="d-table-row">
-                    <td class="col-6 col-md-6">
-                        <strong>
+                    <td class="col-5 col-md-6">
+                        <strong class="text-wrap text-break">
                             <a href="{{ URL::action('ReaderController@index', [$manga, $item, 1]) }}">
                                 {{ \App\Scanner::simplifyName($item->name) }}
                             </a>
                         </strong>
                     </td>
-                    <td class="col-1 col-md-2">
-                        <small class="mt-3">
-                            <a href="{{ URL::action('PreviewController@index', [$manga, $item]) }}">Preview</a>
-                        </small>
+                    <td class="col-1">
+                        <a href="{{ URL::action('PreviewController@index', [$manga, $item]) }}">
+                            <strong>
+                                <span class="fa fa-search"></span>
+                            </strong>
+                        </a>
                     </td>
-                    <td class="col-3 col-md-2">
+                    <td class="col-3 pr-0">
                         @if (! empty($archiveHistory))
-                            <small class="text-{{ $colorType }}">{{ $archiveHistory->updated_at->diffForHumans() }}</small>
+                            <div class="d-flex d-sm-none">
+                                <small class="text-{{ $colorType }}">{{ $archiveHistory->updated_at->diffForHumans(null, \Carbon\CarbonInterface::DIFF_ABSOLUTE) }}</small>
+                            </div>
+                            <div class="d-none d-sm-flex">
+                                <small class="text-{{ $colorType }}">{{ $archiveHistory->updated_at->diffForHumans() }}</small>
+                            </div>
                         @endif
                     </td>
-                    <td class="col-3 col-md-2">
-                        <small>{{ $item->created_at->diffForHumans() }}</small>
+                    <td class="col-3 pr-0">
+                        <div class="d-flex d-sm-none">
+                            <small>{{ $item->created_at->diffForHumans(null, \Carbon\CarbonInterface::DIFF_ABSOLUTE) }}</small>
+                        </div>
+                        <div class="d-none d-sm-flex">
+                            <small>{{ $item->created_at->diffForHumans() }}</small>
+                        </div>
                     </td>
                 </tr>
             @endforeach
