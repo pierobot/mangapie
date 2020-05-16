@@ -2,6 +2,7 @@
 
 namespace App;
 
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class Archive extends Model
@@ -56,39 +57,51 @@ class Archive extends Model
      *  Gets the adjacent archive in relation to $this.
      *
      *  @param bool $next Boolean value that indicates to get the next or previous archive.
-     *  @return Archive|false
+     *  @return Archive
      */
-    private function getAdjacentArchive($next = true)
+    private function getAdjacentArchive(bool $next = true)
     {
-        $archives = $this->manga->getArchives();
-        if (empty($archives))
-            return false;
+        /** @var Collection $archives */
+        // Sort them because there's no guarantee on their IDs being in order since transfers can be out of order
+        $archives = $this->manga->archives()->orderBy('name', 'asc')->get();
+        // Determine if the current archive is in the root directory or a sub directory
+        $fileInfo = new \SplFileInfo($this->name);
+        $basePath = $fileInfo->getPath();
+        $isInRoot = empty($basePath);
+        $currentName = $this->name;
 
-        // find the index of $name in $archives
-        for ($i = 0, $max = count($archives) - 1; $i < $max; $i++) {
-            // if the names match then we can get the next archive
-            if ($archives[$i]->name == $this->name) {
-                if (! $next) {
-                    // previous archive wanted
-                    // check if we were given the first archive
-                    if ($i == 0)
-                        break;
+        // Filter out the archives that are not in the same working directory
+        if ($isInRoot) {
+            $archives = $archives->filter(function (Archive $archive) {
+                $fileInfo = new \SplFileInfo($archive->name);
+                $path = $fileInfo->getPath();
 
-                    return $archives[$i - 1];
-                } else {
-                    // next archive wanted
-                    return $archives[$i + 1];
-                }
-            }
+                return empty($path);
+            });
+        } else {
+            $archives = $archives->filter(function (Archive $archive) use ($basePath) {
+                $fileInfo = new \SplFileInfo($archive->name);
+                $path = $fileInfo->getPath();
+
+                return $basePath == $path;
+            });
         }
 
-        return false;
+        if ($next) {
+            return $archives->first(function (Archive $archive) use ($currentName) {
+                return IntlString::strcmp($archive->name, $currentName) > 0;
+            });
+        } else {
+            return $archives->last(function (Archive $archive) use ($currentName) {
+                return IntlString::strcmp($archive->name, $currentName) < 0;
+            });
+        }
     }
 
     /**
      * Gets the previous archive in relation to $this.
      *
-     * @return Archive|false
+     * @return Archive
      */
     public function getPreviousArchive()
     {
@@ -98,7 +111,7 @@ class Archive extends Model
     /**
      * Gets the next archive in relation to $this.
      *
-     * @return Archive|false
+     * @return Archive
      */
     public function getNextArchive()
     {
