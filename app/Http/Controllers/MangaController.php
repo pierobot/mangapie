@@ -49,52 +49,45 @@ class MangaController extends Controller
 
         $user = \Auth::user()->loadMissing(['favorites', 'readerHistory', 'watchReferences']);
 
-        $sortByTopMostDirectories = true;
-        // Root should always be the first top most directory
         $topMostDirectories = $manga->topMostDirectories();
         /** @var Collection $items */
         $items = $manga->archives()
             ->orderBy('name', $sort)
             ->get();
 
-        if ($sortByTopMostDirectories) {
-            $rootItems = $items->filter(function (Archive $archive) {
+        $rootItems = $items->filter(function (Archive $archive) {
+            $fileInfo = new SplFileInfo($archive->name);
+            $basePath = $fileInfo->getPath();
+
+            return empty($basePath);
+        });
+
+        if ($rootItems->count()) {
+            if (count($topMostDirectories)) {
+                // Only add Root to the directories if it has files and if there are other directories
+                $topMostDirectories = array_merge(['Root'], $topMostDirectories);
+            }
+        } else {
+            if ($filter === 'Root') {
+                $filter = count($topMostDirectories) ? $topMostDirectories[0] : null;
+            }
+        }
+
+        if ($filter !== 'Root') {
+            $items = $items->filter(function (Archive $archive) use ($filter) {
                 $fileInfo = new SplFileInfo($archive->name);
                 $basePath = $fileInfo->getPath();
 
-                return empty($basePath);
+                return $basePath == $filter;
             });
-
-            /* If the first directory is empty, then filter by the first top most directory.
-             * Otherwise, add 'Root' to the top most directories so that the UI shows it as a filter.
-             */
-            if (! $rootItems->count() &&
-                count($topMostDirectories)
-            ){
-                $filter = $topMostDirectories[0];
-            } elseif ($rootItems->count() && ! empty($topMostDirectories)) {
-                $topMostDirectories = array_merge(['Root'], $topMostDirectories);
-            }
-
-            if ($filter !== 'Root') {
-                // If sorting by top most directories is enabled
-                // then we'll need to filter by the first directory if there is no filter
-                $items = $items->filter(function (Archive $archive) use ($filter) {
-                    $fileInfo = new SplFileInfo($archive->name);
-                    $basePath = $fileInfo->getPath();
-
-                    return $basePath == $filter;
-                });
-            } else {
-                $items = $rootItems;
-            }
+        } else {
+            $items = $rootItems;
         }
 
         return view('manga.show')
             ->with('user', $user)
             ->with('manga', $manga)
             ->with('items', $items)
-            ->with('sortByTopMostDirectories', $sortByTopMostDirectories)
             ->with('topMostDirectories', $topMostDirectories)
             ->with('sort', $sort)
             ->with('filter', $filter);
@@ -118,52 +111,45 @@ class MangaController extends Controller
 
         $user = \Auth::user()->loadMissing(['favorites', 'readerHistory', 'watchReferences']);
 
-        $sortByTopMostDirectories = true;
-        // Root should always be the first top most directory
         $topMostDirectories = $manga->topMostDirectories();
         /** @var Collection $items */
         $items = $manga->archives()
             ->orderBy('name', $sort)
             ->get();
 
-        if ($sortByTopMostDirectories) {
-            $rootItems = $items->filter(function (Archive $archive) {
+        $rootItems = $items->filter(function (Archive $archive) {
+            $fileInfo = new SplFileInfo($archive->name);
+            $basePath = $fileInfo->getPath();
+
+            return empty($basePath);
+        });
+
+        if ($rootItems->count()) {
+            if (count($topMostDirectories)) {
+                // Only add Root to the directories if it has files and if there are other directories
+                $topMostDirectories = array_merge(['Root'], $topMostDirectories);
+            }
+        } else {
+            if ($filter === 'Root') {
+                $filter = count($topMostDirectories) ? $topMostDirectories[0] : null;
+            }
+        }
+
+        if ($filter !== 'Root') {
+            $items = $items->filter(function (Archive $archive) use ($filter) {
                 $fileInfo = new SplFileInfo($archive->name);
                 $basePath = $fileInfo->getPath();
 
-                return empty($basePath);
+                return $basePath == $filter;
             });
-
-            /* If the first directory is empty, then filter by the first top most directory.
-             * Otherwise, add 'Root' to the top most directories so that the UI shows it as a filter.
-             */
-            if (! $rootItems->count() &&
-                count($topMostDirectories)
-            ){
-                $filter = $topMostDirectories[0];
-            } elseif ($rootItems->count() && ! empty($topMostDirectories)) {
-                $topMostDirectories = array_merge(['Root'], $topMostDirectories);
-            }
-
-            if ($filter !== 'Root') {
-                // If sorting by top most directories is enabled
-                // then we'll need to filter by the first directory if there is no filter
-                $items = $items->filter(function (Archive $archive) use ($filter) {
-                    $fileInfo = new SplFileInfo($archive->name);
-                    $basePath = $fileInfo->getPath();
-
-                    return $basePath == $filter;
-                });
-            } else {
-                $items = $rootItems;
-            }
+        } else {
+            $items = $rootItems;
         }
 
         return view('manga.files')
             ->with('user', $user)
             ->with('manga', $manga)
             ->with('items', $items)
-            ->with('sortByTopMostDirectories', $sortByTopMostDirectories)
             ->with('topMostDirectories', $topMostDirectories)
             ->with('sort', $sort)
             ->with('filter', $filter);

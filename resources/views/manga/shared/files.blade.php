@@ -1,17 +1,14 @@
-@if ($sortByTopMostDirectories)
-    <ul class="nav nav-pills nav-fill">
-        @foreach ($topMostDirectories as $directory)
-            <li class="nav-item">
-                <a href="{{ URL::action('MangaController@files', [$manga]) . '?' . \Illuminate\Support\Arr::query(['filter' => $directory]) }}"
-                   class="nav-link @if ($filter === $directory) active @endif"
-                >
-                    {{ $directory }}
-                </a>
-            </li>
-        @endforeach
-    </ul>
-@endif
-
+<ul class="nav nav-pills nav-fill">
+    @foreach ($topMostDirectories as $directory)
+        <li class="nav-item">
+            <a href="{{ URL::action('MangaController@files', [$manga]) . '?' . \Illuminate\Support\Arr::query(['filter' => $directory]) }}"
+               class="nav-link @if ($filter === $directory) active @endif"
+            >
+                {{ $directory }}
+            </a>
+        </li>
+    @endforeach
+</ul>
 
 <table class="table table-borderless table-striped mt-3">
     <thead>
