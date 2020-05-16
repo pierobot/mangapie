@@ -64,7 +64,7 @@
             <th class="col-5">
                 <strong class="text-wrap text-break">
                     <a href="{{ URL::action('ReaderController@index', [$manga, $item, 1]) }}">
-                        {{ \App\Scanner::simplifyName($item->name) }}
+                        {{ \App\Scanner::removeExtension(\App\Scanner::simplifyName($item->name)) }}
                     </a>
                 </strong>
             </th>
