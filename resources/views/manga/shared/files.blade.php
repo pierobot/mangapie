@@ -58,7 +58,8 @@
         @endphp
 
         <tr class="d-flex">
-            <th class="col-5">
+            {{-- Use text-left as this column is centered on Safari --}}
+            <th class="col-5 text-left">
                 <strong class="text-wrap text-break">
                     <a href="{{ URL::action('ReaderController@index', [$manga, $item, 1]) }}">
                         {{ \App\Scanner::removeExtension(\App\Scanner::simplifyName($item->name)) }}
