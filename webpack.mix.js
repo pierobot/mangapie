@@ -12,7 +12,7 @@ const del = require('del');
  |
  */
 
-del(['public/assets/*']).then(function ($paths) {
+del(['public/assets/mangapie*']).then(function ($paths) {
 });
 
 mix.setPublicPath('public/');
