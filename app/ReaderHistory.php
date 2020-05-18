@@ -47,13 +47,18 @@ class ReaderHistory extends Model
         return $this->updated_at;
     }
 
+    public function archive()
+    {
+        return $this->belongsTo(Archive::class);
+    }
+
     public function manga()
     {
-        return $this->belongsTo(\App\Manga::class);
+        return $this->belongsTo(Manga::class);
     }
 
     public function user()
     {
-        return $this->belongsTo(\App\User::class);
+        return $this->belongsTo(User::class);
     }
 }

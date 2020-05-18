@@ -6,8 +6,11 @@ use App\Http\Requests\User\PutStatusRequest;
 use App\Http\Requests\User\UserCreateRequest;
 use App\Http\Requests\User\UserEditRequest;
 
+use App\ReaderHistory;
 use App\Role;
 use App\User;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Query\Builder;
 
 class UserController extends Controller
 {
@@ -31,6 +34,7 @@ class UserController extends Controller
             // TODO: combine comments and activity into one page for the profile; remove from here
             'comments' => 'view',
             'activity' => 'view',
+            'history' => 'view',
             'create' => 'create',
             'store' => 'create',
             'edit' => 'update',
@@ -43,8 +47,15 @@ class UserController extends Controller
     {
         // TODO: Make config option for the # to load
 
-        $recentFavorites = $user->favorites->sortByDesc('updated_at')->take(4)->load('manga');
-        $recentReads = $user->readerHistory->sortByDesc('updated_at')->unique('manga_id')->take(4)->load('manga');
+        $recentFavorites = $user->favorites
+            ->sortByDesc('updated_at')
+            ->take(4)
+            ->load('manga');
+        $recentReads = $user->readerHistory
+            ->sortByDesc('updated_at')
+            ->unique('manga_id')
+            ->take(4)
+            ->load('manga');
 
         return view('user.activity')
             ->with('user', $user)
@@ -55,7 +66,10 @@ class UserController extends Controller
     // TODO: deprecate and make config option for the # to load
     public function comments(User $user)
     {
-        $comments = $user->comments->sortByDesc('created_at')->take(10)->load('manga');
+        $comments = $user->comments
+            ->sortByDesc('created_at')
+            ->take(10)
+            ->load('manga');
 
         return view('user.comments')
             ->with('user', $user)
@@ -66,13 +80,69 @@ class UserController extends Controller
     {
         // TODO: Make config option for the # to load
 
-        $recentFavorites = $user->favorites->sortByDesc('updated_at')->take(4)->load('manga');
-        $recentReads = $user->readerHistory->sortByDesc('updated_at')->unique('manga_id')->take(4)->load('manga');
+        $recentFavorites = $user->favorites
+            ->sortByDesc('updated_at')
+            ->take(4)
+            ->load('manga');
+        $recentReads = $user->readerHistory
+            ->sortByDesc('updated_at')
+            ->unique('manga_id')
+            ->take(4)
+            ->load('manga');
 
         return view('user.activity')
             ->with('user', $user)
             ->with('recentFavorites', $recentFavorites)
             ->with('recentReads', $recentReads);
+    }
+
+    /**
+     * Route for viewing a user's history.
+     *
+     * @param User $user
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function history(User $user)
+    {
+        // Create a query that will take 30 distinct manga IDs from a user's reading history
+        $distinctQuery = ReaderHistory::query()->from('reader_histories AS b')
+            ->select(['b.manga_id'])
+            ->distinct()
+            ->where('b.user_id', '=', $user->id)
+            ->take(30);
+
+        /*
+         * Create another query and inner join the one above using forbidden black magic.
+         * As far as I'm aware, this will only work with MySQL.
+         *
+         * TODO: Find workaround for SQL Server & PostgreSQL. Should I refactor into a separate table?
+         */
+        $items = ReaderHistory::query()->from('reader_histories AS a')
+            ->select(['a.manga_id'])
+            ->selectRaw(
+                /*
+                 * Without selectRaw, this query would throw because of strict mode's ONLY_FULL_GROUP_BY.
+                 * Sure, you could disable strict mode but that's not really a solution.
+                 *
+                 * The workaround, is to follow the rules and use an aggregator. The values we are interested in
+                 * for the archive_id and updated_at columns are for the latest read archive. Therefore, we can use
+                 * the GROUP_CONCAT aggregator with the DISTINCT keyword to order the rows, in descending order,
+                 * by the updated_at column and then apply a limit of 1 to give us the latest.
+                 */
+                'GROUP_CONCAT(DISTINCT a.archive_id ORDER BY a.updated_at DESC LIMIT 1) AS archive_id,' .
+                'GROUP_CONCAT(DISTINCT a.page ORDER BY a.updated_at DESC LIMIT 1) AS page,' .
+                'GROUP_CONCAT(DISTINCT a.page_count ORDER BY a.updated_at DESC LIMIT 1) AS page_count,' .
+                'GROUP_CONCAT(DISTINCT a.updated_at ORDER BY a.updated_at DESC LIMIT 1) AS updated_at'
+            )
+            ->groupBy(['a.manga_id'])
+            ->joinSub($distinctQuery, 'b', 'a.manga_id', '=', 'b.manga_id')
+            ->orderByDesc('a.updated_at')
+            ->with(['manga', 'archive'])
+            ->get();
+
+        return view('user.history')
+            ->with('user', $user)
+            ->with('items', $items);
     }
 
     public function avatar(User $user)
