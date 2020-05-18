@@ -93,6 +93,9 @@
                         <a class="nav-link" href="{{ URL::action('UserController@show', [auth()->user()]) }}"><span class="fa fa-user"></span>&nbsp;Profile</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ URL::action('UserController@history', [auth()->user()]) }}"><span class="fa fa-history"></span>&nbsp;History</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ URL::action('FavoriteController@index') }}"><span class="fa fa-heart"></span>&nbsp;Favorites</a>
                     </li>
                     <li class="nav-item">

@@ -188,6 +188,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{user}', 'UserController@show');
         Route::get('/{user}/comments', 'UserController@comments');
         Route::get('/{user}/activity', 'UserController@activity');
+        Route::get('/{user}/history', 'UserController@history');
 
         Route::put('/status', 'UserController@putStatus');
     });

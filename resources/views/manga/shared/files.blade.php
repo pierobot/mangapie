@@ -12,36 +12,36 @@
 
 <table class="table table-borderless table-striped mt-3">
     <thead>
-    <tr class="d-flex">
-        <th class="col-5">
-            <span class="fa fa-book d-flex d-md-none">
-                &nbsp;
-                @if ($sort === 'asc' || empty($sort))
-                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'desc']) }}"><span class="fa fa-sort-alpha-up"></span></a>
-                @else
-                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'asc']) }}"><span class="fa fa-sort-alpha-down"></span></a>
-                @endif
-            </span>
-            <span class="d-none d-md-flex">
-                Name&nbsp;
-                @if ($sort === 'asc' || empty($sort))
-                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'desc']) }}"><span class="fa fa-sort-alpha-up"></span></a>
-                @else
-                    <a href="{{ request()->fullUrlWithQuery(['sort' => 'asc']) }}"><span class="fa fa-sort-alpha-down"></span></a>
-                @endif
-            </span>
-        </th>
-        <th class="col-1">
-        </th>
-        <th class="col">
-            <span class="fa fa-history d-flex d-md-none"></span>
-            <span class="d-none d-md-flex">Last Read</span>
-        </th>
-        <th class="col">
-            <span class="fa fa-clock d-flex d-md-none"></span>
-            <span class="d-none d-md-flex">Date Added</span>
-        </th>
-    </tr>
+        <tr class="d-flex">
+            <th class="col-5">
+                <span class="fa fa-book d-flex d-md-none">
+                    &nbsp;
+                    @if ($sort === 'asc' || empty($sort))
+                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'desc']) }}"><span class="fa fa-sort-alpha-up"></span></a>
+                    @else
+                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'asc']) }}"><span class="fa fa-sort-alpha-down"></span></a>
+                    @endif
+                </span>
+                <span class="d-none d-md-flex">
+                    Name&nbsp;
+                    @if ($sort === 'asc' || empty($sort))
+                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'desc']) }}"><span class="fa fa-sort-alpha-up"></span></a>
+                    @else
+                        <a href="{{ request()->fullUrlWithQuery(['sort' => 'asc']) }}"><span class="fa fa-sort-alpha-down"></span></a>
+                    @endif
+                </span>
+            </th>
+            <th class="col-1">
+            </th>
+            <th class="col">
+                <span class="fa fa-history d-flex d-md-none"></span>
+                <span class="d-none d-md-flex">Last Read</span>
+            </th>
+            <th class="col">
+                <span class="fa fa-clock d-flex d-md-none"></span>
+                <span class="d-none d-md-flex">Date Added</span>
+            </th>
+        </tr>
     </thead>
     <tbody>
     @foreach ($items as $item)
