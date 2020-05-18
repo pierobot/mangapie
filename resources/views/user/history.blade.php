@@ -74,7 +74,7 @@
                                         </button>
                                     @else
                                         <a class="btn btn-primary"
-                                           href="{{ URL::action('ReaderController@index', [$item->manga, $item->archive, $item->page]) }}"
+                                           href="{{ $continueUrl }}"
                                         >
                                             Continue
                                         </a>
