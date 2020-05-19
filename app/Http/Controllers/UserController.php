@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Avatar;
 use App\Http\Requests\User\PutStatusRequest;
 use App\Http\Requests\User\UserCreateRequest;
 use App\Http\Requests\User\UserEditRequest;
@@ -147,14 +148,9 @@ class UserController extends Controller
 
     public function avatar(User $user)
     {
-        $filePath = storage_path('app/public/avatars') . DIRECTORY_SEPARATOR . $user->id;
-        $accelPath = '/avatars' . DIRECTORY_SEPARATOR . $user->id;
+        $avatar = new Avatar($user);
 
-        return response()->make('', 200, [
-            'Content-Type' => \Image::make($filePath)->mime,
-            'X-Accel-Redirect' => $accelPath,
-            'X-Accel-Charset' => 'utf-8'
-        ]);
+        return $avatar->response();
     }
 
     public function statistics(User $user = null)
