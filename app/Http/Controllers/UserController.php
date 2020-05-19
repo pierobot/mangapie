@@ -141,6 +141,13 @@ class UserController extends Controller
             ->with(['manga', 'archive'])
             ->get();
 
+        /* gh issue #200
+         * Seems like the sql server might not always order correctly?
+         * Regardless, a sort of 30 items on our end is not expensive
+         * This should be solved in  the future once we refactor this whole method to work on all DBMS
+         */
+        $items = $items->sortByDesc('updated_at');
+
         return view('user.history')
             ->with('user', $user)
             ->with('items', $items);
