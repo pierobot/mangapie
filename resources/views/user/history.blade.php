@@ -13,7 +13,7 @@
         </div>
         <div class="row">
             <div class="col">
-                <table class="table table-borderless table-striped">
+                <table class="table table-borderless table-striped" style="table-layout: fixed;">
                     <thead>
                         <tr class="d-flex">
                             <th class="col-4 col-md-2">
@@ -47,39 +47,52 @@
                                 <th class="col-4 col-md-2">
                                     <img class="img-fluid" src="{{ URL::action('CoverController@smallDefault', [$item->manga]) }}" alt="Cover for {{ $item->manga->name }}">
                                 </th>
-                                <td class="col">
+                                <td class="col text-wrap text-break">
                                     <h5>
-                                        <strong class="text-wrap text-break">
+                                        <strong>
                                             <a href="{{ URL::action('MangaController@show', [$item->manga]) }}">{{ $item->manga->name }}</a>
                                         </strong>
                                     </h5>
 
-                                    <p class="text-wrap text-break">
-                                        @if (! empty($basePath))
-                                            <small class="d-flex d-md-none text-muted">{{ $basePath }} -</small>
-                                            <span class="d-none d-md-inline-flex text-muted">{{ $basePath }} -</span>
-                                        @endif
+                                    @if (! empty($basePath))
+                                        <p class="text-muted">
+                                            {{ $basePath }}
+                                        </p>
+                                    @endif
 
-                                        <small class="d-flex d-md-none">{{ \App\Scanner::removeExtension(\App\Scanner::simplifyName($item->archive->name)) }}</small>
-                                        <span class="d-none d-md-inline-flex">{{ \App\Scanner::removeExtension(\App\Scanner::simplifyName($item->archive->name)) }}</span>
+                                    <p>
+                                        {{ \App\Scanner::removeExtension(\App\Scanner::simplifyName($item->archive->name)) }}
                                     </p>
-                                    <p class="text-wrap text-break">
-                                        <small class="d-flex d-md-none">{{ $item->updated_at->diffForHumans() }}</small>
-                                        <span class="d-none d-md-inline-flex">{{ $item->updated_at->diffForHumans() }}</span>
+
+                                    <p>
+                                        {{ $item->updated_at->diffForHumans() }}
                                     </p>
 
                                     @if (empty($continueUrl))
-                                        <button class="btn btn-warning disabled" disabled>
-                                            Next archive not found
-                                        </button>
+                                        <div class="d-flex d-md-none">
+                                            <button class="btn btn-secondary disabled w-100" disabled>
+                                                Next archive not found
+                                            </button>
+                                        </div>
+                                        <div class="d-none d-md-flex">
+                                            <button class="btn btn-secondary disabled" disabled>
+                                                Next archive not found
+                                            </button>
+                                        </div>
                                     @else
-                                        <a class="btn btn-primary"
-                                           href="{{ $continueUrl }}"
-                                        >
-                                            Continue
-                                        </a>
+                                        <div class="d-flex d-md-none">
+                                            <a class="btn btn-primary w-100" href="{{ $continueUrl }}">
+                                                Continue
+                                            </a>
+                                        </div>
+                                        <div class="d-none d-md-flex">
+                                            <a class="btn btn-primary" href="{{ $continueUrl }}">
+                                                Continue
+                                            </a>
+                                        </div>
                                     @endif
                                 </td>
+                            </tr>
                         @endforeach
                     </tbody>
                 </table>
