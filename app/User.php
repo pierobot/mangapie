@@ -126,6 +126,9 @@ class User extends Authenticatable
         return $this->about;
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function favorites()
     {
         return $this->hasMany(\App\Favorite::class);

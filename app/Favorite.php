@@ -9,18 +9,19 @@ class Favorite extends Model
     //
     protected $fillable = ['user_id', 'manga_id'];
 
-    public function getCreatedAt()
-    {
-        return $this->created_at;
-    }
-
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function user()
     {
-        return $this->belongsTo('App\User', 'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function manga()
     {
-        return $this->belongsTo('App\Manga', 'manga_id', 'id');
+        return $this->belongsTo(Manga::class, 'manga_id', 'id');
     }
 }

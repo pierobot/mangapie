@@ -7,8 +7,9 @@ use App\Http\Requests\Favorite\FavoriteAddRequest;
 
 use App\IntlString;
 use App\Manga;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 
 class FavoriteController extends Controller
 {
@@ -24,33 +25,41 @@ class FavoriteController extends Controller
         $user = \Auth::user();
         $sort = request()->input('sort', 'asc');
         $library = request()->query('library');
+        $page = request()->get('page');
         $perPage = 18;
 
-        /** @var Collection $favorites */
-        $favorites = $user->favorites
-            ->loadMissing([
+        /** @var Builder $favorites */
+        $favorites = $user->favorites()
+            ->with([
                 'manga',
                 'manga.favorites',
                 'manga.votes',
                 'manga.authorReferences',
-                'manga.authorReferences.author']
-            );
+                'manga.authorReferences.author'
+            ]);
 
-        $collection = $favorites->transform(function (Favorite $favorite) {
+        if (! empty($library)) {
+            $favorites = $favorites->whereHas('manga', function (Builder $query) use ($library) {
+                $query->where('library_id', $library);
+            });
+        }
+
+        /** @var Collection $collection */
+        $collection = $favorites->get()->transform(function (Favorite $favorite) {
             return $favorite->manga;
         });
-        $collection = $collection->filter(function (Manga $manga) use ($library) {
-            return $manga->library->id == $library;
-        });
-        $collection = $collection->sort(function (Manga $left, Manga $right) {
-            return IntlString::strcmp($left->name, $right->name);
+
+        $collection = $collection->sort(function (Manga $left, Manga $right) use ($sort) {
+            if ($sort === 'asc') {
+                return IntlString::strcmp($left->name, $right->name) > 0;
+            } else {
+                return IntlString::strcmp($left->name, $right->name) < 0;
+            }
         });
 
         // TODO: Should favorites to a library one can no longer access be viewable?
 
-        $page = request()->get('page');
         $manga_list = new LengthAwarePaginator($collection->forPage($page, $perPage), $collection->count(), $perPage);
-        $manga_list->withPath(request()->path());
         $manga_list->appends(request()->input());
 
         return view('favorites.index')
