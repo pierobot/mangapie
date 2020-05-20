@@ -19,6 +19,27 @@ class AddForeignKeysToLists extends Migration
      */
     public function up()
     {
+        // Purge entries that are stale
+        Completed::whereDoesntHave('manga')
+            ->orWhereDoesntHave('user')
+            ->forceDelete();
+
+        Dropped::whereDoesntHave('manga')
+            ->orWhereDoesntHave('user')
+            ->forceDelete();
+
+        Reading::whereDoesntHave('manga')
+            ->orWhereDoesntHave('user')
+            ->forceDelete();
+
+        OnHold::whereDoesntHave('manga')
+            ->orWhereDoesntHave('user')
+            ->forceDelete();
+
+        Planned::whereDoesntHave('manga')
+            ->orWhereDoesntHave('user')
+            ->forceDelete();
+
         Schema::table('completed', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->change();
             $table->foreign('manga_id')->references('id')->on('manga')->onDelete('cascade')->change();
@@ -53,27 +74,6 @@ class AddForeignKeysToLists extends Migration
 
             $table->index(['user_id', 'manga_id']);
         });
-
-        // Purge entries that are stale
-        Completed::whereDoesntHave('manga')
-            ->orWhereDoesntHave('user')
-            ->forceDelete();
-
-        Dropped::whereDoesntHave('manga')
-            ->orWhereDoesntHave('user')
-            ->forceDelete();
-
-        Reading::whereDoesntHave('manga')
-            ->orWhereDoesntHave('user')
-            ->forceDelete();
-
-        OnHold::whereDoesntHave('manga')
-            ->orWhereDoesntHave('user')
-            ->forceDelete();
-
-        Planned::whereDoesntHave('manga')
-            ->orWhereDoesntHave('user')
-            ->forceDelete();
     }
 
     /**

@@ -13,6 +13,11 @@ class CascadeDeleteReaderHistories extends Migration
      */
     public function up()
     {
+        \App\ReaderHistory::whereDoesntHave('user')
+            ->orWhereDoesntHave('archive')
+            ->orWhereDoesntHave('manga')
+            ->forceDelete();
+
         Schema::table('reader_histories', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->change();
             $table->foreign('archive_id')->references('id')->on('archives')->onDelete('cascade')->change();
