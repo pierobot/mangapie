@@ -108,23 +108,6 @@ class Manga
         return $this->cover_archive_page;
     }
 
-    public function forceDelete()
-    {
-        // TODO: handle more elegantly using observers?
-
-        // delete all information and references that belongs to this manga
-        $this->artistReferences()->forceDelete();
-        $this->authorReferences()->forceDelete();
-        $this->genreReferences()->forceDelete();
-        $this->favorites()->forceDelete();
-        $this->archives()->forceDelete();
-        $this->readerHistory()->forceDelete();
-        $this->watchNotifications()->forceDelete();
-        $this->votes()->forceDelete();
-
-        parent::forceDelete();
-    }
-
     public function archives()
     {
         return $this->hasMany(\App\Archive::class);

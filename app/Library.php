@@ -32,15 +32,4 @@ class Library extends Model
     {
         return $this->hasMany('App\Manga', 'library_id', 'id');
     }
-
-    public function forceDelete()
-    {
-        // and delete them
-        foreach ($this->manga as $manga) {
-            // Manga::forceDelete deletes all the references to other tables (artists, authors, etc..)
-            $manga->forceDelete();
-        }
-
-        parent::forceDelete();
-    }
 }
