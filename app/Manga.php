@@ -138,6 +138,18 @@ class Manga
         return $this->hasMany(\App\WatchNotification::class);
     }
 
+    public function watchers()
+    {
+        return $this->hasManyThrough(
+            User::class,
+            WatchReference::class,
+            'manga_id',
+            'id',
+            'id',
+            'user_id'
+        );
+    }
+
     public function library()
     {
         return $this->belongsTo('App\Library');
