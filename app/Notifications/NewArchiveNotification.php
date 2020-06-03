@@ -3,10 +3,8 @@
 namespace App\Notifications;
 
 use App\Archive;
-use App\Manga;
-use App\Observers\ArchiveObserver;
+
 use Illuminate\Bus\Queueable;
-use Illuminate\Notifications\Messages\DatabaseMessage;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -21,8 +19,6 @@ final class NewArchiveNotification
     private $series;
     /** @var array $archives An array that contains the id and name of archive. */
     private $archive;
-    /** @var int $count The count of how many new archives there are.*/
-    private $count;
 
     /**
      * Create a new notification instance.
