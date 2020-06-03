@@ -4,6 +4,7 @@ namespace App\Notifications;
 
 use App\Archive;
 
+use App\Scanner;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -47,7 +48,13 @@ final class NewArchiveNotification
      */
     public function via($notifiable)
     {
-        return ['database'];
+        $via = ['database'];
+
+        if (config('app.mail_notifications') === true) {
+            $via[] = 'mail';
+        }
+
+        return $via;
     }
 
     /**
@@ -58,10 +65,23 @@ final class NewArchiveNotification
      */
     public function toMail($notifiable)
     {
+        $seriesName = $this->series['name'];
+        $archiveName = Scanner::simplifyName(Scanner::removeExtension($this->archive['name']));
+        $finfo = new \SplFileInfo($this->archive['name']);
+        $directory = $finfo->getPath() ?? 'Root';
+
+        $readUrl = \URL::action('ReaderController@index', [
+            $this->series['id'],
+            $this->archive['id'],
+            1,
+            'notification' => $this->id
+        ]);
+
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+            ->subject("New archive for $seriesName")
+            ->line("You have a new archive named \"$archiveName\" in \"$directory\".")
+            ->action('Read now', $readUrl)
+            ->line('Note: Reading will dismiss the notification in Mangapie.');
     }
 
     /**
