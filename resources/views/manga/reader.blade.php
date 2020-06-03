@@ -257,7 +257,7 @@
                 if (g_previousArchiveUrl !== undefined) {
                     window.location = g_previousArchiveUrl;
                 } else {
-                    alert("There is no page or archive before this one.");
+                    window.location = '{{ URL::action('MangaController@show', [$manga]) }}';
                 }
 
                 return;
@@ -296,7 +296,7 @@
                 if (g_nextArchiveUrl !== undefined) {
                     window.location = g_nextArchiveUrl;
                 } else {
-                    alert("There is no page or archive after this one.");
+                    window.location = '{{ URL::action('MangaController@show', [$manga]) }}';
                 }
 
                 return;
