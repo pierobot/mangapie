@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Person;
+use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -44,6 +45,8 @@ class RouteServiceProvider extends ServiceProvider
         Route::model('manga', Manga::class);
         Route::model('person', Person::class);
         Route::model('jobStatus', JobStatus::class);
+
+        Route::model('notification', DatabaseNotification::class);
 
         parent::boot();
     }

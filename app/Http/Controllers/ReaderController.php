@@ -8,11 +8,19 @@ use App\Manga;
 use App\Image;
 use App\ImageArchive;
 use App\ReaderHistory;
+use App\User;
 
 class ReaderController extends Controller
 {
     public function index(Manga $manga, Archive $archive, int $page)
     {
+        $notificationId = request()->query('notification');
+        if (! empty($notificationId)) {
+            \Auth::user()->unreadNotifications()
+                ->where('id','=', $notificationId)
+                ->forceDelete();
+        }
+
         $imgArchive = ImageArchive::open($manga->path . DIRECTORY_SEPARATOR . $archive->name);
         if ($imgArchive === false)
             return response()->make(null, 400);

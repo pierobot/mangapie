@@ -1,0 +1,37 @@
+.custom-image-checkbox {
+  input[type="checkbox"] {
+    display: none;
+
+    & + label {
+      box-shadow: 0 0 0 4px $input-border-color;
+      -moz-box-shadow: 0 0 0 4px $input-border-color;
+      -webkit-box-shadow: 0 0 0 4px $input-border-color;
+
+      & > span {
+        display: none;
+      }
+    }
+
+    &:checked + label {
+      box-shadow: 0 0 0 4px $primary;
+      -moz-box-shadow: 0 0 0 4px $primary;
+      -webkit-box-shadow: 0 0 0 4px $primary;
+
+      & > img {
+        filter: brightness(50%);
+      }
+
+      & > span {
+        display: flex;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+
+        font-size: 3.3em;
+        color: $white;
+        text-shadow: 1px 1px;
+      }
+    }
+  }
+}

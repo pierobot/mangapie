@@ -14,15 +14,14 @@ class NotificationsComposer
      */
     public function compose(View $view)
     {
-        if (\Auth::check()) {
-            $user = \Auth::user()->load('watchNotifications');
-            $notificationCount = 0;
+        $user = \Auth::user();
 
-            $watchNotifications = $user->watchNotifications;
-            $notificationCount += $watchNotifications->count();
+        if (! empty($user)) {
+            $notifications = $user->unreadNotifications()
+                ->orderBy('updated_at')
+                ->get();
 
-            $view->with('watchNotifications', $watchNotifications)
-                 ->with('notificationCount', $notificationCount);
+            $view->with('notifications', $notifications);
         }
     }
 }
