@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\AssociatedName;
+use App\AssociatedNameReference;
 use App\Library;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Query\JoinClause;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
@@ -151,6 +155,8 @@ class SearchController extends Controller
      * Perform a quick search on a series' name and associated names using the like operator.
      * Requires the url parameter 'query' to be present. (?query=xxx)
      *
+     * TODO: Is there a way to optimize the queries in this method?
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function autoComplete()
@@ -160,16 +166,28 @@ class SearchController extends Controller
         $libraries = $user->libraries()->toArray();
         $searchQuery = request()->get('query');
 
-        /** @var Builder $items */
-        $items = Manga::where('name', 'like', "%$searchQuery%");
+        /** @var Collection $items */
+        $items = Manga::query()
+            ->where('name', 'like', "%$searchQuery%")
+            ->get(['id', 'name']);
 
-        $items = $items->orWhereHas('associatedNames', function (Builder $query) use ($searchQuery) {
-            $query->where('name', 'like', "%$searchQuery%");
-        });
+        $associatedNameQuery = AssociatedNameReference::query()
+            ->whereHas('associatedName', function (Builder $query) use ($searchQuery) {
+                $query->select(['id'])
+                      ->where('name', 'like', "%$searchQuery%");
+            })
+            ->select(['manga_id', 'associated_name_id']);
 
-        // filter out the items the user cannot access
-        $items = $items->whereIn('library_id', $libraries)->get(['id', 'name']);
+        $associatedItems = Manga::query()
+            ->joinSub($associatedNameQuery, 'associatedNameReferences', function (JoinClause $join) {
+                $join->on('manga.id', '=', 'manga_id');
+            })
+            ->join('associated_names', function (JoinClause $join) {
+                $join->on('associated_name_id', '=', 'associated_names.id');
+            })
+            ->select(['manga.id', 'associated_names.name'])
+            ->get();
 
-        return response()->json($items);
+        return response()->json($items->merge($associatedItems));
     }
 }
