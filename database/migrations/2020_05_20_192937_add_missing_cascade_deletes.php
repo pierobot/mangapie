@@ -2,18 +2,17 @@
 
 use App\Archive;
 use App\ArchiveView;
-use App\ArtistReference;
-use App\AssociatedNameReference;
 use App\Comment;
 use App\Favorite;
 use App\Manga;
 use App\MangaView;
 use App\Vote;
-use App\WatchNotification;
 use App\WatchReference;
+
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use \Illuminate\Database\Query\Builder;
 
 class AddMissingCascadeDeletes extends Migration
 {
@@ -98,10 +97,22 @@ class AddMissingCascadeDeletes extends Migration
             $table->index(['manga_id']);
         });
 
-        WatchNotification::whereDoesntHave('manga')
-            ->orWhereDoesntHave('user')
-            ->orWhereDoesntHave('archive')
-            ->forceDelete();
+        \DB::table('watch_notifications')
+            ->whereNotExists(function (Builder $query) {
+                $query->from('manga')
+                    ->select(['id'])
+                    ->whereColumn('watch_notifications.manga_id', '=', 'manga.id');
+            })
+            ->orWhereNotExists(function (Builder $query) {
+                $query->from('users')
+                    ->select(['id'])
+                    ->whereColumn('watch_notifications.user_id', '=', 'users.id');
+            })
+            ->orWhereNotExists(function (Builder $query) {
+                $query->from('archives')
+                    ->select(['id'])
+                    ->whereColumn('watch_notifications.archive_id', '=', 'archives.id');
+            })->delete();
 
         Schema::table('watch_notifications', function (Blueprint $table) {
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade')->change();
