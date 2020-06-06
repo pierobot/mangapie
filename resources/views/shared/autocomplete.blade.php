@@ -9,6 +9,11 @@
             selectOnBlur: false,
             theme: "bootstrap4",
 
+            /* Required in order for results not to be ignored. */
+            matcher: function (data) {
+                return true;
+            },
+
             itemLink: function (manga) {
                 return baseUrl + '/' + manga.id;
             },
@@ -26,6 +31,10 @@
             minLength: 3,
             selectOnBlur: false,
             theme: "bootstrap4",
+
+            matcher: function (data) {
+                return true;
+            },
 
             itemLink: function (manga) {
                 return baseUrl + '/' + manga.id;
