@@ -1,7 +1,7 @@
 <ul class="nav nav-pills nav-fill">
     @foreach ($topMostDirectories as $directory)
         <li class="nav-item">
-            <a href="{{ URL::action('MangaController@files', [$manga]) . '?' . \Illuminate\Support\Arr::query(['filter' => $directory]) }}"
+            <a href="{{ URL::action('MangaController@files', [$manga, 'filter' => $directory]) }}"
                class="nav-link @if ($filter === $directory) active @endif"
             >
                 {{ $directory }}
@@ -14,7 +14,12 @@
     <thead>
         <tr class="d-flex">
             <th class="col-5">
-                <span class="fa fa-book d-flex d-md-none">
+                {{ Form::open(['action' => ['ReaderHistoryController@markAllArchivesRead', $manga, 'filter' => $filter], 'class' => 'd-inline-flex p-0 m-0']) }}
+                <button class="btn m-0 p-0 pr-1" type="submit" title="Mark all as read">
+                    <span class="fa fa-check text-success"></span>
+                </button>
+                {{ Form::close() }}
+                <span class="fa fa-book d-inline-flex d-md-none">
                     &nbsp;
                     @if ($sort === 'asc' || empty($sort))
                         <a href="{{ request()->fullUrlWithQuery(['sort' => 'desc']) }}"><span class="fa fa-sort-alpha-up"></span></a>
@@ -22,7 +27,7 @@
                         <a href="{{ request()->fullUrlWithQuery(['sort' => 'asc']) }}"><span class="fa fa-sort-alpha-down"></span></a>
                     @endif
                 </span>
-                <span class="d-none d-md-flex">
+                <span class="d-none d-md-inline-flex">
                     Name&nbsp;
                     @if ($sort === 'asc' || empty($sort))
                         <a href="{{ request()->fullUrlWithQuery(['sort' => 'desc']) }}"><span class="fa fa-sort-alpha-up"></span></a>
@@ -60,6 +65,26 @@
         <tr class="d-flex">
             {{-- Use text-left as this column is centered on Safari --}}
             <th class="col-5 text-left">
+                @php
+                    if ($status === 'Incomplete' || $status === 'Unread') {
+                        $actionParams = ['ReaderHistoryController@markArchiveRead', $item];
+                        $title = 'Mark as read';
+                    } else {
+                        $actionParams = ['ReaderHistoryController@markArchiveUnread', $item];
+                        $title = 'Mark as unread';
+                    }
+                @endphp
+                {{ Form::open(['action' => $actionParams, 'class' => 'd-inline-flex m-0 p-0']) }}
+                <button class="btn m-0 p-0 pr-1 toggle-archive-read"
+                        data-status="{{ $status }}"
+                        type="submit"
+                        title="{{ $title }}"
+                        id="archive-{{ $item->id }}"
+                >
+                    <span class="fa fa-check-circle"></span>
+                </button>
+                {{ Form::close() }}
+
                 <strong class="text-wrap text-break">
                     <a href="{{ URL::action('ReaderController@index', [$manga, $item, 1]) }}">
                         {{ \App\Scanner::removeExtension(\App\Scanner::simplifyName($item->name)) }}

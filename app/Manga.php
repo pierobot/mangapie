@@ -133,11 +133,6 @@ class Manga
         return $this->hasMany(\App\Vote::class);
     }
 
-    public function watchNotifications()
-    {
-        return $this->hasMany(\App\WatchNotification::class);
-    }
-
     public function watchers()
     {
         return $this->hasManyThrough(

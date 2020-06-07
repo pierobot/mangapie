@@ -107,6 +107,13 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{genre}', 'GenreController@index');
     });
 
+    Route::prefix('history')->name('history')->group(function () {
+        Route::post('/read/{archive}', 'ReaderHistoryController@markArchiveRead');
+        Route::post('/unread/{archive}', 'ReaderHistoryController@markArchiveUnread');
+
+        Route::post('/readall/{manga}', 'ReaderHistoryController@markAllArchivesRead');
+    });
+
     Route::name('home')->group(function () {
         Route::get('/', 'HomeController@index');
         Route::get('/home', 'HomeController@index');

@@ -139,11 +139,6 @@ class User extends Authenticatable
         return $this->hasMany(\App\WatchReference::class);
     }
 
-    public function watchNotifications()
-    {
-        return $this->hasMany(\App\WatchNotification::class);
-    }
-
     public function readerHistory()
     {
         return $this->hasMany(\App\ReaderHistory::class);

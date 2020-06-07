@@ -1,0 +1,28 @@
+/**
+ * Toggle the checkmark colors next to the archive names depending on their read state.
+ */
+.toggle-archive-read {
+  &[data-status="Incomplete"] {
+    @extend .text-warning
+  }
+
+  &[data-status="Incomplete"]:hover {
+    @extend .text-success
+  }
+
+  &[data-status="Complete"] {
+    @extend .text-success
+  }
+
+  &[data-status="Complete"]:hover {
+    @extend .text-danger
+  }
+
+  &[data-status="Unread"] {
+    @extend .text-muted
+  }
+
+  &[data-status="Unread"]:hover {
+    @extend .text-success
+  }
+}
