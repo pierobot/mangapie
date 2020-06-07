@@ -155,7 +155,7 @@ class SearchController extends Controller
      * Perform a quick search on a series' name and associated names using the like operator.
      * Requires the url parameter 'query' to be present. (?query=xxx)
      *
-     * TODO: Is there a way to optimize the queries in this method?
+     * TODO: Is there a way to optimize the queries in this method? Maybe Fulltext?
      *
      * @return \Illuminate\Http\JsonResponse
      */
@@ -166,15 +166,16 @@ class SearchController extends Controller
         $libraries = $user->libraries()->toArray();
         $searchQuery = request()->get('query');
 
-        /** @var Collection $items */
         $items = Manga::query()
             ->where('name', 'like', "%$searchQuery%")
-            ->get(['id', 'name']);
+            ->orWhere('mu_name', 'like', "%$searchQuery")
+            ->get(['id', 'name'])
+            ->toArray();
 
         $associatedNameQuery = AssociatedNameReference::query()
             ->whereHas('associatedName', function (Builder $query) use ($searchQuery) {
                 $query->select(['id'])
-                      ->where('name', 'like', "%$searchQuery%");
+                    ->where('name', 'like', "%$searchQuery%");
             })
             ->select(['manga_id', 'associated_name_id']);
 
@@ -185,9 +186,11 @@ class SearchController extends Controller
             ->join('associated_names', function (JoinClause $join) {
                 $join->on('associated_name_id', '=', 'associated_names.id');
             })
+            ->whereIn('manga.library_id', $libraries)
             ->select(['manga.id', 'associated_names.name'])
-            ->get();
+            ->get()
+            ->toArray();
 
-        return response()->json($items->merge($associatedItems));
+        return response()->json(array_merge($items, $associatedItems));
     }
 }
