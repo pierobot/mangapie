@@ -81,8 +81,8 @@ class ReaderHistoryController extends Controller
         });
 
         $counts = [];
-        foreach ($archives as $archive) {
-            $counts []= $archive->getPageCount();
+        foreach ($archives as $index => $archive) {
+            $counts[$index] = $archive->getPageCount();
         }
 
         \DB::transaction(function () use ($manga, $user, $archives, $counts) {
