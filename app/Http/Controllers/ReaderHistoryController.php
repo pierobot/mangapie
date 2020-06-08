@@ -28,6 +28,7 @@ class ReaderHistoryController extends Controller
 
         $user->readerHistory()->updateOrCreate(
             [
+                'manga_id' => $archive->manga->id,
                 'archive_id' => $archive->id
             ],
             [
