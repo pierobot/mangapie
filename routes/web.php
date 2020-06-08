@@ -72,6 +72,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/author', 'MangaEditController@postAuthor');
         Route::post('/assocname', 'MangaEditController@postAssocName');
         Route::put('/genres', 'MangaEditController@putGenres');
+        Route::post('/refresh/{manga}', 'MangaEditController@refreshMetadata');
         Route::put('/autofill', 'MangaEditController@putAutofill');
         Route::patch('/description', 'MangaEditController@patchDescription');
         Route::patch('/type', 'MangaEditController@patchType');

@@ -90,6 +90,17 @@ class MangaEditController extends Controller
             ->with('archives', $archives);
     }
 
+    public function refreshMetadata(Manga $manga)
+    {
+        if (! empty($manga->mu_id)) {
+            MangaUpdates::autofillFromId($manga, $manga->mu_id);
+        } else {
+            MangaUpdates::autofill($manga);
+        }
+
+        return redirect()->back()->with('success', 'The information was successfully updated.');
+    }
+
     public function putAutofill(EditMangaAutofillRequest $request)
     {
         $manga = Manga::find($request->get('manga_id'));

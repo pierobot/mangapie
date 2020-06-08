@@ -21,6 +21,17 @@
                 <div class="col-12 text-center">
                     <h3 class="mb-3">
                         <strong>{{ $manga->name }}</strong>
+
+                        @can('update-series', $manga)
+                            {{ Form::open(['action' => ['MangaEditController@refreshMetadata', $manga],
+                                           'class' => 'd-inline-flex m-0 p-0',
+                                           'style' => 'vertical-align:middle;',
+                                           'title' => 'Refresh series metadata']) }}
+                            <button class="btn text-primary" type="submit">
+                                <span class="fa fa-refresh"></span>
+                            </button>
+                            {{ Form::close() }}
+                        @endcan
                     </h3>
 
                     {{--@if ($user->hasRole('Administrator') || $user->hasRole('Editor'))--}}
@@ -43,6 +54,17 @@
                 <div class="col-12">
                     <h1 class="mb-3">
                         <strong>{{ $manga->name }}</strong>
+
+                        @can('update-series', $manga)
+                            {{ Form::open(['action' => ['MangaEditController@refreshMetadata', $manga],
+                                           'class' => 'd-inline-flex m-0 p-0',
+                                           'style' => 'vertical-align:middle;',
+                                           'title' => 'Refresh series metadata']) }}
+                            <button class="btn text-primary" type="submit">
+                                <span class="fa fa-refresh"></span>
+                            </button>
+                            {{ Form::close() }}
+                        @endcan
                     </h1>
 
                     <div class="row">
