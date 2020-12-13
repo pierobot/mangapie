@@ -12,6 +12,8 @@ class Manga
     extends Model
     implements EditableInterface
 {
+    protected $table = 'manga';
+
     protected $guarded = [
         'id',
         'created_at',

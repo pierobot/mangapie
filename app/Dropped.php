@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Dropped extends Model
 {
+    protected $table = 'dropped';
+
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     /**
