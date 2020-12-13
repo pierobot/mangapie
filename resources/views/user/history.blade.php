@@ -32,16 +32,7 @@
                                 $finfo = new \SplFileInfo($item->archive->name);
                                 $basePath = $finfo->getPath();
 
-                                $nextArchive = $item->archive->getNextArchive();
-                                if ($item->page === $item->page_count){
-                                    if (! empty($nextArchive)) {
-                                        $continueUrl = URL::action('ReaderController@index', [$item->manga, $nextArchive, 1]);
-                                    } else {
-                                        $continueUrl = null;
-                                    }
-                                } else {
-                                    $continueUrl = URL::action('ReaderController@index', [$item->manga, $item->archive, $item->page]);
-                                }
+                                $continueUrl = URL::action('ReaderController@index', [$item->manga, $item->archive, $item->page]);
                             @endphp
                             <tr class="d-flex">
                                 <th class="col-4 col-md-2">
