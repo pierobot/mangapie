@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Planned extends Model
 {
+    protected $table = 'planned';
+
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     /**

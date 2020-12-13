@@ -189,7 +189,6 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
-        App\Providers\PluralizationServiceProvider::class,
         App\Providers\LogParserServiceProvider::class,
         App\Providers\ViewComposerServiceProvider::class,
 

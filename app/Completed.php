@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Completed extends Model
 {
+    protected $table = 'completed';
+
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     /**

@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class OnHold extends Model
 {
+    protected $table = 'on_hold';
+
     protected $guarded = ['id', 'created_at', 'updated_at'];
 
     /**
