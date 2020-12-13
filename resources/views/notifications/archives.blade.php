@@ -75,7 +75,7 @@
                                 <th class="col-4 col-sm-2 col-lg-1">
                                     <div class="custom-image-checkbox">
                                         <input type="checkbox" id="notification-{{ $index }}" name="notification-{{ $index }}" value="{{ $series['id'] }}">
-                                        <label class="text-center text-primary my-auto" for="notification-{{ $index }}">
+                                        <label class=" text-center text-primary my-auto" for="notification-{{ $index }}">
                                             <img class="img-fluid" src="{{ URL::action('CoverController@smallDefault', [$series['id']]) }}" alt="Cover">
                                             <span class="fa fa-check"></span>
                                         </label>
@@ -112,7 +112,8 @@
                                     <p class="d-none d-md-inline-block">
                                     @foreach ($seriesArchives as $directory => $directoryArchives)
                                         <ul>
-                                            <li><a href="{{ URL::action('MangaController@files', [$series['id'], 'filter' => $directory]) }}">{{ $directory }}</a>
+                                            <li>
+                                                <a href="{{ URL::action('MangaController@files', [$series['id'], 'filter' => $directory]) }}">{{ $directory }}</a>
                                                 <ul>
                                                     @foreach ($directoryArchives as $archive)
                                                         <li>
@@ -122,8 +123,8 @@
                                                 </ul>
                                             </li>
                                         </ul>
-                                        @endforeach
-                                        </p>
+                                    @endforeach
+                                    </p>
                                 </td>
                                 <td class="d-none col-md">
                                     {{ $notification->created_at->diffForHumans() }}

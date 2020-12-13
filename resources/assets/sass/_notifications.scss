@@ -22,11 +22,9 @@
       }
 
       & > span {
-        display: flex;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
+        display: block;
+        transform: translate(0, -92px);
+        height: 0;
 
         font-size: 3.3em;
         color: $white;
