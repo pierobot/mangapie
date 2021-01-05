@@ -10,7 +10,7 @@
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.15.1",
     "awesome-bootstrap-checkbox": "github:flatlogic/awesome-bootstrap-checkbox#bump-to-bootstrap4",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "bootstrap": "^4.5.3",
     "bootstrap-3-typeahead": "github:bassjobsen/Bootstrap-3-Typeahead#master",
     "cross-env": "^5.2.1",
