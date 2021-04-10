@@ -8,6 +8,7 @@ use App\Http\Requests\Favorite\FavoriteAddRequest;
 use App\IntlString;
 use App\Manga;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -59,7 +60,8 @@ class FavoriteController extends Controller
 
         // TODO: Should favorites to a library one can no longer access be viewable?
 
-        $manga_list = new LengthAwarePaginator($collection->forPage($page, $perPage), $collection->count(), $perPage);
+        $manga_list = new LengthAwarePaginator($collection->forPage($page, $perPage), $collection->count(), $perPage,
+        					Paginator::resolveCurrentPage(), ['path' => Paginator::resolveCurrentPath()]);
         $manga_list->appends(request()->input());
 
         return view('favorites.index')
